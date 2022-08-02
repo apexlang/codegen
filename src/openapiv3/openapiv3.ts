@@ -41,13 +41,10 @@ import {
   SchemaObject,
   ServerObject,
 } from "openapi3-ts";
-import {
-  SummaryDirective,
-  PathDirective,
-  ResponseDirective,
-} from "./directives";
+import { SummaryDirective } from "./directives";
 import * as yaml from "yaml";
 import { ExposedTypesVisitor, isService } from "../utils";
+import { getPath, ResponseDirective } from "../rest";
 
 const statusCodes = new Map<string, string>([
   ["OK", "200"],
@@ -147,7 +144,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
     if (!isService(context)) {
       return;
     }
-    const role = context.role!;
+    const { role } = context;
     this.root.addTag({
       name: role.name,
       description: role.description,
@@ -158,27 +155,8 @@ export class OpenAPIV3Visitor extends BaseVisitor {
     if (!isService(context)) {
       return;
     }
-    const ns = context.namespace;
-    const inter = context.interface;
-    const role = context.role;
-    const oper = context.operation!;
-    let path = "";
-    ns.annotation("path", (a) => {
-      path += a.convert<PathDirective>().value;
-    });
-    if (inter) {
-      inter.annotation("path", (a) => {
-        path += a.convert<PathDirective>().value;
-      });
-    }
-    if (role) {
-      role.annotation("path", (a) => {
-        path += a.convert<PathDirective>().value;
-      });
-    }
-    oper.annotation("path", (a) => {
-      path += a.convert<PathDirective>().value;
-    });
+    const { role, operation } = context;
+    const path = getPath(context);
     if (path == "") {
       return;
     }
@@ -193,7 +171,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
     let method = "";
     ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"].forEach(
       (m) => {
-        oper.annotation(m, () => {
+        operation.annotation(m, () => {
           method = m.toLowerCase();
         });
       }
@@ -202,21 +180,21 @@ export class OpenAPIV3Visitor extends BaseVisitor {
       return;
     }
 
-    let summary = oper.description;
-    oper.annotation("summary", (a) => {
+    let summary = operation.description;
+    operation.annotation("summary", (a) => {
       summary = a.convert<SummaryDirective>().value;
     });
 
     this.path = path;
     this.method = method;
     this.operation = {
-      operationId: oper.name,
+      operationId: operation.name,
       summary: summary,
-      description: oper.description,
+      description: operation.description,
       responses: {},
-      tags: [role!.name],
+      tags: [role.name],
     };
-    oper.annotation("deprecated", (a) => {
+    operation.annotation("deprecated", (a) => {
       this.operation!.deprecated = true;
     });
     pathItem[method] = this.operation;
@@ -226,32 +204,31 @@ export class OpenAPIV3Visitor extends BaseVisitor {
     if (!this.operation || !isService(context)) {
       return;
     }
-    if (!this.operation!.parameters) {
+    if (!this.operation.parameters) {
       this.operation!.parameters = [];
     }
 
-    const oper = context.operation!;
-    const param = context.parameter!;
+    const { operation, parameter } = context;
     let paramIn: ParameterLocation;
 
     let required = true;
-    let t = param.type;
+    let t = parameter.type;
     if (t.kind == Kind.Optional) {
       t = (t as Optional).type;
       required = false;
     }
 
-    if (this.path.indexOf(`{` + param.name + `}`) != -1) {
+    if (this.path.indexOf(`{` + parameter.name + `}`) != -1) {
       paramIn = "path";
-    } else if (param.annotation("query")) {
+    } else if (parameter.annotation("query")) {
       paramIn = "query";
-    } else if (param.annotation("header")) {
+    } else if (parameter.annotation("header")) {
       paramIn = "header";
-    } else if (param.annotation("cookie")) {
+    } else if (parameter.annotation("cookie")) {
       paramIn = "cookie";
     } else {
       // Body
-      if (oper.isUnary()) {
+      if (operation.isUnary()) {
         if (
           t.kind == Kind.Type ||
           t.kind == Kind.Union ||
@@ -260,14 +237,21 @@ export class OpenAPIV3Visitor extends BaseVisitor {
         ) {
           const type = t as Named;
           this.operation!.requestBody = {
-            $ref: "#/components/schemas/" + type.name,
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/" + type.name,
+                },
+              },
+            },
+            required: true,
           };
         } else if (t.kind == Kind.Primitive) {
           const named = t as Primitive;
           const typeFormat = primitiveTypeMap.get(named.name);
           if (!typeFormat) {
             throw Error(
-              `path parameter "${param.name}" must be a required type: found "${t.kind}"`
+              `path parameter "${parameter.name}" must be a required type: found "${t.kind}"`
             );
           }
           this.operation!.requestBody = {
@@ -304,7 +288,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
           t.kind == Kind.Enum
         ) {
           const type = t as Named;
-          content.properties![param.name] = {
+          content.properties![parameter.name] = {
             $ref: "#/components/schemas/" + type.name,
           };
         } else if (t.kind == Kind.Primitive) {
@@ -312,14 +296,14 @@ export class OpenAPIV3Visitor extends BaseVisitor {
           const typeFormat = primitiveTypeMap.get(named.name);
           if (!typeFormat) {
             throw Error(
-              `path parameter "${param.name}" must be a required type: found "${t.kind}"`
+              `path parameter "${parameter.name}" must be a required type: found "${t.kind}"`
             );
           }
-          content.properties![param.name] = {
+          content.properties![parameter.name] = {
             ...typeFormat,
           };
           if (required) {
-            content.required?.push(param.name);
+            content.required?.push(parameter.name);
           }
           return;
         }
@@ -329,9 +313,9 @@ export class OpenAPIV3Visitor extends BaseVisitor {
     }
 
     const p: ParameterObject = {
-      name: param.name,
+      name: parameter.name,
       in: paramIn,
-      description: param.description,
+      description: parameter.description,
       required: required,
     };
 
@@ -347,7 +331,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
         }
         if (!typeFormat) {
           throw Error(
-            `path parameter "${param.name}" must be a required type: found "${t.kind}"`
+            `path parameter "${parameter.name}" must be a required type: found "${t.kind}"`
           );
         }
         this.operation!.parameters.push({
@@ -370,7 +354,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
             }
             if (!typeFormat) {
               throw Error(
-                `query parameter "${param.name}" must be a built-type: found "${type.kind}"`
+                `query parameter "${parameter.name}" must be a built-type: found "${type.kind}"`
               );
             }
             this.operation!.parameters.push({
@@ -419,7 +403,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
               return;
             }
             throw Error(
-              `query parameter "${param.name}" must be a built-type: found "${named.name}"`
+              `query parameter "${parameter.name}" must be a built-type: found "${named.name}"`
             );
         }
     }
@@ -431,12 +415,12 @@ export class OpenAPIV3Visitor extends BaseVisitor {
     if (!this.operation || !isService(context)) {
       return;
     }
-    const oper = context.operation!;
+    const { operation } = context;
     const responses: ResponsesObject = {};
 
     const responseDirectives: ResponseDirective[] = [];
     let found2xx = false;
-    oper.annotations.map((a) => {
+    operation.annotations.map((a) => {
       if (a.name != "response") {
         return;
       }
@@ -456,7 +440,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
         content: {
           "application/json": {
             //example: resp.examples?["application/json"],
-            schema: this.typeToSchema(oper.type),
+            schema: this.typeToSchema(operation.type),
           },
         },
       };
@@ -464,7 +448,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
 
     responseDirectives.map((resp) => {
       const code = statusCodes.get(resp.status) || "default";
-      let type = oper.type;
+      let type = operation.type;
       if (resp.returns) {
         type = context.namespace.types[resp.returns];
       }
@@ -488,7 +472,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
   }
 
   visitType(context: Context): void {
-    const type = context.type!;
+    const { type } = context;
     if (!this.exposedTypes.has(type.name)) {
       return;
     }

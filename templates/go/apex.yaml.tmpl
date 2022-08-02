@@ -1,0 +1,44 @@
+spec: spec.apexlang
+config:
+  package: {{.package}}
+  module: {{.module}}
+generates:
+  openapi.yaml:
+    module: '@apexlang/codegen/openapiv3'
+    visitorClass: OpenAPIV3Visitor
+  proto/service.proto:
+    module: '@apexlang/codegen/grpc'
+    visitorClass: GRPCVisitor
+    config:
+      options:
+        go_package: {{.module}}/proto
+    runAfter:
+      - command: |
+          protoc
+          --go_out=.
+          --go_opt=paths=source_relative
+          --go-grpc_out=.
+          --go-grpc_opt=paths=source_relative
+          proto/service.proto
+  pkg/{{.package}}/interfaces.go:
+    module: '@apexlang/codegen/go'
+    visitorClass: InterfacesVisitor
+  pkg/{{.package}}/fiber.go:
+    module: '@apexlang/codegen/go'
+    visitorClass: FiberVisitor
+  pkg/{{.package}}/grpc.go:
+    module: '@apexlang/codegen/go'
+    visitorClass: GRPCVisitor
+    config:
+      protoPackage: {{.module}}/proto
+  pkg/{{.package}}/services.go:
+    ifNotExists: true
+    module: '@apexlang/codegen/go'
+    visitorClass: ScaffoldVisitor
+    config:
+      types:
+        - service
+  cmd/main.go:
+    ifNotExists: false  # Change to true to control dependency injection
+    module: '@apexlang/codegen/go'
+    visitorClass: MainVisitor

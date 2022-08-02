@@ -1,0 +1,34 @@
+APP_ID  ?= {{.package}}
+
+HTTP_ADDRESS    ?= :3000
+GRPC_ADDRESS    ?= :4000
+
+.PHONY: all deps codegen watch tidy build run clean doc test
+
+all: deps codegen tidy build
+
+deps:
+
+codegen:
+	apex generate
+
+watch:
+	apex watch
+
+tidy:
+	go mod tidy -compat=1.17
+
+build:
+	mkdir -p build
+	go build -o build/$(APP_ID) cmd/main.go
+
+run:
+	@HTTP_ADDRESS=${HTTP_ADDRESS} GRPC_ADDRESS=${GRPC_ADDRESS} go run cmd/main.go
+
+clean:
+	rm -Rf build
+
+doc:
+
+test:
+	go test --count=1 ./pkg/...

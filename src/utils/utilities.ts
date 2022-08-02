@@ -28,10 +28,33 @@ import {
   Annotation,
   TypeResolver,
   Operation,
+  Role,
 } from "@apexlang/core/model";
 
+export function isOneOfType(context: Context, types: string[]): boolean {
+  if (context.role) {
+    const role = context.role;
+    let found = false;
+    for (let i = 0; i < types.length; i++) {
+      if (role.annotation(types[i]) != undefined) {
+        found = true;
+        break;
+      }
+    }
+    if (!found) {
+      return false;
+    }
+    return (
+      role.operations.find((o) => {
+        return o.annotation("nocode") == undefined;
+      }) != undefined
+    );
+  }
+  return false;
+}
+
 export function isHandler(context: Context): boolean {
-  return isService(context) || isEvents(context) || isActivities(context);
+  return isService(context) || isEvents(context);
 }
 
 export function isService(context: Context): boolean {
@@ -39,7 +62,7 @@ export function isService(context: Context): boolean {
     return true;
   }
   if (context.role) {
-    const role = context.role!;
+    const { role } = context;
     if (role.annotation("service") == undefined) {
       return false;
     }
@@ -48,49 +71,6 @@ export function isService(context: Context): boolean {
         return o.annotation("nocode") == undefined;
       }) != undefined
     );
-  }
-  return false;
-}
-
-export function isStateful(context: Context): boolean {
-  if (context.interface) {
-    return true;
-  }
-  if (context.role) {
-    const role = context.role!;
-    if (
-      role.annotation("stateful") == undefined &&
-      role.annotation("actor") == undefined &&
-      role.annotation("workflow") == undefined
-    ) {
-      return false;
-    }
-    return (
-      role.operations.find((o) => {
-        return o.annotation("nocode") == undefined;
-      }) != undefined
-    );
-  }
-  return false;
-}
-
-export function hasStateful(context: Context): boolean {
-  for (let name in context.namespace.roles) {
-    const role = context.namespace.roles[name];
-    if (
-      role.annotation("stateful") == undefined &&
-      role.annotation("actor") == undefined &&
-      role.annotation("workflow") == undefined
-    ) {
-      continue;
-    }
-    if (
-      role.operations.find((o) => {
-        return o.annotation("nocode") == undefined;
-      }) != undefined
-    ) {
-      return true;
-    }
   }
   return false;
 }
@@ -112,17 +92,25 @@ export function hasServiceCode(context: Context): boolean {
   return false;
 }
 
+export function hasMethods(role: Role): boolean {
+  if (
+    role.operations.find((o) => {
+      return o.annotation("nocode") == undefined;
+    }) != undefined
+  ) {
+    return true;
+  }
+  return false;
+}
+
 export function hasCode(context: Context): boolean {
   if (context.interface) {
     return true;
   }
   if (context.role) {
-    const role = context.role!;
+    const { role } = context;
     if (
       role.annotation("service") == undefined &&
-      role.annotation("stateful") == undefined &&
-      role.annotation("actor") == undefined &&
-      role.annotation("workflow") == undefined &&
       role.annotation("provider") == undefined &&
       role.annotation("dependency") == undefined
     ) {
@@ -139,7 +127,7 @@ export function hasCode(context: Context): boolean {
 
 export function isEvents(context: Context): boolean {
   if (context.role) {
-    const role = context.role!;
+    const { role } = context;
     if (role.annotation("events") == undefined) {
       return false;
     }
@@ -152,40 +140,9 @@ export function isEvents(context: Context): boolean {
   return false;
 }
 
-export function isWorkflow(context: Context): boolean {
-  if (context.role) {
-    const role = context.role!;
-    if (role.annotation("workflow") == undefined) {
-      return false;
-    }
-    return (
-      role.operations.find((o) => {
-        return o.annotation("nocode") == undefined;
-      }) != undefined
-    );
-  }
-  return false;
-}
-
-export function isActivities(context: Context): boolean {
-  if (context.role) {
-    const role = context.role!;
-    if (role.annotation("activities") == undefined) {
-      return false;
-    }
-    return true;
-    // return (
-    //   role.operations.find((o) => {
-    //     return o.annotation("nocode") == undefined;
-    //   }) != undefined
-    // );
-  }
-  return false;
-}
-
 export function isProvider(context: Context): boolean {
   if (context.role) {
-    const role = context.role!;
+    const { role } = context;
     if (
       role.annotation("provider") == undefined &&
       role.annotation("dependency") == undefined &&
@@ -282,17 +239,6 @@ export const primitives = new Set([
   "f64",
   "string",
 ]);
-
-function shouldInclude(context: Context, roles: Array<String>): boolean {
-  if (context.role != undefined) {
-    if (roles == undefined || roles.indexOf(context.role.name) == -1) {
-      return false;
-    }
-  } else if (context.config.skipInterface == true) {
-    return false;
-  }
-  return true;
-}
 
 export function formatComment(
   prefix: string,

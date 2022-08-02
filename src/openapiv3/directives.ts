@@ -1,16 +1,3 @@
-// REST
-
-export interface PathDirective {
-  value: string;
-}
-
-export interface ResponseDirective {
-  status: string;
-  returns?: string;
-  description?: string;
-  examples?: { [k: string]: string };
-}
-
 // OpenAPI v2
 
 export interface HostDirective {

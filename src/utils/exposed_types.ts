@@ -61,15 +61,15 @@ export class ExposedTypesVisitor extends BaseVisitor {
     if (!isService(context)) {
       return;
     }
-    const oper = context.operation!;
-    this.checkType(oper.type);
+    const { operation } = context;
+    this.checkType(operation.type);
   }
 
   visitParameter(context: Context): void {
     if (!isService(context)) {
       return;
     }
-    const param = context.parameter!;
-    this.checkType(param.type);
+    const { parameter } = context;
+    this.checkType(parameter.type);
   }
 }

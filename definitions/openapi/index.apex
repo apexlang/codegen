@@ -22,6 +22,20 @@ directive @host(value: string) on NAMESPACE
 directive @schemes(value: [string]) on NAMESPACE
 directive @consumes(value: [string]) on NAMESPACE
 directive @produces(value: [string]) on NAMESPACE
+directive @server(
+  url: string,
+  description: string?,
+  variables: {string: ServerVariableObject}?
+) on NAMESPACE
+
+type ServerVariableObject @novisit {
+  enum: ServerVariableObjectEnum?,
+  default: ServerVariableObjectVal,
+  description: string?
+}
+
+union ServerVariableObjectEnum @novisit = [string] | [bool] | [i64]
+union ServerVariableObjectVal @novisit = string | bool | i64
 
 directive @password on PARAMETER | FIELD
 

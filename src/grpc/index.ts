@@ -35,6 +35,7 @@ import {
   isVoid,
   convertOperationToType,
   ExposedTypesVisitor,
+  isPrimitive,
 } from "../utils";
 
 interface FieldNumDirective {
@@ -83,7 +84,7 @@ package ${ns.name};\n\n`);
     if (!shouldIncludeHandler(context)) {
       return;
     }
-    const role = context.role!;
+    const { role } = context;
     this.write(formatComment("// ", role.description));
     this.write(`service ${role.name} {\n`);
   }
@@ -99,27 +100,35 @@ package ${ns.name};\n\n`);
     if (!shouldIncludeHandler(context)) {
       return;
     }
-    const oper = context.operation!;
-    this.write(formatComment("  // ", oper.description));
-    this.write(`  rpc ${pascalCase(oper.name)}(`);
-    if (oper.parameters.length == 0) {
+    const { operation } = context;
+    this.write(formatComment("  // ", operation.description));
+    this.write(`  rpc ${pascalCase(operation.name)}(`);
+    if (operation.parameters.length == 0) {
       this.write(`google.protobuf.Empty`);
-    } else if (oper.unary) {
-      this.write(`${typeSignature(oper.parameters[0].type)}`);
+    } else if (operation.unary) {
+      this.write(`${typeSignature(operation.parameters[0].type)}`);
     } else {
       const argsType = convertOperationToType(
         context.getType.bind(context),
-        oper
+        operation
       );
       this.requestTypes.push(argsType);
       this.exposedTypes.add(argsType.name);
-      this.write(`${pascalCase(oper.name)}Args`);
+      this.write(`${pascalCase(operation.name)}Args`);
     }
     this.write(`) returns (`);
-    if (isVoid(oper.type)) {
+    if (isVoid(operation.type)) {
       this.write(`google.protobuf.Empty`);
+    } else if (isPrimitive(operation.type)) {
+      const p = operation.type as Primitive;
+      switch (p.name) {
+        case PrimitiveName.String:
+          this.write(`google.protobuf.StringValue`);
+          break;
+        // TODO
+      }
     } else {
-      this.write(`${typeSignature(oper.type)}`);
+      this.write(`${typeSignature(operation.type)}`);
     }
     this.write(`) {};\n`);
   }
@@ -128,11 +137,10 @@ package ${ns.name};\n\n`);
     if (!shouldIncludeHandler(context)) {
       return;
     }
-    const oper = context.operation!;
   }
 
   visitTypeBefore(context: Context): void {
-    const type = context.type!;
+    const { type } = context;
     if (!this.exposedTypes.has(type.name)) {
       return;
     }
@@ -141,11 +149,10 @@ package ${ns.name};\n\n`);
   }
 
   visitTypeField(context: Context): void {
-    const type = context.type!;
+    const { type, field } = context;
     if (!this.exposedTypes.has(type.name)) {
       return;
     }
-    const field = context.field!;
     const fieldnumAnnotation = field.annotation("n");
     if (!fieldnumAnnotation) {
       throw new Error(`${type.name}.${field.name} requires a @n`);
@@ -160,7 +167,7 @@ package ${ns.name};\n\n`);
   }
 
   visitTypeAfter(context: Context): void {
-    const type = context.type!;
+    const { type } = context;
     if (!this.exposedTypes.has(type.name)) {
       return;
     }
@@ -168,7 +175,7 @@ package ${ns.name};\n\n`);
   }
 
   visitEnumBefore(context: Context): void {
-    const e = context.enum!;
+    const e = context.enum;
     if (!this.exposedTypes.has(e.name)) {
       return;
     }
@@ -177,17 +184,17 @@ package ${ns.name};\n\n`);
   }
 
   visitEnumValue(context: Context): void {
-    const e = context.enum!;
+    const e = context.enum;
     if (!this.exposedTypes.has(e.name)) {
       return;
     }
-    const ev = context.enumValue!;
+    const ev = context.enumValue;
     this.write(formatComment("  // ", ev.description));
     this.write(`  ${snakeCase(ev.name).toUpperCase()} = ${ev.index};\n`);
   }
 
   visitEnumAfter(context: Context): void {
-    const e = context.enum!;
+    const e = context.enum;
     if (!this.exposedTypes.has(e.name)) {
       return;
     }
@@ -195,7 +202,7 @@ package ${ns.name};\n\n`);
   }
 
   visitUnion(context: Context): void {
-    const u = context.union!;
+    const u = context.union;
     if (!this.exposedTypes.has(u.name)) {
       return;
     }
@@ -293,25 +300,47 @@ class ImportVisitor extends BaseVisitor {
     }
   }
 
+  private checkSingleType(t: AnyType) {
+    switch (t.kind) {
+      case Kind.Primitive:
+        const p = t as Primitive;
+        switch (p.name) {
+          case PrimitiveName.String:
+            this.addImport("google/protobuf/wrappers.proto");
+            break;
+        }
+        break;
+    }
+  }
+
   visitOperation(context: Context): void {
     if (!shouldIncludeHandler(context)) {
       return;
     }
-    const oper = context.operation!;
-    this.checkType(oper.type);
+    const { operation } = context;
+    if (operation.isUnary()) {
+      this.checkSingleType(operation.parameters[0]);
+    }
+    this.checkType(operation.type);
+    this.checkSingleType(operation.type);
   }
 
   visitParameter(context: Context): void {
     if (!shouldIncludeHandler(context)) {
       return;
     }
-    const param = context.parameter!;
-    this.checkType(param.type);
+    const { parameter } = context;
+    this.checkType(parameter.type);
   }
 
   visitType(context: Context): void {
-    const type = context.type!;
+    const { type } = context;
     this.checkType(type);
+  }
+
+  visitTypeField(context: Context): void {
+    const { field } = context;
+    this.checkType(field.type);
   }
 
   visitNamespaceAfter(context: Context): void {
