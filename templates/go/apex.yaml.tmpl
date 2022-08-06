@@ -8,7 +8,7 @@ generates:
     visitorClass: OpenAPIV3Visitor
   proto/service.proto:
     module: '@apexlang/codegen/grpc'
-    visitorClass: GRPCVisitor
+    visitorClass: ProtoVisitor
     config:
       options:
         go_package: {{.module}}/proto

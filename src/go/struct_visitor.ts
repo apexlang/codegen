@@ -14,7 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Context, BaseVisitor, Writer, Kind } from "@apexlang/core/model";
+import {
+  Context,
+  BaseVisitor,
+  Writer,
+  Kind,
+  Named,
+} from "@apexlang/core/model";
 import { expandType, fieldName } from "./helpers";
 import { translateAlias } from "./alias_visitor";
 import { formatComment } from "../utils";
@@ -38,12 +44,20 @@ export class StructVisitor extends BaseVisitor {
   }
 
   visitTypeField(context: Context): void {
-    const { field } = context;
+    const { field, type } = context;
     const packageName = context.config.otherPackage;
+
     const omitempty = field.type.kind === Kind.Optional ? ",omitempty" : "";
     this.write(formatComment("// ", field.description));
+
+    // Prevent illegal circular reference error.
+    const ptr =
+      field.type.kind === Kind.Type && (field.type as Named).name == type.name
+        ? "*"
+        : "";
+
     this.write(
-      `\t${fieldName(field, field.name)} ${expandType(
+      `\t${fieldName(field, field.name)} ${ptr}${expandType(
         field.type!,
         packageName,
         true,

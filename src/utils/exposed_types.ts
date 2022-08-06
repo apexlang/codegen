@@ -29,16 +29,14 @@ import { isNamed, isService } from "./utilities";
 export class ExposedTypesVisitor extends BaseVisitor {
   found: Set<string> = new Set<string>();
 
-  private add(name: string): void {
-    if (!this.found.has(name)) {
-      this.found.add(name);
-    }
-  }
-
   private checkType(any: AnyType) {
     if (isNamed(any)) {
       const n = any as Named;
-      this.add(n.name);
+      if (!this.found.has(n.name)) {
+        this.found.add(n.name);
+      } else {
+        return; // Prevent stack overflow
+      }
     }
 
     switch (any.kind) {

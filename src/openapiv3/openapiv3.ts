@@ -257,7 +257,9 @@ export class OpenAPIV3Visitor extends BaseVisitor {
           this.operation!.requestBody = {
             content: {
               "application/json": {
-                ...typeFormat,
+                schema: {
+                  ...typeFormat,
+                },
               },
             },
             required: true,
@@ -433,7 +435,11 @@ export class OpenAPIV3Visitor extends BaseVisitor {
       responseDirectives.push(resp);
     });
 
-    if (!found2xx) {
+    if (operation.type.kind == Kind.Void) {
+      responses[204] = {
+        description: "No Content",
+      };
+    } else if (!found2xx) {
       const status = this.method == "post" ? "201" : "200";
       responses.default = {
         description: "Success",
@@ -476,12 +482,27 @@ export class OpenAPIV3Visitor extends BaseVisitor {
     if (!this.exposedTypes.has(type.name)) {
       return;
     }
-    const schema = {
+    const schema: SchemaObject = {
       description: type.description,
       ...this.typeDefinitionToSchema(type),
     };
     this.schemas[type.name] = schema;
     this.root.addSchema(type.name, schema);
+  }
+
+  visitEnum(context: Context): void {
+    const e = context.enum;
+    if (!this.exposedTypes.has(e.name)) {
+      return;
+    }
+
+    const schema: SchemaObject = {
+      type: Types.STRING,
+      description: e.description,
+      enum: e.values.map((ev) => ev.name),
+    };
+    this.schemas[e.name] = schema;
+    this.root.addSchema(e.name, schema);
   }
 
   typeDefinitionToSchema(type: Type): SchemaObject {
@@ -525,8 +546,9 @@ export class OpenAPIV3Visitor extends BaseVisitor {
         return {
           ...primitive,
         };
+      case Kind.Enum:
       case Kind.Type:
-        const named = type as Type;
+        const named = type as Named;
         return {
           $ref: "#/components/schemas/" + named.name,
         };

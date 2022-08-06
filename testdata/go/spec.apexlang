@@ -1,0 +1,101 @@
+import * from "@apexlang/core"
+import * from "@apexlang/rest"
+import * from "@apexlang/openapi"
+
+namespace "apex.testing"
+  @info(
+    title: "Test Output API"
+    description: "Apex spec used to test the output of code generators."
+    version: "1.0.0"
+    termsOfService: "https://api.goodcorp.com/terms/"
+    contact: {
+      name: "API Support"
+      url: "https://api.goodcorp.com/support"
+      email: "api@goodcorp.com"
+    },
+    license: {
+      name: "Apache 2.0"
+      url: "https://www.apache.org/licenses/LICENSE-2.0"
+    }
+  )
+  @server(url: "https://api.goodcorp.com")
+  @path("/v1")
+
+role MyService @service @uses(["Repository"]) {
+  emptyVoid(): void
+    @GET
+  unaryType{thing: MyType}: MyType
+    @path("/unaryType") @POST
+  unaryEnum{value: MyEnum}: MyEnum
+    @path("/unaryEnum") @POST
+  unaryString{value: string}: string
+    @path("/unaryString") @POST
+  unaryI64{value: i64}: i64
+    @path("/unaryI64") @POST
+  unaryI32{value: i32}: i32
+    @path("/unaryI32") @POST
+  unaryI16{value: i16}: i16
+    @path("/unaryI16") @POST
+  unaryI8{value: i8}: i8
+    @path("/unaryI8") @POST
+  unaryU64{value: u64}: u64
+    @path("/unaryU64") @POST
+  unaryU32{value: u32}: u32
+    @path("/unaryU32") @POST
+  unaryU16{value: u16}: u16
+    @path("/unaryU16") @POST
+  unaryU8{value: u8}: u8
+    @path("/unaryU8") @POST
+  unaryF64{value: f64}: f64
+    @path("/unaryF64") @POST
+  unaryF32{value: f32}: f32
+    @path("/unaryF32") @POST
+  unaryBytes{value: bytes}: bytes
+    @path("/unaryBytes") @POST
+}
+
+role Repository @dependency {
+  getData(): MyType
+}
+
+union MyUnion = MyType | MyEnum
+
+"MyType is a class"
+type MyType {
+  "type value"
+  typeValue: MyType @n(1)
+  "string value"
+  stringValue: string @n(2)
+  "i64 value"
+  i64Value: i64 @n(3)
+  "i32 value"
+  i32Value: i32 @n(4)
+  "i16 value"
+  i16Value: i16 @n(5)
+  "i8 value"
+  i8Value: i8 @n(6)
+  "u64 value"
+  u64Value: u64 @n(7)
+  "u32 value"
+  u32Value: u32 @n(8)
+  "u16 value"
+  u16Value: u16 @n(9)
+  "u8 value"
+  u8Value: u8 @n(10)
+  "f64 value"
+  f64Value: f64 @n(11)
+  "f32 value"
+  f32Value: f32 @n(12)
+  "bytes value"
+  bytesValue: bytes @n(13)
+}
+
+"MyEnum is an emuneration"
+enum MyEnum {
+  "ONE value"
+  ONE = 0 as "one"
+  "TWO value"
+  TWO = 1 as "two"
+  "THREE value"
+  THREE = 2 as "three"
+}

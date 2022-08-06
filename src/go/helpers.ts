@@ -143,9 +143,10 @@ export function defaultValueForType(
     case Kind.List:
     case Kind.Map:
       return type.kind;
+    case Kind.Enum:
+      return (type as Named).name + "(0)";
     case Kind.Primitive:
     case Kind.Alias:
-    case Kind.Enum:
     case Kind.Type:
     case Kind.Union:
       const name = (type as Named).name;

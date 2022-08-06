@@ -28,7 +28,7 @@ import {
   Type,
   Union,
 } from "@apexlang/core/model";
-import { capitalize, isPrimitive, isService, isVoid } from "../utils";
+import { capitalize, isNamed, isPrimitive, isService, isVoid } from "../utils";
 import { fieldName, methodName } from "./helpers";
 
 export type NamedType = Alias | Type | Union | Enum;
@@ -100,13 +100,21 @@ func New${role.name}GRPCWrapper(service ${role.name}) *${role.name}GRPCWrapper {
       `func (s *${role.name}GRPCWrapper) ${operName}(ctx context.Context, `
     );
     if (operation.isUnary()) {
-      const param = operation.parameters[0].type;
-      switch (param.kind) {
+      const param = operation.parameters[0];
+      switch (param.type.kind) {
         case Kind.Void:
           this.write(`*emptypb.Empty`);
           break;
+        case Kind.Primitive:
+          const p = param.type as Primitive;
+          this.write(`${param.name} ${primitiveWrapperType(p.name)}`);
+          break;
+        case Kind.Enum:
+          const e = param.type as Enum;
+          this.write(`${param.name} *pb.${e.name}Value`);
+          break;
         case Kind.Type:
-          this.write(`request *pb.${(param as Named).name}`);
+          this.write(`request *pb.${(param.type as Named).name}`);
           break;
       }
     } else if (operation.parameters.length > 0) {
@@ -121,14 +129,10 @@ func New${role.name}GRPCWrapper(service ${role.name}) *${role.name}GRPCWrapper {
         break;
       case Kind.Primitive:
         const p = operation.type as Primitive;
-        switch (p.name) {
-          case PrimitiveName.String:
-            this.write(`*wrapperspb.StringValue`);
-            break;
-          // case PrimitiveName.String:
-          //   this.write(`*wrapperspb.StringValue`);
-          //   break;
-        }
+        this.write(primitiveWrapperType(p.name));
+        break;
+      case Kind.Enum:
+        this.write(`*pb.${(returnType as Enum).name}Value`);
         break;
       case Kind.Type:
         this.write(`*pb.${(returnType as Named).name}`);
@@ -137,11 +141,40 @@ func New${role.name}GRPCWrapper(service ${role.name}) *${role.name}GRPCWrapper {
     this.write(`, error) {\n`);
 
     if (operation.isUnary()) {
-      this.write(
-        `input := convertInput${
-          (operation.parameters[0].type as Named).name
-        }(request)\n`
-      );
+      const param = operation.parameters[0];
+      switch (param.type.kind) {
+        case Kind.Primitive:
+          const p = param.type as Primitive;
+          switch (p.name) {
+            case PrimitiveName.I8:
+              this.write(`input := int8(${param.name}.Value)\n`);
+              break;
+            case PrimitiveName.I16:
+              this.write(`input := int16(${param.name}.Value)\n`);
+              break;
+            case PrimitiveName.U8:
+              this.write(`input := uint8(${param.name}.Value)\n`);
+              break;
+            case PrimitiveName.U16:
+              this.write(`input := uint16(${param.name}.Value)\n`);
+              break;
+            default:
+              this.write(`input := ${param.name}.Value\n`);
+              break;
+          }
+          break;
+        case Kind.Enum:
+          const e = param.type as Enum;
+          this.write(`input := ${e.name}(${param.name}.Value)\n`);
+          break;
+        default:
+          this.write(
+            `input := convertInput${
+              (operation.parameters[0].type as Named).name
+            }(request)\n`
+          );
+          break;
+      }
       if (!isVoid(operation.type)) {
         this.write(`result, `);
       }
@@ -176,13 +209,55 @@ func New${role.name}GRPCWrapper(service ${role.name}) *${role.name}GRPCWrapper {
         this.write(
           `return convertOutput${(operation.type as Named).name}(result), nil\n`
         );
+        break;
+      case Kind.Enum:
+        const e = operation.type as Enum;
+        this.write(
+          `return &pb.${e.name}Value{Value: pb.${e.name}(result)}, nil\n`
+        );
+        break;
       case Kind.Primitive:
         const p = operation.type as Primitive;
         switch (p.name) {
           case PrimitiveName.String:
             this.write(`return &wrapperspb.StringValue{Value: result}, nil\n`);
             break;
-          // TODO
+          case PrimitiveName.I64:
+            this.write(`return &wrapperspb.Int64Value{Value: result}, nil\n`);
+            break;
+          case PrimitiveName.I32:
+            this.write(`return &wrapperspb.Int32Value{Value: result}, nil\n`);
+            break;
+          case PrimitiveName.I16:
+          case PrimitiveName.I8:
+            this.write(
+              `return &wrapperspb.Int32Value{Value: int32(result)}, nil\n`
+            );
+            break;
+          case PrimitiveName.U64:
+            this.write(`return &wrapperspb.UInt64Value{Value: result}, nil\n`);
+            break;
+          case PrimitiveName.U32:
+            this.write(`return &wrapperspb.UInt32Value{Value: result}, nil\n`);
+            break;
+          case PrimitiveName.U16:
+          case PrimitiveName.U8:
+            this.write(
+              `return &wrapperspb.UInt32Value{Value: uint32(result)}, nil\n`
+            );
+            break;
+          case PrimitiveName.F64:
+            this.write(`return &wrapperspb.DoubleValue{Value: result}, nil\n`);
+            break;
+          case PrimitiveName.F32:
+            this.write(`return &wrapperspb.FloatValue{Value: result}, nil\n`);
+            break;
+          case PrimitiveName.Bool:
+            this.write(`return &wrapperspb.BoolValue{Value: result}, nil\n`);
+            break;
+          case PrimitiveName.Bytes:
+            this.write(`return &wrapperspb.BytesValue{Value: result}, nil\n`);
+            break;
         }
     }
     this.write(`}\n\n`);
@@ -290,11 +365,11 @@ func New${role.name}GRPCWrapper(service ${role.name}) *${role.name}GRPCWrapper {
           break;
         case Kind.Type:
           const ft = f.type as Type;
+          const ref = ft.name == t.name ? "" : "&";
           this.write(
-            `${capitalize(f.name)}: convertOutput${ft.name}(&from.${fieldName(
-              f,
-              f.name
-            )}),\n`
+            `${capitalize(f.name)}: convertOutput${
+              ft.name
+            }(${ref}from.${fieldName(f, f.name)}),\n`
           );
           break;
       }
@@ -386,10 +461,12 @@ func New${role.name}GRPCWrapper(service ${role.name}) *${role.name}GRPCWrapper {
           break;
         case Kind.Type:
           const ft = f.type as Type;
+          // Prevent illegal circular reference error.
+          const ref = ft.name == t.name ? "" : "*";
           this.write(
-            `${fieldName(f, f.name)}: *convertInput${ft.name}(from.${capitalize(
-              f.name
-            )}),\n`
+            `${fieldName(f, f.name)}: ${ref}convertInput${
+              ft.name
+            }(from.${capitalize(f.name)}),\n`
           );
           break;
       }
@@ -440,7 +517,20 @@ export class InputOutputVisitor extends BaseVisitor {
     }
   }
 
-  checkType(a: AnyType, m: { [name: string]: AnyType }) {
+  checkType(
+    a: AnyType,
+    m: { [name: string]: AnyType },
+    types: Set<string> = new Set()
+  ) {
+    // Prevent stack overflow
+    if (isNamed(a)) {
+      const n = a as Named;
+      if (types.has(n.name)) {
+        return;
+      }
+      types.add(n.name);
+    }
+
     switch (a.kind) {
       case Kind.Primitive:
         const p = a as Primitive;
@@ -454,8 +544,48 @@ export class InputOutputVisitor extends BaseVisitor {
       case Kind.Type:
         const t = a as Type;
         m[t.name] = t;
-        t.fields.forEach((f) => this.checkType(f.type, m));
-      // TODO: other named types
+        t.fields.forEach((f) => this.checkType(f.type, m, types));
+        break;
+
+      case Kind.Union:
+        const u = a as Union;
+        // m[t.name] = u; // TODO
+        u.types.forEach((t) => this.checkType(t, m, types));
+        break;
+
+      case Kind.Alias:
+        const al = a as Alias;
+        // m[t.name] = al; // TODO
+        this.checkType(al.type, m, types);
     }
   }
+}
+
+function primitiveWrapperType(name: PrimitiveName): string {
+  switch (name) {
+    case PrimitiveName.String:
+      return `*wrapperspb.StringValue`;
+    case PrimitiveName.I64:
+      return `*wrapperspb.Int64Value`;
+    case PrimitiveName.I32:
+    case PrimitiveName.I16:
+    case PrimitiveName.I8:
+      return `*wrapperspb.Int32Value`;
+    case PrimitiveName.U64:
+      return `*wrapperspb.UInt64Value`;
+    case PrimitiveName.U32:
+    case PrimitiveName.U16:
+    case PrimitiveName.U8:
+      return `*wrapperspb.UInt32Value`;
+    case PrimitiveName.F64:
+      return `*wrapperspb.DoubleValue`;
+    case PrimitiveName.F32:
+      return `*wrapperspb.FloatValue`;
+    case PrimitiveName.Bool:
+      return `*wrapperspb.BoolValue`;
+    case PrimitiveName.Bytes:
+      return `*wrapperspb.BytesValue`;
+  }
+
+  return "unknown";
 }
