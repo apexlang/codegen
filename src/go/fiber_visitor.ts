@@ -14,16 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, Context, Type } from "@apexlang/core/model";
 import {
-  capitalize,
-  convertOperationToType,
-  hasServiceCode,
-  isService,
-} from "../utils";
+  AnyType,
+  BaseVisitor,
+  Context,
+  Kind,
+  Type,
+} from "@apexlang/core/model";
+import { capitalize, convertOperationToType, isService } from "../utils";
 import { getMethods, getPath, hasBody } from "../rest";
 import { StructVisitor } from "./struct_visitor";
-import { fieldName, methodName } from "./helpers";
+import { expandType, fieldName, methodName } from "./helpers";
 
 export class FiberVisitor extends BaseVisitor {
   visitNamespaceBefore(context: Context): void {
@@ -50,15 +51,19 @@ var _ = httpresponse.New
     }
 
     const { role } = context;
+    const visitor = new FiberServiceVisitor(this.writer);
+    role.accept(context, visitor);
+  }
+}
+
+class FiberServiceVisitor extends BaseVisitor {
+  visitRoleBefore(context: Context): void {
+    const { role } = context;
     this.write(`func ${role.name}Fiber(service ${role.name}) tfiber.RegisterFn {
     return func(router fiber.Router) {\n`);
   }
 
   visitOperation(context: Context): void {
-    if (!isService(context)) {
-      return;
-    }
-
     const { operation } = context;
     const path = getPath(context);
     if (path == "") {
@@ -68,9 +73,9 @@ var _ = httpresponse.New
     const methods = getMethods(operation).map((m) =>
       capitalize(m.toLowerCase())
     );
-    let argsType: Type;
 
     methods.forEach((method) => {
+      let paramType: AnyType | undefined;
       this.write(
         `router.${method}("${fiberPath}", func(c *fiber.Ctx) error {
           resp := httpresponse.New()
@@ -78,49 +83,76 @@ var _ = httpresponse.New
       );
       if (operation.isUnary()) {
         // TODO: check type
-        argsType = operation.parameters[0].type as Type;
+        paramType = operation.parameters[0].type;
       } else if (operation.parameters.length > 0) {
-        argsType = convertOperationToType(
+        const argsType = convertOperationToType(
           context.getType.bind(context),
           operation
         );
+        paramType = argsType;
         const structVisitor = new StructVisitor(this.writer);
         argsType.accept(context.clone({ type: argsType }), structVisitor);
       }
 
-      this.write(`var args ${argsType.name}\n`);
-      if (hasBody(method)) {
-        this.write(`if err := c.BodyParser(&args); err != nil {
-        return err
-      }\n`);
-      }
-      argsType.fields.forEach((f) => {
-        if (path.indexOf(`{${f.name}}`) != -1) {
-          // Set path argument
-          this.write(`args.${fieldName(f, f.name)} = c.Params("${f.name}")\n`);
-        } else if (f.annotation("query") != undefined) {
-          this.write(`args.${fieldName(f, f.name)} = c.Query("${f.name}")\n`);
-        }
-      });
-
       const operMethod = methodName(operation, operation.name);
-      if (operation.isUnary()) {
-        this.write(`result, err := service.${operMethod}(ctx, &args)\n`);
+
+      if (paramType) {
+        // TODO
+        this.write(`var args ${expandType(paramType)}\n`);
+        if (hasBody(method)) {
+          this.write(`if err := c.BodyParser(&args); err != nil {
+            return err
+          }\n`);
+        }
+
+        switch (paramType.kind) {
+          case Kind.Type:
+            const t = paramType as Type;
+            t.fields.forEach((f) => {
+              if (path.indexOf(`{${f.name}}`) != -1) {
+                // Set path argument
+                this.write(
+                  `args.${fieldName(f, f.name)} = c.Params("${f.name}")\n`
+                );
+              } else if (f.annotation("query") != undefined) {
+                this.write(
+                  `args.${fieldName(f, f.name)} = c.Query("${f.name}")\n`
+                );
+              }
+            });
+
+            break;
+        }
+
+        if (operation.type.kind != Kind.Void) {
+          this.write(`result, `);
+        }
+        if (operation.isUnary()) {
+          const share =
+            [Kind.Primitive, Kind.Enum].indexOf(paramType.kind) == -1
+              ? "&"
+              : "";
+          this.write(`err := service.${operMethod}(ctx, ${share}args)\n`);
+        } else {
+          const args = (paramType as Type).fields
+            .map((f) => ", args." + fieldName(f, f.name))
+            .join("");
+          this.write(`err := service.${operMethod}(ctx${args})\n`);
+        }
       } else {
-        const args = argsType.fields
-          .map((f) => ", args." + fieldName(f, f.name))
-          .join("");
-        this.write(`result, err := service.${operMethod}(ctx${args})\n`);
+        this.write(`err := service.${operMethod}(ctx)\n`);
       }
-      this.write(`return tfiber.Response(c, resp, result, err)\n`);
-      this.write(`   })\n`);
+
+      if (operation.type.kind != Kind.Void) {
+        this.write(`return tfiber.Response(c, resp, result, err)\n`);
+      } else {
+        this.write(`return err\n`);
+      }
+      this.write(`})\n`);
     });
   }
 
   visitRoleAfter(context: Context): void {
-    if (!isService(context)) {
-      return;
-    }
     this.write(`  }
 }\n`);
   }

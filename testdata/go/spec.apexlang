@@ -88,6 +88,10 @@ type MyType {
   f32Value: f32 @n(12)
   "bytes value"
   bytesValue: bytes @n(13)
+  "map value"
+  mapValue: { string: i64 } @n(14)
+  "array value"
+  arrayValue: [string] @n(15)
 }
 
 "MyEnum is an emuneration"

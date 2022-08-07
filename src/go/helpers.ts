@@ -201,8 +201,8 @@ export const strQuote = (s: string) => {
  */
 export const expandType = (
   type: AnyType,
-  packageName: string | undefined,
-  useOptional: boolean,
+  packageName?: string | undefined,
+  useOptional: boolean = false,
   translate?: (named: string) => string | undefined
 ): string => {
   let translation: string | undefined = undefined;

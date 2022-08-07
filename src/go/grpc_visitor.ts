@@ -27,6 +27,8 @@ import {
   PrimitiveName,
   Type,
   Union,
+  Map,
+  List,
 } from "@apexlang/core/model";
 import { capitalize, isNamed, isPrimitive, isService, isVoid } from "../utils";
 import { fieldName, methodName } from "./helpers";
@@ -372,6 +374,11 @@ func New${role.name}GRPCWrapper(service ${role.name}) *${role.name}GRPCWrapper {
             }(${ref}from.${fieldName(f, f.name)}),\n`
           );
           break;
+        case Kind.Map:
+        case Kind.List:
+          // TODO: values as types
+          this.write(`${capitalize(f.name)}: from.${fieldName(f, f.name)},\n`);
+          break;
       }
     });
     this.write(`\t}
@@ -469,6 +476,11 @@ func New${role.name}GRPCWrapper(service ${role.name}) *${role.name}GRPCWrapper {
             }(from.${capitalize(f.name)}),\n`
           );
           break;
+        case Kind.Map:
+        case Kind.List:
+          // TODO: values as types
+          this.write(`${fieldName(f, f.name)}: from.${capitalize(f.name)},\n`);
+          break;
       }
     });
     this.write(`\t}
@@ -557,6 +569,23 @@ export class InputOutputVisitor extends BaseVisitor {
         const al = a as Alias;
         // m[t.name] = al; // TODO
         this.checkType(al.type, m, types);
+        break;
+
+      case Kind.Map:
+        const ma = a as Map;
+        this.checkType(ma.keyType, m, types);
+        this.checkType(ma.valueType, m, types);
+        break;
+
+      case Kind.List:
+        const l = a as List;
+        this.checkType(l.type, m, types);
+        break;
+
+      case Kind.Optional:
+        const o = a as Optional;
+        this.checkType(o.type, m, types);
+        break;
     }
   }
 }

@@ -24,7 +24,11 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": "./dist/index.js",
-    "./openapiv3": "./dist/openapiv3/index.js"
+    "./go": "./dist/go/index.js",
+    "./grpc": "./dist/grpc/index.js",
+    "./openapiv3": "./dist/openapiv3/index.js",
+    "./python": "./dist/python/index.js",
+    "./typescript": "./dist/typescript/index.js"
   },
   "engines": {
     "node": ">=14.0"
