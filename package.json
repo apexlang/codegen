@@ -51,6 +51,7 @@
     "watch": "tsc -w",
     "clean": "shx rm -rf dist",
     "test": "echo todo",
+    "install": "npm run format:fix && npm run clean && npm run build && apex install file:.",
     "style": "npm run format -- --list-different && npm run lint",
     "style:fix": "npm run format:fix && npm run lint:fix",
     "format": "prettier \"src/**/*.{ts,tsx,js,jsx,css,scss,sass,less,md}\"",

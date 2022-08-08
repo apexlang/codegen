@@ -29,8 +29,16 @@ import {
   Union,
   Map,
   List,
+  Field,
 } from "@apexlang/core/model";
-import { capitalize, isNamed, isPrimitive, isService, isVoid } from "../utils";
+import {
+  capitalize,
+  isNamed,
+  isObject,
+  isPrimitive,
+  isService,
+  isVoid,
+} from "../utils";
 import { fieldName, methodName } from "./helpers";
 
 export type NamedType = Alias | Type | Union | Enum;
@@ -61,8 +69,11 @@ import (
 
     this.write(`
 	"github.com/apexlang/api-go/transport/tgrpc"
+  "github.com/apexlang/api-go/convert"
 	pb "${protoPackage}"
-)\n\n`);
+)
+
+const _ = convert.Package\n\n`);
     super.triggerNamespaceBefore(context);
   }
 
@@ -183,7 +194,7 @@ func New${role.name}GRPCWrapper(service ${role.name}) *${role.name}GRPCWrapper {
       this.write(`err := s.service.${methodName(
         operation,
         operation.name
-      )}(ctx, input)
+      )}(ctx, ${isObject(param.type) ? "" : ""}input)
       if err != nil {
       	return nil, tgrpc.Error(err)
       }\n`);
@@ -289,6 +300,9 @@ func New${role.name}GRPCWrapper(service ${role.name}) *${role.name}GRPCWrapper {
 
   writeOutputType(t: Type) {
     this.write(`func convertOutput${t.name}(from *${t.name}) *pb.${t.name} {
+      if from == nil {
+        return nil
+      }
       return &pb.${t.name}{\n`);
     t.fields.forEach((f) => {
       switch (f.type.kind) {
@@ -375,9 +389,44 @@ func New${role.name}GRPCWrapper(service ${role.name}) *${role.name}GRPCWrapper {
           );
           break;
         case Kind.Map:
+          const m = f.type as Map;
+          if (isObject(m.valueType)) {
+            const n = (
+              m.valueType.kind == Kind.Optional
+                ? (m.valueType as Optional).type
+                : m.valueType
+            ) as Named;
+            const ptr = m.valueType.kind == Kind.Optional ? "" : "Ptr";
+            this.write(
+              `${capitalize(f.name)}: convert.Map${ptr}(from.${fieldName(
+                f,
+                f.name
+              )}, convertOutput${n.name}),\n`
+            );
+          } else {
+            this.write(
+              `${capitalize(f.name)}: from.${fieldName(f, f.name)},\n`
+            );
+          }
+          break;
         case Kind.List:
-          // TODO: values as types
-          this.write(`${capitalize(f.name)}: from.${fieldName(f, f.name)},\n`);
+          const l = f.type as List;
+          if (isObject(l.type)) {
+            const n = (
+              l.type.kind == Kind.Optional ? (l.type as Optional).type : l.type
+            ) as Named;
+            const ptr = l.type.kind == Kind.Optional ? "" : "Ptr";
+            this.write(
+              `${capitalize(f.name)}: convert.Slice${ptr}(from.${fieldName(
+                f,
+                f.name
+              )}, convertOutput${n.name}),\n`
+            );
+          } else {
+            this.write(
+              `${capitalize(f.name)}: from.${fieldName(f, f.name)},\n`
+            );
+          }
           break;
       }
     });
@@ -387,104 +436,129 @@ func New${role.name}GRPCWrapper(service ${role.name}) *${role.name}GRPCWrapper {
 
   writeInputType(t: Type) {
     this.write(`func convertInput${t.name}(from *pb.${t.name}) *${t.name} {
-      return &${t.name}{\n`);
-    t.fields.forEach((f) => {
-      switch (f.type.kind) {
-        case Kind.Optional:
-          const optType = (f.type as Optional).type;
-          switch (optType.kind) {
-            case Kind.Primitive:
-              const prim = optType as Primitive;
-              let wrapperStart = "";
-              let wrapperEnd = "";
-              switch (prim.name) {
-                case PrimitiveName.I16:
-                  wrapperStart = `tgrpc.ConvertInputI16Ptr(`;
-                  wrapperEnd = ")";
-                  break;
-                case PrimitiveName.I8:
-                  wrapperStart = `tgrpc.ConvertInputI8Ptr(`;
-                  wrapperEnd = ")";
-                  break;
-                case PrimitiveName.U16:
-                  wrapperStart = `tgrpc.ConvertInputU16Ptr(`;
-                  wrapperEnd = ")";
-                  break;
-                case PrimitiveName.U8:
-                  wrapperStart = `tgrpc.ConvertInputU8Ptr(`;
-                  wrapperEnd = ")";
-                  break;
-                case PrimitiveName.DateTime:
-                  wrapperStart = `tgrpc.ConvertInputTimestamp(`;
-                  wrapperEnd = `)`;
-                  break;
-              }
-              this.write(
-                `${fieldName(f, f.name)}: ${wrapperStart}from.${capitalize(
-                  f.name
-                )}${wrapperEnd},\n`
-              );
-              break;
-            case Kind.Type:
-              const ft = optType as Type;
-              this.write(
-                `${fieldName(f, f.name)}: convertInput${
-                  ft.name
-                }(from.${capitalize(f.name)}),\n`
-              );
-              break;
-          }
-          break;
-        case Kind.Primitive:
-          const prim = f.type as Primitive;
-          let wrapperStart = "";
-          let wrapperEnd = "";
-          switch (prim.name) {
-            case PrimitiveName.I16:
-              wrapperStart = `int16(`;
-              wrapperEnd = ")";
-              break;
-            case PrimitiveName.I8:
-              wrapperStart = `int8(`;
-              wrapperEnd = ")";
-              break;
-            case PrimitiveName.U16:
-              wrapperStart = `uint16(`;
-              wrapperEnd = ")";
-              break;
-            case PrimitiveName.U8:
-              wrapperStart = `uint8(`;
-              wrapperEnd = ")";
-              break;
-            case PrimitiveName.DateTime:
-              wrapperEnd = `.AsTime()`;
-              break;
-          }
-          this.write(
-            `${fieldName(f, f.name)}: ${wrapperStart}from.${capitalize(
-              f.name
-            )}${wrapperEnd},\n`
-          );
-          break;
-        case Kind.Type:
-          const ft = f.type as Type;
-          // Prevent illegal circular reference error.
-          const ref = ft.name == t.name ? "" : "*";
-          this.write(
-            `${fieldName(f, f.name)}: ${ref}convertInput${
-              ft.name
-            }(from.${capitalize(f.name)}),\n`
-          );
-          break;
-        case Kind.Map:
-        case Kind.List:
-          // TODO: values as types
-          this.write(`${fieldName(f, f.name)}: from.${capitalize(f.name)},\n`);
-          break;
+      if from == nil {
+        return nil
       }
-    });
+      return &${t.name}{\n`);
+    t.fields.forEach((f) => this.writeInputField(t, f));
     this.write(`\t}
   }\n\n`);
+  }
+
+  writeInputField(t: Type, f: Field) {
+    switch (f.type.kind) {
+      case Kind.Optional:
+        const optType = (f.type as Optional).type;
+        switch (optType.kind) {
+          case Kind.Primitive:
+            const prim = optType as Primitive;
+            let wrapperStart = "";
+            let wrapperEnd = "";
+            switch (prim.name) {
+              case PrimitiveName.I16:
+                wrapperStart = `tgrpc.ConvertInputI16Ptr(`;
+                wrapperEnd = ")";
+                break;
+              case PrimitiveName.I8:
+                wrapperStart = `tgrpc.ConvertInputI8Ptr(`;
+                wrapperEnd = ")";
+                break;
+              case PrimitiveName.U16:
+                wrapperStart = `tgrpc.ConvertInputU16Ptr(`;
+                wrapperEnd = ")";
+                break;
+              case PrimitiveName.U8:
+                wrapperStart = `tgrpc.ConvertInputU8Ptr(`;
+                wrapperEnd = ")";
+                break;
+              case PrimitiveName.DateTime:
+                wrapperStart = `tgrpc.ConvertInputTimestamp(`;
+                wrapperEnd = `)`;
+                break;
+            }
+            this.write(
+              `${fieldName(f, f.name)}: ${wrapperStart}from.${capitalize(
+                f.name
+              )}${wrapperEnd},\n`
+            );
+            break;
+          case Kind.Type:
+            const ft = optType as Type;
+            this.write(
+              `${fieldName(f, f.name)}: convertInput${
+                ft.name
+              }(from.${capitalize(f.name)}),\n`
+            );
+            break;
+        }
+        break;
+      case Kind.Primitive:
+        const prim = f.type as Primitive;
+        let wrapperStart = "";
+        let wrapperEnd = "";
+        switch (prim.name) {
+          case PrimitiveName.I16:
+            wrapperStart = `int16(`;
+            wrapperEnd = ")";
+            break;
+          case PrimitiveName.I8:
+            wrapperStart = `int8(`;
+            wrapperEnd = ")";
+            break;
+          case PrimitiveName.U16:
+            wrapperStart = `uint16(`;
+            wrapperEnd = ")";
+            break;
+          case PrimitiveName.U8:
+            wrapperStart = `uint8(`;
+            wrapperEnd = ")";
+            break;
+          case PrimitiveName.DateTime:
+            wrapperEnd = `.AsTime()`;
+            break;
+        }
+        this.write(
+          `${fieldName(f, f.name)}: ${wrapperStart}from.${capitalize(
+            f.name
+          )}${wrapperEnd},\n`
+        );
+        break;
+      case Kind.Type:
+        const ft = f.type as Type;
+        this.write(
+          `${capitalize(f.name)}: *convertInput${ft.name}(from.${fieldName(
+            f,
+            f.name
+          )}),\n`
+        );
+        break;
+      case Kind.Map:
+        const m = f.type as Map;
+        if (isObject(m.valueType)) {
+          const n = m.valueType as Named;
+          this.write(
+            `${fieldName(f, f.name)}: convert.MapRef(from.${capitalize(
+              f.name
+            )}, convertInput${n.name}),\n`
+          );
+        } else {
+          this.write(`${fieldName(f, f.name)}: from.${capitalize(f.name)},\n`);
+        }
+        break;
+      case Kind.List:
+        const l = f.type as List;
+        if (isObject(l.type)) {
+          const n = l.type as Named;
+          this.write(
+            `${fieldName(f, f.name)}: convert.SliceRef(from.${capitalize(
+              f.name
+            )}, convertInput${n.name}),\n`
+          );
+        } else {
+          this.write(`${fieldName(f, f.name)}: from.${capitalize(f.name)},\n`);
+        }
+        break;
+    }
   }
 }
 

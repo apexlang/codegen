@@ -38,30 +38,94 @@ export class EnumVisitor extends BaseVisitor {
   }
 
   visitEnumAfter(context: Context): void {
+    const tick = "`";
     this.write(`)\n\n`);
+
+    const toStringVisitor = new EnumVisitorToStringMap(this.writer);
+    context.enum.accept(context, toStringVisitor);
+    const toIDVisitor = new EnumVisitorToIDMap(this.writer);
+    context.enum.accept(context, toIDVisitor);
+
+    this.write(`func (e ${context.enum.name}) Type() string {
+      return "${context.enum.name}"
+    }
+
+    func (e ${context.enum.name}) String() string {
+      str, ok := toString${context.enum.name}[e]
+      if !ok {
+        return "unknown"
+      }
+      return str
+    }
+
+    func (e *${context.enum.name}) FromString(str string) (ok bool) {
+      *e, ok = toID${context.enum.name}[str]
+      return ok
+    }
+    
+    // MarshalJSON marshals the enum as a quoted json string
+func (e ${context.enum.name}) MarshalJSON() ([]byte, error) {
+  return json.Marshal(e.String())
+}
+
+// UnmarshalJSON unmashals a quoted json string to the enum value
+func (e *${context.enum.name}) UnmarshalJSON(b []byte) error {
+	var str string
+	err := json.Unmarshal(b, &str)
+	if err != nil {
+		return err
+	}
+  if !e.FromString(str) {
+		return fmt.Errorf("unknown value %q for ${context.enum.name}", str)
+	}
+	return nil
+}
+\n\n`);
     super.triggerEnumsAfter(context);
   }
 }
 
-export class EnumVisitorToString extends BaseVisitor {
+export class EnumVisitorToStringMap extends BaseVisitor {
   visitEnumBefore(context: Context): void {
     super.triggerEnumsBefore(context);
-    this.write(formatComment("// ", context.enum.description));
-    this.write(`func (e ${context.enum.name}) String() string {
-      switch e {\n`);
+    this.write(
+      `var toString${context.enum.name} = map[${context.enum.name}]string{\n`
+    );
   }
 
   visitEnumValue(context: Context): void {
     const { enumValue } = context;
     const display = enumValue.display ? enumValue.display : enumValue.name;
-    this.write(`    case ${context.enum.name}${pascalCase(enumValue.name)}:
-       return "${display}"\n`);
+    this.write(
+      `\t${context.enum.name}${pascalCase(enumValue.name)}:"${display}",\n`
+    );
     super.triggerTypeField(context);
   }
 
   visitEnumAfter(context: Context): void {
-    this.write(`    }\n\n`);
-    this.write(`    return "unknown"\n`);
+    this.write(`}\n\n`);
+    super.triggerEnumsAfter(context);
+  }
+}
+
+export class EnumVisitorToIDMap extends BaseVisitor {
+  visitEnumBefore(context: Context): void {
+    super.triggerEnumsBefore(context);
+    this.write(
+      `var toID${context.enum.name} = map[string]${context.enum.name}{\n`
+    );
+  }
+
+  visitEnumValue(context: Context): void {
+    const { enumValue } = context;
+    const display = enumValue.display ? enumValue.display : enumValue.name;
+    this.write(
+      `\t"${display}": ${context.enum.name}${pascalCase(enumValue.name)},\n`
+    );
+    super.triggerTypeField(context);
+  }
+
+  visitEnumAfter(context: Context): void {
     this.write(`}\n\n`);
     super.triggerEnumsAfter(context);
   }

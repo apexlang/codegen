@@ -62,36 +62,47 @@ union MyUnion = MyType | MyEnum
 
 "MyType is a class"
 type MyType {
+  "same type value"
+  sameValue: MyType? @n(1)
   "type value"
-  typeValue: MyType @n(1)
+  typeValue: MyOtherType @n(2)
   "string value"
-  stringValue: string @n(2)
+  stringValue: string @n(3)
   "i64 value"
-  i64Value: i64 @n(3)
+  i64Value: i64 @n(4)
   "i32 value"
-  i32Value: i32 @n(4)
+  i32Value: i32 @n(5)
   "i16 value"
-  i16Value: i16 @n(5)
+  i16Value: i16 @n(6)
   "i8 value"
-  i8Value: i8 @n(6)
+  i8Value: i8 @n(7)
   "u64 value"
-  u64Value: u64 @n(7)
+  u64Value: u64 @n(8)
   "u32 value"
-  u32Value: u32 @n(8)
+  u32Value: u32 @n(9)
   "u16 value"
-  u16Value: u16 @n(9)
+  u16Value: u16 @n(10)
   "u8 value"
-  u8Value: u8 @n(10)
+  u8Value: u8 @n(11)
   "f64 value"
-  f64Value: f64 @n(11)
+  f64Value: f64 @n(12)
   "f32 value"
-  f32Value: f32 @n(12)
+  f32Value: f32 @n(13)
   "bytes value"
-  bytesValue: bytes @n(13)
+  bytesValue: bytes @n(14)
   "map value"
-  mapValue: { string: i64 } @n(14)
+  mapValue: { string: i64 } @n(15)
+  "map of types"
+  mapOfTypes: { string: MyType } @n(16)
   "array value"
-  arrayValue: [string] @n(15)
+  arrayValue: [string] @n(17)
+  "array of types"
+  arrayOfTypes: [MyType] @n(18)
+}
+
+type MyOtherType {
+  foo: string @n(1)
+  bar: string @n(2)
 }
 
 "MyEnum is an emuneration"
@@ -99,7 +110,7 @@ enum MyEnum {
   "ONE value"
   ONE = 0 as "one"
   "TWO value"
-  TWO = 1 as "two"
+  TWO = 1
   "THREE value"
   THREE = 2 as "three"
 }

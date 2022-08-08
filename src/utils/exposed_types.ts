@@ -23,6 +23,9 @@ import {
   AnyType,
   Union,
   Alias,
+  Map,
+  List,
+  Optional,
 } from "@apexlang/core/model";
 import { isNamed, isService } from "./utilities";
 
@@ -40,17 +43,35 @@ export class ExposedTypesVisitor extends BaseVisitor {
     }
 
     switch (any.kind) {
+      case Kind.Optional:
+        const o = any as Optional;
+        this.checkType(o.type);
+        break;
+
       case Kind.Type:
         const t = any as Type;
         t.fields.forEach((field) => this.checkType(field.type));
         break;
+
       case Kind.Union:
         const u = any as Union;
         u.types.forEach((t) => this.checkType(t));
         break;
+
       case Kind.Alias:
         const a = any as Alias;
         this.checkType(a.type);
+        break;
+
+      case Kind.Map:
+        const m = any as Map;
+        this.checkType(m.keyType);
+        this.checkType(m.valueType);
+        break;
+
+      case Kind.List:
+        const l = any as List;
+        this.checkType(l.type);
         break;
     }
   }

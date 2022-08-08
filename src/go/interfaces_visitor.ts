@@ -16,7 +16,7 @@ limitations under the License.
 
 import { BaseVisitor, Context, Writer } from "@apexlang/core/model";
 import { expandType, mapParams, methodName, returnPointer } from "./helpers";
-import { EnumVisitor, EnumVisitorToString } from "./enum_visitor";
+import { EnumVisitor } from "./enum_visitor";
 import { StructVisitor } from "./struct_visitor";
 import { ImportsVisitor } from "./imports_visitor";
 import { AliasVisitor, translateAlias } from "./alias_visitor";
@@ -68,8 +68,6 @@ export class InterfacesVisitor extends BaseVisitor {
   visitEnum(context: Context): void {
     const e = new EnumVisitor(this.writer);
     context.enum.accept(context, e);
-    const s = new EnumVisitorToString(this.writer);
-    context.enum.accept(context, s);
   }
 
   visitType(context: Context): void {

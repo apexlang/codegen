@@ -116,6 +116,16 @@ export class ImportsVisitor extends BaseVisitor {
         const optional = type as Optional;
         this.checkType(context, optional.type);
         break;
+      case Kind.Enum:
+        this.addType("JSON", {
+          type: "JSON",
+          import: "encoding/json",
+        });
+        this.addType("FMT", {
+          type: "FMT",
+          import: "fmt",
+        });
+        break;
     }
   }
 

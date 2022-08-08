@@ -40,7 +40,7 @@ import (
   "github.com/apexlang/api-go/transport/httpresponse"
 )
 
-var _ = httpresponse.New
+const _ = httpresponse.Package
 \n\n`);
     super.triggerNamespaceBefore(context);
   }

@@ -29,6 +29,7 @@ import {
   TypeResolver,
   Operation,
   Role,
+  Union,
 } from "@apexlang/core/model";
 
 export function isOneOfType(context: Context, types: string[]): boolean {
@@ -191,10 +192,19 @@ export function isNamed(t: AnyType): boolean {
  * @param t Node that is a Type node
  */
 export function isObject(t: AnyType): boolean {
-  if (t.kind == Kind.Alias) {
-    t = (t as Alias).type;
+  while (t.kind == Kind.Alias || t.kind == Kind.Optional) {
+    if (t.kind == Kind.Optional) {
+      t = (t as Optional).type;
+    } else if (t.kind == Kind.Alias) {
+      t = (t as Alias).type;
+    }
   }
-  return t.kind !== Kind.Primitive;
+  switch (t.kind) {
+    case Kind.Type:
+    case Kind.Union:
+      return true;
+  }
+  return false;
 }
 
 export function isPrimitive(t: AnyType): boolean {
