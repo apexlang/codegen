@@ -157,6 +157,12 @@ type MyType {
   arrayOfTypes: [MyType] @n(32)
   "union value"
   unionValue: MyUnion @n(33)
+  "union option"
+  unionOption: MyUnion? @n(34)
+  "enum value"
+  enumValue: MyEnum @n(35)
+  "enum option"
+  enumOption: MyEnum? @n(36)
   # "any value"
   # anyValue: any @n(999)
 }

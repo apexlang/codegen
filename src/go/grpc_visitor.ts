@@ -360,6 +360,17 @@ func New${role.name}GRPCWrapper(service ${role.name}) *${role.name}GRPCWrapper {
                 )}${wrapperEnd},\n`
               );
               break;
+
+            case Kind.Enum:
+              const e = optType as Enum;
+              this.write(
+                `${capitalize(f.name)}: (*pb.${e.name})(from.${fieldName(
+                  f,
+                  f.name
+                )}),\n`
+              );
+              break;
+
             case Kind.Union:
             case Kind.Type:
               const ft = optType as Named;
@@ -371,6 +382,7 @@ func New${role.name}GRPCWrapper(service ${role.name}) *${role.name}GRPCWrapper {
               break;
           }
           break;
+
         case Kind.Primitive:
           const prim = f.type as Primitive;
           let wrapperStart = "";
@@ -398,6 +410,17 @@ func New${role.name}GRPCWrapper(service ${role.name}) *${role.name}GRPCWrapper {
             )}${wrapperEnd},\n`
           );
           break;
+
+        case Kind.Enum:
+          const e = f.type as Enum;
+          this.write(
+            `${capitalize(f.name)}: pb.${e.name}(from.${fieldName(
+              f,
+              f.name
+            )}),\n`
+          );
+          break;
+
         case Kind.Union:
         case Kind.Type:
           const ft = f.type as Named;
@@ -408,6 +431,7 @@ func New${role.name}GRPCWrapper(service ${role.name}) *${role.name}GRPCWrapper {
             }(${ref}from.${fieldName(f, f.name)}),\n`
           );
           break;
+
         case Kind.Map:
           const m = f.type as Map;
           if (isObject(m.valueType)) {
