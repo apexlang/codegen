@@ -21,7 +21,7 @@ export class EnumVisitor extends BaseVisitor {
   visitEnumBefore(context: Context): void {
     super.triggerEnumsBefore(context);
     this.write(formatComment("// ", context.enum.description));
-    this.write(`type ${context.enum.name} int
+    this.write(`type ${context.enum.name} int32
 
     const (\n`);
   }

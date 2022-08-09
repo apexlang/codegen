@@ -417,7 +417,6 @@ function primitiveMessageType(name: PrimitiveName): string {
       return `google.protobuf.DoubleValue`;
     case PrimitiveName.F32:
       return `google.protobuf.FloatValue`;
-      break;
     case PrimitiveName.Bool:
       return `google.protobuf.BoolValue`;
     case PrimitiveName.Bytes:

@@ -33,6 +33,7 @@ import {
 } from "@apexlang/core/model";
 import {
   capitalize,
+  convertOperationToType,
   isNamed,
   isObject,
   isPrimitive,
@@ -201,8 +202,12 @@ func New${role.name}GRPCWrapper(service ${role.name}) *${role.name}GRPCWrapper {
       	return nil, tgrpc.Error(err)
       }\n`);
     } else {
-      const params = operation.parameters
-        .map((p) => `, args.${capitalize(p.name)}`)
+      const paramsType = convertOperationToType(
+        context.getType.bind(context),
+        operation
+      );
+      const params = paramsType.fields
+        .map((f) => `, ${this.writeInput(f, "args", true)}`)
         .join("");
       if (!isVoid(operation.type)) {
         this.write(`result, `);
@@ -486,43 +491,23 @@ func New${role.name}GRPCWrapper(service ${role.name}) *${role.name}GRPCWrapper {
       }
       this.write(`}\n`);
     });
-    // case from.MyEnum != nil:
-    //   return &pb.MyUnion{
-    //     Value: &pb.MyUnion_MyEnumValue{
-    //       MyEnumValue: pb.MyEnum(*from.MyEnum),
-    //     },
-    //   }
-    // case from.MyType != nil:
-    //   return &pb.MyUnion{
-    //     Value: &pb.MyUnion_MyTypeValue{
-    //       MyTypeValue: convertOutputMyType(from.MyType),
-    //     },
-    //   }
-    // case from.String != nil:
-    //   return &pb.MyUnion{
-    //     Value: &pb.MyUnion_StringValue{
-    //       StringValue: *from.String,
-    //     },
-    //   }
-    // }
     this.write(`}
     return nil
     }\n\n`);
   }
 
-  writeInputType(union: Type) {
-    this
-      .write(`func convertInput${union.name}(from *pb.${union.name}) *${union.name} {
+  writeInputType(t: Type) {
+    this.write(`func convertInput${t.name}(from *pb.${t.name}) *${t.name} {
       if from == nil {
         return nil
       }
-      return &${union.name}{\n`);
-    t: union.fields.forEach((f) => this.writeInputField(union, f));
+      return &${t.name}{\n`);
+    t: t.fields.forEach((f) => `${this.writeInputField(f)}`);
     this.write(`\t}
   }\n\n`);
   }
 
-  writeInputField(union: Type, f: Field) {
+  writeInput(f: Field, from: string, allowPtr: boolean): string {
     switch (f.type.kind) {
       case Kind.Optional:
         const optType = (f.type as Optional).type;
@@ -553,24 +538,18 @@ func New${role.name}GRPCWrapper(service ${role.name}) *${role.name}GRPCWrapper {
                 wrapperEnd = `)`;
                 break;
             }
-            this.write(
-              `${fieldName(f, f.name)}: ${wrapperStart}from.${capitalize(
-                f.name
-              )}${wrapperEnd},\n`
-            );
-            break;
+            return `${wrapperStart}${from}.${capitalize(f.name)}${wrapperEnd}`;
+
+          case Kind.Enum:
+            const e = optType as Enum;
+            return `(*${e.name})(${from}.${capitalize(f.name)})`;
 
           case Kind.Union:
           case Kind.Type:
             const ft = optType as Named;
-            this.write(
-              `${fieldName(f, f.name)}: convertInput${
-                ft.name
-              }(from.${capitalize(f.name)}),\n`
-            );
-            break;
+            return `convertInput${ft.name}(${from}.${capitalize(f.name)})`;
         }
-        break;
+        throw new Error(`unhandled type ${optType.kind} inside optional`);
 
       case Kind.Primitive:
         const prim = f.type as Primitive;
@@ -601,52 +580,48 @@ func New${role.name}GRPCWrapper(service ${role.name}) *${role.name}GRPCWrapper {
             wrapperEnd = `.AsTime()`;
             break;
         }
-        this.write(
-          `${fieldName(f, f.name)}: ${wrapperStart}from.${capitalize(
-            f.name
-          )}${wrapperEnd},\n`
-        );
-        break;
+        return `${wrapperStart}${from}.${capitalize(f.name)}${wrapperEnd}`;
+
+      case Kind.Enum:
+        const e = f.type as Enum;
+        return `${e.name}(${from}.${fieldName(f, f.name)})`;
 
       case Kind.Union:
       case Kind.Type:
         const ft = f.type as Named;
-        this.write(
-          `${capitalize(f.name)}: *convertInput${ft.name}(from.${fieldName(
-            f,
-            f.name
-          )}),\n`
-        );
-        break;
+        const ptr = allowPtr ? "" : "*";
+        return `${ptr}convertInput${ft.name}(${from}.${fieldName(f, f.name)})`;
 
       case Kind.Map:
         const m = f.type as Map;
         if (isObject(m.valueType)) {
           const n = m.valueType as Named;
-          this.write(
-            `${fieldName(f, f.name)}: convert.MapRef(from.${capitalize(
-              f.name
-            )}, convertInput${n.name}),\n`
-          );
+          return `convert.MapRef(${from}.${capitalize(f.name)}, convertInput${
+            n.name
+          })`;
         } else {
-          this.write(`${fieldName(f, f.name)}: from.${capitalize(f.name)},\n`);
+          return `${from}.${capitalize(f.name)}`;
         }
-        break;
 
       case Kind.List:
         const l = f.type as List;
         if (isObject(l.type)) {
           const n = l.type as Named;
-          this.write(
-            `${fieldName(f, f.name)}: convert.SliceRef(from.${capitalize(
-              f.name
-            )}, convertInput${n.name}),\n`
-          );
+          return `convert.SliceRef(${from}.${capitalize(f.name)}, convertInput${
+            n.name
+          })`;
         } else {
-          this.write(`${fieldName(f, f.name)}: from.${capitalize(f.name)},\n`);
+          return `${from}.${capitalize(f.name)}`;
         }
-        break;
     }
+
+    throw new Error(`unhandled type ${f.type.kind}`);
+  }
+
+  writeInputField(f: Field) {
+    this.write(
+      `${fieldName(f, f.name)}: ${this.writeInput(f, "from", false)},\n`
+    );
   }
 
   writeInputUnion(union: Union) {
@@ -676,18 +651,6 @@ func New${role.name}GRPCWrapper(service ${role.name}) *${role.name}GRPCWrapper {
       }
       this.write(`}\n`);
     });
-    //   case *pb.MyUnion_MyEnumValue:
-    //     return &MyUnion{
-    //       MyEnum: convert.Ptr(MyEnum(v.MyEnumValue)),
-    //     }
-    //   case *pb.MyUnion_MyTypeValue:
-    //     return &MyUnion{
-    //       MyType: convertInputMyType(v.MyTypeValue),
-    //     }
-    //   case *pb.MyUnion_StringValue:
-    //     return &MyUnion{
-    //       String: &v.StringValue,
-    //     }
     this.write(`\t}
     return nil
   }\n\n`);
