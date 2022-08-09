@@ -206,6 +206,12 @@ export const expandType = (
   translate?: (named: string) => string | undefined
 ): string => {
   let translation: string | undefined = undefined;
+  if (type.kind == Kind.Primitive) {
+    const p = type as Primitive;
+    if (p.name == PrimitiveName.Any) {
+      return "interface{}";
+    }
+  }
   switch (type.kind) {
     case Kind.Primitive:
     case Kind.Alias:

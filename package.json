@@ -51,7 +51,7 @@
     "watch": "tsc -w",
     "clean": "shx rm -rf dist",
     "test": "echo todo",
-    "install": "npm run format:fix && npm run clean && npm run build && apex install file:.",
+    "apex-install": "npm run format:fix && npm run clean && npm run build && apex install file:.",
     "style": "npm run format -- --list-different && npm run lint",
     "style:fix": "npm run format:fix && npm run lint:fix",
     "format": "prettier \"src/**/*.{ts,tsx,js,jsx,css,scss,sass,less,md}\"",
@@ -61,7 +61,7 @@
     "prerelease": "npm run build"
   },
   "dependencies": {
-    "@apexlang/core": "^0.0.23",
+    "@apexlang/core": "^0.0.25",
     "yaml": "^1.10.2",
     "openapi3-ts": "^2.0.2"
   },

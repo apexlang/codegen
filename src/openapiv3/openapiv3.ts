@@ -27,6 +27,7 @@ import {
   Map as MapType,
   AnyType,
   Primitive,
+  PrimitiveName,
 } from "@apexlang/core/model";
 import {
   ExternalDocumentationObject,
@@ -43,7 +44,7 @@ import {
 } from "openapi3-ts";
 import { SummaryDirective } from "./directives";
 import * as yaml from "yaml";
-import { ExposedTypesVisitor, isService } from "../utils";
+import { convertArrayToObject, ExposedTypesVisitor, isService } from "../utils";
 import { getPath, ResponseDirective } from "../rest";
 
 const statusCodes = new Map<string, string>([
@@ -505,6 +506,31 @@ export class OpenAPIV3Visitor extends BaseVisitor {
     this.root.addSchema(e.name, schema);
   }
 
+  visitUnion(context: Context): void {
+    const { union } = context;
+    const schema: SchemaObject = {
+      type: Types.OBJECT,
+      description: union.description,
+      properties: convertArrayToObject(
+        union.types,
+        (t: AnyType) => {
+          switch (t.kind) {
+            case Kind.Union:
+            case Kind.Type:
+            case Kind.Enum:
+              return (t as Named).name;
+            case Kind.Primitive:
+              return (t as Primitive).name;
+          }
+          return "unknown";
+        },
+        this.typeToSchema
+      ),
+    };
+    this.schemas[union.name] = schema;
+    this.root.addSchema(union.name, schema);
+  }
+
   typeDefinitionToSchema(type: Type): SchemaObject {
     return {
       type: Types.OBJECT,
@@ -535,17 +561,18 @@ export class OpenAPIV3Visitor extends BaseVisitor {
     return defs;
   }
 
-  typeToSchema(type: AnyType, required: boolean = true): SchemaObject {
+  typeToSchema(type: AnyType): SchemaObject {
     switch (type.kind) {
       case Kind.Optional:
         const optional = type as Optional;
-        return this.typeToSchema(optional.type, false);
+        return this.typeToSchema(optional.type);
       case Kind.Primitive:
         const prim = type as Primitive;
         const primitive = primitiveTypeMap.get(prim.name);
         return {
           ...primitive,
         };
+      case Kind.Union:
       case Kind.Enum:
       case Kind.Type:
         const named = type as Named;
@@ -622,6 +649,8 @@ const primitiveTypeMap = new Map<string, TypeFormat>([
   ["boolean", { type: Types.BOOLEAN }],
   ["date", { type: Types.STRING, format: "date" }],
   ["datetime", { type: Types.STRING, format: "date-time" }],
+  ["any", {}],
+  ["value", {}],
 ]);
 
 function fieldsSignature(fields: Field[]): string {

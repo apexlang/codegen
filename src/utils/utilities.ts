@@ -574,3 +574,16 @@ export function convertOperationToType(
     )
   );
 }
+
+export function convertArrayToObject<T, D>(
+  array: T[],
+  keyFunc: (value: T) => string,
+  convert: (value: T) => D = (value: T) => value as unknown as D
+): { [key: string]: D } {
+  const obj: { [key: string]: D } = {};
+  array.forEach((value) => {
+    const keyVal = keyFunc(value);
+    obj[keyVal] = convert(value);
+  });
+  return obj;
+}

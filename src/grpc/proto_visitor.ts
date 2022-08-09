@@ -159,7 +159,7 @@ package ${ns.name};\n\n`);
     }
     this.write(formatComment("// ", u.description));
     this.write(`message ${pascalCase(u.name)} {\n`);
-    this.write(`  oneof oneof {\n`);
+    this.write(`  oneof value {\n`);
     let i = 0;
     for (let t of u.types) {
       const n = t as Named;
@@ -278,7 +278,8 @@ const scalarTypeMap = new Map<string, string>([
   ["boolean", "bool"],
   ["date", "google.protobuf.Timestamp"],
   ["datetime", "google.protobuf.Timestamp"],
-  ["raw", "google.protobuf.Any"],
+  ["any", "google.protobuf.Any"],
+  ["value", "google.protobuf.Any"],
 ]);
 
 function typeSignature(type: AnyType): string {
@@ -338,9 +339,9 @@ class ImportVisitor extends BaseVisitor {
           case PrimitiveName.DateTime:
             this.addImport("google/protobuf/timestamp.proto");
             break;
-          // TODO: Any, Raw
-          //case PrimitiveName.Any:
-          //  break;
+          case PrimitiveName.Any:
+            this.addImport("google/protobuf/any.proto");
+            break;
         }
         break;
     }
@@ -421,6 +422,8 @@ function primitiveMessageType(name: PrimitiveName): string {
       return `google.protobuf.BoolValue`;
     case PrimitiveName.Bytes:
       return `google.protobuf.BytesValue`;
+    case PrimitiveName.Any:
+      return `google.protobuf.Any`;
   }
 
   return "unknown";

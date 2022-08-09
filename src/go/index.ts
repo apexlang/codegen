@@ -14,11 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-export * from "./struct_visitor";
-export * from "./interfaces_visitor";
-export * from "./scaffold_visitor";
-export * from "./main_visitor";
+export * from "./alias_visitor";
+export * from "./constant";
+export * from "./enum_visitor";
 export * from "./fiber_visitor";
 export * from "./grpc_visitor";
 export * from "./helpers";
-export * from "./constant";
+export * from "./interfaces_visitor";
+export * from "./main_visitor";
+export * from "./scaffold_visitor";
+export * from "./struct_visitor";
+export * from "./union_visitor";

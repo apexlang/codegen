@@ -21,6 +21,7 @@ import { StructVisitor } from "./struct_visitor";
 import { ImportsVisitor } from "./imports_visitor";
 import { AliasVisitor, translateAlias } from "./alias_visitor";
 import { formatComment, isHandler, isProvider, isVoid, noCode } from "../utils";
+import { UnionVisitor } from "./union_visitor";
 
 export class InterfacesVisitor extends BaseVisitor {
   visitNamespaceBefore(context: Context): void {
@@ -30,9 +31,9 @@ export class InterfacesVisitor extends BaseVisitor {
     package ${packageName}
       
       import (\n`);
-    const e = new ImportsVisitor(this.writer);
+    const visitor = new ImportsVisitor(this.writer);
     const ns = context.namespace;
-    ns.accept(context, e);
+    ns.accept(context, visitor);
     this.write(`
       )\n\n
       type ns struct{}
@@ -52,27 +53,32 @@ export class InterfacesVisitor extends BaseVisitor {
   visitRoleBefore(context: Context): void {
     const { role } = context;
     if (isProvider(context)) {
-      const struct = new ProviderVisitor(this.writer);
-      role.accept(context, struct);
+      const visitor = new ProviderVisitor(this.writer);
+      role.accept(context, visitor);
     } else if (isHandler(context)) {
-      const struct = new HandlerVisitor(this.writer);
-      role.accept(context, struct);
+      const visitor = new HandlerVisitor(this.writer);
+      role.accept(context, visitor);
     }
   }
 
   visitAlias(context: Context): void {
-    const e = new AliasVisitor(this.writer);
-    context.alias.accept(context, e);
+    const visitor = new AliasVisitor(this.writer);
+    context.alias.accept(context, visitor);
   }
 
   visitEnum(context: Context): void {
-    const e = new EnumVisitor(this.writer);
-    context.enum.accept(context, e);
+    const visitor = new EnumVisitor(this.writer);
+    context.enum.accept(context, visitor);
+  }
+
+  visitUnion(context: Context): void {
+    const visitor = new UnionVisitor(this.writer);
+    context.union.accept(context, visitor);
   }
 
   visitType(context: Context): void {
-    const struct = new StructVisitor(this.writer, true);
-    context.type.accept(context, struct);
+    const visitor = new StructVisitor(this.writer, true);
+    context.type.accept(context, visitor);
   }
 }
 

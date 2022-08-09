@@ -58,7 +58,7 @@ role Repository @dependency {
   getData(): MyType
 }
 
-union MyUnion = MyType | MyEnum
+union MyUnion = MyType | MyEnum | string
 
 "MyType is a class"
 type MyType {
@@ -68,36 +68,68 @@ type MyType {
   typeValue: MyOtherType @n(2)
   "string value"
   stringValue: string @n(3)
+  "string option"
+  stringOption: string? @n(4)
   "i64 value"
-  i64Value: i64 @n(4)
+  i64Value: i64 @n(5)
+  "i64 option"
+  i64Option: i64? @n(6)
   "i32 value"
-  i32Value: i32 @n(5)
+  i32Value: i32 @n(7)
+  "i32 option"
+  i32Option: i32? @n(8)
   "i16 value"
-  i16Value: i16 @n(6)
+  i16Value: i16 @n(9)
+  "i16 option"
+  i16Option: i16? @n(10)
   "i8 value"
-  i8Value: i8 @n(7)
+  i8Value: i8 @n(11)
+  "i8 option"
+  i8Option: i8? @n(12)
   "u64 value"
-  u64Value: u64 @n(8)
+  u64Value: u64 @n(13)
+  "u64 option"
+  u64Option: u64? @n(14)
   "u32 value"
-  u32Value: u32 @n(9)
+  u32Value: u32 @n(15)
+  "u32 option"
+  u32Option: u32? @n(16)
   "u16 value"
-  u16Value: u16 @n(10)
+  u16Value: u16 @n(17)
+  "u16 option"
+  u16Option: u16? @n(18)
   "u8 value"
-  u8Value: u8 @n(11)
+  u8Value: u8 @n(19)
+  "u8 option"
+  u8Option: u8? @n(20)
   "f64 value"
-  f64Value: f64 @n(12)
+  f64Value: f64 @n(21)
+  "f64 option"
+  f64Option: f64? @n(22)
   "f32 value"
-  f32Value: f32 @n(13)
+  f32Value: f32 @n(23)
+  "f32 option"
+  f32Option: f32? @n(24)
+  "datetime value"
+  datetimeValue: datetime @n(25)
+  "datetime option"
+  datetimeOption: datetime? @n(26)
   "bytes value"
-  bytesValue: bytes @n(14)
+  bytesValue: bytes @n(27)
+  "bytes option"
+  bytesOption: bytes? @n(28)
   "map value"
-  mapValue: { string: i64 } @n(15)
+  mapValue: { string: i64 } @n(29)
   "map of types"
-  mapOfTypes: { string: MyType } @n(16)
+  mapOfTypes: { string: MyType } @n(30)
   "array value"
-  arrayValue: [string] @n(17)
+  arrayValue: [string] @n(31)
   "array of types"
-  arrayOfTypes: [MyType] @n(18)
+  arrayOfTypes: [MyType] @n(32)
+  "union value"
+  unionValue: MyUnion @n(33)
+  # "any value"
+  # anyValue: any @n(999)
 }
 
 type MyOtherType {
