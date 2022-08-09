@@ -500,7 +500,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
     const schema: SchemaObject = {
       type: Types.STRING,
       description: e.description,
-      enum: e.values.map((ev) => ev.name),
+      enum: e.values.map((ev) => ev.display || ev.name),
     };
     this.schemas[e.name] = schema;
     this.root.addSchema(e.name, schema);
@@ -652,34 +652,3 @@ const primitiveTypeMap = new Map<string, TypeFormat>([
   ["any", {}],
   ["value", {}],
 ]);
-
-function fieldsSignature(fields: Field[]): string {
-  let sig = "";
-  let clone = Object.assign([], fields) as Field[];
-  clone = clone.sort((a, b) => (a.name > b.name ? 1 : -1));
-  clone.forEach((f) => {
-    sig += `${f.name}: ${typeSignature(f.type)}\n`;
-  });
-  return sig;
-}
-
-function typeSignature(type: AnyType): string {
-  switch (type.kind) {
-    case Kind.Primitive:
-      return (type as Named).name;
-    case Kind.Type:
-    case Kind.Alias:
-    case Kind.Union:
-    case Kind.Enum:
-      return (type as Named).name;
-    case Kind.List:
-      return `[${typeSignature((type as ListType).type)}]`;
-    case Kind.Map:
-      const map = type as MapType;
-      return `{${typeSignature(map.keyType)}: ${typeSignature(map.valueType)}}`;
-    case Kind.Optional:
-      return `${typeSignature((type as Optional).type)}?`;
-    default:
-      throw new Error("unexpected kind: " + type.kind);
-  }
-}

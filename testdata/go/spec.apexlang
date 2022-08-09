@@ -24,7 +24,7 @@ namespace "apex.testing"
 role MyService @service @uses(["Repository"]) {
   emptyVoid(): void
     @GET
-  unaryType{thing: MyType}: MyType
+  unaryType{value: MyType}: MyType
     @path("/unaryType") @POST
   unaryEnum{value: MyEnum}: MyEnum
     @path("/unaryEnum") @POST
@@ -52,6 +52,35 @@ role MyService @service @uses(["Repository"]) {
     @path("/unaryF32") @POST
   unaryBytes{value: bytes}: bytes
     @path("/unaryBytes") @POST
+
+  funcType(value: MyType @n(1), optional: MyType? @n(2)): MyType
+    @path("/funcType") @POST
+  funcEnum(value: MyEnum @n(1), optional: MyEnum? @n(2)): MyEnum
+    @path("/funcEnum") @POST
+  funcString(value: string @n(1), optional: string? @n(2)): string
+    @path("/funcString") @POST
+  funcI64(value: i64 @n(1), optional: i64? @n(2)): i64
+    @path("/funcI64") @POST
+  funcI32(value: i32 @n(1), optional: i32? @n(2)): i32
+    @path("/funcI32") @POST
+  funcI16(value: i16 @n(1), optional: i16? @n(2)): i16
+    @path("/funcI16") @POST
+  funcI8(value: i8 @n(1), optional: i8? @n(2)): i8
+    @path("/funcI8") @POST
+  funcU64(value: u64 @n(1), optional: u64? @n(2)): u64
+    @path("/funcU64") @POST
+  funcU32(value: u32 @n(1), optional: u32? @n(2)): u32
+    @path("/funcU32") @POST
+  funcU16(value: u16 @n(1), optional: u16? @n(2)): u16
+    @path("/funcU16") @POST
+  funcU8(value: u8 @n(1), optional: u8? @n(2)): u8
+    @path("/funcU8") @POST
+  funcF64(value: f64 @n(1), optional: f64? @n(2)): f64
+    @path("/funcF64") @POST
+  funcF32(value: f32 @n(1), optional: f32? @n(2)): f32
+    @path("/funcF32") @POST
+  funcBytes(value: bytes @n(1), optional: bytes? @n(2)): bytes
+    @path("/funcBytes") @POST
 }
 
 role Repository @dependency {

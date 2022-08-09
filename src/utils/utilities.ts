@@ -191,10 +191,14 @@ export function isNamed(t: AnyType): boolean {
  * Determines if Type Node is a Named node and if its type is not one of the base translation types.
  * @param t Node that is a Type node
  */
-export function isObject(t: AnyType): boolean {
+export function isObject(t: AnyType, recurseOption: boolean = true): boolean {
   while (t.kind == Kind.Alias || t.kind == Kind.Optional) {
     if (t.kind == Kind.Optional) {
-      t = (t as Optional).type;
+      if (recurseOption) {
+        t = (t as Optional).type;
+      } else {
+        break;
+      }
     } else if (t.kind == Kind.Alias) {
       t = (t as Alias).type;
     }

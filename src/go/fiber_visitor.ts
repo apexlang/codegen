@@ -21,7 +21,12 @@ import {
   Kind,
   Type,
 } from "@apexlang/core/model";
-import { capitalize, convertOperationToType, isService } from "../utils";
+import {
+  capitalize,
+  convertOperationToType,
+  isObject,
+  isService,
+} from "../utils";
 import { getMethods, getPath, hasBody } from "../rest";
 import { StructVisitor } from "./struct_visitor";
 import { expandType, fieldName, methodName } from "./helpers";
@@ -135,7 +140,13 @@ class FiberServiceVisitor extends BaseVisitor {
           this.write(`err := service.${operMethod}(ctx, ${share}args)\n`);
         } else {
           const args = (paramType as Type).fields
-            .map((f) => ", args." + fieldName(f, f.name))
+            .map(
+              (f) =>
+                `, ${isObject(f.type, false) ? "&" : ""}args.${fieldName(
+                  f,
+                  f.name
+                )}`
+            )
             .join("");
           this.write(`err := service.${operMethod}(ctx${args})\n`);
         }
