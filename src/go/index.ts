@@ -20,6 +20,7 @@ export * from "./enum_visitor";
 export * from "./fiber_visitor";
 export * from "./grpc_visitor";
 export * from "./helpers";
+export * from "./interface_visitor";
 export * from "./interfaces_visitor";
 export * from "./main_visitor";
 export * from "./scaffold_visitor";

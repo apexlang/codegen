@@ -15,23 +15,23 @@ limitations under the License.
 */
 
 import { BaseVisitor, Context, Visitor, Writer } from "@apexlang/core/model";
-import { expandType, mapParams, methodName, returnPointer } from "./helpers";
 import { EnumVisitor } from "./enum_visitor";
 import { StructVisitor } from "./struct_visitor";
 import { ImportsVisitor } from "./imports_visitor";
-import { AliasVisitor, translateAlias } from "./alias_visitor";
-import { formatComment, isHandler, isProvider, isVoid, noCode } from "../utils";
+import { AliasVisitor } from "./alias_visitor";
+import { isHandler, isProvider } from "../utils";
 import { UnionVisitor } from "./union_visitor";
+import { InterfaceVisitor } from "./interface_visitor";
 
 export class InterfacesVisitor extends BaseVisitor {
   // Overridable visitor implementations
   importsVisitor = (writer: Writer): Visitor => new ImportsVisitor(writer);
-  providerVisitor = (writer: Writer): Visitor => new ProviderVisitor(writer);
-  handlerVisitor = (writer: Writer): Visitor => new HandlerVisitor(writer);
-  aliasVisitor = (writer: Writer): Visitor => new AliasVisitor(writer);
+  serviceVisitor = (writer: Writer): Visitor => new InterfaceVisitor(writer);
+  dependencyVisitor = (writer: Writer): Visitor => new InterfaceVisitor(writer);
+  structVisitor = (writer: Writer): Visitor => new StructVisitor(writer, true);
   enumVisitor = (writer: Writer): Visitor => new EnumVisitor(writer);
   unionVisitor = (writer: Writer): Visitor => new UnionVisitor(writer);
-  structVisitor = (writer: Writer): Visitor => new StructVisitor(writer, true);
+  aliasVisitor = (writer: Writer): Visitor => new AliasVisitor(writer);
 
   visitNamespaceBefore(context: Context): void {
     const packageName = context.config.package || "module";
@@ -62,10 +62,10 @@ export class InterfacesVisitor extends BaseVisitor {
   visitRoleBefore(context: Context): void {
     const { role } = context;
     if (isProvider(context)) {
-      const visitor = this.providerVisitor(this.writer);
+      const visitor = this.dependencyVisitor(this.writer);
       role.accept(context, visitor);
     } else if (isHandler(context)) {
-      const visitor = this.handlerVisitor(this.writer);
+      const visitor = this.serviceVisitor(this.writer);
       role.accept(context, visitor);
     }
   }
@@ -88,95 +88,5 @@ export class InterfacesVisitor extends BaseVisitor {
   visitType(context: Context): void {
     const visitor = this.structVisitor(this.writer);
     context.type.accept(context, visitor);
-  }
-}
-
-export class HandlerVisitor extends BaseVisitor {
-  visitRoleBefore(context: Context): void {
-    const { role } = context;
-    this.write(formatComment("// ", role.description));
-    this.write(`type ${role.name} interface {\n`);
-  }
-
-  visitOperation(context: Context): void {
-    const { operation } = context;
-    if (noCode(operation)) {
-      return;
-    }
-    this.write(formatComment("// ", operation.description));
-    this.write(`${methodName(operation, operation.name)}(ctx context.Context`);
-    if (operation.parameters.length > 0) {
-      this.write(`, `);
-    }
-    const translate = translateAlias(context);
-    this.write(
-      `${mapParams(context, operation.parameters, undefined, translate)})`
-    );
-    if (!isVoid(operation.type)) {
-      this.write(
-        ` (${returnPointer(context, operation.type)}${expandType(
-          operation.type,
-          undefined,
-          true,
-          translate
-        )}, error)`
-      );
-    } else {
-      this.write(` error`);
-    }
-    this.write(`\n`);
-  }
-
-  visitRoleAfter(context: Context): void {
-    this.write(`}\n\n`);
-  }
-}
-
-export class ProviderVisitor extends BaseVisitor {
-  private contextPackage: string;
-
-  constructor(writer: Writer, contextPackage: string = "context.") {
-    super(writer);
-    this.contextPackage = contextPackage;
-  }
-
-  visitRoleBefore(context: Context): void {
-    const { role } = context;
-    this.write(formatComment("// ", role.description));
-    this.write(`type ${role.name} interface {\n`);
-  }
-
-  visitOperation(context: Context): void {
-    const { operation } = context;
-    this.write(formatComment("// ", operation.description));
-    this.write(
-      `${methodName(operation, operation.name)}(ctx ${
-        this.contextPackage
-      }Context`
-    );
-    if (operation.parameters.length > 0) {
-      this.write(`, `);
-    }
-    const translate = translateAlias(context);
-    this.write(
-      `${mapParams(context, operation.parameters, undefined, translate)})`
-    );
-    if (!isVoid(operation.type)) {
-      this.write(
-        ` (${returnPointer(context, operation.type)}${expandType(
-          operation.type,
-          undefined,
-          true,
-          translate
-        )}, error)`
-      );
-    } else {
-      this.write(` error`);
-    }
-    this.write(`\n`);
-  }
-
-  visitRoleAfter(context: Context): void {
-    this.write(`}\n\n`);
   }
 }
