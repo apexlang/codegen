@@ -14,7 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Annotation, BaseVisitor, Context } from "@apexlang/core/model";
+import {
+  Annotation,
+  BaseVisitor,
+  Context,
+  Visitor,
+  Writer,
+} from "@apexlang/core/model";
 import { camelCase, isProvider, isService } from "../utils";
 
 interface Config {
@@ -31,7 +37,16 @@ interface Listener {
   environmentKey: string;
 }
 
+export interface ComponentVisitor extends Visitor {
+  services: Map<string, string[]>;
+  dependencies: string[];
+}
+
 export class MainVisitor extends BaseVisitor {
+  // Overridable visitor implementations
+  roleVisitor = (writer: Writer): ComponentVisitor =>
+    new RoleComponentVisitor(writer);
+
   visitNamespaceBefore(context: Context): void {
     const config = context.config as Config;
     const http = config.http || {};
@@ -50,7 +65,7 @@ export class MainVisitor extends BaseVisitor {
     grpc.environmentKey = grpc.environmentKey || "GRPC_ADDRESS";
 
     config.package = config.package || "mypackage";
-    config.module = config.module || "mymodule";
+    config.module = config.module || "githib.com/myorg/mymodule";
     config.imports = config.imports || [];
 
     // Default import
@@ -58,7 +73,7 @@ export class MainVisitor extends BaseVisitor {
       config.imports.push(`${config.module}/pkg/${config.package}`);
     }
 
-    const roleVisitor = new RoleVisitor(this.writer);
+    const roleVisitor = this.roleVisitor(this.writer);
     context.namespace.accept(context, roleVisitor);
 
     this.write(`package main
@@ -210,7 +225,7 @@ func getEnv(key string, defaultVal string) string {
   }
 }
 
-class RoleVisitor extends BaseVisitor {
+class RoleComponentVisitor extends BaseVisitor implements ComponentVisitor {
   services: Map<string, string[]> = new Map();
   dependencies: string[] = [];
 

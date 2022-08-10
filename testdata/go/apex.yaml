@@ -7,7 +7,7 @@ generates:
     module: '@apexlang/codegen/openapiv3'
     visitorClass: OpenAPIV3Visitor
   proto/service.proto:
-    module: '@apexlang/codegen/grpc'
+    module: '@apexlang/codegen/proto'
     visitorClass: ProtoVisitor
     config:
       options:

@@ -27,7 +27,6 @@ import {
   Map as MapType,
   AnyType,
   Primitive,
-  PrimitiveName,
 } from "@apexlang/core/model";
 import {
   ExternalDocumentationObject,
@@ -108,7 +107,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
 
   constructor(writer: Writer) {
     super(writer);
-    this.root.rootDoc.openapi = "3.1.0";
+    this.root.rootDoc.openapi = "3.0.3";
   }
 
   visitNamespaceBefore(context: Context) {

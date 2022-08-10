@@ -29,8 +29,10 @@ export class UnionVisitor extends BaseVisitor {
       this.write(
         `${pascalCase(
           typeName
-        )} *${typeName} ${tick}json:"${typeName},omitempty" msgpack:"${typeName},omitempty"${tick}\n`
+        )} *${typeName} ${tick}json:"${typeName},omitempty" yaml:"${typeName},omitempty" msgpack:"${typeName},omitempty`
       );
+      this.triggerCallbacks(context, "UnionStructTags");
+      this.write(`"${tick}\n`);
     });
     this.write(`}\n\n`);
   }

@@ -29,7 +29,6 @@ import {
   TypeResolver,
   Operation,
   Role,
-  Union,
 } from "@apexlang/core/model";
 
 export function isOneOfType(context: Context, types: string[]): boolean {
@@ -151,12 +150,11 @@ export function isProvider(context: Context): boolean {
     ) {
       return false;
     }
-    return true;
-    // return (
-    //   role.operations.find((o) => {
-    //     return o.annotation("nocode") == undefined;
-    //   }) != undefined
-    // );
+    return (
+      role.operations.find((o) => {
+        return o.annotation("nocode") == undefined;
+      }) != undefined
+    );
   }
   return false;
 }

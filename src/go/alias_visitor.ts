@@ -52,7 +52,7 @@ export class AliasVisitor extends BaseVisitor {
     this.write(formatComment("// ", alias.description));
     this.write(
       `type ${alias.name} ${expandType(
-        alias.type!,
+        alias.type,
         undefined,
         true,
         translateAlias(context)

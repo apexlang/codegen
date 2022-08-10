@@ -62,10 +62,12 @@ export class StructVisitor extends BaseVisitor {
         packageName,
         true,
         translateAlias(context)
-      )} \`json:"${field.name}${omitempty}" msgpack:"${
+      )} \`json:"${field.name}${omitempty}" yaml:"${
         field.name
-      }${omitempty}"\`\n`
+      }${omitempty}" msgpack:"${field.name}${omitempty}"`
     );
+    this.triggerCallbacks(context, "StructTags");
+    this.write(`\`\n`);
     super.triggerTypeField(context);
   }
 
