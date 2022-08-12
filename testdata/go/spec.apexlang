@@ -28,6 +28,8 @@ role MyService @service @uses(["Repository"]) {
     @path("/unaryType") @POST
   unaryEnum{value: MyEnum}: MyEnum
     @path("/unaryEnum") @POST
+  unaryAlias{value: UUID}: UUID
+    @path("/unaryAlias") @POST
   unaryString{value: string}: string
     @path("/unaryString") @POST
   unaryI64{value: i64}: i64
@@ -56,6 +58,8 @@ role MyService @service @uses(["Repository"]) {
   funcType(value: MyType @n(1), optional: MyType? @n(2)): MyType
     @path("/funcType") @POST
   funcEnum(value: MyEnum @n(1), optional: MyEnum? @n(2)): MyEnum
+    @path("/funcEnum") @POST
+  funcAlias(value: UUID @n(1), optional: UUID? @n(2)): UUID
     @path("/funcEnum") @POST
   funcString(value: string @n(1), optional: string? @n(2)): string
     @path("/funcString") @POST
@@ -88,6 +92,8 @@ role Repository @dependency {
 }
 
 union MyUnion = MyType | MyEnum | string
+
+alias UUID = string
 
 "MyType is a class"
 type MyType {
@@ -163,6 +169,10 @@ type MyType {
   enumValue: MyEnum @n(35)
   "enum option"
   enumOption: MyEnum? @n(36)
+  "enum value"
+  aliasValue: UUID @n(37)
+  "enum option"
+  aliasOption: UUID? @n(38)
   # "any value"
   # anyValue: any @n(999)
 }

@@ -26,6 +26,10 @@ jobs:
       #- run: npm run lint
       - run: npm run build
 
+      - name: Generator diff test
+        run: ./diffcheck.sh
+        working-directory: ./testdata
+
       - name: Is Release?
         if: startswith(github.ref, 'refs/tags/v')
         run: echo "DEPLOY_PACKAGE=true" >> $GITHUB_ENV

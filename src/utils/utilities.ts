@@ -29,6 +29,7 @@ import {
   TypeResolver,
   Operation,
   Role,
+  Stream,
 } from "@apexlang/core/model";
 
 export function isOneOfType(context: Context, types: string[]): boolean {
@@ -588,4 +589,36 @@ export function convertArrayToObject<T, D>(
     obj[keyVal] = convert(value);
   });
   return obj;
+}
+
+export function unwrapKinds(t: AnyType, ...kinds: Kind[]): AnyType {
+  while (true) {
+    if (isKinds(t, ...kinds)) {
+      switch (t.kind) {
+        case Kind.Alias:
+          t = (t as Alias).type;
+          break;
+        case Kind.Optional:
+          t = (t as Optional).type;
+          break;
+        case Kind.List:
+          t = (t as List).type;
+          break;
+        case Kind.Map:
+          t = (t as Map).valueType;
+          break;
+        case Kind.Stream:
+          t = (t as Stream).type;
+          break;
+        default:
+          return t;
+      }
+    } else {
+      return t;
+    }
+  }
+}
+
+export function isKinds(t: AnyType, ...kinds: Kind[]): boolean {
+  return kinds.indexOf(t.kind) != -1;
 }

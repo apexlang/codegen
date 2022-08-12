@@ -14,7 +14,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Context, BaseVisitor } from "@apexlang/core/model";
+import {
+  Context,
+  BaseVisitor,
+  AnyType,
+  Kind,
+  List,
+  Map,
+  Optional,
+  Primitive,
+  Alias,
+  PrimitiveName,
+  Type,
+} from "@apexlang/core/model";
 import {
   defaultValueForType,
   expandType,
@@ -30,7 +42,7 @@ import {
   isVoid,
   noCode,
 } from "../utils";
-import { translateAlias } from "./alias_visitor";
+import { Import, translateAlias } from "./alias_visitor";
 
 export class ScaffoldVisitor extends BaseVisitor {
   visitNamespaceBefore(context: Context): void {
@@ -43,6 +55,8 @@ export class ScaffoldVisitor extends BaseVisitor {
     if (hasServiceCode(context)) {
       this.write(`\t"context"\n\n`);
     }
+    const importsVisitor = new ImportsVisitor(this.writer);
+    context.namespace.accept(context, importsVisitor);
     this.write(`\t"github.com/go-logr/logr"\n`);
     this.write(`)\n\n`);
 
@@ -89,17 +103,11 @@ class ServiceVisitor extends BaseVisitor {
   }
 
   visitOperation(context: Context): void {
-    const roleNames = (context.config.names as string[]) || [];
-    const roleTypes = (context.config.types as string[]) || [];
-    const { role } = context;
-    if (
-      !isOneOfType(context, roleTypes) &&
-      roleNames.indexOf(role.name) == -1
-    ) {
+    if (!isValid(context)) {
       return;
     }
 
-    const { operation } = context;
+    const { operation, role } = context;
     if (noCode(operation)) {
       return;
     }
@@ -113,14 +121,17 @@ class ServiceVisitor extends BaseVisitor {
     if (operation.parameters.length > 0) {
       this.write(`, `);
     }
-    this.write(`${mapParams(context, operation.parameters, undefined)})`);
+    const translate = translateAlias(context);
+    this.write(
+      `${mapParams(context, operation.parameters, undefined, translate)})`
+    );
     if (!isVoid(operation.type)) {
       this.write(
-        ` (${returnPointer(context, operation.type)}${expandType(
+        ` (${returnPointer(operation.type)}${expandType(
           operation.type,
           undefined,
           true,
-          translateAlias(context)
+          translate
         )}, error)`
       );
     } else {
@@ -129,11 +140,133 @@ class ServiceVisitor extends BaseVisitor {
     this.write(` {\n`);
     if (!isVoid(operation.type)) {
       const dv = defaultValueForType(context, operation.type, undefined);
-      this.write(`  return ${returnShare(context, operation.type)}${dv}, nil`);
+      this.write(`  return ${returnShare(operation.type)}${dv}, nil`);
     } else {
       this.write(`  return nil`);
     }
     this.write(` // TODO: Provide implementation.\n`);
     this.write(`}\n`);
   }
+}
+
+class ImportsVisitor extends BaseVisitor {
+  private imports: { [key: string]: Import } = {};
+  private externalImports: { [key: string]: Import } = {};
+
+  visitNamespaceAfter(context: Context): void {
+    const stdLib = [];
+    for (const key in this.imports) {
+      const i = this.imports[key];
+      if (i.import) {
+        stdLib.push(i.import);
+      }
+    }
+    stdLib.sort();
+    for (const lib of stdLib) {
+      this.write(`\t"${lib}"\n`);
+    }
+
+    const thirdPartyLib = [];
+    for (const key in this.externalImports) {
+      const i = this.externalImports[key];
+      if (i.import) {
+        thirdPartyLib.push(i.import);
+      }
+    }
+    thirdPartyLib.sort();
+    if (thirdPartyLib.length > 0) {
+      this.write(`\n`);
+    }
+    for (const lib of thirdPartyLib) {
+      this.write(`\t"${lib}"\n`);
+    }
+  }
+
+  addType(name: string, i: Import) {
+    if (i == undefined || i.import == undefined) {
+      return;
+    }
+    if (i.import.indexOf(".") != -1) {
+      if (this.externalImports[name] === undefined) {
+        this.externalImports[name] = i;
+      }
+    } else {
+      if (this.imports[name] === undefined) {
+        this.imports[name] = i;
+      }
+    }
+  }
+
+  checkType(context: Context, type: AnyType): void {
+    const aliases = (context.config.aliases as { [key: string]: Import }) || {};
+
+    switch (type.kind) {
+      case Kind.Alias: {
+        const a = type as Alias;
+        const i = aliases[a.name];
+        this.addType(a.name, i);
+        break;
+      }
+
+      case Kind.Primitive:
+        const prim = type as Primitive;
+        switch (prim.name) {
+          case PrimitiveName.DateTime:
+            this.addType("Time", {
+              type: "time.Time",
+              import: "time",
+            });
+            break;
+        }
+        break;
+      case Kind.Type:
+        const named = type as Type;
+        const i = aliases[named.name];
+        if (named.name === "datetime" && i == undefined) {
+          this.addType("Time", {
+            type: "time.Time",
+            import: "time",
+          });
+          return;
+        }
+        this.addType(named.name, i);
+        break;
+      case Kind.List:
+        const list = type as List;
+        this.checkType(context, list.type);
+        break;
+      case Kind.Map:
+        const map = type as Map;
+        this.checkType(context, map.keyType);
+        this.checkType(context, map.valueType);
+        break;
+      case Kind.Optional:
+        const optional = type as Optional;
+        this.checkType(context, optional.type);
+        break;
+      case Kind.Enum:
+        break;
+    }
+  }
+
+  visitParameter(context: Context): void {
+    if (!isValid(context)) {
+      return;
+    }
+    this.checkType(context, context.parameter.type);
+  }
+
+  visitOperation(context: Context): void {
+    if (!isValid(context)) {
+      return;
+    }
+    this.checkType(context, context.operation.type);
+  }
+}
+
+function isValid(context: Context): boolean {
+  const roleNames = (context.config.names as string[]) || [];
+  const roleTypes = (context.config.types as string[]) || [];
+  const { role } = context;
+  return isOneOfType(context, roleTypes) || roleNames.indexOf(role.name) != -1;
 }

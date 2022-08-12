@@ -32,6 +32,7 @@ import {
   PrimitiveName,
 } from "@apexlang/core/model";
 import { capitalize, renamed } from "../utils";
+import { Import } from "./alias_visitor";
 import { translations } from "./constant";
 
 /**
@@ -109,7 +110,7 @@ export function defValue(fieldDef: Field): string {
   return `???${expandType(type, undefined, false)}???`;
 }
 
-export function returnPointer(context: Context, type: AnyType): string {
+export function returnPointer(type: AnyType): string {
   if (type.kind === Kind.Alias) {
     type = (type as Alias).type;
   }
@@ -119,16 +120,16 @@ export function returnPointer(context: Context, type: AnyType): string {
   return "";
 }
 
-export function returnShare(context: Context, type: AnyType): string {
+export function returnShare(type: AnyType): string {
   if (type.kind === Kind.Alias) {
     type = (type as Alias).type;
   }
   if (type.kind === Kind.Type) {
     return "&";
   }
-  if (type.kind === Kind.Optional) {
-    return returnShare(context, (type as Optional).type);
-  }
+  // if (type.kind === Kind.Optional) {
+  //   return returnShare(context, (type as Optional).type);
+  // }
   return "";
 }
 
@@ -145,8 +146,14 @@ export function defaultValueForType(
       return type.kind;
     case Kind.Enum:
       return (type as Named).name + "(0)";
-    case Kind.Primitive:
     case Kind.Alias:
+      const aliases = context.config.aliases as { [key: string]: Import };
+      const a = type as Alias;
+      const imp = aliases[a.name];
+      if (imp) {
+        return imp.type + "{}";
+      }
+    case Kind.Primitive:
     case Kind.Type:
     case Kind.Union:
       const name = (type as Named).name;
@@ -342,7 +349,6 @@ export function mapParam(
   translate?: (named: string) => string | undefined
 ): string {
   return `${parameterName(arg, arg.name)} ${returnPointer(
-    context,
     arg.type
   )}${expandType(arg.type, packageName, true, translate)}`;
 }
@@ -354,10 +360,7 @@ export function varAccessArg(
 ): string {
   return args
     .map((arg) => {
-      return `${returnShare(context, arg.type)}${variable}.${fieldName(
-        arg,
-        arg.name
-      )}`;
+      return `${returnShare(arg.type)}${variable}.${fieldName(arg, arg.name)}`;
     })
     .join(", ");
 }

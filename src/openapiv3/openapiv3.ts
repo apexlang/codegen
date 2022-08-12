@@ -27,6 +27,7 @@ import {
   Map as MapType,
   AnyType,
   Primitive,
+  Alias,
 } from "@apexlang/core/model";
 import {
   ExternalDocumentationObject,
@@ -251,7 +252,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
           const typeFormat = primitiveTypeMap.get(named.name);
           if (!typeFormat) {
             throw Error(
-              `path parameter "${parameter.name}" must be a required type: found "${t.kind}"`
+              `body parameter "${parameter.name}" must be a required type: found "${t.kind}"`
             );
           }
           this.operation!.requestBody = {
@@ -298,7 +299,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
           const typeFormat = primitiveTypeMap.get(named.name);
           if (!typeFormat) {
             throw Error(
-              `path parameter "${parameter.name}" must be a required type: found "${t.kind}"`
+              `body parameter "${parameter.name}" must be a required type: found "${t.kind}"`
             );
           }
           content.properties![parameter.name] = {
@@ -327,6 +328,9 @@ export class OpenAPIV3Visitor extends BaseVisitor {
     switch (paramIn) {
       case "path":
         let typeFormat: TypeFormat | undefined = undefined;
+        if (t.kind == Kind.Alias) {
+          t = (t as Alias).type;
+        }
         if (t.kind == Kind.Primitive) {
           const named = t as Primitive;
           typeFormat = primitiveTypeMap.get(named.name);
@@ -565,6 +569,9 @@ export class OpenAPIV3Visitor extends BaseVisitor {
       case Kind.Optional:
         const optional = type as Optional;
         return this.typeToSchema(optional.type);
+      case Kind.Alias:
+        const a = type as Alias;
+        return this.typeToSchema(a.type);
       case Kind.Primitive:
         const prim = type as Primitive;
         const primitive = primitiveTypeMap.get(prim.name);

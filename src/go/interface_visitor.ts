@@ -42,7 +42,7 @@ export class InterfaceVisitor extends BaseVisitor {
     );
     if (!isVoid(operation.type)) {
       this.write(
-        ` (${returnPointer(context, operation.type)}${expandType(
+        ` (${returnPointer(operation.type)}${expandType(
           operation.type,
           undefined,
           true,

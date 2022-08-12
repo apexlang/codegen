@@ -2,6 +2,12 @@ spec: ../spec.apexlang
 config:
   package: outputtest
   module: github.com/apexlang/outputtest
+  aliases:
+    UUID:
+      type: uuid.UUID
+      import: github.com/google/uuid
+      parse: uuid.Parse
+      format: String
 generates:
   openapi.yaml:
     module: '@apexlang/codegen/openapiv3'

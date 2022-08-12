@@ -25,6 +25,7 @@ import {
   Optional,
   Primitive,
   PrimitiveName,
+  Alias,
 } from "@apexlang/core/model";
 import { Import } from "./alias_visitor";
 
@@ -80,6 +81,13 @@ export class ImportsVisitor extends BaseVisitor {
     const aliases = (context.config.aliases as { [key: string]: Import }) || {};
 
     switch (type.kind) {
+      case Kind.Alias: {
+        const a = type as Alias;
+        const i = aliases[a.name];
+        this.addType(a.name, i);
+        break;
+      }
+
       case Kind.Primitive:
         const prim = type as Primitive;
         switch (prim.name) {

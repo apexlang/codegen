@@ -29,6 +29,7 @@ import {
   Stream,
   Writer,
   Enum,
+  Alias,
 } from "@apexlang/core/model";
 import {
   snakeCase,
@@ -37,6 +38,7 @@ import {
   convertOperationToType,
   ExposedTypesVisitor,
   isService,
+  unwrapKinds,
 } from "../utils";
 
 interface FieldNumDirective {
@@ -206,17 +208,18 @@ class RoleVisitor extends BaseVisitor {
       this.write(`google.protobuf.Empty`);
     } else if (operation.unary) {
       const param = operation.parameters[0];
-      switch (param.type.kind) {
+      const pt = unwrapKinds(param.type, Kind.Alias);
+      switch (pt.kind) {
         case Kind.Primitive:
-          const p = param.type as Primitive;
+          const p = pt as Primitive;
           this.write(primitiveMessageType(p.name));
           break;
         case Kind.Enum:
-          const e = param.type as Enum;
+          const e = pt as Enum;
           this.write(`${e.name}Value`);
           break;
         default:
-          this.write(`${typeSignature(param.type)}`);
+          this.write(`${typeSignature(pt)}`);
           break;
       }
     } else {
@@ -229,20 +232,21 @@ class RoleVisitor extends BaseVisitor {
       this.write(`${pascalCase(operation.name)}Args`);
     }
     this.write(`) returns (`);
-    switch (operation.type.kind) {
+    const ot = unwrapKinds(operation.type, Kind.Alias);
+    switch (ot.kind) {
       case Kind.Void:
         this.write(`google.protobuf.Empty`);
         break;
       case Kind.Primitive:
-        const p = operation.type as Primitive;
+        const p = ot as Primitive;
         this.write(primitiveMessageType(p.name));
         break;
       case Kind.Enum:
-        const e = operation.type as Enum;
+        const e = ot as Enum;
         this.write(`${e.name}Value`);
         break;
       default:
-        this.write(`${typeSignature(operation.type)}`);
+        this.write(`${typeSignature(ot)}`);
         break;
     }
     this.write(`) {};\n`);
@@ -288,10 +292,13 @@ function typeSignature(type: AnyType): string {
       const p = type as Primitive;
       return scalarTypeMap.get(p.name) || p.name;
 
+    case Kind.Alias:
+      const a = type as Alias;
+      return typeSignature(a.type);
+
     case Kind.Type:
     case Kind.Enum:
     case Kind.Union:
-    case Kind.Alias:
       const named = type as Named;
       return named.name;
 

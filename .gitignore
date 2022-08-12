@@ -2,4 +2,8 @@
 /dist
 docs
 coverage
-/testdata/*/expected
+/testdata/*/actual/*
+
+!/testdata/*/actual/go.*
+!/testdata/*/actual/package.*
+!/testdata/*/actual/requirements.txt

@@ -21,6 +21,8 @@ import { formatComment } from "../utils";
 export interface Import {
   type: string;
   import?: string;
+  parse?: string;
+  format?: string;
 }
 
 export function translateAlias({
