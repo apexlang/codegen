@@ -30,8 +30,10 @@ jobs:
         with:
           go-version: '1.19'
 
+      - name: Install Apex CLI
+        run: wget -q https://apexlang.io/install.sh -O - | /bin/bash
+
       - name: Install Protoc
-        #run: sudo apt-get install -y protobuf-compiler=3.21.5
         run: |
           PB_REL="https://github.com/protocolbuffers/protobuf/releases"
           curl -LO $PB_REL/download/v21.5/protoc-21.5-linux-x86_64.zip
@@ -44,9 +46,6 @@ jobs:
 
       - name: Install swagger-cli
         run: npm install -g @apidevtools/swagger-cli
-
-      - name: Install apex
-        run: wget -q https://apexlang.io/install.sh -O - | /bin/bash
 
       - name: Generator diff test
         run: ./diffcheck.sh
