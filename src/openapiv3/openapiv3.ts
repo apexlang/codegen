@@ -534,6 +534,13 @@ export class OpenAPIV3Visitor extends BaseVisitor {
     this.root.addSchema(union.name, schema);
   }
 
+  visitAlias(context: Context): void {
+    const a = context.alias;
+    const schema = this.typeToSchema(a);
+    this.schemas[a.name] = schema;
+    this.root.addSchema(a.name, schema);
+  }
+
   typeDefinitionToSchema(type: Type): SchemaObject {
     return {
       type: Types.OBJECT,

@@ -1,0 +1,193 @@
+import * from "@apexlang/core"
+import * from "@apexlang/rest"
+import * from "@apexlang/openapi"
+
+namespace "apex.testing"
+  @info(
+    title: "Test Output API"
+    description: "Apex spec used to test the output of code generators."
+    version: "1.0.0"
+    termsOfService: "https://api.goodcorp.com/terms/"
+    contact: {
+      name: "API Support"
+      url: "https://api.goodcorp.com/support"
+      email: "api@goodcorp.com"
+    },
+    license: {
+      name: "Apache 2.0"
+      url: "https://www.apache.org/licenses/LICENSE-2.0"
+    }
+  )
+  @server(url: "https://api.goodcorp.com")
+  @path("/v1")
+
+role MyService @service @uses(["Repository"]) {
+  emptyVoid(): void
+    @GET
+  unaryType{value: MyType}: MyType
+    @path("/unaryType") @POST
+  unaryEnum{value: MyEnum}: MyEnum
+    @path("/unaryEnum") @POST
+  unaryAlias{value: UUID}: UUID
+    @path("/unaryAlias") @POST
+  unaryString{value: string}: string
+    @path("/unaryString") @POST
+  unaryI64{value: i64}: i64
+    @path("/unaryI64") @POST
+  unaryI32{value: i32}: i32
+    @path("/unaryI32") @POST
+  unaryI16{value: i16}: i16
+    @path("/unaryI16") @POST
+  unaryI8{value: i8}: i8
+    @path("/unaryI8") @POST
+  unaryU64{value: u64}: u64
+    @path("/unaryU64") @POST
+  unaryU32{value: u32}: u32
+    @path("/unaryU32") @POST
+  unaryU16{value: u16}: u16
+    @path("/unaryU16") @POST
+  unaryU8{value: u8}: u8
+    @path("/unaryU8") @POST
+  unaryF64{value: f64}: f64
+    @path("/unaryF64") @POST
+  unaryF32{value: f32}: f32
+    @path("/unaryF32") @POST
+  unaryBytes{value: bytes}: bytes
+    @path("/unaryBytes") @POST
+
+  funcType(value: MyType @n(1), optional: MyType? @n(2)): MyType
+    @path("/funcType") @POST
+  funcEnum(value: MyEnum @n(1), optional: MyEnum? @n(2)): MyEnum
+    @path("/funcEnum") @POST
+  funcAlias(value: UUID @n(1), optional: UUID? @n(2)): UUID
+    @path("/funcEnum") @POST
+  funcString(value: string @n(1), optional: string? @n(2)): string
+    @path("/funcString") @POST
+  funcI64(value: i64 @n(1), optional: i64? @n(2)): i64
+    @path("/funcI64") @POST
+  funcI32(value: i32 @n(1), optional: i32? @n(2)): i32
+    @path("/funcI32") @POST
+  funcI16(value: i16 @n(1), optional: i16? @n(2)): i16
+    @path("/funcI16") @POST
+  funcI8(value: i8 @n(1), optional: i8? @n(2)): i8
+    @path("/funcI8") @POST
+  funcU64(value: u64 @n(1), optional: u64? @n(2)): u64
+    @path("/funcU64") @POST
+  funcU32(value: u32 @n(1), optional: u32? @n(2)): u32
+    @path("/funcU32") @POST
+  funcU16(value: u16 @n(1), optional: u16? @n(2)): u16
+    @path("/funcU16") @POST
+  funcU8(value: u8 @n(1), optional: u8? @n(2)): u8
+    @path("/funcU8") @POST
+  funcF64(value: f64 @n(1), optional: f64? @n(2)): f64
+    @path("/funcF64") @POST
+  funcF32(value: f32 @n(1), optional: f32? @n(2)): f32
+    @path("/funcF32") @POST
+  funcBytes(value: bytes @n(1), optional: bytes? @n(2)): bytes
+    @path("/funcBytes") @POST
+}
+
+role Repository @dependency {
+  getData(): MyType
+}
+
+union MyUnion = MyType | MyEnum | string
+
+alias UUID = string
+
+"MyType is a class"
+type MyType {
+  "same type value"
+  sameValue: MyType? @n(1)
+  "type value"
+  typeValue: MyOtherType @n(2)
+  "string value"
+  stringValue: string @n(3)
+  "string option"
+  stringOption: string? @n(4)
+  "i64 value"
+  i64Value: i64 @n(5)
+  "i64 option"
+  i64Option: i64? @n(6)
+  "i32 value"
+  i32Value: i32 @n(7)
+  "i32 option"
+  i32Option: i32? @n(8)
+  "i16 value"
+  i16Value: i16 @n(9)
+  "i16 option"
+  i16Option: i16? @n(10)
+  "i8 value"
+  i8Value: i8 @n(11)
+  "i8 option"
+  i8Option: i8? @n(12)
+  "u64 value"
+  u64Value: u64 @n(13)
+  "u64 option"
+  u64Option: u64? @n(14)
+  "u32 value"
+  u32Value: u32 @n(15)
+  "u32 option"
+  u32Option: u32? @n(16)
+  "u16 value"
+  u16Value: u16 @n(17)
+  "u16 option"
+  u16Option: u16? @n(18)
+  "u8 value"
+  u8Value: u8 @n(19)
+  "u8 option"
+  u8Option: u8? @n(20)
+  "f64 value"
+  f64Value: f64 @n(21)
+  "f64 option"
+  f64Option: f64? @n(22)
+  "f32 value"
+  f32Value: f32 @n(23)
+  "f32 option"
+  f32Option: f32? @n(24)
+  "datetime value"
+  datetimeValue: datetime @n(25)
+  "datetime option"
+  datetimeOption: datetime? @n(26)
+  "bytes value"
+  bytesValue: bytes @n(27)
+  "bytes option"
+  bytesOption: bytes? @n(28)
+  "map value"
+  mapValue: { string: i64 } @n(29)
+  "map of types"
+  mapOfTypes: { string: MyType } @n(30)
+  "array value"
+  arrayValue: [string] @n(31)
+  "array of types"
+  arrayOfTypes: [MyType] @n(32)
+  "union value"
+  unionValue: MyUnion @n(33)
+  "union option"
+  unionOption: MyUnion? @n(34)
+  "enum value"
+  enumValue: MyEnum @n(35)
+  "enum option"
+  enumOption: MyEnum? @n(36)
+  "enum value"
+  aliasValue: UUID @n(37)
+  "enum option"
+  aliasOption: UUID? @n(38)
+  # "any value"
+  # anyValue: any @n(999)
+}
+
+type MyOtherType {
+  foo: string @n(1)
+  bar: string @n(2)
+}
+
+"MyEnum is an emuneration"
+enum MyEnum {
+  "ONE value"
+  ONE = 0 as "one"
+  "TWO value"
+  TWO = 1
+  "THREE value"
+  THREE = 2 as "three"
+}

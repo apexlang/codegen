@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
         with:
-          node-version: 12
+          node-version: 16
           registry-url: https://registry.npmjs.org/
       - run: npm install
       - run: npm run test
@@ -42,11 +42,18 @@ jobs:
           go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.28.1
           go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.2.0
 
+      - name: Install swagger-cli
+        run: npm install -g @apidevtools/swagger-cli
+
       - name: Install apex
         run: wget -q https://apexlang.io/install.sh -O - | /bin/bash
 
       - name: Generator diff test
         run: ./diffcheck.sh
+        working-directory: ./testdata
+
+      - name: Validate generated OpenAPI
+        run: find . -name 'openapi.yaml' -exec swagger-cli validate {} \;
         working-directory: ./testdata
 
       - name: Is Release?
