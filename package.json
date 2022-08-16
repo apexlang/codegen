@@ -28,6 +28,7 @@
     "./proto": "./dist/proto/index.js",
     "./openapiv3": "./dist/openapiv3/index.js",
     "./python": "./dist/python/index.js",
+    "./json-schema": "./dist/json-schema/index.js",
     "./typescript": "./dist/typescript/index.js"
   },
   "engines": {
