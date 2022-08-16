@@ -1,4 +1,4 @@
-spec: ./testdata/json-schema/spec.apexlang
+spec: ../spec.apexlang
 generates:
   schema-test.json:
     module: "@apexlang/codegen/json-schema"

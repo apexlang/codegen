@@ -1,0 +1,228 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "apex.testing",
+  "$defs": {
+    "UUID": {
+      "description": "An alias for UUID",
+      "name": "UUID",
+      "type": "string"
+    },
+    "PrimitiveAlias": {
+      "description": "An alias for string",
+      "name": "PrimitiveAlias",
+      "type": "string"
+    },
+    "Beagle": {
+      "description": "An alias for a complex type",
+      "name": "Beagle",
+      "$ref": "#/$defs/Dog"
+    },
+    "MyType": {
+      "properties": {
+        "sameValue": {
+          "description": "same type value",
+          "$ref": "#/$defs/MyType"
+        },
+        "typeValue": {
+          "description": "type value",
+          "$ref": "#/$defs/MyOtherType"
+        },
+        "stringValue": {
+          "description": "string value",
+          "type": "string"
+        },
+        "i64Value": {
+          "description": "i64 value",
+          "type": "integer"
+        },
+        "i32Value": {
+          "description": "i32 value",
+          "type": "integer"
+        },
+        "i16Value": {
+          "description": "i16 value",
+          "type": "integer"
+        },
+        "i8Value": {
+          "description": "i8 value",
+          "type": "integer"
+        },
+        "u64Value": {
+          "description": "u64 value",
+          "type": "integer"
+        },
+        "u32Value": {
+          "description": "u32 value",
+          "type": "integer"
+        },
+        "u16Value": {
+          "description": "u16 value",
+          "type": "integer"
+        },
+        "u8Value": {
+          "description": "u8 value",
+          "type": "integer"
+        },
+        "f64Value": {
+          "description": "f64 value",
+          "type": "number"
+        },
+        "f32Value": {
+          "description": "f32 value",
+          "type": "number"
+        },
+        "bytesValue": {
+          "description": "bytes value",
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        "mapValue": {
+          "description": "map value",
+          "type": "object",
+          "patternProperties": {
+            ".*": {
+              "type": "integer"
+            }
+          }
+        },
+        "mapOfTypes": {
+          "description": "map of types",
+          "type": "object",
+          "patternProperties": {
+            ".*": {
+              "$ref": "#/$defs/MyType"
+            }
+          }
+        },
+        "arrayValue": {
+          "description": "array value",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "arrayOfTypes": {
+          "description": "array of types",
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/MyType"
+          }
+        }
+      },
+      "required": [
+        "typeValue",
+        "stringValue",
+        "i64Value",
+        "i32Value",
+        "i16Value",
+        "i8Value",
+        "u64Value",
+        "u32Value",
+        "u16Value",
+        "u8Value",
+        "f64Value",
+        "f32Value",
+        "bytesValue",
+        "mapValue",
+        "mapOfTypes",
+        "arrayValue",
+        "arrayOfTypes"
+      ]
+    },
+    "MyOtherType": {
+      "properties": {
+        "foo": {
+          "type": "string"
+        },
+        "bar": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "foo",
+        "bar"
+      ]
+    },
+    "PhoneNumber": {
+      "properties": {
+        "number": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/$defs/PhoneType"
+        }
+      },
+      "required": [
+        "number",
+        "type"
+      ]
+    },
+    "Cat": {
+      "properties": {
+        "lives": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "lives"
+      ]
+    },
+    "Dog": {
+      "properties": {
+        "years": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "years"
+      ]
+    },
+    "MyUnion": {
+      "type": "object",
+      "properties": {
+        "oneOf": [
+          {
+            "$ref": "#/$defs/MyType"
+          },
+          {
+            "$ref": "#/$defs/MyEnum"
+          }
+        ]
+      }
+    },
+    "Animal": {
+      "description": "Example Union",
+      "type": "object",
+      "properties": {
+        "oneOf": [
+          {
+            "$ref": "#/$defs/Cat"
+          },
+          {
+            "$ref": "#/$defs/Dog"
+          }
+        ]
+      }
+    },
+    "MyEnum": {
+      "description": "MyEnum is an emuneration",
+      "type": "string",
+      "enum": [
+        "one",
+        "TWO",
+        "three"
+      ]
+    },
+    "PhoneType": {
+      "description": "Example: enum",
+      "type": "string",
+      "enum": [
+        "Mobile",
+        "Home",
+        "Work"
+      ]
+    }
+  }
+}
