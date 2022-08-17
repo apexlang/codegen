@@ -1,0 +1,85 @@
+import * from "@apexlang/core"
+
+namespace "apex.testing"
+
+"MyService is an interface"
+role MyService {
+  emptyVoid(): void
+  unaryType{thing: MyType}: MyType
+  unaryEnum{value: MyEnum}: MyEnum
+  unaryString{value: string}: string
+  unaryI64{value: i64}: i64
+  unaryI32{value: i32}: i32
+  unaryI16{value: i16}: i16
+  unaryI8{value: i8}: i8
+  unaryU64{value: u64}: u64
+  unaryU32{value: u32}: u32
+  unaryU16{value: u16}: u16
+  unaryU8{value: u8}: u8
+  unaryF64{value: f64}: f64
+  unaryF32{value: f32}: f32
+  unaryBytes{value: bytes}: bytes
+}
+
+"Repository is an interface"
+role Repository {
+  getData(): MyType
+}
+
+"MyUnion is either MyType or MyEnum"
+union MyUnion = MyType | MyEnum
+
+"MyType is a class-like definition"
+type MyType {
+  "same type value"
+  sameValue: MyType?
+  "type value"
+  typeValue: MyOtherType
+  "string value"
+  stringValue: string
+  "i64 value"
+  i64Value: i64
+  "i32 value"
+  i32Value: i32
+  "i16 value"
+  i16Value: i16
+  "i8 value"
+  i8Value: i8
+  "u64 value"
+  u64Value: u64
+  "u32 value"
+  u32Value: u32
+  "u16 value"
+  u16Value: u16
+  "u8 value"
+  u8Value: u8
+  "f64 value"
+  f64Value: f64
+  "f32 value"
+  f32Value: f32
+  "bytes value"
+  bytesValue: bytes
+  "map value"
+  mapValue: { string: i64 }
+  "map of types"
+  mapOfTypes: { string: MyType }
+  "array value"
+  arrayValue: [string]
+  "array of types"
+  arrayOfTypes: [MyType]
+}
+
+type MyOtherType {
+  foo: string
+  bar: string
+}
+
+"MyEnum is an enumeration"
+enum MyEnum {
+  "ONE value"
+  ONE = 0 as "one"
+  "TWO value"
+  TWO = 1
+  "THREE value"
+  THREE = 2 as "three"
+}

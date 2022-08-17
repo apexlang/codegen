@@ -1,0 +1,14 @@
+spec: ../spec.apexlang
+generates:
+  basics.rs:
+    module: ../../../src/rust
+    visitorClass: RustBasic
+    config:
+      derive:
+        _all:
+          - Clone
+          - Debug
+          - PartialEq
+        MyOtherType:
+          - serde::Serialize
+          - serde::Deserialize
