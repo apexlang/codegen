@@ -34,7 +34,7 @@ export class ImportsVisitor extends BaseVisitor {
   private externalImports: { [key: string]: Import } = {};
 
   visitNamespaceAfter(context: Context): void {
-    const stdLib = ["context"];
+    const stdLib = [];
     for (const key in this.imports) {
       const i = this.imports[key];
       if (i.import) {
@@ -42,9 +42,6 @@ export class ImportsVisitor extends BaseVisitor {
       }
     }
     stdLib.sort();
-    for (const lib of stdLib) {
-      this.write(`\t"${lib}"\n`);
-    }
 
     const thirdPartyLib = [];
     for (const key in this.externalImports) {
@@ -54,12 +51,27 @@ export class ImportsVisitor extends BaseVisitor {
       }
     }
     thirdPartyLib.sort();
-    if (thirdPartyLib.length > 0) {
-      this.write(`\n`);
+
+    if (stdLib.length > 0 || thirdPartyLib.length > 0) {
+      this.write(`import (\n`);
+      for (const lib of stdLib) {
+        this.write(`\t"${lib}"\n`);
+      }
+      if (thirdPartyLib.length > 0) {
+        this.write(`\n`);
+      }
+      for (const lib of thirdPartyLib) {
+        this.write(`\t"${lib}"\n`);
+      }
+      this.write(`)\n`);
     }
-    for (const lib of thirdPartyLib) {
-      this.write(`\t"${lib}"\n`);
-    }
+  }
+
+  visitOperationAfter(context: Context): void {
+    this.addType("context", {
+      type: "context.Context",
+      import: "context",
+    });
   }
 
   addType(name: string, i: Import) {

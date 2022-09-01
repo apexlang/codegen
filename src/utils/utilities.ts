@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { FieldDefinition, Name, TypeDefinition } from "@apexlang/core/ast";
 import {
   AnyType,
   Context,
@@ -30,7 +29,22 @@ import {
   Operation,
   Role,
   Stream,
+  Union,
+  Primitive,
+  Named,
 } from "@apexlang/core/model";
+import {
+  FieldDefinition,
+  Name,
+  Named as ASTNamed,
+  TypeDefinition,
+  Optional as OptionalAST,
+  Type as ASTType,
+  ListType,
+  MapType,
+  Stream as StreamType,
+  StringValue,
+} from "@apexlang/core/ast";
 
 export function isOneOfType(context: Context, types: string[]): boolean {
   if (context.role) {
@@ -528,19 +542,6 @@ export function renamed(
   return ret;
 }
 
-/**
- * Determines if one of the annotations provided is a reference
- * @param annotations array of Directives
- */
-export function isReference(annotations: Annotation[]): boolean {
-  for (let annotation of annotations) {
-    if (annotation.name == "ref" || annotation.name == "reference") {
-      return true;
-    }
-  }
-  return false;
-}
-
 export function operationTypeName(operation: Operation): string {
   return capitalize(renamed(operation, operation.name)!);
 }
@@ -576,6 +577,104 @@ export function convertOperationToType(
       fields
     )
   );
+}
+
+export function convertUnionToType(tr: TypeResolver, union: Union): Type {
+  var fields = union.types.map((param) => {
+    const n = typeName(param);
+    const t = modelToAST(param);
+    return new FieldDefinition(
+      undefined,
+      new Name(undefined, n),
+      undefined,
+      new OptionalAST(undefined, t),
+      undefined,
+      []
+    );
+  });
+  return new Type(
+    tr,
+    new TypeDefinition(
+      union.node.loc,
+      new Name(union.node.name.loc, union.name),
+      union.description != undefined
+        ? new StringValue(undefined, union.description)
+        : undefined,
+      [],
+      union.node.annotations,
+      fields
+    )
+  );
+}
+
+function modelToAST(t: AnyType): ASTType {
+  switch (t.kind) {
+    case Kind.Primitive: {
+      const p = t as Primitive;
+      return new ASTNamed(undefined, new Name(undefined, p.name));
+    }
+    case Kind.Alias:
+    case Kind.Enum:
+    case Kind.Type:
+    case Kind.Union: {
+      const a = t as unknown as Named;
+      return new ASTNamed(undefined, new Name(undefined, a.name));
+    }
+    case Kind.Stream: {
+      const o = t as Optional;
+      return new StreamType(undefined, modelToAST(o.type));
+    }
+    case Kind.Optional: {
+      const o = t as Optional;
+      return new OptionalAST(undefined, modelToAST(o.type));
+    }
+    case Kind.List: {
+      const l = t as List;
+      return new ListType(undefined, modelToAST(l.type));
+    }
+    case Kind.Map: {
+      const l = t as Map;
+      return new MapType(
+        undefined,
+        modelToAST(l.keyType),
+        modelToAST(l.keyType)
+      );
+    }
+  }
+  return new ASTNamed(undefined, new Name(undefined, "????"));
+}
+
+function typeName(t: AnyType): string {
+  switch (t.kind) {
+    case Kind.Primitive: {
+      const p = t as Primitive;
+      return p.name;
+    }
+    case Kind.Alias:
+    case Kind.Enum:
+    case Kind.Type:
+    case Kind.Union: {
+      const a = t as unknown as Named;
+      return a.name;
+    }
+    case Kind.Stream: {
+      const s = t as Stream;
+      return "stream{" + modelToAST(s.type) + "}";
+    }
+    case Kind.Optional: {
+      const o = t as Optional;
+      return "optional{" + modelToAST(o.type) + "}";
+    }
+    case Kind.List: {
+      const l = t as List;
+      return "list{" + modelToAST(l.type) + "}";
+    }
+    case Kind.Map: {
+      const l = t as Map;
+      return "map{" + modelToAST(l.keyType) + "," + modelToAST(l.keyType) + "}";
+    }
+  }
+  return "????";
 }
 
 export function convertArrayToObject<T, D>(

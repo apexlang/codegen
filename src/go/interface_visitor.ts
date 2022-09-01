@@ -32,10 +32,7 @@ export class InterfaceVisitor extends BaseVisitor {
       return;
     }
     this.write(formatComment("// ", operation.description));
-    this.write(`${methodName(operation, operation.name)}(ctx context.Context`);
-    if (operation.parameters.length > 0) {
-      this.write(`, `);
-    }
+    this.write(`${methodName(operation, operation.name)}(`);
     const translate = translateAlias(context);
     this.write(
       `${mapParams(context, operation.parameters, undefined, translate)})`

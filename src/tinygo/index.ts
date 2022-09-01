@@ -14,6 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-export * from "./exposed_types";
-export * from "./utilities";
-export * from "./uses_visitor";
+export * from "./wapc_handlers_visitor";
+export * from "./wapc_host_visitor";
+export * from "./wapc_main_visitor";
+export * from "./wapc_export_visitor";
+export * from "./msgpack_decoder_visitor";
+export * from "./msgpack_encoder_visitor";
+export * from "./wapc_wrappers_visitor";
+export * from "./msgpack_helpers";

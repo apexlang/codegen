@@ -30,6 +30,7 @@ import {
   Annotated,
   Named,
   PrimitiveName,
+  Role,
 } from "@apexlang/core/model";
 import { capitalize, renamed } from "../utils";
 import { Import } from "./alias_visitor";
@@ -147,7 +148,8 @@ export function defaultValueForType(
     case Kind.Enum:
       return (type as Named).name + "(0)";
     case Kind.Alias:
-      const aliases = context.config.aliases as { [key: string]: Import };
+      const aliases =
+        (context.config.aliases as { [key: string]: Import }) || {};
       const a = type as Alias;
       const imp = aliases[a.name];
       if (imp) {
@@ -335,11 +337,15 @@ export function mapParams(
   packageName?: string,
   translate?: (named: string) => string | undefined
 ): string {
-  return args
-    .map((arg) => {
-      return mapParam(context, arg, packageName, translate);
-    })
-    .join(", ");
+  return (
+    `ctx context.Context` +
+    (args.length > 0 ? ", " : "") +
+    args
+      .map((arg) => {
+        return mapParam(context, arg, packageName, translate);
+      })
+      .join(", ")
+  );
 }
 
 export function mapParam(
@@ -363,4 +369,8 @@ export function varAccessArg(
       return `${returnShare(arg.type)}${variable}.${fieldName(arg, arg.name)}`;
     })
     .join(", ");
+}
+
+export function receiver(role: Role): string {
+  return role.name[0].toLowerCase();
 }

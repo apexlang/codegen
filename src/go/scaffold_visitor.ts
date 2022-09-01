@@ -32,6 +32,7 @@ import {
   expandType,
   mapParams,
   methodName,
+  receiver,
   returnPointer,
   returnShare,
 } from "./helpers";
@@ -44,10 +45,20 @@ import {
 } from "../utils";
 import { Import, translateAlias } from "./alias_visitor";
 
+interface Logger {
+  import: string;
+  interface: string;
+}
+
+function getLogger(context: Context): Logger | undefined {
+  return context.config.logger as Logger;
+}
+
 export class ScaffoldVisitor extends BaseVisitor {
   visitNamespaceBefore(context: Context): void {
     const packageName = context.config.package || "myapp";
     super.visitNamespaceBefore(context);
+    const logger = getLogger(context);
 
     this.write(`package ${packageName}
 
@@ -57,7 +68,9 @@ export class ScaffoldVisitor extends BaseVisitor {
     }
     const importsVisitor = new ImportsVisitor(this.writer);
     context.namespace.accept(context, importsVisitor);
-    this.write(`\t"github.com/go-logr/logr"\n`);
+    if (logger) {
+      this.write(`\t"${logger.import}"\n`);
+    }
     this.write(`)\n\n`);
 
     const service = new ServiceVisitor(this.writer);
@@ -70,6 +83,7 @@ class ServiceVisitor extends BaseVisitor {
     const roleNames = (context.config.names as string[]) || [];
     const roleTypes = (context.config.types as string[]) || [];
     const { role } = context;
+    const logger = getLogger(context);
     if (
       !isOneOfType(context, roleTypes) &&
       roleNames.indexOf(role.name) == -1
@@ -83,21 +97,32 @@ class ServiceVisitor extends BaseVisitor {
       }
     });
     this.write(`
-    type ${role.name}Impl struct {
-      log logr.Logger
-      ${dependencies.map((e) => camelCase(e) + " " + e).join("\n\t\t")}
+    type ${role.name}Impl struct {\n`);
+    if (logger) {
+      this.write(`log ${logger.interface}\n`);
+    }
+    this.write(`${dependencies
+      .map((e) => camelCase(e) + " " + e)
+      .join("\n\t\t")}
     }
     
-    func New${role.name}Impl(log logr.Logger${
-      dependencies.length > 0 ? ", " : ""
-    }${dependencies.map((e) => camelCase(e) + " " + e).join(", ")}) *${
-      role.name
-    }Impl {
-      return &${role.name}Impl{
-        log: log,
-        ${dependencies
-          .map((e) => camelCase(e) + ": " + camelCase(e) + ",")
-          .join(",\n\t\t")}
+    func New${role.name}(`);
+    if (logger) {
+      this.write(`log ${logger.interface}`);
+      if (dependencies.length > 0) {
+        this.write(`, `);
+      }
+    }
+    this.write(`${dependencies
+      .map((e) => camelCase(e) + " " + e)
+      .join(", ")}) *${role.name}Impl {
+      return &${role.name}Impl{\n`);
+    if (logger) {
+      this.write("log: log,\n");
+    }
+    this.write(`${dependencies
+      .map((e) => camelCase(e) + ": " + camelCase(e) + ",")
+      .join(",\n\t\t")}
       }
     }\n\n`);
   }
@@ -113,14 +138,11 @@ class ServiceVisitor extends BaseVisitor {
     }
     this.write(`\n`);
     this.write(
-      `func (s *${role.name}Impl) ${methodName(
+      `func (${receiver(role)} *${role.name}Impl) ${methodName(
         operation,
         operation.name
-      )}(ctx context.Context`
+      )}(`
     );
-    if (operation.parameters.length > 0) {
-      this.write(`, `);
-    }
     const translate = translateAlias(context);
     this.write(
       `${mapParams(context, operation.parameters, undefined, translate)})`

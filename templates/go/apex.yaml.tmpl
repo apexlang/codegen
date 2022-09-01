@@ -2,6 +2,9 @@ spec: spec.apexlang
 config:
   package: {{.package}}
   module: {{.module}}
+  logger:
+    import: "github.com/go-logr/logr"
+    interface: "logr.Logger"
 generates:
   openapi.yaml:
     module: '@apexlang/codegen/openapiv3'
@@ -38,6 +41,13 @@ generates:
     config:
       types:
         - service
+  pkg/{{.package}}/providers.go:
+    ifNotExists: true
+    module: '@apexlang/codegen/go'
+    visitorClass: ScaffoldVisitor
+    config:
+      types:
+        - provider
   cmd/main.go:
     ifNotExists: false  # Change to true to control dependency injection
     module: '@apexlang/codegen/go'

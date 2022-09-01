@@ -14,14 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import {
-  Annotation,
-  BaseVisitor,
-  Context,
-  Visitor,
-  Writer,
-} from "@apexlang/core/model";
-import { camelCase, isProvider, isService } from "../utils";
+import { BaseVisitor, Context, Writer } from "@apexlang/core/model";
+import { camelCase, RoleUsesVisitor, UsesVisitor } from "../utils";
 
 interface Config {
   http: Listener;
@@ -37,15 +31,9 @@ interface Listener {
   environmentKey: string;
 }
 
-export interface ComponentVisitor extends Visitor {
-  services: Map<string, string[]>;
-  dependencies: string[];
-}
-
 export class MainVisitor extends BaseVisitor {
   // Overridable visitor implementations
-  roleVisitor = (writer: Writer): ComponentVisitor =>
-    new RoleComponentVisitor(writer);
+  usesVisitor = (writer: Writer): UsesVisitor => new RoleUsesVisitor(writer);
 
   visitNamespaceBefore(context: Context): void {
     const config = context.config as Config;
@@ -73,8 +61,8 @@ export class MainVisitor extends BaseVisitor {
       config.imports.push(`${config.module}/pkg/${config.package}`);
     }
 
-    const roleVisitor = this.roleVisitor(this.writer);
-    context.namespace.accept(context, roleVisitor);
+    const usesVisitor = this.usesVisitor(this.writer);
+    context.namespace.accept(context, usesVisitor);
 
     this.write(`package main
 
@@ -123,23 +111,23 @@ func main() {
   // Connect to data sources
 
   // Create dependencies\n`);
-    roleVisitor.dependencies.forEach((dependency) => {
+    usesVisitor.dependencies.forEach((dependency) => {
       this.write(
         `${camelCase(dependency)}Dep := ${
           config.package
-        }.New${dependency}Impl(log)\n`
+        }.New${dependency}(log)\n`
       );
     });
 
     this.write(`\n\n// Create service components\n`);
-    roleVisitor.services.forEach((dependencies, service) => {
+    usesVisitor.services.forEach((dependencies, service) => {
       const deps =
         (dependencies.length > 0 ? ", " : "") +
         dependencies.map((d) => camelCase(d) + "Dep").join(", ");
       this.write(
         `${camelCase(service)}Service := ${
           config.package
-        }.New${service}Impl(log${deps})\n`
+        }.New${service}(log${deps})\n`
       );
     });
 
@@ -157,7 +145,7 @@ func main() {
       }
       app := fiber.New(config)\n`);
 
-      roleVisitor.services.forEach((_, service) => {
+      usesVisitor.services.forEach((_, service) => {
         this.write(
           `tfiber.Register(app, ${config.package}.${service}Fiber(${camelCase(
             service
@@ -180,7 +168,7 @@ func main() {
 	{
 		server := grpc.NewServer()\n`);
 
-      roleVisitor.services.forEach((_, service) => {
+      usesVisitor.services.forEach((_, service) => {
         this.write(
           `tgrpc.Register(server, ${config.package}.${service}GRPC(${camelCase(
             service
@@ -222,26 +210,5 @@ func getEnv(key string, defaultVal string) string {
 	return val
 }
 `);
-  }
-}
-
-class RoleComponentVisitor extends BaseVisitor implements ComponentVisitor {
-  services: Map<string, string[]> = new Map();
-  dependencies: string[] = [];
-
-  visitRole(context: Context): void {
-    const { role } = context;
-    if (isService(context)) {
-      let dependencies: string[] = [];
-      role.annotation("uses", (a: Annotation) => {
-        if (a.arguments.length > 0) {
-          dependencies = a.arguments[0].value.getValue() as string[];
-        }
-      });
-      this.services.set(role.name, dependencies);
-    }
-    if (isProvider(context)) {
-      this.dependencies.push(role.name);
-    }
   }
 }

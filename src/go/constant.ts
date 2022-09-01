@@ -16,6 +16,7 @@ limitations under the License.
 
 export const translations = new Map<string, string>([
   ["ID", "string"],
+  ["string", "string"],
   ["bytes", "[]byte"],
   ["i8", "int8"],
   ["i16", "int16"],
