@@ -20,10 +20,10 @@ import { translateAlias } from "./alias_visitor";
 import { formatComment, isVoid, noCode } from "../utils";
 
 export class InterfaceVisitor extends BaseVisitor {
-  visitRoleBefore(context: Context): void {
-    const { role } = context;
-    this.write(formatComment("// ", role.description));
-    this.write(`type ${role.name} interface {\n`);
+  visitInterfaceBefore(context: Context): void {
+    const { interface: iface } = context;
+    this.write(formatComment("// ", iface.description));
+    this.write(`type ${iface.name} interface {\n`);
   }
 
   visitOperation(context: Context): void {
@@ -52,7 +52,7 @@ export class InterfaceVisitor extends BaseVisitor {
     this.write(`\n`);
   }
 
-  visitRoleAfter(context: Context): void {
+  visitInterfaceAfter(context: Context): void {
     this.write(`}\n\n`);
   }
 }

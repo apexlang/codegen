@@ -66,12 +66,11 @@ export class WrapperFuncsVisitor extends BaseVisitor {
       return;
     }
     const tr = translateAlias(context);
-    const role = context.role;
-    const operation = context.operation;
+    const { interface: iface, operation } = context;
     this.write(
-      `func ${uncapitalize(role.name)}${capitalize(
+      `func ${uncapitalize(iface.name)}${capitalize(
         operation.name
-      )}Wrapper(svc ${role.name}) wapc.Function {
+      )}Wrapper(svc ${iface.name}) wapc.Function {
         return func(payload []byte) ([]byte, error) {
           ctx := context.Background()\n`
     );
@@ -117,7 +116,7 @@ export class WrapperFuncsVisitor extends BaseVisitor {
       );
     } else {
       if (operation.parameters.length > 0) {
-        this.write(`var inputArgs ${uncapitalize(role.name)}${capitalize(
+        this.write(`var inputArgs ${uncapitalize(iface.name)}${capitalize(
           operation.name
         )}Args
         inputArgs.Decode(&decoder)\n`);

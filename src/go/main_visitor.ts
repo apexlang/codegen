@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 import { BaseVisitor, Context, Writer } from "@apexlang/core/model";
-import { camelCase, RoleUsesVisitor, UsesVisitor } from "../utils";
+import { camelCase, InterfaceUsesVisitor, UsesVisitor } from "../utils";
 
 interface Config {
   http: Listener;
@@ -33,7 +33,8 @@ interface Listener {
 
 export class MainVisitor extends BaseVisitor {
   // Overridable visitor implementations
-  usesVisitor = (writer: Writer): UsesVisitor => new RoleUsesVisitor(writer);
+  usesVisitor = (writer: Writer): UsesVisitor =>
+    new InterfaceUsesVisitor(writer);
 
   visitNamespaceBefore(context: Context): void {
     const config = context.config as Config;

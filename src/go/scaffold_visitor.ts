@@ -79,25 +79,25 @@ export class ScaffoldVisitor extends BaseVisitor {
 }
 
 class ServiceVisitor extends BaseVisitor {
-  visitRoleBefore(context: Context): void {
+  visitInterfaceBefore(context: Context): void {
     const roleNames = (context.config.names as string[]) || [];
     const roleTypes = (context.config.types as string[]) || [];
-    const { role } = context;
+    const { interface: iface } = context;
     const logger = getLogger(context);
     if (
       !isOneOfType(context, roleTypes) &&
-      roleNames.indexOf(role.name) == -1
+      roleNames.indexOf(iface.name) == -1
     ) {
       return;
     }
     let dependencies: string[] = [];
-    role.annotation("uses", (a) => {
+    iface.annotation("uses", (a) => {
       if (a.arguments.length > 0) {
         dependencies = a.arguments[0].value.getValue() as string[];
       }
     });
     this.write(`
-    type ${role.name}Impl struct {\n`);
+    type ${iface.name}Impl struct {\n`);
     if (logger) {
       this.write(`log ${logger.interface}\n`);
     }
@@ -106,7 +106,7 @@ class ServiceVisitor extends BaseVisitor {
       .join("\n\t\t")}
     }
     
-    func New${role.name}(`);
+    func New${iface.name}(`);
     if (logger) {
       this.write(`log ${logger.interface}`);
       if (dependencies.length > 0) {
@@ -115,8 +115,8 @@ class ServiceVisitor extends BaseVisitor {
     }
     this.write(`${dependencies
       .map((e) => camelCase(e) + " " + e)
-      .join(", ")}) *${role.name}Impl {
-      return &${role.name}Impl{\n`);
+      .join(", ")}) *${iface.name}Impl {
+      return &${iface.name}Impl{\n`);
     if (logger) {
       this.write("log: log,\n");
     }
@@ -132,13 +132,13 @@ class ServiceVisitor extends BaseVisitor {
       return;
     }
 
-    const { operation, role } = context;
+    const { operation, interface: iface } = context;
     if (noCode(operation)) {
       return;
     }
     this.write(`\n`);
     this.write(
-      `func (${receiver(role)} *${role.name}Impl) ${methodName(
+      `func (${receiver(iface)} *${iface.name}Impl) ${methodName(
         operation,
         operation.name
       )}(`
@@ -289,6 +289,6 @@ class ImportsVisitor extends BaseVisitor {
 function isValid(context: Context): boolean {
   const roleNames = (context.config.names as string[]) || [];
   const roleTypes = (context.config.types as string[]) || [];
-  const { role } = context;
-  return isOneOfType(context, roleTypes) || roleNames.indexOf(role.name) != -1;
+  const { interface: iface } = context;
+  return isOneOfType(context, roleTypes) || roleNames.indexOf(iface.name) != -1;
 }

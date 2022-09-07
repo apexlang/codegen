@@ -1,6 +1,6 @@
 {
   "name": "@apexlang/codegen",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Apex built-in code generators",
   "keywords": [
     "apex",
@@ -64,7 +64,7 @@
     "prerelease": "npm run build"
   },
   "dependencies": {
-    "@apexlang/core": "^0.0.27",
+    "@apexlang/core": "^0.1.0",
     "yaml": "^1.10.2",
     "openapi3-ts": "^2.0.2"
   },

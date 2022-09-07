@@ -51,18 +51,18 @@ export class WapcHostVisitor extends BaseVisitor {
       return;
     }
     const ns = context.namespace;
-    const { role, operation } = context;
+    const { interface: iface, operation } = context;
     const tr = translateAlias(context);
-    this.write(`type ${role.name}Impl struct {
+    this.write(`type ${iface.name}Impl struct {
 \tbinding string
 }
 
-func New${role.name}(binding ...string) *${role.name}Impl {
+func New${iface.name}(binding ...string) *${iface.name}Impl {
   var bindingName string
   if len(binding) > 0 {
     bindingName = binding[0]
   }
-\treturn &${role.name}Impl{
+\treturn &${iface.name}Impl{
 \t\tbinding: bindingName,
 \t}
 }\n`);
@@ -70,7 +70,7 @@ func New${role.name}(binding ...string) *${role.name}Impl {
 
     this.write(formatComment("    // ", operation.description));
     this.write(
-      `func (h *${role.name}Impl) ${capitalize(
+      `func (h *${iface.name}Impl) ${capitalize(
         operation.name
       )}(ctx context.Context`
     );
@@ -117,7 +117,7 @@ func New${role.name}(binding ...string) *${role.name}Impl {
         this.write(`_, err := `);
       }
       this.write(
-        `wapc.HostCall(h.binding, "${ns.name}.${role.name}", "${operation.name}", []byte{})\n`
+        `wapc.HostCall(h.binding, "${ns.name}.${iface.name}", "${operation.name}", []byte{})\n`
       );
     } else if (operation.isUnary()) {
       const unaryParam = operation.unaryOp();
@@ -138,11 +138,11 @@ func New${role.name}(binding ...string) *${role.name}Impl {
         this.write(`_, err = `);
       }
       this.write(
-        `wapc.HostCall(h.binding, "${ns.name}.${role.name}", "${operation.name}", inputBytes)\n`
+        `wapc.HostCall(h.binding, "${ns.name}.${iface.name}", "${operation.name}", inputBytes)\n`
       );
     } else {
       this.write(
-        `inputArgs := ${uncapitalize(role.name)}${fieldName(
+        `inputArgs := ${uncapitalize(iface.name)}${fieldName(
           operation,
           operation.name
         )}Args{\n`
@@ -168,7 +168,7 @@ func New${role.name}(binding ...string) *${role.name}Impl {
       }
       this.write(`wapc.HostCall(
       h.binding,
-      "${ns.name}.${role.name}",
+      "${ns.name}.${iface.name}",
       "${operation.name}",
       inputBytes,
     )\n`);

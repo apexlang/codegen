@@ -27,11 +27,11 @@ import {
   Annotation,
   TypeResolver,
   Operation,
-  Role,
   Stream,
   Union,
   Primitive,
   Named,
+  Interface,
 } from "@apexlang/core/model";
 import {
   FieldDefinition,
@@ -47,11 +47,11 @@ import {
 } from "@apexlang/core/ast";
 
 export function isOneOfType(context: Context, types: string[]): boolean {
-  if (context.role) {
-    const role = context.role;
+  if (context.interface) {
+    const iface = context.interface;
     let found = false;
     for (let i = 0; i < types.length; i++) {
-      if (role.annotation(types[i]) != undefined) {
+      if (iface.annotation(types[i]) != undefined) {
         found = true;
         break;
       }
@@ -60,7 +60,7 @@ export function isOneOfType(context: Context, types: string[]): boolean {
       return false;
     }
     return (
-      role.operations.find((o) => {
+      iface.operations.find((o) => {
         return o.annotation("nocode") == undefined;
       }) != undefined
     );
@@ -74,15 +74,12 @@ export function isHandler(context: Context): boolean {
 
 export function isService(context: Context): boolean {
   if (context.interface) {
-    return true;
-  }
-  if (context.role) {
-    const { role } = context;
-    if (role.annotation("service") == undefined) {
+    const { interface: iface } = context;
+    if (iface.annotation("service") == undefined) {
       return false;
     }
     return (
-      role.operations.find((o) => {
+      iface.operations.find((o) => {
         return o.annotation("nocode") == undefined;
       }) != undefined
     );
@@ -91,8 +88,8 @@ export function isService(context: Context): boolean {
 }
 
 export function hasServiceCode(context: Context): boolean {
-  for (let name in context.namespace.roles) {
-    const role = context.namespace.roles[name];
+  for (let name in context.namespace.interfaces) {
+    const role = context.namespace.interfaces[name];
     if (role.annotation("service") == undefined) {
       continue;
     }
@@ -107,9 +104,9 @@ export function hasServiceCode(context: Context): boolean {
   return false;
 }
 
-export function hasMethods(role: Role): boolean {
+export function hasMethods(iface: Interface): boolean {
   if (
-    role.operations.find((o) => {
+    iface.operations.find((o) => {
       return o.annotation("nocode") == undefined;
     }) != undefined
   ) {
@@ -120,19 +117,16 @@ export function hasMethods(role: Role): boolean {
 
 export function hasCode(context: Context): boolean {
   if (context.interface) {
-    return true;
-  }
-  if (context.role) {
-    const { role } = context;
+    const { interface: iface } = context;
     if (
-      role.annotation("service") == undefined &&
-      role.annotation("provider") == undefined &&
-      role.annotation("dependency") == undefined
+      iface.annotation("service") == undefined &&
+      iface.annotation("provider") == undefined &&
+      iface.annotation("dependency") == undefined
     ) {
       return false;
     }
     return (
-      role.operations.find((o) => {
+      iface.operations.find((o) => {
         return o.annotation("nocode") == undefined;
       }) != undefined
     );
@@ -141,13 +135,13 @@ export function hasCode(context: Context): boolean {
 }
 
 export function isEvents(context: Context): boolean {
-  if (context.role) {
-    const { role } = context;
-    if (role.annotation("events") == undefined) {
+  if (context.interface) {
+    const { interface: iface } = context;
+    if (iface.annotation("events") == undefined) {
       return false;
     }
     return (
-      role.operations.find((o) => {
+      iface.operations.find((o) => {
         return o.annotation("nocode") == undefined;
       }) != undefined
     );
@@ -156,17 +150,17 @@ export function isEvents(context: Context): boolean {
 }
 
 export function isProvider(context: Context): boolean {
-  if (context.role) {
-    const { role } = context;
+  if (context.interface) {
+    const { interface: iface } = context;
     if (
-      role.annotation("provider") == undefined &&
-      role.annotation("dependency") == undefined &&
-      role.annotation("activities") == undefined
+      iface.annotation("provider") == undefined &&
+      iface.annotation("dependency") == undefined &&
+      iface.annotation("activities") == undefined
     ) {
       return false;
     }
     return (
-      role.operations.find((o) => {
+      iface.operations.find((o) => {
         return o.annotation("nocode") == undefined;
       }) != undefined
     );

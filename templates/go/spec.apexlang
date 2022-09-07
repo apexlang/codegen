@@ -21,7 +21,7 @@ namespace "greeting.v1"
   @server(url: "https://api.goodcorp.com")
   @path("/v1")
 
-role Greeter @service {
+interface Greeter @service {
     sayHello(firstName: string @n(1), lastName: string @n(2)): string
       @path("/greeting") @POST
 }

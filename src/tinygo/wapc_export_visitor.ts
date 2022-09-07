@@ -61,7 +61,7 @@ export class WapcExportVisitor extends BaseVisitor {
       "OperationAfter",
       "arguments",
       (context: Context): void => {
-        const { role, operation } = context;
+        const { interface: iface, operation } = context;
         if (operation.parameters.length == 0 || operation.isUnary()) {
           return;
         }
@@ -69,7 +69,7 @@ export class WapcExportVisitor extends BaseVisitor {
         const type = convertOperationToType(
           tr,
           operation,
-          uncapitalize(role.name)
+          uncapitalize(iface.name)
         );
         const ctx = context.clone({ type: type });
         const struct = new StructVisitor(this.writer);

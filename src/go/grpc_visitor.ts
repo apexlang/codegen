@@ -89,25 +89,25 @@ const (
     super.triggerNamespaceBefore(context);
   }
 
-  visitRoleBefore(context: Context): void {
+  visitInterfaceBefore(context: Context): void {
     if (!isService(context)) {
       return;
     }
 
-    const { role } = context;
-    this.write(`func ${role.name}GRPC(s ${role.name}) tgrpc.RegisterFn {
+    const { interface: iface } = context;
+    this.write(`func ${iface.name}GRPC(s ${iface.name}) tgrpc.RegisterFn {
   return func(server grpc.ServiceRegistrar) {
-    pb.Register${role.name}Server(server, New${role.name}GRPCWrapper(s))
+    pb.Register${iface.name}Server(server, New${iface.name}GRPCWrapper(s))
   }
 }
 
-type ${role.name}GRPCWrapper struct {
-  pb.Unimplemented${role.name}Server
-  service ${role.name}
+type ${iface.name}GRPCWrapper struct {
+  pb.Unimplemented${iface.name}Server
+  service ${iface.name}
 }
 
-func New${role.name}GRPCWrapper(service ${role.name}) *${role.name}GRPCWrapper {
-  return &${role.name}GRPCWrapper{
+func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrapper {
+  return &${iface.name}GRPCWrapper{
     service: service,
   }
 }\n\n`);
@@ -118,11 +118,11 @@ func New${role.name}GRPCWrapper(service ${role.name}) *${role.name}GRPCWrapper {
       return;
     }
 
-    const { role, operation } = context;
+    const { interface: iface, operation } = context;
     const returnType = operation.type;
     const operName = capitalize(operation.name);
     this.write(
-      `func (s *${role.name}GRPCWrapper) ${operName}(ctx context.Context, `
+      `func (s *${iface.name}GRPCWrapper) ${operName}(ctx context.Context, `
     );
     if (operation.isUnary()) {
       const param = operation.parameters[0];

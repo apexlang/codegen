@@ -46,8 +46,8 @@ interface FieldNumDirective {
 }
 
 function shouldIncludeHandler(context: Context): boolean {
-  const role = context.role;
-  return role?.annotation("service") != undefined;
+  const { interface: iface } = context;
+  return iface.annotation("service") != undefined;
 }
 
 export class ProtoVisitor extends BaseVisitor {
@@ -87,7 +87,7 @@ package ${ns.name};\n\n`);
     ns.accept(context, visitor);
   }
 
-  visitRole(context: Context) {
+  visitInterface(context: Context) {
     if (!shouldIncludeHandler(context)) {
       return;
     }
@@ -96,7 +96,7 @@ package ${ns.name};\n\n`);
       this.requestTypes,
       this.exposedTypes
     );
-    context.role.accept(context, visitor);
+    context.interface.accept(context, visitor);
   }
 
   visitTypeBefore(context: Context): void {
@@ -188,13 +188,13 @@ class RoleVisitor extends BaseVisitor {
     this.requestTypes = requestTypes;
     this.exposedTypes = exposedTypes;
   }
-  visitRoleBefore(context: Context): void {
+  visitInterfaceBefore(context: Context): void {
     if (!shouldIncludeHandler(context)) {
       return;
     }
-    const { role } = context;
-    this.write(formatComment("// ", role.description));
-    this.write(`service ${role.name} {\n`);
+    const { interface: iface } = context;
+    this.write(formatComment("// ", iface.description));
+    this.write(`service ${iface.name} {\n`);
   }
 
   visitOperationBefore(context: Context): void {
@@ -258,7 +258,7 @@ class RoleVisitor extends BaseVisitor {
     }
   }
 
-  visitRoleAfter(context: Context): void {
+  visitInterfaceAfter(context: Context): void {
     if (!shouldIncludeHandler(context)) {
       return;
     }

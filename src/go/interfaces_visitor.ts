@@ -57,14 +57,14 @@ export class InterfacesVisitor extends BaseVisitor {
     super.triggerNamespaceBefore(context);
   }
 
-  visitRoleBefore(context: Context): void {
-    const { role } = context;
+  visitInterfaceBefore(context: Context): void {
+    const { interface: iface } = context;
     if (isProvider(context)) {
       const visitor = this.dependencyVisitor(this.writer);
-      role.accept(context, visitor);
+      iface.accept(context, visitor);
     } else if (isHandler(context)) {
       const visitor = this.serviceVisitor(this.writer);
-      role.accept(context, visitor);
+      iface.accept(context, visitor);
     }
   }
 

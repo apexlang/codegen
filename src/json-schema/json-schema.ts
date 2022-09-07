@@ -1,4 +1,4 @@
-import { Name, Named } from "@apexlang/core/dist/ast";
+import { Named } from "@apexlang/core/dist/ast";
 import {
   BaseVisitor,
   Context,
@@ -11,10 +11,8 @@ import {
   List,
   Map,
   Optional,
-  primitives,
-  Enum,
 } from "@apexlang/core/model";
-import { SchemaObject, ReferenceObject, isSchemaObject } from "openapi3-ts";
+import { SchemaObject, ReferenceObject } from "openapi3-ts";
 import { convertArrayToObject } from "../utils";
 
 interface Definitions {

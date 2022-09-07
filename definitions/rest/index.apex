@@ -1,4 +1,4 @@
-directive @path(value: string) on NAMESPACE | INTERFACE | ROLE | OPERATION
+directive @path(value: string) on NAMESPACE | INTERFACE | OPERATION
 
 directive @GET on OPERATION
 directive @POST on OPERATION

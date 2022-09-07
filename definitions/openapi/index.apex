@@ -45,7 +45,7 @@ directive @response(
   returns: string?,
   examples: { string : string }
 ) on OPERATION
-#require @path on SELF | INTERFACE | ROLE | NAMESPACE
+#require @path on SELF | INTERFACE | NAMESPACE
 
 enum StatusCode @novisit {
   OK = 200 as "OK"

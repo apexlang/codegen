@@ -33,10 +33,10 @@ func main() {
 	// Connect to data sources
 
 	// Create dependencies
-	repositoryDep := outputtest.NewRepositoryImpl(log)
+	repositoryDep := outputtest.NewRepository(log)
 
 	// Create service components
-	myServiceService := outputtest.NewMyServiceImpl(log, repositoryDep)
+	myServiceService := outputtest.NewMyService(log, repositoryDep)
 
 	var g run.Group
 	// REST/HTTP

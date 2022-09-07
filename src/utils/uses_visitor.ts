@@ -27,23 +27,23 @@ export interface UsesVisitor extends Visitor {
   dependencies: string[];
 }
 
-export class RoleUsesVisitor extends BaseVisitor implements UsesVisitor {
+export class InterfaceUsesVisitor extends BaseVisitor implements UsesVisitor {
   services: Map<string, string[]> = new Map();
   dependencies: string[] = [];
 
-  visitRole(context: Context): void {
-    const { role } = context;
+  visitInterface(context: Context): void {
+    const { interface: iface } = context;
     if (isService(context)) {
       let dependencies: string[] = [];
-      role.annotation("uses", (a: Annotation) => {
+      iface.annotation("uses", (a: Annotation) => {
         if (a.arguments.length > 0) {
           dependencies = a.arguments[0].value.getValue() as string[];
         }
       });
-      this.services.set(role.name, dependencies);
+      this.services.set(iface.name, dependencies);
     }
     if (isProvider(context)) {
-      this.dependencies.push(role.name);
+      this.dependencies.push(iface.name);
     }
   }
 }

@@ -64,13 +64,13 @@ export class WapcHandlersVisitor extends BaseVisitor {
 }
 
 export class RegisterVisitor extends BaseVisitor {
-  visitRoleBefore(context: Context): void {
+  visitInterfaceBefore(context: Context): void {
     if (!isService(context)) {
       return;
     }
-    super.triggerRoleBefore(context);
+    super.triggerInterfaceBefore(context);
     this.write(
-      `func Register${context.role.name}(svc ${context.role.name}) {\n`
+      `func Register${context.interface.name}(svc ${context.interface.name}) {\n`
     );
   }
 
@@ -78,24 +78,23 @@ export class RegisterVisitor extends BaseVisitor {
     if (!isService(context)) {
       return;
     }
-    const ns = context.namespace;
-    const role = context.role;
+    const { namespace: ns, interface: iface } = context;
     const operation = context.operation;
     this.write(
-      `wapc.RegisterFunction("${ns.name}.${role.name}/${
+      `wapc.RegisterFunction("${ns.name}.${iface.name}/${
         operation.name
-      }", ${uncapitalize(role.name)}${capitalize(
+      }", ${uncapitalize(iface.name)}${capitalize(
         operation.name
       )}Wrapper(svc))\n`
     );
     super.triggerOperation(context);
   }
 
-  visitRoleAfter(context: Context): void {
+  visitInterfaceAfter(context: Context): void {
     if (!isService(context)) {
       return;
     }
     this.write(`}\n\n`);
-    super.triggerRoleAfter(context);
+    super.triggerInterfaceAfter(context);
   }
 }

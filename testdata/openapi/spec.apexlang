@@ -21,38 +21,38 @@ namespace "apex.testing"
   @server(url: "https://api.goodcorp.com")
   @path("/v1")
 
-role MyService @service @uses(["Repository"]) {
+interface MyService @service @uses(["Repository"]) {
   emptyVoid(): void
     @GET
-  unaryType{value: MyType}: MyType
+  unaryType[value : MyType]: MyType
     @path("/unaryType") @POST
-  unaryEnum{value: MyEnum}: MyEnum
+  unaryEnum[value : MyEnum]: MyEnum
     @path("/unaryEnum") @POST
-  unaryAlias{value: UUID}: UUID
+  unaryAlias[value : UUID]: UUID
     @path("/unaryAlias") @POST
-  unaryString{value: string}: string
+  unaryString[value : string]: string
     @path("/unaryString") @POST
-  unaryI64{value: i64}: i64
+  unaryI64[value : i64]: i64
     @path("/unaryI64") @POST
-  unaryI32{value: i32}: i32
+  unaryI32[value : i32]: i32
     @path("/unaryI32") @POST
-  unaryI16{value: i16}: i16
+  unaryI16[value : i16]: i16
     @path("/unaryI16") @POST
-  unaryI8{value: i8}: i8
+  unaryI8[value : i8]: i8
     @path("/unaryI8") @POST
-  unaryU64{value: u64}: u64
+  unaryU64[value : u64]: u64
     @path("/unaryU64") @POST
-  unaryU32{value: u32}: u32
+  unaryU32[value : u32]: u32
     @path("/unaryU32") @POST
-  unaryU16{value: u16}: u16
+  unaryU16[value : u16]: u16
     @path("/unaryU16") @POST
-  unaryU8{value: u8}: u8
+  unaryU8[value : u8]: u8
     @path("/unaryU8") @POST
-  unaryF64{value: f64}: f64
+  unaryF64[value : f64]: f64
     @path("/unaryF64") @POST
-  unaryF32{value: f32}: f32
+  unaryF32[value : f32]: f32
     @path("/unaryF32") @POST
-  unaryBytes{value: bytes}: bytes
+  unaryBytes[value : bytes]: bytes
     @path("/unaryBytes") @POST
 
   funcType(value: MyType @n(1), optional: MyType? @n(2)): MyType
@@ -87,7 +87,7 @@ role MyService @service @uses(["Repository"]) {
     @path("/funcBytes") @POST
 }
 
-role Repository @dependency {
+interface Repository @dependency {
   getData(): MyType
 }
 

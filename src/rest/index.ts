@@ -30,7 +30,7 @@ export interface ResponseDirective {
 export function getPath(context: Context): string {
   const ns = context.namespace;
   const inter = context.interface;
-  const { role, operation } = context;
+  const { interface: iface, operation } = context;
 
   let path = "";
   ns.annotation("path", (a) => {
@@ -41,8 +41,8 @@ export function getPath(context: Context): string {
       path += a.convert<PathDirective>().value;
     });
   }
-  if (role) {
-    role.annotation("path", (a) => {
+  if (iface) {
+    iface.annotation("path", (a) => {
       path += a.convert<PathDirective>().value;
     });
   }

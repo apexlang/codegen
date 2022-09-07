@@ -141,14 +141,14 @@ export class OpenAPIV3Visitor extends BaseVisitor {
     });
   }
 
-  visitRole(context: Context): void {
+  visitInterface(context: Context): void {
     if (!isService(context)) {
       return;
     }
-    const { role } = context;
+    const { interface: iface } = context;
     this.root.addTag({
-      name: role.name,
-      description: role.description,
+      name: iface.name,
+      description: iface.description,
     });
   }
 
@@ -156,7 +156,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
     if (!isService(context)) {
       return;
     }
-    const { role, operation } = context;
+    const { interface: iface, operation } = context;
     const path = getPath(context);
     if (path == "") {
       return;
@@ -193,7 +193,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
       summary: summary,
       description: operation.description,
       responses: {},
-      tags: [role.name],
+      tags: [iface.name],
     };
     operation.annotation("deprecated", (a) => {
       this.operation!.deprecated = true;

@@ -30,7 +30,7 @@ import {
   Annotated,
   Named,
   PrimitiveName,
-  Role,
+  Interface,
 } from "@apexlang/core/model";
 import { capitalize, renamed } from "../utils";
 import { Import } from "./alias_visitor";
@@ -371,6 +371,6 @@ export function varAccessArg(
     .join(", ");
 }
 
-export function receiver(role: Role): string {
-  return role.name[0].toLowerCase();
+export function receiver(iface: Interface): string {
+  return iface.name[0].toLowerCase();
 }

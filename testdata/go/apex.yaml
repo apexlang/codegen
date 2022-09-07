@@ -8,6 +8,9 @@ config:
       import: github.com/google/uuid
       parse: uuid.Parse
       format: String
+  logger:
+    import: github.com/go-logr/logr
+    interface: logr.Logger
 generates:
   openapi.yaml:
     module: '@apexlang/codegen/openapiv3'

@@ -15,11 +15,17 @@ limitations under the License.
 */
 
 import { Context, BaseVisitor, Writer } from "@apexlang/core/model";
-import { camelCase, isService, RoleUsesVisitor, UsesVisitor } from "../utils";
+import {
+  camelCase,
+  isService,
+  InterfaceUsesVisitor,
+  UsesVisitor,
+} from "../utils";
 
 export class WapcMainVisitor extends BaseVisitor {
   // Overridable visitor implementations
-  usesVisitor = (writer: Writer): UsesVisitor => new RoleUsesVisitor(writer);
+  usesVisitor = (writer: Writer): UsesVisitor =>
+    new InterfaceUsesVisitor(writer);
   uses: UsesVisitor | undefined = undefined;
 
   visitNamespaceBefore(context: Context): void {
@@ -71,16 +77,16 @@ export class WapcMainVisitor extends BaseVisitor {
 }
 
 class HandlerRegistrationVisitor extends BaseVisitor {
-  visitRole(context: Context): void {
+  visitInterface(context: Context): void {
     if (!isService(context)) {
       return;
     }
     const packageName = context.config["package"] || "module";
-    const { role } = context;
+    const { interface: iface } = context;
 
     this.write(
-      `\t\t${packageName}.Register${role.name}(${camelCase(
-        role.name
+      `\t\t${packageName}.Register${iface.name}(${camelCase(
+        iface.name
       )}Service)\n`
     );
   }

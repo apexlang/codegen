@@ -63,21 +63,22 @@ const _ = httpresponse.Package
     super.triggerNamespaceBefore(context);
   }
 
-  visitRoleBefore(context: Context): void {
+  visitInterfaceBefore(context: Context): void {
     if (!isService(context)) {
       return;
     }
 
-    const { role } = context;
+    const { interface: iface } = context;
     const visitor = new FiberServiceVisitor(this.writer);
-    role.accept(context, visitor);
+    iface.accept(context, visitor);
   }
 }
 
 class FiberServiceVisitor extends BaseVisitor {
-  visitRoleBefore(context: Context): void {
-    const { role } = context;
-    this.write(`func ${role.name}Fiber(service ${role.name}) tfiber.RegisterFn {
+  visitInterfaceBefore(context: Context): void {
+    const { interface: iface } = context;
+    this
+      .write(`func ${iface.name}Fiber(service ${iface.name}) tfiber.RegisterFn {
     return func(router fiber.Router) {\n`);
   }
 
@@ -177,7 +178,7 @@ class FiberServiceVisitor extends BaseVisitor {
     });
   }
 
-  visitRoleAfter(context: Context): void {
+  visitInterfaceAfter(context: Context): void {
     this.write(`  }
 }\n`);
   }
