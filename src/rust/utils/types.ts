@@ -94,7 +94,7 @@ function primitiveToRust(t: Primitive): string {
     case PrimitiveName.Bytes:
       return "Vec<u8>";
     case PrimitiveName.DateTime:
-      return "std::time::SystemTime";
+      return "time::OffsetTime";
     case PrimitiveName.F32:
       return "f32";
     case PrimitiveName.F64:

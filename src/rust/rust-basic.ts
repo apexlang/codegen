@@ -1,5 +1,5 @@
 import { Context, Writer } from "@apexlang/core/model";
-import { NamespaceWriter } from "./visitors/base";
+import { ContextWriter } from "./visitors/base";
 import { StructVisitor } from "./visitors/struct_visitor";
 import { InterfaceVisitor } from "./visitors/interface_visitor";
 import { EnumVisitor } from "./visitors/enum_visitor";
@@ -7,7 +7,7 @@ import { UnionVisitor } from "./visitors/union_visitor";
 import { rustifyCaps } from "./utils";
 import { apexToRustType } from "./utils/types";
 
-export class RustBasic extends NamespaceWriter {
+export class RustBasic extends ContextWriter {
   constructor(writer: Writer) {
     super(writer);
   }
@@ -16,7 +16,7 @@ export class RustBasic extends NamespaceWriter {
     this.append(new StructVisitor(context).toString());
   }
 
-  visitRole(context: Context): void {
+  visitInterface(context: Context): void {
     this.append(new InterfaceVisitor(context).toString());
   }
 

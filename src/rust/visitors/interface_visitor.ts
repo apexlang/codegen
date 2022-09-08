@@ -1,13 +1,13 @@
-import { Context, ObjectMap, Role } from "@apexlang/core/model";
+import { Context, Interface, ObjectMap } from "@apexlang/core/model";
 import { rustDoc, rustify, rustifyCaps, trimLines } from "../utils";
 import { apexToRustType } from "../utils/types";
 import { SourceGenerator } from "./base";
 
-export class InterfaceVisitor extends SourceGenerator<Role> {
+export class InterfaceVisitor extends SourceGenerator<Interface> {
   config: ObjectMap<any>;
 
   constructor(context: Context) {
-    super(context.role, context);
+    super(context.interface, context);
     this.config = context.config;
   }
 

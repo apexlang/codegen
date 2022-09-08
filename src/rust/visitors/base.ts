@@ -38,18 +38,24 @@ export class SourceGenerator<T extends VisitorTypes> extends AbstractVisitor {
   }
 }
 
-export class NamespaceWriter extends BaseVisitor {
+export class ContextWriter extends BaseVisitor {
   source: string = "";
 
   constructor(writer: Writer) {
+    console.log("start");
     super(writer);
+    console.log("start");
   }
 
   append(source: string): void {
     this.source += source;
   }
 
-  visitNamespaceAfter(context: Context): void {
+  visitContextBefore(context: Context): void {
+    console.log("start");
+  }
+
+  visitContextAfter(context: Context): void {
     this.write(this.source);
   }
 }
