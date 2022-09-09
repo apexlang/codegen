@@ -15,8 +15,8 @@ limitations under the License.
 */
 
 import { Context, BaseVisitor } from "@apexlang/core/model";
-import { fieldName } from "../go";
-import { encode } from "./msgpack_helpers";
+import { fieldName } from "../go/index.js";
+import { encode } from "./msgpack_helpers.js";
 
 export class MsgPackEncoderVisitor extends BaseVisitor {
   visitTypeFieldsBefore(context: Context): void {

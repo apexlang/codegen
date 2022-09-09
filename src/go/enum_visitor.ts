@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 import { Context, BaseVisitor } from "@apexlang/core/model";
-import { formatComment, pascalCase } from "../utils";
+import { formatComment, pascalCase } from "../utils/index.js";
 
 export class EnumVisitor extends BaseVisitor {
   visitEnumBefore(context: Context): void {
@@ -62,7 +62,7 @@ export class EnumVisitor extends BaseVisitor {
       *e, ok = toID${context.enum.name}[str]
       return ok
     }
-    
+
     // MarshalJSON marshals the enum as a quoted json string
 func (e ${context.enum.name}) MarshalJSON() ([]byte, error) {
   return json.Marshal(e.String())

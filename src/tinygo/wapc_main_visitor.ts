@@ -20,7 +20,7 @@ import {
   isService,
   InterfaceUsesVisitor,
   UsesVisitor,
-} from "../utils";
+} from "../utils/index.js";
 
 export class WapcMainVisitor extends BaseVisitor {
   // Overridable visitor implementations

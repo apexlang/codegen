@@ -42,10 +42,14 @@ import {
   SchemaObject,
   ServerObject,
 } from "openapi3-ts";
-import { SummaryDirective } from "./directives";
+import { SummaryDirective } from "./directives.js";
 import * as yaml from "yaml";
-import { convertArrayToObject, ExposedTypesVisitor, isService } from "../utils";
-import { getPath, ResponseDirective } from "../rest";
+import {
+  convertArrayToObject,
+  ExposedTypesVisitor,
+  isService,
+} from "../utils/index.js";
+import { getPath, ResponseDirective } from "../rest/index.js";
 
 const statusCodes = new Map<string, string>([
   ["OK", "200"],

@@ -15,16 +15,21 @@ limitations under the License.
 */
 
 import { Context, BaseVisitor, Kind, Alias } from "@apexlang/core/model";
-import { expandType, mapParams, returnShare, translateAlias } from "../go";
+import {
+  expandType,
+  mapParams,
+  returnShare,
+  translateAlias,
+} from "../go/index.js";
 import {
   capitalize,
   isVoid,
   isObject,
   uncapitalize,
   isService,
-} from "../utils";
-import { encodeFuncs } from "./msgpack_constants";
-import { size, encode, read, varAccessParam } from "./msgpack_helpers";
+} from "../utils/index.js";
+import { encodeFuncs } from "./msgpack_constants.js";
+import { size, encode, read, varAccessParam } from "./msgpack_helpers.js";
 
 export class WapcWrapperVarsVisitor extends BaseVisitor {
   visitOperation(context: Context): void {

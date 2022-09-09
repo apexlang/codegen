@@ -1,1 +1,1 @@
-export { RustBasic } from "./rust-basic";
+export { RustBasic } from "./rust-basic.js";

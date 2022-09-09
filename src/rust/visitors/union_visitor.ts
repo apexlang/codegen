@@ -6,11 +6,11 @@ import {
   ObjectMap,
   Union,
 } from "@apexlang/core/model";
-import { codegenType, isNamed } from "../../utils";
-import { rustDoc, rustifyCaps, trimLines } from "../utils";
-import { deriveDirective, visibility } from "../utils/config";
-import { apexToRustType, isRecursiveType } from "../utils/types";
-import { SourceGenerator } from "./base";
+import { codegenType, isNamed } from "../../utils/index.js";
+import { rustDoc, rustifyCaps, trimLines } from "../utils/index.js";
+import { deriveDirective, visibility } from "../utils/config.js";
+import { apexToRustType, isRecursiveType } from "../utils/types.js";
+import { SourceGenerator } from "./base.js";
 
 function getTypeName(t: AnyType): string {
   if (isNamed(t)) {

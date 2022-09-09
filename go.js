@@ -1,1 +1,1 @@
-export * from './dist/go';
+export * from "./dist/go/index.js";

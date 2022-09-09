@@ -32,9 +32,9 @@ import {
   PrimitiveName,
   Interface,
 } from "@apexlang/core/model";
-import { capitalize, renamed } from "../utils";
-import { Import } from "./alias_visitor";
-import { translations } from "./constant";
+import { capitalize, renamed } from "../utils/index.js";
+import { Import } from "./alias_visitor.js";
+import { translations } from "./constant.js";
 
 /**
  * Takes an array of ValuedDefintions and returns a string based on supplied params.

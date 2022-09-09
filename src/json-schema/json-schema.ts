@@ -13,7 +13,7 @@ import {
   Optional,
 } from "@apexlang/core/model";
 import { SchemaObject, ReferenceObject } from "openapi3-ts";
-import { convertArrayToObject } from "../utils";
+import { convertArrayToObject } from "../utils/index.js";
 
 interface Definitions {
   $defs?: DefinitionMap;

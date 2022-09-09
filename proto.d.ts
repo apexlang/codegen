@@ -1,1 +1,1 @@
-export * from './dist/proto';
+export * from "./dist/proto/index.js";
