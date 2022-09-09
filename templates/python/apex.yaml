@@ -1,0 +1,12 @@
+spec: spec.apexlang
+generates:
+  adapter.py:
+    module: '@apexlang/codegen/python'
+    visitorClass: AdapterVisitor
+  interfaces.py:
+    module: '@apexlang/codegen/python'
+    visitorClass: InterfacesVisitor
+  service.py:
+    ifNotExists: true
+    module: '@apexlang/codegen/python'
+    visitorClass: ScaffoldVisitor

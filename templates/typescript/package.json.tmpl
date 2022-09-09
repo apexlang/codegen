@@ -1,0 +1,46 @@
+{
+  "name": "{{.name}}",
+  "version": "{{.version}}",
+  "description": "{{.description}}",
+  "author": "{{.author}}",
+  "main": "dist/index.js",
+  "scripts": {
+    "eslint": "eslint src/service.ts",
+    "build": "tsc",
+    "lint": "./node_modules/eslint/bin/eslint.js  src --ext .ts",
+    "dev": "./scripts/dev.sh",
+    "dev-server": "NODE_ENV=development nodemon",
+    "ts-node-server": "ts-node src/service.ts",
+    "start": "node dist/service.js",
+    "test": "jest",
+    "fix-lint": "./node_modules/eslint/bin/eslint.js  src --ext .ts --fix"
+  },
+  "dependencies": {
+    "@msgpack/msgpack": "^2.7.0",
+    "@types/rsocket-core": "^0.0.7",
+    "@types/rsocket-tcp-client": "^0.0.1",
+    "@types/uuid": "^8.3.4",
+    "class-transformer": "^0.4.0",
+    "dotenv": "10.0.0",
+    "reflect-metadata": "^0.1.13",
+    "typescript-lru-cache": "^1.2.1",
+    "uuid": "^8.3.2",
+    "winston": "3.3.3",
+    "winston-transport": "4.4.0"
+  },
+  "devDependencies": {
+    "@types/jest": "26.0.24",
+    "@types/node": "16.4.10",
+    "@types/supertest": "2.0.11",
+    "@typescript-eslint/eslint-plugin": "4.29.0",
+    "@typescript-eslint/parser": "4.29.0",
+    "eslint": "7.32.0",
+    "eslint-plugin-import": "2.23.4",
+    "jest": "27.0.6",
+    "nodemon": "2.0.12",
+    "supertest": "6.1.4",
+    "ts-jest": "27.0.4",
+    "ts-node": "10.1.0",
+    "typescript": "4.3.5"
+  }
+}
