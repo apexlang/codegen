@@ -1,4 +1,10 @@
-import { Context, Kind, ObjectMap, Type } from "@apexlang/core/model";
+import {
+  Context,
+  Kind,
+  ObjectMap,
+  Primitive,
+  Type,
+} from "@apexlang/core/model";
 import { rustDoc, rustify, rustifyCaps, trimLines } from "../utils";
 import { deriveDirective } from "../utils/config";
 import { apexToRustType, isRecursiveType } from "../utils/types";
@@ -30,8 +36,14 @@ export class StructVisitor extends SourceGenerator<Type> {
     let typeString =
       isRecursive && !isHeapAllocated ? `Box<${baseType}>` : baseType;
 
+    let serdeAnnotation =
+      field.type.kind === Kind.Primitive &&
+      (field.type as Primitive).name === "datetime"
+        ? `#[serde(with = "time::serde::rfc3339")]`
+        : "";
+
     this.append(
-      `${trimLines([rustDoc(field.description)])}
+      `${trimLines([rustDoc(field.description), serdeAnnotation])}
       ${rustify(field.name)}: ${typeString},
       `
     );

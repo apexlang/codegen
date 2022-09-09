@@ -6,22 +6,21 @@ import {
   ObjectMap,
   Union,
 } from "@apexlang/core/model";
+import { codegenType, isNamed } from "../../utils";
 import { rustDoc, rustifyCaps, trimLines } from "../utils";
 import { deriveDirective } from "../utils/config";
 import { apexToRustType, isRecursiveType } from "../utils/types";
 import { SourceGenerator } from "./base";
 
 function getTypeName(t: AnyType): string {
-  switch (t.kind) {
-    case Kind.Type:
-    case Kind.Enum:
-    case Kind.Union:
-    case Kind.Alias:
-      return (t as Named).name;
-    default:
-      throw new Error(
-        "Can not represent an Apex union as a Rust enum without named types or type aliases."
-      );
+  if (isNamed(t)) {
+    return t.name;
+  } else {
+    const apexType = codegenType(t);
+    throw new Error(
+      `Can't represent an Apex union with primitive or non-named types as a Rust enum.` +
+        ` Try turning "${apexType}" into an alias, e.g. "alias MyType = ${apexType}".`
+    );
   }
 }
 

@@ -1,7 +1,7 @@
 import { pascalCase, snakeCase } from "../../utils";
 
 export function rustDoc(doc?: string): string {
-  return doc ? `///${doc}` : "";
+  return doc ? `/// ${doc}` : "";
 }
 
 export function trimLines(lines: string[]): string {

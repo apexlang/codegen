@@ -1,4 +1,4 @@
-import { Context, Interface, ObjectMap } from "@apexlang/core/model";
+import { Context, Interface, ObjectMap, Operation } from "@apexlang/core/model";
 import { rustDoc, rustify, rustifyCaps, trimLines } from "../utils";
 import { apexToRustType } from "../utils/types";
 import { SourceGenerator } from "./base";
@@ -17,18 +17,19 @@ export class InterfaceVisitor extends SourceGenerator<Interface> {
   }
 
   visitOperation(context: Context): void {
-    const { operation } = context;
-    const typeString = apexToRustType(operation.type);
-    let args = operation.parameters
-      .map((arg) => {
-        return `${rustify(arg.name)}: ${apexToRustType(arg.type)}`;
-      })
-      .join(",");
-
-    this.append(
-      `${trimLines([rustDoc(operation.description)])}
-      fn ${rustify(operation.name)}(${args}) -> ${typeString};
-      `
-    );
+    this.append(genOperation(context.operation));
   }
+}
+
+export function genOperation(op: Operation): string {
+  const typeString = apexToRustType(op.type);
+  let args = op.parameters
+    .map((arg) => {
+      return `${rustify(arg.name)}: ${apexToRustType(arg.type)}`;
+    })
+    .join(",");
+
+  return `${trimLines([rustDoc(op.description)])}
+    fn ${rustify(op.name)}(${args}) -> ${typeString};
+    `;
 }

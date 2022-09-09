@@ -24,6 +24,7 @@ import {
   Type,
   Annotated,
   Alias,
+  Enum,
   Annotation,
   TypeResolver,
   Operation,
@@ -32,6 +33,7 @@ import {
   Primitive,
   Named,
   Interface,
+  Void,
 } from "@apexlang/core/model";
 import {
   FieldDefinition,
@@ -179,11 +181,11 @@ export function noCode(annotated: Annotated): boolean {
  * Determines if a node is a void node
  * @param t Node that is a Type node
  */
-export function isVoid(t: AnyType): boolean {
+export function isVoid(t: AnyType): t is Void {
   return t.kind === Kind.Void;
 }
 
-export function isNamed(t: AnyType): boolean {
+export function isNamed(t: AnyType): t is Enum | Type | Union | Alias {
   switch (t.kind) {
     case Kind.Alias:
     case Kind.Enum:
@@ -218,7 +220,7 @@ export function isObject(t: AnyType, recurseOption: boolean = true): boolean {
   return false;
 }
 
-export function isPrimitive(t: AnyType): boolean {
+export function isPrimitive(t: AnyType): t is Primitive {
   return t.kind === Kind.Primitive;
 }
 
@@ -714,4 +716,26 @@ export function unwrapKinds(t: AnyType, ...kinds: Kind[]): AnyType {
 
 export function isKinds(t: AnyType, ...kinds: Kind[]): boolean {
   return kinds.indexOf(t.kind) != -1;
+}
+
+export function codegenType(t: AnyType): string {
+  switch (t.kind) {
+    case Kind.Alias:
+    case Kind.Enum:
+    case Kind.Union:
+    case Kind.Type:
+      return (t as Named).name;
+    case Kind.Primitive:
+      return (t as Primitive).name;
+    case Kind.Map:
+      const m = t as Map;
+      return `{${codegenType(m.keyType)}: ${codegenType(m.valueType)}}`;
+    case Kind.List:
+      const l = t as List;
+      return `[${codegenType(l.type)}]`;
+    case Kind.Optional:
+      return `${codegenType((t as Optional).type)}?`;
+    default:
+      throw new Error(`Can not codegen type ${t.kind}`);
+  }
 }

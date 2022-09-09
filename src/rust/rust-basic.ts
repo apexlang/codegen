@@ -1,7 +1,7 @@
 import { Context, Writer } from "@apexlang/core/model";
 import { ContextWriter } from "./visitors/base";
 import { StructVisitor } from "./visitors/struct_visitor";
-import { InterfaceVisitor } from "./visitors/interface_visitor";
+import { genOperation, InterfaceVisitor } from "./visitors/interface_visitor";
 import { EnumVisitor } from "./visitors/enum_visitor";
 import { UnionVisitor } from "./visitors/union_visitor";
 import { rustifyCaps } from "./utils";
@@ -28,12 +28,16 @@ export class RustBasic extends ContextWriter {
     this.append(new UnionVisitor(context).toString());
   }
 
+  visitFunction(context: Context): void {
+    this.append(genOperation(context.operation));
+  }
+
   visitAlias(context: Context): void {
     const { alias } = context;
     this.append(
       `pub type ${rustifyCaps(alias.name)} = ${rustifyCaps(
         apexToRustType(alias.type)
-      )}`
+      )};\n`
     );
   }
 }

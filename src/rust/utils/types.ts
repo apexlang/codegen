@@ -10,6 +10,7 @@ import {
   Type,
   Primitive,
 } from "@apexlang/core/model";
+import { rustifyCaps } from ".";
 
 export function isRecursiveType(typ: AnyType, match: AnyType = typ): boolean {
   switch (typ.kind) {
@@ -38,6 +39,7 @@ export function isRecursiveType(typ: AnyType, match: AnyType = typ): boolean {
     }
     case Kind.Enum:
     case Kind.Primitive:
+    case Kind.Alias:
     case Kind.Void: {
       return false;
     }
@@ -70,8 +72,9 @@ export function apexToRustType(typ: AnyType): string {
     }
     case Kind.Union:
     case Kind.Enum:
+    case Kind.Alias:
     case Kind.Type: {
-      return (typ as Named).name;
+      return rustifyCaps((typ as Named).name);
     }
     case Kind.Void: {
       return "()";
@@ -94,7 +97,7 @@ function primitiveToRust(t: Primitive): string {
     case PrimitiveName.Bytes:
       return "Vec<u8>";
     case PrimitiveName.DateTime:
-      return "time::OffsetTime";
+      return "time::OffsetDateTime";
     case PrimitiveName.F32:
       return "f32";
     case PrimitiveName.F64:
