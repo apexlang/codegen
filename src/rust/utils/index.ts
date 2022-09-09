@@ -1,4 +1,4 @@
-import { pascalCase, snakeCase } from "../../utils";
+import { pascalCase, snakeCase } from "../../utils/index.js";
 
 export function rustDoc(doc?: string): string {
   return doc ? `/// ${doc}` : "";

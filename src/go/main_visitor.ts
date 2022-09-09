@@ -15,7 +15,11 @@ limitations under the License.
 */
 
 import { BaseVisitor, Context, Writer } from "@apexlang/core/model";
-import { camelCase, InterfaceUsesVisitor, UsesVisitor } from "../utils";
+import {
+  camelCase,
+  InterfaceUsesVisitor,
+  UsesVisitor,
+} from "../utils/index.js";
 
 interface Config {
   http: Listener;

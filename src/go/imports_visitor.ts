@@ -27,7 +27,7 @@ import {
   PrimitiveName,
   Alias,
 } from "@apexlang/core/model";
-import { Import } from "./alias_visitor";
+import { Import } from "./alias_visitor.js";
 
 export class ImportsVisitor extends BaseVisitor {
   private imports: { [key: string]: Import } = {};

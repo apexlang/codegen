@@ -1,1 +1,1 @@
-export * from './dist/tinygo';
+export * from "./dist/tinygo/index.js";

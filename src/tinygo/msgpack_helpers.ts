@@ -34,13 +34,13 @@ import {
   returnShare,
   translateAlias,
   translations,
-} from "../go";
+} from "../go/index.js";
 import {
   decodeFuncs,
   decodeNillableFuncs,
   encodeFuncs,
   encodeNillableFuncs,
-} from "./msgpack_constants";
+} from "./msgpack_constants.js";
 
 /**
  * Creates string that is an msgpack read code block

@@ -1,8 +1,8 @@
 import { Context, Interface, ObjectMap, Operation } from "@apexlang/core/model";
-import { rustDoc, rustify, rustifyCaps, trimLines } from "../utils";
-import { visibility } from "../utils/config";
-import { apexToRustType } from "../utils/types";
-import { SourceGenerator } from "./base";
+import { rustDoc, rustify, rustifyCaps, trimLines } from "../utils/index.js";
+import { visibility } from "../utils/config.js";
+import { apexToRustType } from "../utils/types.js";
+import { SourceGenerator } from "./base.js";
 
 export class InterfaceVisitor extends SourceGenerator<Interface> {
   config: ObjectMap<any>;

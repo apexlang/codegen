@@ -20,7 +20,7 @@ import {
   Context,
   Visitor,
 } from "@apexlang/core/model";
-import { isProvider, isService } from "./utilities";
+import { isProvider, isService } from "./utilities.js";
 
 export interface UsesVisitor extends Visitor {
   services: Map<string, string[]>;

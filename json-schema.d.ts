@@ -1,1 +1,1 @@
-export * from './dist/json-schema';
+export * from "./dist/json-schema/index.js";

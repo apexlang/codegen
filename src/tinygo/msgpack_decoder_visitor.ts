@@ -15,8 +15,8 @@ limitations under the License.
 */
 
 import { Context, BaseVisitor } from "@apexlang/core/model";
-import { fieldName } from "../go";
-import { read } from "./msgpack_helpers";
+import { fieldName } from "../go/index.js";
+import { read } from "./msgpack_helpers.js";
 
 export class MsgPackDecoderVisitor extends BaseVisitor {
   visitTypeFieldsBefore(context: Context): void {

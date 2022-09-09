@@ -10,7 +10,7 @@ import {
   Type,
   Primitive,
 } from "@apexlang/core/model";
-import { rustifyCaps } from ".";
+import { rustifyCaps } from "./index.js";
 
 export function isRecursiveType(typ: AnyType, match: AnyType = typ): boolean {
   switch (typ.kind) {

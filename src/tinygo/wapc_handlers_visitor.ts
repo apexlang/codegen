@@ -15,14 +15,19 @@ limitations under the License.
 */
 
 import { Context, BaseVisitor } from "@apexlang/core/model";
-import { expandType, mapParams, mapParam, translateAlias } from "../go";
+import {
+  expandType,
+  mapParams,
+  mapParam,
+  translateAlias,
+} from "../go/index.js";
 import {
   capitalize,
   uncapitalize,
   isVoid,
   formatComment,
   isService,
-} from "../utils";
+} from "../utils/index.js";
 
 export class WapcHandlersVisitor extends BaseVisitor {
   visitOperation(context: Context): void {

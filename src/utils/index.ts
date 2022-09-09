@@ -14,6 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-export * from "./exposed_types";
-export * from "./utilities";
-export * from "./uses_visitor";
+export * from "./exposed_types.js";
+export * from "./utilities.js";
+export * from "./uses_visitor.js";

@@ -1,7 +1,7 @@
 import { Context, Enum, ObjectMap, Type } from "@apexlang/core/model";
-import { rustDoc, rustifyCaps, trimLines } from "../utils";
-import { deriveDirective, visibility } from "../utils/config";
-import { SourceGenerator } from "./base";
+import { rustDoc, rustifyCaps, trimLines } from "../utils/index.js";
+import { deriveDirective, visibility } from "../utils/config.js";
+import { SourceGenerator } from "./base.js";
 
 export class EnumVisitor extends SourceGenerator<Enum> {
   hasDisplayValues = false;

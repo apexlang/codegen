@@ -1,9 +1,9 @@
 import { Context, Kind, ObjectMap, Type } from "@apexlang/core/model";
-import { isPrimitive } from "../../utils";
-import { rustDoc, rustify, rustifyCaps, trimLines } from "../utils";
-import { deriveDirective, useSerde, visibility } from "../utils/config";
-import { apexToRustType, isRecursiveType } from "../utils/types";
-import { SourceGenerator } from "./base";
+import { isPrimitive } from "../../utils/index.js";
+import { rustDoc, rustify, rustifyCaps, trimLines } from "../utils/index.js";
+import { deriveDirective, useSerde, visibility } from "../utils/config.js";
+import { apexToRustType, isRecursiveType } from "../utils/types.js";
+import { SourceGenerator } from "./base.js";
 
 export class StructVisitor extends SourceGenerator<Type> {
   config: ObjectMap<any>;

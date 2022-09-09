@@ -15,8 +15,8 @@ limitations under the License.
 */
 
 import { Context, BaseVisitor } from "@apexlang/core/model";
-import { formatComment, pascalCase } from "../utils";
-import { expandType } from "./helpers";
+import { formatComment, pascalCase } from "../utils/index.js";
+import { expandType } from "./helpers.js";
 
 export class UnionVisitor extends BaseVisitor {
   visitUnion(context: Context): void {

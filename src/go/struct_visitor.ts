@@ -21,9 +21,9 @@ import {
   Kind,
   Named,
 } from "@apexlang/core/model";
-import { expandType, fieldName } from "./helpers";
-import { translateAlias } from "./alias_visitor";
-import { formatComment } from "../utils";
+import { expandType, fieldName } from "./helpers.js";
+import { translateAlias } from "./alias_visitor.js";
+import { formatComment } from "../utils/index.js";
 
 export class StructVisitor extends BaseVisitor {
   private writeTypeInfo: boolean;

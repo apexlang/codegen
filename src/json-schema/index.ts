@@ -1,1 +1,1 @@
-export { JsonSchemaVisitor } from "./json-schema";
+export { JsonSchemaVisitor } from "./json-schema.js";

@@ -25,6 +25,7 @@
   "exports": {
     ".": "./dist/index.js",
     "./go": "./dist/go/index.js",
+    "./rust": "./dist/rust/index.js",
     "./proto": "./dist/proto/index.js",
     "./openapiv3": "./dist/openapiv3/index.js",
     "./python": "./dist/python/index.js",

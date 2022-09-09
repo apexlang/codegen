@@ -29,7 +29,7 @@ import {
   defaultValueForType,
   translateAlias,
   returnPointer,
-} from "../go";
+} from "../go/index.js";
 import {
   capitalize,
   isVoid,
@@ -37,9 +37,9 @@ import {
   formatComment,
   isProvider,
   uncapitalize,
-} from "../utils";
-import { codecFuncs } from "./msgpack_constants";
-import { read } from "./msgpack_helpers";
+} from "../utils/index.js";
+import { codecFuncs } from "./msgpack_constants.js";
+import { read } from "./msgpack_helpers.js";
 
 export class WapcHostVisitor extends BaseVisitor {
   constructor(writer: Writer) {

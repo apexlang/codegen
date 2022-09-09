@@ -27,7 +27,7 @@ import {
   List,
   Optional,
 } from "@apexlang/core/model";
-import { isNamed, isService } from "./utilities";
+import { isNamed, isService } from "./utilities.js";
 
 export class ExposedTypesVisitor extends BaseVisitor {
   found: Set<string> = new Set<string>();

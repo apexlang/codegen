@@ -39,7 +39,7 @@ import {
   ExposedTypesVisitor,
   isService,
   unwrapKinds,
-} from "../utils";
+} from "../utils/index.js";
 
 interface FieldNumDirective {
   value: number;

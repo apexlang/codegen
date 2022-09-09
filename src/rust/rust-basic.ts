@@ -1,12 +1,15 @@
 import { Context, Writer } from "@apexlang/core/model";
-import { ContextWriter } from "./visitors/base";
-import { StructVisitor } from "./visitors/struct_visitor";
-import { genOperation, InterfaceVisitor } from "./visitors/interface_visitor";
-import { EnumVisitor } from "./visitors/enum_visitor";
-import { UnionVisitor } from "./visitors/union_visitor";
-import { rustifyCaps } from "./utils";
-import { apexToRustType } from "./utils/types";
-import { visibility } from "./utils/config";
+import { ContextWriter } from "./visitors/base.js";
+import { StructVisitor } from "./visitors/struct_visitor.js";
+import {
+  genOperation,
+  InterfaceVisitor,
+} from "./visitors/interface_visitor.js";
+import { EnumVisitor } from "./visitors/enum_visitor.js";
+import { UnionVisitor } from "./visitors/union_visitor.js";
+import { rustifyCaps } from "./utils/index.js";
+import { apexToRustType } from "./utils/types.js";
+import { visibility } from "./utils/config.js";
 
 export class RustBasic extends ContextWriter {
   constructor(writer: Writer) {

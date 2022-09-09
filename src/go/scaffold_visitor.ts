@@ -35,15 +35,15 @@ import {
   receiver,
   returnPointer,
   returnShare,
-} from "./helpers";
+} from "./helpers.js";
 import {
   camelCase,
   hasServiceCode,
   isOneOfType,
   isVoid,
   noCode,
-} from "../utils";
-import { Import, translateAlias } from "./alias_visitor";
+} from "../utils/index.js";
+import { Import, translateAlias } from "./alias_visitor.js";
 
 interface Logger {
   import: string;
@@ -105,7 +105,7 @@ class ServiceVisitor extends BaseVisitor {
       .map((e) => camelCase(e) + " " + e)
       .join("\n\t\t")}
     }
-    
+
     func New${iface.name}(`);
     if (logger) {
       this.write(`log ${logger.interface}`);
