@@ -1,0 +1,15 @@
+spec: ../spec.apexlang
+generates:
+  basics.rs:
+    module: ../../../src/rust
+    visitorClass: RustBasic
+    config:
+      serde: true
+      visibility:
+        _all: pub
+        MyService: crate
+      derive:
+        _all:
+          - Clone
+          - Debug
+          - PartialEq
