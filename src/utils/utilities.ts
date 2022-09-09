@@ -181,7 +181,7 @@ export function noCode(annotated: Annotated): boolean {
  * Determines if a node is a void node
  * @param t Node that is a Type node
  */
-export function isVoid(t: AnyType): t is Void {
+export function isVoid(t: AnyType): boolean {
   return t.kind === Kind.Void;
 }
 

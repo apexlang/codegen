@@ -8,7 +8,7 @@ import {
 } from "@apexlang/core/model";
 import { codegenType, isNamed } from "../../utils";
 import { rustDoc, rustifyCaps, trimLines } from "../utils";
-import { deriveDirective } from "../utils/config";
+import { deriveDirective, visibility } from "../utils/config";
 import { apexToRustType, isRecursiveType } from "../utils/types";
 import { SourceGenerator } from "./base";
 
@@ -26,10 +26,12 @@ function getTypeName(t: AnyType): string {
 
 export class UnionVisitor extends SourceGenerator<Union> {
   config: ObjectMap<any>;
+  visibility: visibility;
 
   constructor(context: Context) {
     super(context.union, context);
     this.config = context.config;
+    this.visibility = visibility(this.root.name, this.config);
   }
 
   getSource(): string {
@@ -46,7 +48,7 @@ export class UnionVisitor extends SourceGenerator<Union> {
       rustDoc(this.root.description),
       deriveDirective(this.root.name, this.config),
     ])}
-    pub enum ${rustifyCaps(this.root.name)}{
+    ${this.visibility} enum ${rustifyCaps(this.root.name)}{
       ${variants.join(",")}
     }
     `;

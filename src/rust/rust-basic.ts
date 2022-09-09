@@ -6,6 +6,7 @@ import { EnumVisitor } from "./visitors/enum_visitor";
 import { UnionVisitor } from "./visitors/union_visitor";
 import { rustifyCaps } from "./utils";
 import { apexToRustType } from "./utils/types";
+import { visibility } from "./utils/config";
 
 export class RustBasic extends ContextWriter {
   constructor(writer: Writer) {
@@ -29,7 +30,8 @@ export class RustBasic extends ContextWriter {
   }
 
   visitFunction(context: Context): void {
-    this.append(genOperation(context.operation));
+    const vis = visibility(context.operation.name, context.config);
+    this.append(genOperation(context.operation, vis));
   }
 
   visitAlias(context: Context): void {

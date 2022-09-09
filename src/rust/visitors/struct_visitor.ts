@@ -1,28 +1,25 @@
-import {
-  Context,
-  Kind,
-  ObjectMap,
-  Primitive,
-  Type,
-} from "@apexlang/core/model";
+import { Context, Kind, ObjectMap, Type } from "@apexlang/core/model";
+import { isPrimitive } from "../../utils";
 import { rustDoc, rustify, rustifyCaps, trimLines } from "../utils";
-import { deriveDirective } from "../utils/config";
+import { deriveDirective, useSerde, visibility } from "../utils/config";
 import { apexToRustType, isRecursiveType } from "../utils/types";
 import { SourceGenerator } from "./base";
 
 export class StructVisitor extends SourceGenerator<Type> {
   config: ObjectMap<any>;
+  visibility: visibility;
 
   constructor(context: Context) {
     super(context.type, context);
     this.config = context.config;
+    this.visibility = visibility(this.root.name, this.config);
   }
 
   getSource(): string {
     return `
     ${rustDoc(this.root.description)}
     ${deriveDirective(this.root.name, this.config)}
-    pub struct ${rustifyCaps(this.root.name)}{
+    ${this.visibility} struct ${rustifyCaps(this.root.name)}{
       ${this.source}
     }`;
   }
@@ -37,14 +34,17 @@ export class StructVisitor extends SourceGenerator<Type> {
       isRecursive && !isHeapAllocated ? `Box<${baseType}>` : baseType;
 
     let serdeAnnotation =
-      field.type.kind === Kind.Primitive &&
-      (field.type as Primitive).name === "datetime"
+      useSerde(context.config) &&
+      isPrimitive(field.type) &&
+      field.type.name === "datetime"
         ? `#[serde(with = "time::serde::rfc3339")]`
         : "";
 
+    const vis = visibility(this.root.name, this.config);
+
     this.append(
       `${trimLines([rustDoc(field.description), serdeAnnotation])}
-      ${rustify(field.name)}: ${typeString},
+      ${this.visibility} ${rustify(field.name)}: ${typeString},
       `
     );
   }

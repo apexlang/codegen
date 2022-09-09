@@ -1,16 +1,18 @@
 import { Context, Enum, ObjectMap, Type } from "@apexlang/core/model";
 import { rustDoc, rustifyCaps, trimLines } from "../utils";
-import { deriveDirective } from "../utils/config";
+import { deriveDirective, visibility } from "../utils/config";
 import { SourceGenerator } from "./base";
 
 export class EnumVisitor extends SourceGenerator<Enum> {
   hasDisplayValues = false;
   hasIndices = false;
   config: ObjectMap<any>;
+  visibility: visibility;
 
   constructor(context: Context) {
     super(context.enum, context);
     this.config = context.config;
+    this.visibility = visibility(this.root.name, this.config);
   }
 
   getSource(): string {
@@ -27,7 +29,7 @@ export class EnumVisitor extends SourceGenerator<Enum> {
       rustDoc(this.root.description),
       deriveDirective(this.root.name, this.config),
     ])}
-    pub enum ${rustifyCaps(this.root.name)}{
+    ${this.visibility} enum ${rustifyCaps(this.root.name)}{
       ${this.source}
     }
     ${trimLines([optionalDisplayImpl, optionalIndexConversion])}
