@@ -1,0 +1,27 @@
+import * from "@apexlang/core"
+import * from "@apexlang/rest"
+import * from "@apexlang/openapi"
+
+namespace "greeting.v1"
+  @info(
+    title: "Greeting API"
+    description: "Simple greeting API created using Apex."
+    version: "1.0.0"
+    termsOfService: "https://api.goodcorp.com/terms/"
+    contact: {
+      name: "API Support"
+      url: "https://api.goodcorp.com/support"
+      email: "api@goodcorp.com"
+    },
+    license: {
+      name: "Apache 2.0"
+      url: "https://www.apache.org/licenses/LICENSE-2.0"
+    }
+  )
+  @server(url: "https://api.goodcorp.com")
+  @path("/v1")
+
+interface Greeter @service {
+    sayHello(firstName: string @n(1), lastName: string @n(2)): string
+      @path("/greeting") @POST
+}

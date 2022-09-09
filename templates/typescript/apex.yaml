@@ -1,0 +1,23 @@
+spec: spec.apex
+config:
+  aliases:
+    UUID:
+      type: true
+      import: v4 as uuidv4
+      from: uuid
+      default: uuidv4()
+generates:
+  src/adapter.ts:
+    module: '@apexlang/codegen/typescript'
+    visitorClass: AdapterVisitor
+  src/interfaces.ts:
+    module: '@apexlang/codegen/typescript'
+    visitorClass: InterfacesVisitor
+  src/service.ts:
+    ifNotExists: true
+    module: '@apexlang/codegen/typescript'
+    visitorClass: ScaffoldVisitor
+  bus.yaml:
+    ifNotExists: true
+    module: '@apexlang/codegen/bus'
+    visitorClass: BusVisitor
