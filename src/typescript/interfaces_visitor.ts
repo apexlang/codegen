@@ -15,12 +15,12 @@ limitations under the License.
 */
 
 import { Context, BaseVisitor } from "@apexlang/core/model";
-import { ClassVisitor } from "./class_visitor";
-import { InterfaceVisitor } from "./interface_visitor";
-import { HandlerVisitor } from "./handler_visitor";
-import { isHandler, isProvider } from "../utils";
-import { AliasVisitor } from "./alias_visitor";
-import { ImportsVisitor } from "./imports_visitor";
+import { ClassVisitor } from "./class_visitor.js";
+import { InterfaceVisitor } from "./interface_visitor.js";
+import { HandlerVisitor } from "./handler_visitor.js";
+import { isHandler, isProvider } from "../utils/index.js";
+import { AliasVisitor } from "./alias_visitor.js";
+import { ImportsVisitor } from "./imports_visitor.js";
 
 export class InterfacesVisitor extends BaseVisitor {
   visitNamespaceBefore(context: Context): void {

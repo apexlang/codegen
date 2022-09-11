@@ -15,8 +15,8 @@ limitations under the License.
 */
 
 import { Context, BaseVisitor } from "@apexlang/core/model";
-import { expandType } from "./helpers";
-import { capitalize, isVoid, camelCase, noCode } from "../utils";
+import { expandType } from "./helpers.js";
+import { capitalize, isVoid, camelCase, noCode } from "../utils/index.js";
 
 export class WrapperVisitor extends BaseVisitor {
   visitInterfaceBefore(context: Context): void {

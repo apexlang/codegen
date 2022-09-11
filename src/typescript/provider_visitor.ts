@@ -15,14 +15,14 @@ limitations under the License.
 */
 
 import { Context, BaseVisitor } from "@apexlang/core/model";
-import { expandType, strQuote } from "./helpers";
+import { expandType, strQuote } from "./helpers.js";
 import {
   capitalize,
   camelCase,
   formatComment,
   isProvider,
   isVoid,
-} from "../utils";
+} from "../utils/index.js";
 
 export class ProviderVisitor extends BaseVisitor {
   visitInterfaceBefore(context: Context): void {
@@ -82,7 +82,7 @@ export class ProviderVisitor extends BaseVisitor {
         this.write(`  ${paramName},\n`);
       });
       this.write(`}\n`);
-      this.write(`return this.adapter.requestResponse(${expandedType}, 
+      this.write(`return this.adapter.requestResponse(${expandedType},
       ${strQuote(path)},
       inputArgs
     )`);
