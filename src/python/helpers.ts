@@ -30,8 +30,8 @@ import {
   Primitive,
   PrimitiveName,
 } from "@apexlang/core/model";
-import { capitalize, snakeCase } from "../utils";
-import { translations } from "./constant";
+import { capitalize, snakeCase } from "../utils/index.js";
+import { translations } from "./constant.js";
 
 /**
  * Takes an array of ValuedDefintions and returns a string based on supplied params.

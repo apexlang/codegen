@@ -15,8 +15,8 @@ limitations under the License.
 */
 
 import { BaseVisitor, Context } from "@apexlang/core/model";
-import { convertOperationToType, noCode } from "../utils";
-import { ClassVisitor } from "./class_visitor";
+import { convertOperationToType, noCode } from "../utils/index.js";
+import { ClassVisitor } from "./class_visitor.js";
 
 export class ArgsVisitor extends BaseVisitor {
   visitOperation(context: Context): void {

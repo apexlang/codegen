@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 import { Context, BaseVisitor } from "@apexlang/core/model";
-import { expandType } from "./helpers";
+import { expandType } from "./helpers.js";
 import {
   capitalize,
   camelCase,
@@ -23,7 +23,7 @@ import {
   isProvider,
   isVoid,
   snakeCase,
-} from "../utils";
+} from "../utils/index.js";
 
 export class ProviderVisitor extends BaseVisitor {
   visitInterfaceBefore(context: Context): void {

@@ -25,10 +25,10 @@ import {
   Visitor,
   AnyType,
 } from "@apexlang/core/model";
-import { ClassVisitor } from "./class_visitor";
-import { InterfaceVisitor } from "./interface_visitor";
-import { isHandler, isProvider, visitNamed } from "../utils";
-import { HandlerVisitor } from "./handler_visitor";
+import { ClassVisitor } from "./class_visitor.js";
+import { InterfaceVisitor } from "./interface_visitor.js";
+import { isHandler, isProvider, visitNamed } from "../utils/index.js";
+import { HandlerVisitor } from "./handler_visitor.js";
 
 export class InterfacesVisitor extends BaseVisitor {
   visitNamespaceBefore(context: Context): void {
