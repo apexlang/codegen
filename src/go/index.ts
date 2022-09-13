@@ -26,3 +26,5 @@ export * from "./main_visitor.js";
 export * from "./scaffold_visitor.js";
 export * from "./struct_visitor.js";
 export * from "./union_visitor.js";
+
+export { InterfacesVisitor as default } from "./interfaces_visitor.js";

@@ -15,3 +15,5 @@ limitations under the License.
 */
 
 export * from "./openapiv3.js";
+
+export { OpenAPIV3Visitor as default } from "./openapiv3.js";
