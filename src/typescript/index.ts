@@ -19,3 +19,5 @@ export * from "./interfaces_visitor.js";
 export * from "./scaffold_visitor.js";
 export * from "./helpers.js";
 export * from "./constant.js";
+
+export { InterfacesVisitor as default } from "./interfaces_visitor.js";
