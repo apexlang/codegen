@@ -20,7 +20,7 @@ import {
   convertUnionToType,
   uncapitalize,
 } from "../utils/index.js";
-import { StructVisitor } from "../go/index.js";
+import { Import, StructVisitor } from "../go/index.js";
 import { WapcHostVisitor } from "./wapc_host_visitor.js";
 import { RegisterVisitor } from "./wapc_handlers_visitor.js";
 import { WrapperFuncsVisitor } from "./wapc_wrappers_visitor.js";
@@ -93,11 +93,11 @@ export class WapcExportVisitor extends BaseVisitor {
       const { union } = context;
       const tr = context.getType.bind(context);
       const type = convertUnionToType(tr, union);
-      // const ctx = context.clone({ type: type });
-      // const decoder = new MsgPackDecoderVisitor(this.writer);
-      // type.accept(ctx, decoder);
-      // const encoder = new MsgPackEncoderUnionVisitor(this.writer);
-      // type.accept(ctx, encoder);
+      const ctx = context.clone({ type: type });
+      const decoder = new MsgPackDecoderVisitor(this.writer);
+      type.accept(ctx, decoder);
+      const encoder = new MsgPackEncoderUnionVisitor(this.writer);
+      type.accept(ctx, encoder);
       this.write(`\n`);
     });
   }
@@ -111,45 +111,18 @@ export class WapcExportVisitor extends BaseVisitor {
     import (
       "context"
 
-      wapc "github.com/wapc/wapc-guest-tinygo"
-      msgpack "github.com/wapc/tinygo-msgpack"
-    )\n\n`);
+      "github.com/wapc/tinygo-msgpack"
+      "github.com/wapc/tinygo-msgpack/convert"
+      "github.com/wapc/wapc-guest-tinygo"\n`);
+    const aliases = (context.config.aliases as { [key: string]: Import }) || {};
+    for (let a of Object.values(aliases)) {
+      if (a.import) {
+        this.write(`\t"${a.import}"\n`);
+      }
+    }
+    this.write(`)
+    
+    var _ = convert.Package\n\n`);
     super.triggerNamespaceBefore(context);
-  }
-
-  visitNamespaceAfter(context: Context): void {
-    this.write(`func castString[T ~string](value string, err error) (T, error) {
-      return T(value), err
-    }
-
-    func castNillableString[T ~string](value *string, err error) (*T, error) {
-      ret := T(*value)
-      return &ret, err
-    }
-
-    func castStringPtr[T ~string](value string, err error) (*T, error) {
-      if err != nil {
-        return nil, err
-      }
-      val := T(value)
-      return &val, nil
-    }
-
-    func castEnum[T ~int32](value int32, err error) (T, error) {
-      return T(value), err
-    }
-
-    func castNillableEnum[T ~int32](value *int32, err error) (*T, error) {
-      ret := T(*value)
-      return &ret, err
-    }
-
-    func castEnumPtr[T ~int32](value int32, err error) (*T, error) {
-      if err != nil {
-        return nil, err
-      }
-      val := T(value)
-      return &val, nil
-    }\n`);
   }
 }

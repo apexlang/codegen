@@ -1,16 +1,22 @@
-spec: spec.apexlang
+spec: ../spec.apexlang
 config:
-  package: {{.package}}
-  module: {{.module}}
+  package: outputtest
+  module: github.com/apexlang/outputtest
+  aliases:
+    UUID:
+      type: uuid.UUID
+      import: github.com/google/uuid
+      parse: uuid.Parse
+      format: String
 generates:
-  pkg/{{.package}}/interfaces.go:
+  pkg/outputtest/interfaces.go:
     module: '@apexlang/codegen/go'
     visitorClass: InterfacesVisitor
-  pkg/{{.package}}/wapc.go:
+  pkg/outputtest/wapc.go:
     module: '@apexlang/codegen/tinygo'
     visitorClass: WapcExportVisitor
-  pkg/{{.package}}/services.go:
-    ifNotExists: true
+  pkg/outputtest/services.go:
+    ifNotExists: false
     module: '@apexlang/codegen/go'
     visitorClass: ScaffoldVisitor
     config:
@@ -21,5 +27,4 @@ generates:
     module: '@apexlang/codegen/tinygo'
     visitorClass: WapcMainVisitor
     config:
-      import: {{.module}}/pkg/{{.package}}
-
+      import: github.com/apexlang/outputtest/pkg/outputtest

@@ -14,9 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Context, BaseVisitor, Kind, Alias } from "@apexlang/core/model";
+import {
+  Context,
+  BaseVisitor,
+  Kind,
+  Alias,
+  Primitive,
+} from "@apexlang/core/model";
 import {
   expandType,
+  Import,
   mapParams,
   returnShare,
   translateAlias,
@@ -66,6 +73,12 @@ export class WapcWrapperVarsVisitor extends BaseVisitor {
 }
 
 export class WrapperFuncsVisitor extends BaseVisitor {
+  private aliases: { [key: string]: Import } = {};
+
+  visitContextBefore(context: Context): void {
+    this.aliases = (context.config.aliases as { [key: string]: Import }) || {};
+  }
+
   visitOperation(context: Context): void {
     if (!isService(context)) {
       return;
@@ -140,17 +153,6 @@ export class WrapperFuncsVisitor extends BaseVisitor {
     if (isVoid(operation.type)) {
       this.visitWrapperBeforeReturn(context);
       this.write(`return []byte{}, nil\n`);
-    } else if (operation.type.kind == Kind.Alias) {
-      const a = operation.type as Alias;
-      const aet = expandType(a.type);
-      const encodeFn = encodeFuncs.get(aet);
-      this.write(`var sizer msgpack.Sizer
-      sizer.${encodeFn}(${aet}(response))
-      ua := make([]byte, sizer.Len());
-      encoder := msgpack.NewEncoder(ua);
-      encoder.${encodeFn}(${aet}(response))\n`);
-      this.visitWrapperBeforeReturn(context);
-      this.write(`return ua, nil\n`);
     } else if (operation.type.kind == Kind.Enum) {
       this.write(`var sizer msgpack.Sizer
       sizer.WriteInt32(int32(response))
@@ -164,10 +166,10 @@ export class WrapperFuncsVisitor extends BaseVisitor {
       this.write(`return msgpack.ToBytes(response)\n`);
     } else {
       this.write(`var sizer msgpack.Sizer
-      ${size(true, "response", operation.type)}
-      ua := make([]byte, sizer.Len());
+      ${size(context, true, "response", operation.type)}`);
+      this.write(`ua := make([]byte, sizer.Len());
       encoder := msgpack.NewEncoder(ua);
-      ${encode(true, "response", operation.type)}\n`);
+      ${encode(context, true, "response", operation.type)}`);
       this.visitWrapperBeforeReturn(context);
       this.write(`return ua, nil\n`);
     }

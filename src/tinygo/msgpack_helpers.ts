@@ -31,11 +31,14 @@ import {
 import {
   expandType,
   fieldName,
+  Import,
   returnShare,
   translateAlias,
   translations,
 } from "../go/index.js";
 import {
+  castFuncs,
+  castNillableFuncs,
   decodeFuncs,
   decodeNillableFuncs,
   encodeFuncs,
@@ -90,12 +93,45 @@ export function read(
     }
   }
   switch (t.kind) {
-    case Kind.Type:
     case Kind.Alias:
+      const aliases =
+        (context.config.aliases as { [key: string]: Import }) || {};
+      const a = t as Alias;
+      const prim = a.type as Primitive;
+      const imp = aliases[a.name];
+      if (imp && imp.parse) {
+        if (prevOptional) {
+          const decoder = decodeNillableFuncs.get(prim.name)!;
+          return `${prefix}convert.NillableParse(${imp.parse})(decoder.${decoder}())\n`;
+        } else {
+          const decoder = decodeFuncs.get(prim.name)!;
+          return `${prefix}convert.Parse(${imp.parse})(decoder.${decoder}())\n`;
+        }
+      }
+      if (prevOptional) {
+        const caster = castNillableFuncs.get(prim.name)!;
+        const decoder = decodeNillableFuncs.get(prim.name)!;
+        return `${prefix}${caster}[${a.name}](decoder.${decoder}())\n`;
+      } else {
+        const caster = castFuncs.get(prim.name)!;
+        const decoder = decodeFuncs.get(prim.name)!;
+        return `${prefix}${caster}[${a.name}](decoder.${decoder}())\n`;
+      }
+    case Kind.Union:
+    case Kind.Type:
     case Kind.Primitive: {
+      if (t.kind == Kind.Primitive) {
+        const prim = t as Primitive;
+        if (prim.name == PrimitiveName.DateTime) {
+          if (prevOptional) {
+            return `${prefix}convert.StringToTimePtr(decoder.ReadNillableString())\n`;
+          }
+          return `${prefix}convert.StringToTime(decoder.ReadString())\n`;
+        }
+      }
       let namedNode = t as Named;
       const amp = typeInstRef ? "&" : "";
-      let decodeFn = `Decode${namedNode.name}(${amp}decoder)`;
+      let decodeFn = `msgpack.Decode[${namedNode.name}](${amp}decoder)`;
       if (prevOptional) {
         decodeFn = `msgpack.DecodeNillable[${namedNode.name}](decoder)`;
       }
@@ -108,9 +144,9 @@ export function read(
     }
     case Kind.Enum: {
       let e = t as Enum;
-      let decodeFn = `castEnum[${e.name}](decoder.ReadInt32())`;
+      let decodeFn = `convert.Numeric[${e.name}](decoder.ReadInt32())`;
       if (prevOptional) {
-        decodeFn = `castNillableEnum[${e.name}](decoder.ReadNillableInt32())`;
+        decodeFn = `convert.NillableNumeric[${e.name}](decoder.ReadNillableInt32())`;
       }
       return `${prefix}${decodeFn}\n`;
     }
@@ -255,6 +291,7 @@ export function read(
  * @param isReference if the type that is being expanded has a `@ref` annotation
  */
 export function write(
+  context: Context,
   typeInst: string,
   typeInstRef: boolean,
   typeClass: string,
@@ -266,8 +303,16 @@ export function write(
   let code = "";
   switch (t.kind) {
     case Kind.Alias:
+      const aliases =
+        (context.config.aliases as { [key: string]: Import }) || {};
       const a = t as Alias;
+      const imp = aliases[a.name];
       const p = a.type as Primitive;
+      if (imp && imp.format) {
+        return `${typeInst}.${encodeFuncs.get(p.name)}(${variable}.${
+          imp.format
+        }())\n`;
+      }
       const castType = translations.get(p.name);
       if (prevOptional && encodeNillableFuncs.has(p.name)) {
         return `${typeInst}.${encodeNillableFuncs.get(
@@ -280,8 +325,18 @@ export function write(
         )}(${castType}(${variable}))\n`;
       }
       return "???\n";
+    case Kind.Union:
     case Kind.Type:
     case Kind.Primitive:
+      if (t.kind == Kind.Primitive) {
+        const prim = t as Primitive;
+        if (prim.name == PrimitiveName.DateTime) {
+          if (prevOptional) {
+            return `${typeInst}.WriteNillableString(convert.TimeToStringPtr(${variable}))\n`;
+          }
+          return `${typeInst}.WriteString(convert.TimeToString(${variable}))\n`;
+        }
+      }
       const namedNode = t as Named;
       if (prevOptional && encodeNillableFuncs.has(namedNode.name)) {
         return `${typeInst}.${encodeNillableFuncs.get(
@@ -307,6 +362,7 @@ export function write(
       if ${variable} != nil { // TinyGo bug: ranging over nil maps panics.
       for k, v := range ${variable} {
         ${write(
+          context,
           typeInst,
           typeInstRef,
           typeClass,
@@ -315,6 +371,7 @@ export function write(
           mappedNode.keyType,
           false
         )}${write(
+          context,
           typeInst,
           typeInstRef,
           typeClass,
@@ -332,6 +389,7 @@ export function write(
         `.WriteArraySize(uint32(len(${variable})))
       for _, v := range ${variable} {
         ${write(
+          context,
           typeInst,
           typeInstRef,
           typeClass,
@@ -344,13 +402,21 @@ export function write(
     case Kind.Optional:
       const optionalNode = t as Optional;
       switch (optionalNode.type.kind) {
+        case Kind.Alias:
+          const a = optionalNode.type as Alias;
+          const aliases =
+            (context.config.aliases as { [key: string]: Import }) || {};
+          const imp = aliases[a.name];
+          if (imp && imp.format) {
+            break;
+          }
         case Kind.List:
         case Kind.Map:
         case Kind.Enum:
-        case Kind.Alias:
         case Kind.Type:
         case Kind.Primitive:
           return write(
+            context,
             typeInst,
             typeInstRef,
             typeClass,
@@ -363,8 +429,9 @@ export function write(
       code += "if " + variable + " == nil {\n";
       code += typeInst + ".WriteNil()\n";
       code += "} else {\n";
-      let vprefix = returnDeref(optionalNode.type);
+      let vprefix = returnDeref(context, optionalNode.type);
       code += write(
+        context,
         typeInst,
         typeInstRef,
         typeClass,
@@ -380,9 +447,15 @@ export function write(
   }
 }
 
-function returnDeref(type: AnyType): string {
+function returnDeref(context: Context, type: AnyType): string {
   if (type.kind === Kind.Alias) {
-    type = (type as Alias).type;
+    const a = type as Alias;
+    const aliases = (context.config.aliases as { [key: string]: Import }) || {};
+    const imp = aliases[a.name];
+    if (imp && imp.format) {
+      return "";
+    }
+    type = a.type;
   }
   if (type.kind === Kind.Primitive) {
     const p = type as Primitive;
@@ -400,11 +473,21 @@ function returnDeref(type: AnyType): string {
  * @param isReference if the type that is being expanded has a `@ref` annotation
  */
 export function size(
+  context: Context,
   typeInstRef: boolean,
   variable: string,
   t: AnyType
 ): string {
-  return write("sizer", typeInstRef, "Writer", "Encode", variable, t, false);
+  return write(
+    context,
+    "sizer",
+    typeInstRef,
+    "Writer",
+    "Encode",
+    variable,
+    t,
+    false
+  );
 }
 
 /**
@@ -414,11 +497,21 @@ export function size(
  * @param isReference if the type that is being expanded has a `@ref` annotation
  */
 export function encode(
+  context: Context,
   typeInstRef: boolean,
   variable: string,
   t: AnyType
 ): string {
-  return write("encoder", typeInstRef, "Writer", "Encode", variable, t, false);
+  return write(
+    context,
+    "encoder",
+    typeInstRef,
+    "Writer",
+    "Encode",
+    variable,
+    t,
+    false
+  );
 }
 
 export function varAccessParam(variable: string, args: Parameter[]): string {

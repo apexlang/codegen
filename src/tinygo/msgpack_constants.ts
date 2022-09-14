@@ -99,3 +99,37 @@ export const encodeNillableFuncs = new Map<string, string>([
   ["f64", "WriteNillableFloat64"],
   ["bytes", "WriteNillableByteArray"],
 ]);
+
+export const castFuncs = new Map<string, string>([
+  ["ID", "convert.String"],
+  ["bool", "convert.Bool"],
+  ["string", "convert.String"],
+  ["i8", "convert.Numeric"],
+  ["u8", "convert.Numeric.Numerict8"],
+  ["i16", "convert.Numeric"],
+  ["u16", "convert.Numeric"],
+  ["i32", "convert.Numeric"],
+  ["u32", "convert.Numeric"],
+  ["i64", "convert.Numeric"],
+  ["u64", "convert.Numeric"],
+  ["f32", "convert.Numeric"],
+  ["f64", "convert.Numeric"],
+  ["bytes", "convert.ByteArray"],
+]);
+
+export const castNillableFuncs = new Map<string, string>([
+  ["ID", "convert.NillableString"],
+  ["bool", "convert.NillableBool"],
+  ["string", "convert.NillableString"],
+  ["i8", "convert.NillableNumeric"],
+  ["u8", "convert.NillableNumeric"],
+  ["i16", "convert.NillableNumeric"],
+  ["u16", "convert.NillableNumeric"],
+  ["i32", "convert.NillableNumeric"],
+  ["u32", "convert.NillableNumeric"],
+  ["i64", "convert.NillableNumeric"],
+  ["u64", "convert.NillableNumeric"],
+  ["f32", "convert.NillableNumeric"],
+  ["f64", "convert.NillableNumeric"],
+  ["bytes", "convert.ByteArray"],
+]);

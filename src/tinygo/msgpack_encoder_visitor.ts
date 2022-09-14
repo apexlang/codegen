@@ -34,7 +34,9 @@ export class MsgPackEncoderVisitor extends BaseVisitor {
   visitTypeField(context: Context): void {
     const field = context.field;
     this.write(`encoder.WriteString("${field.name}")\n`);
-    this.write(encode(false, "o." + fieldName(field, field.name), field.type));
+    this.write(
+      encode(context, false, "o." + fieldName(field, field.name), field.type)
+    );
     super.triggerTypeField(context);
   }
 
@@ -63,7 +65,9 @@ export class MsgPackEncoderUnionVisitor extends BaseVisitor {
     this.write(`if o.${fieldName(field, field.name)} != nil {\n`);
     this.write(`encoder.WriteMapSize(1)\n`);
     this.write(`encoder.WriteString("${field.name}")\n`);
-    this.write(encode(false, "o." + fieldName(field, field.name), field.type));
+    this.write(
+      encode(context, false, "o." + fieldName(field, field.name), field.type)
+    );
     this.write(`return nil\n`);
     this.write(`}\n`);
     super.triggerTypeField(context);
