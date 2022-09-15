@@ -31,7 +31,6 @@
     "./python": "./dist/python/index.js",
     "./json-schema": "./dist/json-schema/index.js",
     "./typescript": "./dist/typescript/index.js",
-    "./tinygo": "./dist/tinygo/index.js",
     "./utils": "./dist/utils/index.js"
   },
   "engines": {

@@ -15,8 +15,8 @@ limitations under the License.
 */
 
 import { Context, BaseVisitor } from "@apexlang/core/model";
-import { fieldName } from "../go/index.js";
-import { encode } from "./msgpack_helpers.js";
+import { fieldName } from "./helpers.js";
+import { msgpackEncode } from "./msgpack_helpers.js";
 
 export class MsgPackEncoderVisitor extends BaseVisitor {
   visitTypeFieldsBefore(context: Context): void {
@@ -35,7 +35,12 @@ export class MsgPackEncoderVisitor extends BaseVisitor {
     const field = context.field;
     this.write(`encoder.WriteString("${field.name}")\n`);
     this.write(
-      encode(context, false, "o." + fieldName(field, field.name), field.type)
+      msgpackEncode(
+        context,
+        false,
+        "o." + fieldName(field, field.name),
+        field.type
+      )
     );
     super.triggerTypeField(context);
   }
@@ -66,7 +71,12 @@ export class MsgPackEncoderUnionVisitor extends BaseVisitor {
     this.write(`encoder.WriteMapSize(1)\n`);
     this.write(`encoder.WriteString("${field.name}")\n`);
     this.write(
-      encode(context, false, "o." + fieldName(field, field.name), field.type)
+      msgpackEncode(
+        context,
+        false,
+        "o." + fieldName(field, field.name),
+        field.type
+      )
     );
     this.write(`return nil\n`);
     this.write(`}\n`);

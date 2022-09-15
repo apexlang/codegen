@@ -26,5 +26,8 @@ export * from "./main_visitor.js";
 export * from "./scaffold_visitor.js";
 export * from "./struct_visitor.js";
 export * from "./union_visitor.js";
+export * from "./msgpack_decoder_visitor.js";
+export * from "./msgpack_encoder_visitor.js";
+export * from "./msgpack_helpers.js";
 
 export { InterfacesVisitor as default } from "./interfaces_visitor.js";
