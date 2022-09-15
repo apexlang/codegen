@@ -39,8 +39,9 @@ export class RustBasic extends ContextWriter {
   visitAlias(context: Context): void {
     const { alias } = context;
     this.append(
-      `pub type ${rustifyCaps(alias.name)} = ${rustifyCaps(
-        types.apexToRustType(alias.type, context.config)
+      `pub type ${rustifyCaps(alias.name)} = ${types.apexToRustType(
+        alias.type,
+        context.config
       )};\n`
     );
   }

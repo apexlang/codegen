@@ -55,7 +55,7 @@ export class StructVisitor extends SourceGenerator<Type> {
     this.append(
       `${trimLines([rustDoc(field.description), serdeAnnotation])}
       ${this.visibility} ${rustify(field.name)}: ${typeString},
-      `
+      `.trim()
     );
   }
 }

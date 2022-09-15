@@ -42,9 +42,11 @@ export class EnumVisitor extends SourceGenerator<Enum> {
     this.hasDisplayValues ||= enumValue.display !== undefined;
     this.hasIndices ||= enumValue.index !== undefined;
 
-    this.append(`
+    this.append(
+      `
       ${trimLines([rustDoc(enumValue.description)])}
-      ${rustifyCaps(enumValue.name)},`);
+      ${rustifyCaps(enumValue.name)},`.trim()
+    );
   }
 }
 
@@ -71,14 +73,16 @@ function displayImpl(node: Enum): string {
 }
 
 function fromIndexImpl(node: Enum): string {
+  let type = "u32";
+
   let patterns = node.values
     .filter((v) => v.index !== undefined)
     .map((v) => `${v.index} => Ok(Self::${rustifyCaps(v.name)})`)
     .join(",");
   return `
-  impl std::convert::TryFrom<u32> for ${rustifyCaps(node.name)} {
+  impl std::convert::TryFrom<${type}> for ${rustifyCaps(node.name)} {
     type Error = Box<dyn std::error::Error + Send + Sync + 'static>;
-    fn try_from(index: u32) -> Result<Self, Self::Error> {
+    fn try_from(index: ${type}) -> Result<Self, Self::Error> {
       match index {
         ${patterns},
         _ => Err(format!("{} is not a valid index for ${rustifyCaps(
