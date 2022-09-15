@@ -28,18 +28,16 @@ import {
   PrimitiveName,
   Enum,
 } from "@apexlang/core/model";
+import { Import, translateAlias } from "./alias_visitor.js";
+import { translations } from "./constant.js";
+import { expandType, fieldName, returnShare } from "./helpers.js";
 import {
-  expandType,
-  fieldName,
-  returnShare,
-  translateAlias,
-  translations,
-} from "../go/index.js";
-import {
-  decodeFuncs,
-  decodeNillableFuncs,
-  encodeFuncs,
-  encodeNillableFuncs,
+  msgpackCastFuncs,
+  msgpackCastNillableFuncs,
+  msgpackDecodeFuncs,
+  msgpackDecodeNillableFuncs,
+  msgpackEncodeFuncs,
+  msgpackEncodeNillableFuncs,
 } from "./msgpack_constants.js";
 
 /**
@@ -49,7 +47,7 @@ import {
  * @param prevOptional if type is being expanded and the parent type is optional
  * @param isReference if the type that is being expanded has a `@ref` annotation
  */
-export function read(
+export function msgpackRead(
   context: Context,
   typeInstRef: boolean,
   variable: string,
@@ -90,27 +88,62 @@ export function read(
     }
   }
   switch (t.kind) {
-    case Kind.Type:
     case Kind.Alias:
+      const aliases =
+        (context.config.aliases as { [key: string]: Import }) || {};
+      const a = t as Alias;
+      const prim = a.type as Primitive;
+      const imp = aliases[a.name];
+      if (imp && imp.parse) {
+        if (prevOptional) {
+          const decoder = msgpackDecodeNillableFuncs.get(prim.name)!;
+          return `${prefix}convert.NillableParse(${imp.parse})(decoder.${decoder}())\n`;
+        } else {
+          const decoder = msgpackDecodeFuncs.get(prim.name)!;
+          return `${prefix}convert.Parse(${imp.parse})(decoder.${decoder}())\n`;
+        }
+      }
+      if (prevOptional) {
+        const caster = msgpackCastNillableFuncs.get(prim.name)!;
+        const decoder = msgpackDecodeNillableFuncs.get(prim.name)!;
+        return `${prefix}${caster}[${a.name}](decoder.${decoder}())\n`;
+      } else {
+        const caster = msgpackCastFuncs.get(prim.name)!;
+        const decoder = msgpackDecodeFuncs.get(prim.name)!;
+        return `${prefix}${caster}[${a.name}](decoder.${decoder}())\n`;
+      }
+    case Kind.Union:
+    case Kind.Type:
     case Kind.Primitive: {
+      if (t.kind == Kind.Primitive) {
+        const prim = t as Primitive;
+        if (prim.name == PrimitiveName.DateTime) {
+          if (prevOptional) {
+            return `${prefix}convert.StringToTimePtr(decoder.ReadNillableString())\n`;
+          }
+          return `${prefix}convert.StringToTime(decoder.ReadString())\n`;
+        }
+      }
       let namedNode = t as Named;
       const amp = typeInstRef ? "&" : "";
-      let decodeFn = `Decode${namedNode.name}(${amp}decoder)`;
+      let decodeFn = `msgpack.Decode[${namedNode.name}](${amp}decoder)`;
       if (prevOptional) {
         decodeFn = `msgpack.DecodeNillable[${namedNode.name}](decoder)`;
       }
-      if (prevOptional && decodeNillableFuncs.has(namedNode.name)) {
-        decodeFn = `decoder.${decodeNillableFuncs.get(namedNode.name)}()`;
-      } else if (decodeFuncs.has(namedNode.name)) {
-        decodeFn = `decoder.${decodeFuncs.get(namedNode.name)}()`;
+      if (prevOptional && msgpackDecodeNillableFuncs.has(namedNode.name)) {
+        decodeFn = `decoder.${msgpackDecodeNillableFuncs.get(
+          namedNode.name
+        )}()`;
+      } else if (msgpackDecodeFuncs.has(namedNode.name)) {
+        decodeFn = `decoder.${msgpackDecodeFuncs.get(namedNode.name)}()`;
       }
       return `${prefix}${decodeFn}\n`;
     }
     case Kind.Enum: {
       let e = t as Enum;
-      let decodeFn = `castEnum[${e.name}](decoder.ReadInt32())`;
+      let decodeFn = `convert.Numeric[${e.name}](decoder.ReadInt32())`;
       if (prevOptional) {
-        decodeFn = `castNillableEnum[${e.name}](decoder.ReadNillableInt32())`;
+        decodeFn = `convert.NillableNumeric[${e.name}](decoder.ReadNillableInt32())`;
       }
       return `${prefix}${decodeFn}\n`;
     }
@@ -132,7 +165,7 @@ export function read(
       )}]${expandType((t as Map).valueType, undefined, true, tr)}, mapSize)\n`;
       mapCode += `for mapSize > 0 {
         mapSize--\n`;
-      mapCode += read(
+      mapCode += msgpackRead(
         context,
         typeInstRef,
         "key",
@@ -147,7 +180,7 @@ export function read(
       mapCode += `if err != nil {
           return ${returnPrefix}err
         }\n`;
-      mapCode += read(
+      mapCode += msgpackRead(
         context,
         typeInstRef,
         "value",
@@ -186,7 +219,7 @@ export function read(
         var nonNilItem ${
           (t as List).type.kind == Kind.Optional ? "*" : ""
         }${expandType((t as List).type, undefined, false, tr)}\n`;
-      listCode += read(
+      listCode += msgpackRead(
         context,
         typeInstRef,
         "nonNilItem",
@@ -210,7 +243,7 @@ export function read(
       switch (optNode.type.kind) {
         case Kind.List:
         case Kind.Map:
-          return read(
+          return msgpackRead(
             context,
             typeInstRef,
             variable,
@@ -227,7 +260,7 @@ export function read(
       // optCode += prefix.replace(", err", "") + "nil;\n";
       // optCode += "} else {\n";
       // optCode += `var nonNil ${expandType(optNode.type, "", false, tr)}\n`;
-      optCode += read(
+      optCode += msgpackRead(
         context,
         typeInstRef,
         variable,
@@ -254,7 +287,8 @@ export function read(
  * @param prevOptional if type is being expanded and the parent type is optional
  * @param isReference if the type that is being expanded has a `@ref` annotation
  */
-export function write(
+export function msgpackWrite(
+  context: Context,
   typeInst: string,
   typeInstRef: boolean,
   typeClass: string,
@@ -266,30 +300,50 @@ export function write(
   let code = "";
   switch (t.kind) {
     case Kind.Alias:
+      const aliases =
+        (context.config.aliases as { [key: string]: Import }) || {};
       const a = t as Alias;
+      const imp = aliases[a.name];
       const p = a.type as Primitive;
+      if (imp && imp.format) {
+        return `${typeInst}.${msgpackEncodeFuncs.get(p.name)}(${variable}.${
+          imp.format
+        }())\n`;
+      }
       const castType = translations.get(p.name);
-      if (prevOptional && encodeNillableFuncs.has(p.name)) {
-        return `${typeInst}.${encodeNillableFuncs.get(
+      if (prevOptional && msgpackEncodeNillableFuncs.has(p.name)) {
+        return `${typeInst}.${msgpackEncodeNillableFuncs.get(
           p.name
         )}((*${castType})(${variable}))\n`;
       }
-      if (encodeFuncs.has(p.name)) {
-        return `${typeInst}.${encodeFuncs.get(
+      if (msgpackEncodeFuncs.has(p.name)) {
+        return `${typeInst}.${msgpackEncodeFuncs.get(
           p.name
         )}(${castType}(${variable}))\n`;
       }
       return "???\n";
+    case Kind.Union:
     case Kind.Type:
     case Kind.Primitive:
+      if (t.kind == Kind.Primitive) {
+        const prim = t as Primitive;
+        if (prim.name == PrimitiveName.DateTime) {
+          if (prevOptional) {
+            return `${typeInst}.WriteNillableString(convert.TimeToStringPtr(${variable}))\n`;
+          }
+          return `${typeInst}.WriteString(convert.TimeToString(${variable}))\n`;
+        }
+      }
       const namedNode = t as Named;
-      if (prevOptional && encodeNillableFuncs.has(namedNode.name)) {
-        return `${typeInst}.${encodeNillableFuncs.get(
+      if (prevOptional && msgpackEncodeNillableFuncs.has(namedNode.name)) {
+        return `${typeInst}.${msgpackEncodeNillableFuncs.get(
           namedNode.name
         )}(${variable})\n`;
       }
-      if (encodeFuncs.has(namedNode.name)) {
-        return `${typeInst}.${encodeFuncs.get(namedNode.name)}(${variable})\n`;
+      if (msgpackEncodeFuncs.has(namedNode.name)) {
+        return `${typeInst}.${msgpackEncodeFuncs.get(
+          namedNode.name
+        )}(${variable})\n`;
       }
       const amp = typeInstRef ? "&" : "";
       return `${variable}.${typeMeth}(${amp}${typeInst})\n`;
@@ -306,7 +360,8 @@ export function write(
         `.WriteMapSize(uint32(len(${variable})))
       if ${variable} != nil { // TinyGo bug: ranging over nil maps panics.
       for k, v := range ${variable} {
-        ${write(
+        ${msgpackWrite(
+          context,
           typeInst,
           typeInstRef,
           typeClass,
@@ -314,7 +369,8 @@ export function write(
           "k",
           mappedNode.keyType,
           false
-        )}${write(
+        )}${msgpackWrite(
+          context,
           typeInst,
           typeInstRef,
           typeClass,
@@ -331,7 +387,8 @@ export function write(
         typeInst +
         `.WriteArraySize(uint32(len(${variable})))
       for _, v := range ${variable} {
-        ${write(
+        ${msgpackWrite(
+          context,
           typeInst,
           typeInstRef,
           typeClass,
@@ -344,13 +401,21 @@ export function write(
     case Kind.Optional:
       const optionalNode = t as Optional;
       switch (optionalNode.type.kind) {
+        case Kind.Alias:
+          const a = optionalNode.type as Alias;
+          const aliases =
+            (context.config.aliases as { [key: string]: Import }) || {};
+          const imp = aliases[a.name];
+          if (imp && imp.format) {
+            break;
+          }
         case Kind.List:
         case Kind.Map:
         case Kind.Enum:
-        case Kind.Alias:
         case Kind.Type:
         case Kind.Primitive:
-          return write(
+          return msgpackWrite(
+            context,
             typeInst,
             typeInstRef,
             typeClass,
@@ -363,8 +428,9 @@ export function write(
       code += "if " + variable + " == nil {\n";
       code += typeInst + ".WriteNil()\n";
       code += "} else {\n";
-      let vprefix = returnDeref(optionalNode.type);
-      code += write(
+      let vprefix = msgpackReturnDeref(context, optionalNode.type);
+      code += msgpackWrite(
+        context,
         typeInst,
         typeInstRef,
         typeClass,
@@ -380,9 +446,15 @@ export function write(
   }
 }
 
-function returnDeref(type: AnyType): string {
+function msgpackReturnDeref(context: Context, type: AnyType): string {
   if (type.kind === Kind.Alias) {
-    type = (type as Alias).type;
+    const a = type as Alias;
+    const aliases = (context.config.aliases as { [key: string]: Import }) || {};
+    const imp = aliases[a.name];
+    if (imp && imp.format) {
+      return "";
+    }
+    type = a.type;
   }
   if (type.kind === Kind.Primitive) {
     const p = type as Primitive;
@@ -399,12 +471,22 @@ function returnDeref(type: AnyType): string {
  * @param t the type node to encode
  * @param isReference if the type that is being expanded has a `@ref` annotation
  */
-export function size(
+export function msgpackSize(
+  context: Context,
   typeInstRef: boolean,
   variable: string,
   t: AnyType
 ): string {
-  return write("sizer", typeInstRef, "Writer", "Encode", variable, t, false);
+  return msgpackWrite(
+    context,
+    "sizer",
+    typeInstRef,
+    "Writer",
+    "Encode",
+    variable,
+    t,
+    false
+  );
 }
 
 /**
@@ -413,15 +495,28 @@ export function size(
  * @param t the type node to encode
  * @param isReference if the type that is being expanded has a `@ref` annotation
  */
-export function encode(
+export function msgpackEncode(
+  context: Context,
   typeInstRef: boolean,
   variable: string,
   t: AnyType
 ): string {
-  return write("encoder", typeInstRef, "Writer", "Encode", variable, t, false);
+  return msgpackWrite(
+    context,
+    "encoder",
+    typeInstRef,
+    "Writer",
+    "Encode",
+    variable,
+    t,
+    false
+  );
 }
 
-export function varAccessParam(variable: string, args: Parameter[]): string {
+export function msgpackVarAccessParam(
+  variable: string,
+  args: Parameter[]
+): string {
   return (
     `ctx` +
     (args.length > 0 ? ", " : "") +

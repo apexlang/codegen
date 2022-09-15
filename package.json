@@ -1,6 +1,6 @@
 {
   "name": "@apexlang/codegen",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Apex built-in code generators",
   "keywords": [
     "apex",
@@ -31,7 +31,6 @@
     "./python": "./dist/python/index.js",
     "./json-schema": "./dist/json-schema/index.js",
     "./typescript": "./dist/typescript/index.js",
-    "./tinygo": "./dist/tinygo/index.js",
     "./utils": "./dist/utils/index.js"
   },
   "engines": {

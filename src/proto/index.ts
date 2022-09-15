@@ -17,4 +17,3 @@ limitations under the License.
 export * from "./proto_visitor.js";
 
 export { ProtoVisitor as default } from "./proto_visitor.js";
-
