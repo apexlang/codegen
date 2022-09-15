@@ -27,6 +27,7 @@ export * from "./scaffold_visitor.js";
 export * from "./struct_visitor.js";
 export * from "./union_visitor.js";
 export * from "./msgpack_visitor.js";
+export * from "./msgpack_constants.js";
 export * from "./msgpack_decoder_visitor.js";
 export * from "./msgpack_encoder_visitor.js";
 export * from "./msgpack_helpers.js";
