@@ -1,6 +1,6 @@
 import { Context, Enum, ObjectMap, Type } from "@apexlang/core/model";
 import { rustDoc, rustifyCaps, trimLines } from "../utils/index.js";
-import { deriveDirective, visibility } from "../utils/config.js";
+import { deriveDirective, visibility } from "../utils/index.js";
 import { SourceGenerator } from "./base.js";
 
 export class EnumVisitor extends SourceGenerator<Enum> {
@@ -9,8 +9,8 @@ export class EnumVisitor extends SourceGenerator<Enum> {
   config: ObjectMap<any>;
   visibility: visibility;
 
-  constructor(context: Context) {
-    super(context.enum, context);
+  constructor(e: Enum, context: Context) {
+    super(e, context);
     this.config = context.config;
     this.visibility = visibility(this.root.name, this.config);
   }

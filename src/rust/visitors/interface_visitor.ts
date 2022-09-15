@@ -1,6 +1,12 @@
 import { Context, Interface, ObjectMap, Operation } from "@apexlang/core/model";
-import { rustDoc, rustify, rustifyCaps, trimLines } from "../utils/index.js";
-import { visibility } from "../utils/config.js";
+import {
+  rustDoc,
+  rustify,
+  rustifyCaps,
+  trimLines,
+  visibility,
+} from "../utils/index.js";
+
 import { apexToRustType } from "../utils/types.js";
 import { SourceGenerator } from "./base.js";
 
@@ -8,8 +14,8 @@ export class InterfaceVisitor extends SourceGenerator<Interface> {
   config: ObjectMap<any>;
   visibility: visibility;
 
-  constructor(context: Context) {
-    super(context.interface, context);
+  constructor(iface: Interface, context: Context) {
+    super(iface, context);
     this.config = context.config;
     this.visibility = visibility(this.root.name, this.config);
   }
@@ -20,15 +26,19 @@ export class InterfaceVisitor extends SourceGenerator<Interface> {
   }
 
   visitOperation(context: Context): void {
-    this.append(genOperation(context.operation, this.visibility));
+    this.append(genOperation(context.operation, this.visibility, this.config));
   }
 }
 
-export function genOperation(op: Operation, vis: visibility): string {
-  const typeString = apexToRustType(op.type);
+export function genOperation(
+  op: Operation,
+  vis: visibility,
+  config: ObjectMap<any>
+): string {
+  const typeString = apexToRustType(op.type, config);
   let args = op.parameters
     .map((arg) => {
-      return `${rustify(arg.name)}: ${apexToRustType(arg.type)}`;
+      return `${rustify(arg.name)}: ${apexToRustType(arg.type, config)}`;
     })
     .join(",");
 
