@@ -1,4 +1,4 @@
-name: python
+name: '@apexlang/python'
 description: Python project
 variables:
 

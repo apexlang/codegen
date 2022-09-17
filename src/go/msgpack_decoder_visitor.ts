@@ -21,7 +21,7 @@ import { msgpackRead } from "./msgpack_helpers.js";
 export class MsgPackDecoderVisitor extends BaseVisitor {
   visitTypeFieldsBefore(context: Context): void {
     super.triggerTypeFieldsBefore(context);
-    const type = context.type!;
+    const type = context.type;
     this.write(
       `func (o *${type.name}) Decode(decoder msgpack.Reader) error {
     numFields, err := decoder.ReadMapSize()
