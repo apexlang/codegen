@@ -1,4 +1,4 @@
-spec: spec.apex
+spec: spec.apexlang
 config:
   aliases:
     UUID:

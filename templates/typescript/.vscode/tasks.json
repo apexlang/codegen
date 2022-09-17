@@ -4,7 +4,7 @@
     {
       "label": "watch",
       "type": "process",
-      "command": "nanogen",
+      "command": "apex",
       "args": ["watch"],
       "isBackground": true,
       "problemMatcher": [],
