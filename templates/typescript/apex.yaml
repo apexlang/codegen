@@ -7,9 +7,6 @@ config:
       from: uuid
       default: uuidv4()
 generates:
-  src/adapter.ts:
-    module: '@apexlang/codegen/typescript'
-    visitorClass: AdapterVisitor
   src/interfaces.ts:
     module: '@apexlang/codegen/typescript'
     visitorClass: InterfacesVisitor
@@ -17,7 +14,3 @@ generates:
     ifNotExists: true
     module: '@apexlang/codegen/typescript'
     visitorClass: ScaffoldVisitor
-  bus.yaml:
-    ifNotExists: true
-    module: '@apexlang/codegen/bus'
-    visitorClass: BusVisitor
