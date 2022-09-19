@@ -17,8 +17,6 @@ limitations under the License.
 import { Context, BaseVisitor } from "@apexlang/core/model";
 import { ClassVisitor } from "./class_visitor.js";
 import { InterfaceVisitor } from "./interface_visitor.js";
-import { HandlerVisitor } from "./handler_visitor.js";
-import { isHandler, isProvider } from "../utils/index.js";
 import { AliasVisitor } from "./alias_visitor.js";
 import { ImportsVisitor } from "./imports_visitor.js";
 
@@ -31,13 +29,8 @@ export class InterfacesVisitor extends BaseVisitor {
   }
 
   visitInterfaceBefore(context: Context): void {
-    if (isProvider(context)) {
-      const iface = new InterfaceVisitor(this.writer);
-      context.interface.accept(context, iface);
-    } else if (isHandler(context)) {
-      const handler = new HandlerVisitor(this.writer);
-      context.interface.accept(context, handler);
-    }
+    const iface = new InterfaceVisitor(this.writer);
+    context.interface.accept(context, iface);
   }
 
   visitAlias(context: Context): void {

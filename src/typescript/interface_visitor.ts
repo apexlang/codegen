@@ -39,12 +39,6 @@ export class InterfaceVisitor extends BaseVisitor {
     let opVal = "";
     this.write(formatComment("  // ", operation.description));
     opVal += `${camelCase(operation.name)}(`;
-    if (this.stateful) {
-      opVal += `ctx: Context`;
-      if (operation.parameters.length > 0) {
-        opVal += `, `;
-      }
-    }
     if (operation.isUnary()) {
       opVal += mapArg(operation.unaryOp());
     } else {
