@@ -48,8 +48,8 @@ export function mapVals(vd: Valued[], sep: string, joinOn: string): string {
 }
 
 /**
- * Return default value for a FieldDefinition. Default value of objects are instantiated.
- * @param fieldDef FieldDefinition Node to get default value of
+ * Return default value for a Field. Default value of objects are instantiated.
+ * @param fieldDef Field Node to get default value of
  */
 export function defValue(context: Context, fieldDef: Field): string {
   const name = fieldDef.name;
