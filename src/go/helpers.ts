@@ -31,6 +31,7 @@ import {
   Named,
   PrimitiveName,
   Interface,
+  Stream,
 } from "@apexlang/core/model";
 import { capitalize, renamed } from "../utils/index.js";
 import { Import } from "./alias_visitor.js";
@@ -202,6 +203,11 @@ export const strQuote = (s: string) => {
   return `\"${s}\"`;
 };
 
+var expandStreamPattern = `{{type}}`;
+export function setExpandStreamPattern(pattern: string) {
+  expandStreamPattern = pattern;
+}
+
 /**
  * returns string of the expanded type of a node
  * @param type the type node that is being expanded
@@ -271,6 +277,12 @@ export const expandType = (
         return `*${expanded}`;
       }
       return expanded;
+    case Kind.Stream:
+      const s = type as Stream;
+      return expandStreamPattern.replace(
+        "{{type}}",
+        expandType(s.type, packageName, true, translate)
+      );
     default:
       return "unknown";
   }

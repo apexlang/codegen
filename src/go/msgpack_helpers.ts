@@ -59,6 +59,14 @@ export function msgpackRead(
   const tr = translateAlias(context);
   const returnPrefix = defaultVal == "" ? "" : `${defaultVal}, `;
   let prefix = "return ";
+  let assign =
+    variable == "item" ||
+    variable == "key" ||
+    variable == "value" ||
+    variable == "ret" ||
+    variable == "request"
+      ? ":="
+      : "=";
   if (variable != "") {
     if (
       variable == "item" ||
@@ -87,11 +95,11 @@ export function msgpackRead(
       }
     }
   }
-  switch (t.kind) {
-    case Kind.Alias:
-      const aliases =
-        (context.config.aliases as { [key: string]: Import }) || {};
-      const a = t as Alias;
+  const passedType = t;
+  if (t.kind == Kind.Alias) {
+    const aliases = (context.config.aliases as { [key: string]: Import }) || {};
+    const a = t as Alias;
+    if (a.type.kind == Kind.Primitive) {
       const prim = a.type as Primitive;
       const imp = aliases[a.name];
       if (imp && imp.parse) {
@@ -112,6 +120,10 @@ export function msgpackRead(
         const decoder = msgpackDecodeFuncs.get(prim.name)!;
         return `${prefix}${caster}[${a.name}](decoder.${decoder}())\n`;
       }
+    }
+    t = a.type;
+  }
+  switch (t.kind) {
     case Kind.Union:
     case Kind.Type:
     case Kind.Primitive: {
@@ -155,14 +167,14 @@ export function msgpackRead(
       if (variable == "ret") {
         mapCode += "ret :=";
       } else {
-        mapCode += `${variable} = `;
+        mapCode += `${variable} ${assign} `;
       }
-      mapCode += `make(map[${expandType(
-        (t as Map).keyType,
+      mapCode += `make(${expandType(
+        passedType,
         undefined,
         true,
         tr
-      )}]${expandType((t as Map).valueType, undefined, true, tr)}, mapSize)\n`;
+      )}, mapSize)\n`;
       mapCode += `for mapSize > 0 {
         mapSize--\n`;
       mapCode += msgpackRead(
@@ -206,10 +218,10 @@ export function msgpackRead(
       if (variable == "ret") {
         listCode += "ret :=";
       } else {
-        listCode += `${variable} = `;
+        listCode += `${variable} ${assign} `;
       }
-      listCode += `make([]${expandType(
-        (t as List).type,
+      listCode += `make(${expandType(
+        passedType,
         undefined,
         true,
         tr
@@ -298,30 +310,30 @@ export function msgpackWrite(
   prevOptional: boolean
 ): string {
   let code = "";
+  if (t.kind == Kind.Alias) {
+    const aliases = (context.config.aliases as { [key: string]: Import }) || {};
+    const a = t as Alias;
+    const imp = aliases[a.name];
+    const p = a.type as Primitive;
+    if (imp && imp.format) {
+      return `${typeInst}.${msgpackEncodeFuncs.get(p.name)}(${variable}.${
+        imp.format
+      }())\n`;
+    }
+    const castType = translations.get(p.name);
+    if (prevOptional && msgpackEncodeNillableFuncs.has(p.name)) {
+      return `${typeInst}.${msgpackEncodeNillableFuncs.get(
+        p.name
+      )}((*${castType})(${variable}))\n`;
+    }
+    if (msgpackEncodeFuncs.has(p.name)) {
+      return `${typeInst}.${msgpackEncodeFuncs.get(
+        p.name
+      )}(${castType}(${variable}))\n`;
+    }
+    t = a.type;
+  }
   switch (t.kind) {
-    case Kind.Alias:
-      const aliases =
-        (context.config.aliases as { [key: string]: Import }) || {};
-      const a = t as Alias;
-      const imp = aliases[a.name];
-      const p = a.type as Primitive;
-      if (imp && imp.format) {
-        return `${typeInst}.${msgpackEncodeFuncs.get(p.name)}(${variable}.${
-          imp.format
-        }())\n`;
-      }
-      const castType = translations.get(p.name);
-      if (prevOptional && msgpackEncodeNillableFuncs.has(p.name)) {
-        return `${typeInst}.${msgpackEncodeNillableFuncs.get(
-          p.name
-        )}((*${castType})(${variable}))\n`;
-      }
-      if (msgpackEncodeFuncs.has(p.name)) {
-        return `${typeInst}.${msgpackEncodeFuncs.get(
-          p.name
-        )}(${castType}(${variable}))\n`;
-      }
-      return "???\n";
     case Kind.Union:
     case Kind.Type:
     case Kind.Primitive:

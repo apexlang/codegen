@@ -26,6 +26,7 @@ import {
   Primitive,
   PrimitiveName,
   Alias,
+  Stream,
 } from "@apexlang/core/model";
 import { Import } from "./alias_visitor.js";
 
@@ -67,13 +68,6 @@ export class ImportsVisitor extends BaseVisitor {
     }
   }
 
-  visitOperationAfter(context: Context): void {
-    this.addType("context", {
-      type: "context.Context",
-      import: "context",
-    });
-  }
-
   addType(name: string, i: Import) {
     if (i == undefined || i.import == undefined) {
       return;
@@ -93,6 +87,11 @@ export class ImportsVisitor extends BaseVisitor {
     const aliases = (context.config.aliases as { [key: string]: Import }) || {};
 
     switch (type.kind) {
+      case Kind.Stream:
+        const s = type as Stream;
+        this.checkType(context, s.type);
+        break;
+
       case Kind.Alias: {
         const a = type as Alias;
         const i = aliases[a.name];
@@ -153,7 +152,19 @@ export class ImportsVisitor extends BaseVisitor {
     this.checkType(context, context.parameter.type);
   }
 
+  visitFunction(context: Context): void {
+    this.addType("context", {
+      type: "context.Context",
+      import: "context",
+    });
+    this.checkType(context, context.operation.type);
+  }
+
   visitOperation(context: Context): void {
+    this.addType("context", {
+      type: "context.Context",
+      import: "context",
+    });
     this.checkType(context, context.operation.type);
   }
 

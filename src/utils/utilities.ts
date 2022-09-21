@@ -547,7 +547,10 @@ export function convertOperationToType(
   operation: Operation,
   prefix?: string
 ): Type {
-  var fields = operation.parameters.map((param) => {
+  const parameters = operation.parameters.filter(
+    (p) => p.type.kind != Kind.Stream
+  );
+  var fields = parameters.map((param) => {
     return new FieldDefinition(
       param.node.loc,
       param.node.name,
