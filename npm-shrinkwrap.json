@@ -1,15 +1,15 @@
 {
   "name": "@apexlang/codegen",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "lockfileVersion": 2,
   "requires": true,
   "packages": {
     "": {
       "name": "@apexlang/codegen",
-      "version": "0.0.10",
+      "version": "0.0.11",
       "license": "Apache-2.0",
       "dependencies": {
-        "@apexlang/core": "^0.1.0",
+        "@apexlang/core": "^0.1.1",
         "openapi3-ts": "^2.0.2",
         "yaml": "^1.10.2"
       },
@@ -26,9 +26,9 @@
       }
     },
     "node_modules/@apexlang/core": {
-      "version": "0.1.0",
-      "resolved": "https://registry.npmjs.org/@apexlang/core/-/core-0.1.0.tgz",
-      "integrity": "sha512-VcKRSIrl7dcLgTGo0oqihgH5efnFa6fLG5iCQv4dZMK5L8cT9WjQ0ViTFnoOnLu1I70sPfF+Eb8g4ej2WYIX/A==",
+      "version": "0.1.1",
+      "resolved": "https://registry.npmjs.org/@apexlang/core/-/core-0.1.1.tgz",
+      "integrity": "sha512-dUQdLslEChjbF4uMu9HNgYUloLF2VVWb1jw87eXzX80UsfcGQ5ti5TKu0JYl0ABdUC3N/0uyWg1Er0gbDt27/Q==",
       "engines": {
         "node": ">=14.0"
       }
@@ -1901,9 +1901,9 @@
   },
   "dependencies": {
     "@apexlang/core": {
-      "version": "0.1.0",
-      "resolved": "https://registry.npmjs.org/@apexlang/core/-/core-0.1.0.tgz",
-      "integrity": "sha512-VcKRSIrl7dcLgTGo0oqihgH5efnFa6fLG5iCQv4dZMK5L8cT9WjQ0ViTFnoOnLu1I70sPfF+Eb8g4ej2WYIX/A=="
+      "version": "0.1.1",
+      "resolved": "https://registry.npmjs.org/@apexlang/core/-/core-0.1.1.tgz",
+      "integrity": "sha512-dUQdLslEChjbF4uMu9HNgYUloLF2VVWb1jw87eXzX80UsfcGQ5ti5TKu0JYl0ABdUC3N/0uyWg1Er0gbDt27/Q=="
     },
     "@babel/code-frame": {
       "version": "7.12.11",

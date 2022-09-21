@@ -20,6 +20,7 @@ export * from "./enum_visitor.js";
 export * from "./fiber_visitor.js";
 export * from "./grpc_visitor.js";
 export * from "./helpers.js";
+export * from "./imports_visitor.js";
 export * from "./interface_visitor.js";
 export * from "./interfaces_visitor.js";
 export * from "./main_visitor.js";

@@ -31,12 +31,14 @@ export class MsgPackDecoderVisitor extends BaseVisitor {
 
     for numFields > 0 {
       numFields--;
-      field, err := decoder.ReadString()
+      ${context.fields.length > 0 ? "field" : "_"}, err := decoder.ReadString()
       if err != nil {
         return err
-      }
-      switch field {\n`
+      }\n`
     );
+    if (context.fields.length > 0) {
+      this.write(`switch field {\n`);
+    }
   }
 
   visitTypeField(context: Context): void {
@@ -57,10 +59,12 @@ export class MsgPackDecoderVisitor extends BaseVisitor {
   }
 
   visitTypeFieldsAfter(context: Context): void {
-    if (context.fields!.length > 0) {
+    if (context.fields.length > 0) {
       this.write(`default:
         err = decoder.Skip()
       }\n`);
+    } else {
+      this.write(`err = decoder.Skip()\n`);
     }
     this.write(`if err != nil {
       return err

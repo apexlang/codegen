@@ -1,6 +1,8 @@
 pub type MyString = String;
 pub type Uuid = String;
 
+fn hello(this: String, that: u64) -> String;
+
 pub(crate) trait MyService {
     fn empty_void() -> ();
 

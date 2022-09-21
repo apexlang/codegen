@@ -15,7 +15,13 @@ limitations under the License.
 */
 
 import { BaseVisitor, Context } from "@apexlang/core/model";
-import { expandType, mapParams, methodName, returnPointer } from "./helpers.js";
+import {
+  expandType,
+  mapParam,
+  mapParams,
+  methodName,
+  returnPointer,
+} from "./helpers.js";
 import { translateAlias } from "./alias_visitor.js";
 import { formatComment, isVoid, noCode } from "../utils/index.js";
 
@@ -26,17 +32,47 @@ export class InterfaceVisitor extends BaseVisitor {
     this.write(`type ${iface.name} interface {\n`);
   }
 
+  visitFunction(context: Context): void {
+    const { operation } = context;
+    if (noCode(operation)) {
+      return;
+    }
+    this.write(formatComment("// ", operation.description));
+    this.write(
+      `type ${methodName(operation, operation.name)}Fn func(ctx context.Context`
+    );
+    operation.parameters.forEach((p) =>
+      this.visitParam(context.clone({ parameter: p }))
+    );
+    this.write(`)`);
+    this.visitOperationReturn(context);
+    this.write(`\n\n`);
+  }
+
   visitOperation(context: Context): void {
     const { operation } = context;
     if (noCode(operation)) {
       return;
     }
     this.write(formatComment("// ", operation.description));
-    this.write(`${methodName(operation, operation.name)}(`);
-    const translate = translateAlias(context);
-    this.write(
-      `${mapParams(context, operation.parameters, undefined, translate)})`
+    this.write(`${methodName(operation, operation.name)}(ctx context.Context`);
+    operation.parameters.forEach((p) =>
+      this.visitParam(context.clone({ parameter: p }))
     );
+    this.write(`)`);
+    this.visitOperationReturn(context);
+    this.write(`\n`);
+  }
+
+  visitParam(context: Context): void {
+    const { parameter } = context;
+    const translate = translateAlias(context);
+    this.write(`, ${mapParam(context, parameter, undefined, translate)}`);
+  }
+
+  visitOperationReturn(context: Context): void {
+    const { operation } = context;
+    const translate = translateAlias(context);
     if (!isVoid(operation.type)) {
       this.write(
         ` (${returnPointer(operation.type)}${expandType(
@@ -49,7 +85,6 @@ export class InterfaceVisitor extends BaseVisitor {
     } else {
       this.write(` error`);
     }
-    this.write(`\n`);
   }
 
   visitInterfaceAfter(context: Context): void {
