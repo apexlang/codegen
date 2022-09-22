@@ -24,6 +24,7 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": "./dist/index.js",
+    "./cs": "./dist/cs/index.js",
     "./go": "./dist/go/index.js",
     "./rust": "./dist/rust/index.js",
     "./proto": "./dist/proto/index.js",
