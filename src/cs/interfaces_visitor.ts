@@ -3,55 +3,38 @@ import {
   Context,
   Visitor,
   Writer,
-} from "@apexlang/core/dist/model";
-import { TypeVisitor } from "./types_visitor";
-import { getMethods, getPath } from "../rest";
-import { pascalCase } from "../utils";
+} from "@apexlang/core/model";
+import {TypeVisitor} from "./types_visitor";
+import {InterfaceVisitor} from "./interface_visitor";
+import {pascalCase} from "../utils";
 
 export class InterfacesVisitor extends BaseVisitor {
   typeVisitor = (writer: Writer): Visitor => new TypeVisitor(writer);
+  interfaceVisitor = (writer: Writer): Visitor => new InterfaceVisitor(writer);
 
-  visitInterfacesBefore(context: Context) {
-    this.write(
-      "void Setup(Microsoft.AspNetCore.Builder.WebApplication app) {\n"
-    );
-    super.visitInterfacesBefore(context);
+  visitNamespaceBefore(context: Context) {
+    this.write(`using System;`);
+    this.write(`\n\n`);
+    super.visitNamespaceBefore(context);
   }
 
-  visitInterfaceBefore(context: Context) {
-    this.write(`  // ${context.interface.name}\n`);
-    this.write("  {\n");
-    super.visitInterfaceBefore(context);
+  visitNamespace(context: Context) {
+    this.write(`namespace ${(pascalCase(context.namespace.name))} {\n`);
+    this.write(`\n`);
+    super.visitNamespace(context);
   }
 
-  visitInterfaceAfter(context: Context) {
-    this.write("  }\n");
-    super.visitInterfaceAfter(context);
-  }
-
-  visitInterfacesAfter(context: Context) {
-    this.write("}\n");
-    super.visitInterfacesBefore(context);
-  }
-
-  visitOperation(context: Context) {
-    const { operation } = context;
-
-    const path = getPath(context);
-    const methods = getMethods(operation);
-
-    for (const method of methods) {
-      this.write(`    app.Map${pascalCase(method)}("${path}", () => {});\n`);
-    }
-
-    super.visitInterface(context);
+  visitNamespaceAfter(context: Context) {
+    this.write(`}\n`);
+    super.visitNamespaceAfter(context);
   }
 
   visitInterface(context: Context) {
-    super.visitInterface(context);
+    const visitor = this.interfaceVisitor(this.writer);
+    context.interface.accept(context,visitor)
   }
 
-  visitType(context: Context): void {
+  visitType(context: Context) {
     const visitor = this.typeVisitor(this.writer);
     context.type.accept(context, visitor);
   }
