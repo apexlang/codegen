@@ -1,5 +1,11 @@
 import { Context, Enum, ObjectMap, Type } from "@apexlang/core/model";
-import { rustDoc, rustifyCaps, trimLines } from "../utils/index.js";
+import { IndexTypeDirective } from "../directives.js";
+import {
+  customAttributes,
+  rustDoc,
+  rustifyCaps,
+  trimLines,
+} from "../utils/index.js";
 import { deriveDirective, visibility } from "../utils/index.js";
 import { SourceGenerator } from "./base.js";
 
@@ -24,15 +30,25 @@ export class EnumVisitor extends SourceGenerator<Enum> {
       ? fromIndexImpl(this.root)
       : "";
 
-    return `
-    ${trimLines([
+    const optionalIntoIndexConversion = this.hasIndices
+      ? intoIndexImpl(this.root)
+      : "";
+
+    let prefix = trimLines([
       rustDoc(this.root.description),
       deriveDirective(this.root.name, this.config),
-    ])}
+      customAttributes(this.root.name, this.config),
+    ]);
+    return `
+    ${prefix}
     ${this.visibility} enum ${rustifyCaps(this.root.name)}{
       ${this.source}
     }
-    ${trimLines([optionalDisplayImpl, optionalIndexConversion])}
+    ${trimLines([
+      optionalDisplayImpl,
+      optionalIndexConversion,
+      optionalIntoIndexConversion,
+    ])}
 
     `;
   }
@@ -73,21 +89,45 @@ function displayImpl(node: Enum): string {
 }
 
 function fromIndexImpl(node: Enum): string {
-  let type = "u32";
+  let type: string = "u32";
+  node.annotation("index_type", (annotation) => {
+    type = (annotation.convert() as IndexTypeDirective).type;
+  });
 
   let patterns = node.values
     .filter((v) => v.index !== undefined)
     .map((v) => `${v.index} => Ok(Self::${rustifyCaps(v.name)})`)
     .join(",");
+
   return `
   impl std::convert::TryFrom<${type}> for ${rustifyCaps(node.name)} {
-    type Error = Box<dyn std::error::Error + Send + Sync + 'static>;
+    type Error = String;
     fn try_from(index: ${type}) -> Result<Self, Self::Error> {
       match index {
         ${patterns},
         _ => Err(format!("{} is not a valid index for ${rustifyCaps(
           node.name
-        )}",index).into())
+        )}",index))
+      }
+    }
+  }
+  `;
+}
+
+function intoIndexImpl(node: Enum): string {
+  let type = "u32";
+
+  let patterns = node.values
+    .map(
+      (v) => `Self::${rustifyCaps(v.name)} => ${v.index || "unreachable!()"}`
+    )
+    .join(",");
+
+  return `
+  impl Into<${type}> for ${rustifyCaps(node.name)} {
+    fn into(self) -> ${type} {
+      match self {
+        ${patterns},
       }
     }
   }

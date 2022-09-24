@@ -1,5 +1,6 @@
 import { Context, Interface, ObjectMap, Operation } from "@apexlang/core/model";
 import {
+  customAttributes,
   rustDoc,
   rustify,
   rustifyCaps,
@@ -21,7 +22,12 @@ export class InterfaceVisitor extends SourceGenerator<Interface> {
   }
 
   getSource(): string {
-    return `${trimLines([rustDoc(this.root.description)])}
+    let prefix = trimLines([
+      rustDoc(this.root.description),
+      customAttributes(this.root.name, this.config),
+    ]);
+
+    return `${prefix}
     ${this.visibility} trait ${rustifyCaps(this.root.name)} {${this.source}}\n`;
   }
 

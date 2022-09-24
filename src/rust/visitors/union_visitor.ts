@@ -14,6 +14,7 @@ import {
   deriveDirective,
   visibility,
   types,
+  customAttributes,
 } from "../utils/index.js";
 
 import { SourceGenerator } from "./base.js";
@@ -49,11 +50,15 @@ export class UnionVisitor extends SourceGenerator<Union> {
         isRecursive && !isHeapAllocated ? `Box<${baseType}>` : baseType;
       return `${getTypeName(t)}(${typeString})`;
     });
-    return `
-    ${trimLines([
+
+    let prefix = trimLines([
       rustDoc(this.root.description),
       deriveDirective(this.root.name, this.config),
-    ])}
+      customAttributes(this.root.name, this.config),
+    ]);
+
+    return `
+    ${prefix}
     ${this.visibility} enum ${rustifyCaps(this.root.name)}{
       ${variants.join(",")}
     }

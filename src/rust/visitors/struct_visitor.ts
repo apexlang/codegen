@@ -9,6 +9,7 @@ import {
   useSerde,
   visibility,
   types,
+  customAttributes,
 } from "../utils/index.js";
 
 import { SourceGenerator } from "./base.js";
@@ -24,9 +25,14 @@ export class StructVisitor extends SourceGenerator<Type> {
   }
 
   getSource(): string {
+    let prefix = trimLines([
+      rustDoc(this.root.description),
+      deriveDirective(this.root.name, this.config),
+      customAttributes(this.root.name, this.config),
+    ]);
+
     return `
-    ${rustDoc(this.root.description)}
-    ${deriveDirective(this.root.name, this.config)}
+    ${prefix}
     ${this.visibility} struct ${rustifyCaps(this.root.name)}{
       ${this.source}
     }`;
