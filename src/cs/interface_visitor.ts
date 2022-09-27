@@ -1,6 +1,7 @@
-import { BaseVisitor, Context } from "@apexlang/core/model";
-import { formatComment, pascalCase } from "../utils";
-import { expandType } from "./helpers";
+import {BaseVisitor, Context} from "@apexlang/core/model";
+import {formatComment, pascalCase} from "../utils";
+import {expandType} from "./helpers";
+import {translations} from "./constant";
 
 export class InterfaceVisitor extends BaseVisitor {
   visitInterfaceBefore(context: Context) {
@@ -10,6 +11,26 @@ export class InterfaceVisitor extends BaseVisitor {
   }
 
   visitInterface(context: Context) {
+    if (context.interface.annotation("service")) {
+      this.write(`\t void Setup(Microsoft.AspNetCore.Builder.WebApplication app) {\n`);
+      context.interface.operations.forEach((method) => {
+        method.parameters.forEach((param) => {
+          const parameter = JSON.parse(JSON.stringify(param));
+          const type = translations.get(parameter.type.name) || parameter.type.name;
+          if ((method.annotation("GET"))) {
+            this.write(`\t\t app.MapGet("/${method.name}", (${type} ${param.name}) => this.${pascalCase(method.name)}(${param.name}));\n`);
+          } else if (method.annotation("POST")) {
+            this.write(`\t\t app.MapPost("/${method.name}", (${type} ${param.name}) => this.${pascalCase(method.name)}(${param.name}));\n`);
+          } else if (method.annotation("PUT")) {
+            this.write(`\t\t app.MapPut("/${method.name}", (${type} ${param.name}) => this.${pascalCase(method.name)}(${param.name}));\n`);
+          } else if (method.annotation("DELETE")) {
+            this.write(`\t\t app.MapDelete("/${method.name}", (${type} ${param.name}) => this.${pascalCase(method.name)}(${param.name}));\n`);
+          }
+        })
+      })
+      this.write(`\t}\n\n`);
+    }
+
     const operations = context.interface.operations;
     for (let i = 0; i < operations.length; ++i) {
       const operation = operations[i];

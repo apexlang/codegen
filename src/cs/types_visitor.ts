@@ -12,6 +12,11 @@ export class TypeVisitor extends BaseVisitor {
     super.visitTypesBefore(context);
   }
 
+  visitTypeBefore_(context: Context): string {
+    const {type} = context;
+    return pascalCase(type.name);
+  }
+
   visitTypeField(context: Context) {
     const { field } = context;
     const type = expandType(field.type);
@@ -22,7 +27,11 @@ export class TypeVisitor extends BaseVisitor {
 
     if (range || email || notEmpty) {
       const name = camelCase(field.name);
-      const propName = pascalCase(field.name);
+      let propName = pascalCase(field.name);
+      const typeVisit = this.visitTypeBefore_(context);
+      if (propName === typeVisit) {
+        propName = propName + "_";
+      }
 
       this.write(`  private ${type} ${name};`);
 
@@ -68,8 +77,13 @@ export class TypeVisitor extends BaseVisitor {
       this.write("    }\n");
       this.write("  }\n");
     } else {
+      const typeVisit = this.visitTypeBefore_(context);
+      let propName = pascalCase(field.name);
+      if (propName === typeVisit) {
+        propName = propName + "_";
+      }
       this.write(formatComment("  /// ", field.description));
-      this.write(`  public ${type} ${pascalCase(field.name)}`);
+      this.write(`  public ${type} ${propName}`);
       this.write(" { get; set; }\n");
     }
   }
