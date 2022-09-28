@@ -22,6 +22,6 @@ namespace "greeting.v1"
   @path("/v1")
 
 interface Greeter @service {
-    sayHello(firstName: string @n(1), lastName: string @n(2)): string
-      @path("/greeting") @POST
+  sayHello(firstName: string @n(1), lastName: string @n(2)): string
+    @path("/greeting") @POST
 }

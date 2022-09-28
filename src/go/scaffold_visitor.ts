@@ -60,18 +60,30 @@ export class ScaffoldVisitor extends BaseVisitor {
     super.visitNamespaceBefore(context);
     const logger = getLogger(context);
 
-    this.write(`package ${packageName}
+    const roleNames = (context.config.names as string[]) || [];
+    const roleTypes = (context.config.types as string[]) || [];
 
-    import (\n`);
-    if (hasServiceCode(context)) {
-      this.write(`\t"context"\n\n`);
+    const hasInterfaces =
+      Object.values(context.namespace.interfaces).find((iface) => {
+        const c = context.clone({ interface: iface });
+        return isOneOfType(c, roleTypes) || roleNames.indexOf(iface.name) != -1;
+      }) != undefined;
+
+    this.write(`package ${packageName}\n\n`);
+
+    // Only emit import section if there are interfaces to generate.
+    if (hasInterfaces) {
+      this.write(`import (\n`);
+      if (hasServiceCode(context)) {
+        this.write(`\t"context"\n\n`);
+      }
+      const importsVisitor = new ImportsVisitor(this.writer);
+      context.namespace.accept(context, importsVisitor);
+      if (logger) {
+        this.write(`\t"${logger.import}"\n`);
+      }
+      this.write(`)\n\n`);
     }
-    const importsVisitor = new ImportsVisitor(this.writer);
-    context.namespace.accept(context, importsVisitor);
-    if (logger) {
-      this.write(`\t"${logger.import}"\n`);
-    }
-    this.write(`)\n\n`);
 
     const service = new ServiceVisitor(this.writer);
     context.namespace.accept(context, service);
