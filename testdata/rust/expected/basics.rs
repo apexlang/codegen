@@ -1,4 +1,11 @@
+/************************************************
+ * THIS FILE IS GENERATED, DO NOT EDIT          *
+ *                                              *
+ * See https://apexlang.io for more information *
+ ***********************************************/
+
 pub type MyString = String;
+
 pub type Uuid = String;
 
 fn hello(this: String, that: u64) -> String;
@@ -189,7 +196,6 @@ pub struct MyType {
     #[serde(rename = "aliasOption")]
     pub alias_option: Option<Uuid>,
 }
-
 #[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct MyOtherType {
     #[serde(rename = "foo")]
@@ -228,13 +234,22 @@ impl std::fmt::Display for MyEnum {
     }
 }
 impl std::convert::TryFrom<u32> for MyEnum {
-    type Error = Box<dyn std::error::Error + Send + Sync + 'static>;
+    type Error = String;
     fn try_from(index: u32) -> Result<Self, Self::Error> {
         match index {
             0 => Ok(Self::One),
             1 => Ok(Self::Two),
             2 => Ok(Self::Three),
-            _ => Err(format!("{} is not a valid index for MyEnum", index).into()),
+            _ => Err(format!("{} is not a valid index for MyEnum", index)),
+        }
+    }
+}
+impl Into<u32> for MyEnum {
+    fn into(self) -> u32 {
+        match self {
+            Self::One => unreachable!(),
+            Self::Two => 1,
+            Self::Three => 2,
         }
     }
 }

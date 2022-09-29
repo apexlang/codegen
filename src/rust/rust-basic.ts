@@ -34,7 +34,13 @@ export class RustBasic extends ContextWriter {
         ]
       )
     );
-    this.append("#![allow(unused_qualifications)]\n");
+    if (context.config.header) {
+      if (Array.isArray(context.config.header)) {
+        this.append(context.config.header.join("\n"));
+      } else {
+        this.append(context.config.header);
+      }
+    }
   }
 
   visitType(context: Context): void {

@@ -6,7 +6,7 @@ import {
   ObjectMap,
   Union,
 } from "@apexlang/core/model";
-import { codegenType, isNamed } from "../../utils/index.js";
+import { codegenType, isNamed, isRecursiveType } from "../../utils/index.js";
 import {
   rustDoc,
   rustifyCaps,
@@ -43,7 +43,7 @@ export class UnionVisitor extends SourceGenerator<Union> {
 
   getSource(): string {
     const variants = this.root.types.map((t) => {
-      let isRecursive = types.isRecursiveType(t);
+      let isRecursive = isRecursiveType(t);
       let isHeapAllocated = t.kind === Kind.Map || t.kind === Kind.List;
       let baseType = types.apexToRustType(t, this.config);
       let typeString =
