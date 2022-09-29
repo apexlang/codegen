@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 import { Context, BaseVisitor } from "@apexlang/core/model";
-import { formatComment, pascalCase } from "../utils/index.js";
+import { formatComment, pascalCase, typeName } from "../utils/index.js";
 import { expandType } from "./helpers.js";
 
 export class UnionVisitor extends BaseVisitor {
@@ -25,11 +25,12 @@ export class UnionVisitor extends BaseVisitor {
     this.write(formatComment("// ", union.description));
     this.write(`type ${union.name} struct {\n`);
     union.types.forEach((t) => {
-      const typeName = expandType(t);
+      const tname = typeName(t);
+      const expandedName = expandType(t);
       this.write(
         `${pascalCase(
-          typeName
-        )} *${typeName} ${tick}json:"${typeName},omitempty" yaml:"${typeName},omitempty" msgpack:"${typeName},omitempty`
+          tname
+        )} *${expandedName} ${tick}json:"${tname},omitempty" yaml:"${tname},omitempty" msgpack:"${tname},omitempty`
       );
       this.triggerCallbacks(context, "UnionStructTags");
       this.write(`"${tick}\n`);

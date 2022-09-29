@@ -606,7 +606,7 @@ export function convertUnionToType(tr: TypeResolver, union: Union): Type {
   );
 }
 
-function modelToAST(t: AnyType): ASTType {
+export function modelToAST(t: AnyType): ASTType {
   switch (t.kind) {
     case Kind.Primitive: {
       const p = t as Primitive;
@@ -643,7 +643,7 @@ function modelToAST(t: AnyType): ASTType {
   return new ASTNamed(undefined, new Name(undefined, "????"));
 }
 
-function typeName(t: AnyType): string {
+export function typeName(t: AnyType): string {
   switch (t.kind) {
     case Kind.Primitive: {
       const p = t as Primitive;
