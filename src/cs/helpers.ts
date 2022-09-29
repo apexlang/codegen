@@ -7,7 +7,7 @@ import {
   Optional,
 } from "@apexlang/core/model";
 import {pascalCase} from "../utils";
-import { translations } from "./constant";
+import {translations} from "./constant";
 
 export const expandType = (type: AnyType): string => {
   switch (type.kind) {
@@ -30,3 +30,7 @@ export const expandType = (type: AnyType): string => {
       return "object";
   }
 };
+
+export const parseNamespaceName = (name: string): string => {
+  return pascalCase(name.split(".")[0]);
+}

@@ -1,0 +1,20 @@
+spec: ../spec.apexlang
+generates:
+  pkg/outputtest/interfaces.cs:
+    module: '@apexlang/codegen/cs'
+    visitorClass: InterfacesVisitor
+  pkg/outputtest/apis.cs:
+    module: '@apexlang/codegen/cs'
+    visitorClass: MinimalAPIVisitor
+  pkg/outputtest/repositories.cs:
+    module: '@apexlang/codegen/cs'
+    visitorClass: ScaffoldVisitor
+    config:
+      names:
+        - Repository
+  pkg/outputtest/services.cs:
+    module: '@apexlang/codegen/cs'
+    visitorClass: ScaffoldVisitor
+    config:
+      types:
+        - service
