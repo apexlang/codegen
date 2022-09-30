@@ -1,45 +1,48 @@
-import { Context, Interface, ObjectMap, Operation } from "@apexlang/core/model";
-import { generateComment } from "../utils/index.js";
+import { Context, Interface } from "@apexlang/core/model";
+import { convertDescription, convertOperation } from "../utils/conversions.js";
 
-import { expandType } from "../utils/types.js";
 import { SourceGenerator } from "./base.js";
 
+/**
+ * Apex interfaces come from syntax like this:
+ *
+ * ```apexlang
+ * interface RetailStore {
+ *   order(item:u32): u32
+ * }
+ * ```
+ *
+ * View a sample model here:
+ * https://apexlang.github.io/ast-viewer/#aW50ZXJmYWNlIFJldGFpbFN0b3JlIHsKICBvcmRlcihpdGVtOnUzMik6IHUzMgp9Cgo=
+ */
 export class InterfaceVisitor extends SourceGenerator<Interface> {
-  config: ObjectMap;
-
-  constructor(iface: Interface, context: Context) {
-    super(iface, context);
-    this.config = context.config;
+  constructor(context: Context) {
+    super(context.interface, context);
   }
 
-  getSource(): string {
-    return `
-    ${generateComment(this.root.description)}
-    interface ${this.root.name} {${this.source}}\n`;
+  buffer(): string {
+    // The name of the Interface from the Apex schema.
+    const name = this.node.name;
+
+    // Get the buffered output. Your visitor operations write
+    // to this buffer when they call `.write()`.
+    const innerSource = this.writer.string();
+
+    // A comment generated from the description.
+    const comment = convertDescription(this.node.description);
+
+    // Combine the above to create and return new output here.
+    return ``;
   }
 
   visitOperation(context: Context): void {
-    this.append(genOperation(context.operation, false, this.config));
+    const { operation } = context;
+
+    // Generate new output from `convertOperation()` below.
+    const converted = convertOperation(operation, false, this.config);
+
+    // Append to the buffer in `this.writer`. Get the buffer's
+    // state by calling `this.writer.string()`.
+    this.write(``);
   }
-}
-
-export function genOperation(
-  op: Operation,
-  global: boolean,
-  config: ObjectMap
-): string {
-  const typeString = expandType(op.type, config);
-  const args = op.parameters
-    .map((arg) => {
-      return `${arg.name}: ${expandType(arg.type, config)}`;
-    })
-    .join(",");
-
-  // If this is a root-level operation, prefix it with 'func'
-  const prefix = global ? "func" : "";
-
-  return `
-    ${generateComment(op.description)}
-    ${prefix} ${op.name}(${args}): ${typeString}
-    `;
 }

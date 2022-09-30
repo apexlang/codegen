@@ -1,0 +1,13 @@
+namespace "test"
+
+interface TestInterface {
+  op1(arg1: string, arg2: bool): CustomType
+}
+
+type CustomType {
+  date: datetime
+}
+
+type OtherType {
+  message: string
+}
