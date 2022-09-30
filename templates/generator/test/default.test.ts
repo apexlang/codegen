@@ -4,7 +4,7 @@ import { Writer } from "@apexlang/core/model";
 
 describe("default visitor", () => {
   test("should generate apex from apex", () => {
-    // Define some test apex to parse.
+    // Define test apex we can parse.
     const apex = `
     namespace "test"
 
@@ -14,6 +14,10 @@ describe("default visitor", () => {
 
     type CustomType {
       date: datetime
+    }
+
+    type OtherType {
+      message: string
     }
     `;
 
@@ -27,18 +31,9 @@ describe("default visitor", () => {
     context.accept(context, visitor);
 
     // Retrieve our generated source.
-    const source = visitor.writer.string();
+    const generated = visitor.writer.string();
 
-    // Parse our newly generated apex
-    const newContext = parse(source);
-
-    // This section converts the context JSON to skip comparing the source locations
-    // which may be understandably different in our generated soure.
-    const skipLocations = (k: string, v: any) => (k === "loc" ? undefined : v);
-    const expected = JSON.stringify(context, skipLocations);
-    const actual = JSON.stringify(newContext, skipLocations);
-
-    // Assert that the actual JSON is equal to the expected JSON.
-    expect(actual).toEqual(expected);
+    // Assert that our generated output equals what we expect.
+    expect(generated).toEqual(`something!`);
   });
 });

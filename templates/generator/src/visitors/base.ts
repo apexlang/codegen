@@ -1,5 +1,4 @@
 import {
-  AbstractVisitor,
   Alias,
   BaseVisitor,
   Context,
@@ -8,48 +7,45 @@ import {
   Union,
   Writer,
   Interface,
+  ObjectMap,
 } from "@apexlang/core/model";
 
 export type VisitorTypes = Alias | Type | Union | Enum | Interface;
 
-export class SourceGenerator<T extends VisitorTypes> extends AbstractVisitor {
-  root: T;
+/**
+ * A utility class to isolate a buffer and provide
+ * easy access to the root node and configuration.
+ *
+ *
+ * @param node - The root node to start from.
+ * @param context - The visitor context to work in.
+ */
+export class SourceGenerator<T extends VisitorTypes> extends BaseVisitor {
+  node: T;
   context: Context;
-  source = "";
+  config: ObjectMap;
 
-  constructor(root: T, context: Context) {
-    super();
-    this.root = root;
+  /**
+   * Creates a new visitor with an isolated Writer and
+   * a reference to the root node and context configuration.
+   *
+   * @param node - The root node to start from.
+   * @param context - The visitor context to work in.
+   */
+  constructor(node: T, context: Context) {
+    super(new Writer());
+    this.node = node;
     this.context = context;
+    this.config = context.config;
+    this.node.accept(this.context, this);
   }
 
-  append(source: string): void {
-    this.source += source;
-  }
-
-  getSource(): string {
-    return this.source;
-  }
-
-  toString(): string {
-    this.root.accept(this.context, this);
-    return this.getSource();
-  }
-}
-
-export class ContextWriter extends BaseVisitor {
-  source = "";
-
-  constructor(writer: Writer) {
-    super(writer);
-  }
-
-  append(source: string): void {
-    this.source += source;
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  visitContextAfter(context: Context): void {
-    this.write(this.source);
+  /**
+   * Get the buffer's contents.
+   *
+   * @returns The buffer's contents.
+   */
+  buffer(): string {
+    return this.writer.string();
   }
 }

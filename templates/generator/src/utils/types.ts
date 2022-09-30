@@ -10,48 +10,128 @@ import {
   ObjectMap,
 } from "@apexlang/core/model";
 
-export function expandType(typ: AnyType, config: ObjectMap): string {
+/**
+ * Convert an Apex type to a type suitable for the destination format.
+ *
+ * @param typ - The Type node to convert.
+ * @param config - The context's configuration.
+ * @returns A string suitable for the destination format.
+ *
+ * @throws Throws if there is a type unaccounted for.
+ */
+export function convertType(typ: AnyType, config: ObjectMap): string {
   switch (typ.kind) {
     case Kind.List: {
+      /**
+       * Generate the destination List/Array types here.
+       * `itemType` is your element type
+       *
+       * For example:
+       * `[string]` in Apex could be `string[]` in TypeScript.
+       * where :
+       *
+       * @example
+       * return `${itemType}[]`
+       * */
       const t = typ as List;
-      const itemType = expandType(t.type, config);
-      return `[${itemType}]`;
+
+      // The list element's type
+      const itemType = convertType(t.type, config);
+
+      return ``;
     }
     case Kind.Map: {
+      /**
+       * Generate destination Map/Object types here.
+       *
+       * For example:
+       * `{string: u32}` in Apex could be `Record<string, number>` in TypeScript:
+       *
+       * @example
+       * return `Record<${keyType}, ${valueType}>`;
+       * */
       const t = typ as Map;
 
-      const keyType = expandType(t.keyType, config);
-      const valueType = expandType(t.valueType, config);
+      // The type of the keys in the Map.
+      const keyType = convertType(t.keyType, config);
+      // The type of the values in the Map.
+      const valueType = convertType(t.valueType, config);
 
-      return `{${keyType} : ${valueType} }`;
+      return ``;
     }
     case Kind.Optional: {
+      /**
+       * Generate the output for Optional types here.
+       *
+       * For example:
+       * `string?` in Apex could be `string | undefined` in TypeScript:
+       *
+       * @example
+       * return `${innerType} | undefined`;
+       * */
       const t = typ as Optional;
-      const innerType = expandType(t.type, config);
-      return `${innerType}?`;
+
+      // The inner type of the Optional node.
+      const innerType = convertType(t.type, config);
+
+      return ``;
     }
     case Kind.Union:
     case Kind.Enum:
     case Kind.Alias:
     case Kind.Type: {
-      return (typ as Named).name;
+      /**
+       * Generate the output for named types.
+       * Usually this is just the name itself, but you
+       * may need to account for package or namespace paths.
+       */
+      const t = typ as Named;
+
+      // The name of the Type, Union, Alias, or Enum.
+      const name = t.name;
+
+      return name;
     }
     case Kind.Void: {
-      return "void";
+      /**
+       * Generate output for `void`, non-existent, or undefined types.
+       *
+       * For example:
+       * TypeScript may return `undefined` here, Rust would return `()`.
+       */
+
+      return "";
     }
     case Kind.Primitive: {
+      /**
+       * Primitive kinds are types inherent to Apex, i.e. string, u32, bool.
+       *
+       * They typically map to a primitive in the destination language or
+       * are printed as-is for documentation.
+       */
+
       const t = typ as Primitive;
-      return expandPrimitive(t, config);
+      return convertPrimitive(t, config);
     }
     default: {
+      // Throw an error if we've come across a type not listed here.
       throw new Error(`Unhandled type conversion for type: ${typ.kind}`);
     }
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function expandPrimitive(t: Primitive, config: ObjectMap): string {
-  switch (t.name) {
+/**
+ * Convert an Apex primitive type (i.e. `string`, `u32`) to a type suitable
+ * for the destination.
+ *
+ * @param typ - The `Primitive` node to convert.
+ * @param config - The context's configuration.
+ * @returns A string suitable for the destination format.
+ *
+ * @throws Throws if there is a type unaccounted for.
+ */
+function convertPrimitive(typ: Primitive, config: ObjectMap): string {
+  switch (typ.name) {
     case PrimitiveName.Bool:
       return "bool";
     case PrimitiveName.Bytes:
@@ -81,10 +161,12 @@ function expandPrimitive(t: Primitive, config: ObjectMap): string {
     case PrimitiveName.String:
       return "string";
     case PrimitiveName.Any:
+      // Any is a special type and could be considered `any` if the destination
+      // language/format supports it or a JSON-like object value if not.
       return "any";
     default:
       throw new Error(
-        `Unhandled primitive type conversion for type: ${t.name}`
+        `Unhandled primitive type conversion for type: ${typ.name}`
       );
   }
 }
