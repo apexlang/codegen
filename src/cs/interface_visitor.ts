@@ -1,11 +1,13 @@
-import {BaseVisitor, Context} from "@apexlang/core/model";
-import {formatComment, pascalCase} from "../utils";
-import {expandType} from "./helpers";
+import { BaseVisitor, Context } from "@apexlang/core/model";
+import { camelCase, formatComment, pascalCase } from "../utils";
+import { expandType } from "./helpers";
 
 export class InterfaceVisitor extends BaseVisitor {
   visitInterfaceBefore(context: Context) {
-    this.write(formatComment("  /// ", context.interface.description));
-    this.write(`  public interface ${pascalCase(context.interface.name)}\n  {\n`);
+    this.write(formatComment("  // ", context.interface.description));
+    this.write(
+      `  public interface ${pascalCase(context.interface.name)}\n  {\n`
+    );
     super.visitInterfaceBefore(context);
   }
 
@@ -15,23 +17,23 @@ export class InterfaceVisitor extends BaseVisitor {
       const operation = operations[i];
       const type = expandType(operation.type);
 
-      this.write(formatComment("    /// ", operation.description));
-      this.write(`    ${type} ${pascalCase(operation.name)}(`);
+      this.write(formatComment("    // ", operation.description));
+      this.write(`    ${type} ${camelCase(operation.name)}(`);
 
       const parameters = operation.parameters;
       for (let j = 0; j < parameters.length; ++j) {
         const parameter = parameters[j];
 
         this.write(`${expandType(parameter.type)} ${parameter.name}`);
-        if (j < (parameters.length - 1)) this.write(`, `);
+        if (j < parameters.length - 1) this.write(`, `);
       }
-      this.write(`);\n`);
+      this.write(`);\n\n`);
     }
     super.visitInterface(context);
   }
 
   visitInterfaceAfter(context: Context) {
-    this.write("  }\n");
+    this.write("  }\n\n");
     super.visitInterfaceAfter(context);
   }
 }

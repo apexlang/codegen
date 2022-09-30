@@ -6,8 +6,9 @@ import {
   Named,
   Optional,
 } from "@apexlang/core/model";
-import {pascalCase} from "../utils";
-import {translations} from "./constant";
+import { pascalCase } from "../utils";
+import { translations } from "./constant";
+import * as crypto from "crypto";
 
 export const expandType = (type: AnyType): string => {
   switch (type.kind) {
@@ -33,4 +34,4 @@ export const expandType = (type: AnyType): string => {
 
 export const parseNamespaceName = (name: string): string => {
   return pascalCase(name.split(".")[0]);
-}
+};

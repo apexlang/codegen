@@ -2,22 +2,27 @@
 
 using System;
 
-namespace Urlshortener {
+namespace urlshortener.v1 {
+
   public class RepositoryImpl : Repository {
-    /// Load the URL by its identifier.
-    public Url LoadById(string id)
+
+    // Load the URL by its identifier.
+    public Url loadById(string id)
     {
       return new Url(); // TODO: Provide implementation.
     }
-    /// Load the ID by its URL.
-    public Url LoadByUrl(string url)
+
+    // Load the ID by its URL.
+    public Url loadByUrl(string url)
     {
       return new Url(); // TODO: Provide implementation.
     }
-    /// Store a URL and its identifier.
-    public object StoreUrl(Url url)
+
+    // Store a URL and its identifier.
+    public object storeUrl(Url url)
     {
       return new object(); // TODO: Provide implementation.
     }
+
   }
 }

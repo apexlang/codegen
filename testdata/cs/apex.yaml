@@ -1,5 +1,8 @@
 spec: ../spec.apexlang
 generates:
+  pkg/outputtest/main.cs:
+    module: '@apexlang/codegen/cs'
+    visitorClass: Main_visitor
   pkg/outputtest/interfaces.cs:
     module: '@apexlang/codegen/cs'
     visitorClass: InterfacesVisitor
@@ -16,5 +19,14 @@ generates:
     module: '@apexlang/codegen/cs'
     visitorClass: ScaffoldVisitor
     config:
+      types:
+        - service
+  cmd/index.cs:
+    #ifNotExists: false  # Change to true to control dependency injection
+    module: '@apexlang/codegen/cs'
+    visitorClass: index_visitor
+    config:
+      names:
+        - Repository
       types:
         - service

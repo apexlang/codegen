@@ -2,31 +2,42 @@
 
 using System;
 
-namespace Urlshortener {
-  /// The URL shortening service.
+
+namespace urlshortener.v1 {
+
+  // The URL shortening service.
   public interface Shortener
   {
-    /// Shorten a URL and return a generated identifier.
-    Url Shorten(string url);
-    /// Return the URL using the generated identifier.
-    Url Lookup(string id);
+    // Shorten a URL and return a generated identifier.
+    Url shorten(string url);
+
+    // Return the URL using the generated identifier.
+    Url lookup(string id);
+
   }
-  /// Repository handles loading and storing shortened URLs.
+
+  // Repository handles loading and storing shortened URLs.
   public interface Repository
   {
-    /// Load the URL by its identifier.
-    Url LoadById(string id);
-    /// Load the ID by its URL.
-    Url LoadByUrl(string url);
-    /// Store a URL and its identifier.
-    object StoreUrl(Url url);
+    // Load the URL by its identifier.
+    Url loadById(string id);
+
+    // Load the ID by its URL.
+    Url loadByUrl(string url);
+
+    // Store a URL and its identifier.
+    object storeUrl(Url url);
+
   }
-  /// URL encapsulates the dynamic identifier and the URL it points to.
+
+  // URL encapsulates the dynamic identifier and the URL it points to.
   public record Url
   {
-    /// The dynamically generated URL identifier.
-    public string Id   { get; set; }
-    /// The original URL that was shortened.
-    public string Url   { get; set; }
+    // The dynamically generated URL identifier.
+    public string id   { get; set; }
+
+    // The original URL that was shortened.
+    public string url   { get; set; }
+
   }
 }

@@ -2,19 +2,22 @@
 
 using System;
 
-namespace Urlshortener {
+namespace urlshortener.v1 {
   public class ShortenerImpl : Shortener {
-    RepositoryImpl repository = new RepositoryImpl();
 
-    /// Shorten a URL and return a generated identifier.
-    public Url Shorten(string url)
+    public ShortenerImpl(RepositoryImpl repository) {}
+
+    // Shorten a URL and return a generated identifier.
+    public Url shorten(string url)
     {
       return new Url(); // TODO: Provide implementation.
     }
-    /// Return the URL using the generated identifier.
-    public Url Lookup(string id)
+
+    // Return the URL using the generated identifier.
+    public Url lookup(string id)
     {
       return new Url(); // TODO: Provide implementation.
     }
+
   }
 }

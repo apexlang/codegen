@@ -1,19 +1,19 @@
-import {Argument, BaseVisitor, Context} from "@apexlang/core/model";
-import {camelCase, formatComment, pascalCase} from "../utils";
-import {expandType} from "./helpers";
+import { Argument, BaseVisitor, Context } from "@apexlang/core/model";
+import { camelCase, formatComment, pascalCase } from "../utils";
+import { expandType } from "./helpers";
 
 export class TypeVisitor extends BaseVisitor {
   visitTypeBefore(context: Context): void {
-    const {type} = context;
+    const { type } = context;
 
-    this.write(formatComment("  /// ", type.description));
-    this.write(`  public record ${pascalCase(type.name)}\n  {\n`);
+    this.write(formatComment("  // ", type.description));
+    this.write(`public record ${pascalCase(type.name)}\n  {\n`);
 
     super.visitTypesBefore(context);
   }
 
   visitTypeField(context: Context) {
-    const {field} = context;
+    const { field } = context;
     const type = expandType(field.type);
 
     const range = field.annotation("range");
@@ -22,15 +22,15 @@ export class TypeVisitor extends BaseVisitor {
 
     if (range || email || notEmpty) {
       const name = camelCase(field.name);
-      let propName = pascalCase(field.name);
+      let propName = camelCase(field.name);
 
       this.write(`    private ${type} ${name};`);
 
-      this.write(formatComment("    /// ", field.description));
-      this.write(`    public ${type} ${propName}\n`);
+      this.write(formatComment("    // ", field.description));
+      this.write(`\t ${type} ${propName}\n`);
       this.write("    {\n");
       this.write(`      get { return this.${name}; }\n`);
-      this.write("      set {\n");
+      this.write("      set {\n\n");
 
       if (email && type === "string") {
         this.write(
@@ -43,7 +43,7 @@ export class TypeVisitor extends BaseVisitor {
       }
 
       if (range && type === "string") {
-        const {min, max} = getRangeArguments(range.arguments);
+        const { min, max } = getRangeArguments(range.arguments);
 
         this.write("        if (");
         if (min) {
@@ -68,21 +68,21 @@ export class TypeVisitor extends BaseVisitor {
       this.write("      }\n");
       this.write("    }\n");
     } else {
-      this.write(formatComment("    /// ", field.description));
-      this.write(`    public ${type} ${pascalCase(field.name)}`);
-      this.write("   { get; set; }\n");
+      this.write(formatComment("    // ", field.description));
+      this.write(`\t ${type} ${camelCase(field.name)}`);
+      this.write("   { get; set; }\n\n");
     }
   }
 
   visitTypeAfter(context: Context) {
-    this.write("  }\n");
+    this.write("  }\n\n");
 
     super.visitTypeAfter(context);
   }
 }
 
 function getRangeArguments(args: Argument[]): { min: any; max: any } {
-  let obj = {min: undefined, max: undefined};
+  let obj = { min: undefined, max: undefined };
   for (const arg of args) {
     // @ts-ignore
     obj[arg.name] = arg.value.getValue();

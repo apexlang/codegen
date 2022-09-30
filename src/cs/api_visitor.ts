@@ -1,8 +1,7 @@
-import {BaseVisitor, Context} from "@apexlang/core/model";
-import {isService, pascalCase} from "../utils";
-import {parseNamespaceName} from "./helpers";
-import {translations} from "./constant";
-import {PathDirective} from "../rest";
+import { BaseVisitor, Context } from "@apexlang/core/model";
+import { camelCase, isService, pascalCase } from "../utils";
+import { translations } from "./constant";
+import { PathDirective } from "../rest";
 
 export class MinimalAPIVisitor extends BaseVisitor {
   visitNamespaceBefore(context: Context) {
@@ -12,7 +11,7 @@ export class MinimalAPIVisitor extends BaseVisitor {
   }
 
   visitNamespace(context: Context) {
-    this.write(`namespace ${(parseNamespaceName(context.namespace.name))} {\n`);
+    this.write(`namespace ${context.namespace.name} {\n\n`);
     super.visitNamespace(context);
   }
 
@@ -34,27 +33,50 @@ export class MinimalAPIVisitor extends BaseVisitor {
 
 export class ApiServiceVisitor extends BaseVisitor {
   visitInterfaceBefore(context: Context): void {
-    let path = ""
+    let path = "";
     context.namespace.annotation("path", (a) => {
-      path = a?.convert<PathDirective>().value
-    })
+      path = a?.convert<PathDirective>().value;
+    });
     this.write(`  public class Setup {\n`);
-    this.write(`    public Setup(WebApplication app, ${pascalCase(context.interface.name)} service) {\n`);
+    this.write(
+      `    public Setup(WebApplication app, ${pascalCase(
+        context.interface.name
+      )} service) {\n`
+    );
     context.interface.operations.forEach((method) => {
       method.parameters.forEach((param) => {
         const parameter = JSON.parse(JSON.stringify(param));
-        const type = translations.get(parameter.type.name) || parameter.type.name;
-        if ((method.annotation("GET"))) {
-          this.write(`      app.MapGet("${path}/${method.name}", (${type} ${param.name}) => service.${pascalCase(method.name)}(${param.name}));\n`);
+        const type =
+          translations.get(parameter.type.name) || parameter.type.name;
+        if (method.annotation("GET")) {
+          this.write(
+            `      app.MapGet("${path}/${method.name}", (${type} ${
+              param.name
+            }) => service.${camelCase(method.name)}(${param.name}));\n`
+          );
         } else if (method.annotation("POST")) {
-          this.write(`      app.MapPost("${path}/${method.name}", (${type} ${param.name}) => service.${pascalCase(method.name)}(${param.name}));\n`);
+          this.write(
+            `      app.MapPost("${path}/${method.name}", (${type} ${
+              param.name
+            }) => service.${camelCase(method.name)}(${param.name}));\n`
+          );
         } else if (method.annotation("PUT")) {
-          this.write(`      app.MapPut("${path}/${method.name}", (${type} ${param.name}) => service.${pascalCase(method.name)}(${param.name}));\n`);
+          this.write(
+            `      app.MapPut("${path}/${method.name}", (${type} ${
+              param.name
+            }) => service.${camelCase(method.name)}(${param.name}));\n`
+          );
         } else if (method.annotation("DELETE")) {
-          this.write(`      app.MapDelete("${path}/${method.name}", (${type} ${param.name}) => service.${pascalCase(method.name)}(${param.name}));\n`);
+          this.write(
+            `      app.MapDelete("${path}/${method.name}", (${type} ${
+              param.name
+            }) => service.${camelCase(method.name)}(${param.name}));\n`
+          );
         }
-      })
-    })
+      });
+    });
     this.write(`    }\n  }\n`);
   }
 }
+
+// Language: typescript
