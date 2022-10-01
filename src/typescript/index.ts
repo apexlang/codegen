@@ -14,9 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+export * from "./alias_visitor.js";
+export * from "./args_visitor.js";
 export * from "./class_visitor.js";
+export * from "./handler_visitor.js";
+export * from "./imports_visitor.js";
+export * from "./interface_visitor.js";
 export * from "./interfaces_visitor.js";
+export * from "./provider_visitor.js";
 export * from "./scaffold_visitor.js";
+export * from "./wrapper_visitor.js";
 export * from "./helpers.js";
 export * from "./constant.js";
 
