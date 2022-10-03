@@ -14,7 +14,7 @@ export class InterfacesVisitor extends BaseVisitor {
   // }
 
   visitNamespace(context: Context) {
-    this.write(`namespace ${context.namespace.name} {\n\n`);
+    this.write(`namespace ${parseNamespaceName(context.namespace.name)} {\n\n`);
     super.visitNamespace(context);
   }
 

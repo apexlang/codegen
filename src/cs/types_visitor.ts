@@ -22,7 +22,7 @@ export class TypeVisitor extends BaseVisitor {
 
     if (range || email || notEmpty) {
       const name = camelCase(field.name);
-      let propName = camelCase(field.name);
+      let propName = pascalCase(field.name);
 
       this.write(`    private ${type} ${name};`);
 
@@ -69,7 +69,7 @@ export class TypeVisitor extends BaseVisitor {
       this.write("    }\n");
     } else {
       this.write(formatComment("    // ", field.description));
-      this.write(`\t ${type} ${camelCase(field.name)}`);
+      this.write(`\t public ${type} ${pascalCase(field.name)}`);
       this.write("   { get; set; }\n\n");
     }
   }

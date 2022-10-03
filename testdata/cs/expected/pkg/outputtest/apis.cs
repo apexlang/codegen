@@ -3,11 +3,12 @@
 using System;
 using Microsoft.AspNetCore.Builder;
 
-namespace urlshortener.v1 {
+namespace Urlshortener {
+
   public class Setup {
     public Setup(WebApplication app, Shortener service) {
-      app.MapPut("/v1/shorten", (string url) => service.shorten(url));
-      app.MapGet("/v1/lookup", (string id) => service.lookup(id));
+      app.MapPut("/v1/shorten", (string url) => service.Shorten(url));
+      app.MapGet("/v1/lookup", (string id) => service.Lookup(id));
     }
   }
 }

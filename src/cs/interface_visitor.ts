@@ -18,7 +18,7 @@ export class InterfaceVisitor extends BaseVisitor {
       const type = expandType(operation.type);
 
       this.write(formatComment("    // ", operation.description));
-      this.write(`    ${type} ${camelCase(operation.name)}(`);
+      this.write(`    public ${type} ${pascalCase(operation.name)}(`);
 
       const parameters = operation.parameters;
       for (let j = 0; j < parameters.length; ++j) {

@@ -3,105 +3,105 @@
 using System;
 using Microsoft.AspNetCore.Builder;
 
-namespace urlshortener.v1 {
+namespace Urlshortener {
 
   public class Setup {
     public Setup(WebApplication app, Shortener service) {
-      app.MapPut("/v1/shorten", (string url) => service.shorten(url));
-      app.MapGet("/v1/lookup", (string id) => service.lookup(id));
+      app.MapPut("/v1/shorten", (string url) => service.Shorten(url));
+      app.MapGet("/v1/lookup", (string id) => service.Lookup(id));
     }
   }
 }
 
-namespace urlshortener.v1 {
+namespace Urlshortener {
 
   public class ShortenerImpl : Shortener {
-	  public ShortenerImpl(RepositoryImpl repository){}
+
+    public ShortenerImpl (RepositoryImpl repository) {}
 
     // Shorten a URL and return a generated identifier.
-    public Url shorten(string url)
+    public Url Shorten(string url)
     {
       return new Url(); // TODO: Provide implementation.
     }
 
     // Return the URL using the generated identifier.
-    public Url lookup(string id)
+    public Url Lookup(string id)
     {
       return new Url(); // TODO: Provide implementation.
     }
 
   }
-}
-
-namespace urlshortener.v1 {
 
   public class RepositoryImpl : Repository {
 
     // Load the URL by its identifier.
-    public Url loadById(string id)
+    public Url LoadById(string id)
     {
       return new Url(); // TODO: Provide implementation.
     }
 
     // Load the ID by its URL.
-    public Url loadByUrl(string url)
+    public Url LoadByUrl(string url)
     {
       return new Url(); // TODO: Provide implementation.
     }
 
     // Store a URL and its identifier.
-    public object storeUrl(Url url)
+    public object StoreUrl(Url url)
     {
       return new object(); // TODO: Provide implementation.
     }
 
   }
-}
 
-namespace urlshortener.v1 {
+}
 
   // The URL shortening service.
   public interface Shortener
   {
     // Shorten a URL and return a generated identifier.
-    Url shorten(string url);
+    public Url Shorten(string url);
 
     // Return the URL using the generated identifier.
-    Url lookup(string id);
+    public Url Lookup(string id);
 
   }
+
+
   // Repository handles loading and storing shortened URLs.
   public interface Repository
   {
     // Load the URL by its identifier.
-    Url loadById(string id);
+    public Url LoadById(string id);
 
     // Load the ID by its URL.
-    Url loadByUrl(string url);
+    public Url LoadByUrl(string url);
 
     // Store a URL and its identifier.
-    object storeUrl(Url url);
+    public object StoreUrl(Url url);
 
   }
+
+
   // URL encapsulates the dynamic identifier and the URL it points to.
 public record Url
   {
     // The dynamically generated URL identifier.
-	 string id   { get; set; }
+	 public string Id   { get; set; }
 
     // The original URL that was shortened.
-	 string url   { get; set; }
+	 public string Url   { get; set; }
 
   }
 
-}
+namespace Urlshortener {
 
-namespace urlshortener.v1 {
+public class MainClass {
 
-public class MainClass{
-
-    public static void Main(String[] args){
-        ShortenerImpl shortener = new ShortenerImpl(new RepositoryImpl());
-		}
+	 public static void Main(String[] args) {
+		 ShortenerImpl shortener = new ShortenerImpl(new RepositoryImpl());
+		 }
 	}
 }
+

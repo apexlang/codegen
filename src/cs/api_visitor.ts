@@ -2,6 +2,7 @@ import { BaseVisitor, Context } from "@apexlang/core/model";
 import { camelCase, isService, pascalCase } from "../utils";
 import { translations } from "./constant";
 import { PathDirective } from "../rest";
+import { parseNamespaceName } from "./helpers";
 
 export class MinimalAPIVisitor extends BaseVisitor {
   visitNamespaceBefore(context: Context) {
@@ -11,7 +12,7 @@ export class MinimalAPIVisitor extends BaseVisitor {
   }
 
   visitNamespace(context: Context) {
-    this.write(`namespace ${context.namespace.name} {\n\n`);
+    this.write(`namespace ${parseNamespaceName(context.namespace.name)} {\n\n`);
     super.visitNamespace(context);
   }
 
@@ -52,25 +53,25 @@ export class ApiServiceVisitor extends BaseVisitor {
           this.write(
             `      app.MapGet("${path}/${method.name}", (${type} ${
               param.name
-            }) => service.${camelCase(method.name)}(${param.name}));\n`
+            }) => service.${pascalCase(method.name)}(${param.name}));\n`
           );
         } else if (method.annotation("POST")) {
           this.write(
             `      app.MapPost("${path}/${method.name}", (${type} ${
               param.name
-            }) => service.${camelCase(method.name)}(${param.name}));\n`
+            }) => service.${pascalCase(method.name)}(${param.name}));\n`
           );
         } else if (method.annotation("PUT")) {
           this.write(
             `      app.MapPut("${path}/${method.name}", (${type} ${
               param.name
-            }) => service.${camelCase(method.name)}(${param.name}));\n`
+            }) => service.${pascalCase(method.name)}(${param.name}));\n`
           );
         } else if (method.annotation("DELETE")) {
           this.write(
             `      app.MapDelete("${path}/${method.name}", (${type} ${
               param.name
-            }) => service.${camelCase(method.name)}(${param.name}));\n`
+            }) => service.${pascalCase(method.name)}(${param.name}));\n`
           );
         }
       });

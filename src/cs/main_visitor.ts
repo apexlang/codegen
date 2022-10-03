@@ -1,9 +1,10 @@
 import { BaseVisitor } from "@apexlang/core/model";
 import { Context } from "@apexlang/core/dist/model";
+import { parseNamespaceName } from "./helpers";
 
 export class Main_visitor extends BaseVisitor {
   visitNamespaceBefore(context: Context) {
-    this.write(`namespace ${context.namespace.name} {\n\n`);
+    this.write(`namespace ${parseNamespaceName(context.namespace.name)} {\n\n`);
     super.visitNamespace(context);
   }
 

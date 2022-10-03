@@ -1,6 +1,6 @@
-import { camelCase, formatComment, isOneOfType } from "../utils";
+import { camelCase, formatComment, isOneOfType, pascalCase } from "../utils";
 import { BaseVisitor, Context } from "@apexlang/core/model";
-import { expandType } from "./helpers";
+import { expandType, parseNamespaceName } from "./helpers";
 
 export class ScaffoldVisitor extends BaseVisitor {
   // visitNamespaceBefore(context: Context) {
@@ -10,7 +10,7 @@ export class ScaffoldVisitor extends BaseVisitor {
   // }
 
   visitNamespace(context: Context) {
-    this.write(`namespace ${context.namespace.name} {\n\n`);
+    this.write(`namespace ${parseNamespaceName(context.namespace.name)} {\n\n`);
 
     const service = new ServiceVisitor(this.writer);
     context.namespace.accept(context, service);
@@ -62,7 +62,7 @@ export class ServiceVisitor extends BaseVisitor {
       const type = expandType(operation.type);
 
       this.write(formatComment("    // ", operation.description));
-      this.write(`    public ${type} ${camelCase(operation.name)}(`);
+      this.write(`    public ${type} ${pascalCase(operation.name)}(`);
 
       const parameters = operation.parameters;
       for (let j = 0; j < parameters.length; ++j) {
@@ -79,7 +79,7 @@ export class ServiceVisitor extends BaseVisitor {
 
       this.write(`    }\n\n`);
     }
-    this.write(`  }\n`);
+    this.write(`  }\n\n`);
     super.visitInterface(context);
   }
 }
