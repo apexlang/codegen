@@ -10,45 +10,10 @@ import {
   Type,
   Primitive,
   ObjectMap,
+  Enum,
+  Alias,
 } from "@apexlang/core/model";
 import { rustifyCaps } from "./index.js";
-
-export function isRecursiveType(typ: AnyType, match: AnyType = typ): boolean {
-  switch (typ.kind) {
-    case Kind.List: {
-      const t = typ as List;
-      return isRecursiveType(t.type, match);
-    }
-    case Kind.Map: {
-      const t = typ as Map;
-      return (
-        isRecursiveType(t.keyType, match) || isRecursiveType(t.valueType, match)
-      );
-    }
-    case Kind.Optional: {
-      const t = typ as Optional;
-      return isRecursiveType(t.type, match);
-    }
-    case Kind.Union: {
-      const t = typ as Union;
-      return t.types.map((t) => isRecursiveType(t, match)).includes(true);
-    }
-
-    case Kind.Type: {
-      const t = typ as Type;
-      return t.name === (match as Named).name;
-    }
-    case Kind.Enum:
-    case Kind.Primitive:
-    case Kind.Alias:
-    case Kind.Void: {
-      return false;
-    }
-    default: {
-      throw new Error(`Unhandled type: ${typ.kind}`);
-    }
-  }
-}
 
 export function apexToRustType(typ: AnyType, config: ObjectMap<any>): string {
   switch (typ.kind) {
@@ -94,7 +59,7 @@ function primitiveToRust(t: Primitive, config: ObjectMap<any>): string {
     case PrimitiveName.Bool:
       return "bool";
     case PrimitiveName.Bytes:
-      return "Vec<u8>";
+      return config.bytes ? config.bytes : "Vec<u8>";
     case PrimitiveName.DateTime:
       return "time::OffsetDateTime";
     case PrimitiveName.F32:

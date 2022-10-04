@@ -11,3 +11,5 @@ directive @uses(value: [any]) on INTERFACE
 directive @nocode on OPERATION
 
 directive @deprecated(value: string?) on INTERFACE | OPERATION
+
+directive @index_type(type: any) on ENUM
