@@ -3,7 +3,7 @@
 using System;
 using Microsoft.AspNetCore.Builder;
 
-namespace Urlshortener {
+namespace Urlshortener.V1 {
 
   public class Setup {
     public Setup(WebApplication app, Shortener service) {

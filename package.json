@@ -69,8 +69,9 @@
   },
   "dependencies": {
     "@apexlang/core": "^0.1.1",
-    "yaml": "^1.10.2",
-    "openapi3-ts": "^2.0.2"
+    "@types/node": "^18.7.23",
+    "openapi3-ts": "^2.0.2",
+    "yaml": "^1.10.2"
   },
   "devDependencies": {
     "@types/jest": "^29.1.0",

@@ -1,5 +1,5 @@
 import { BaseVisitor, Context } from "@apexlang/core/model";
-import { camelCase, formatComment, pascalCase } from "../utils";
+import { formatComment, pascalCase } from "../utils";
 import { expandType } from "./helpers";
 
 export class InterfaceVisitor extends BaseVisitor {

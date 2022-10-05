@@ -1,4 +1,4 @@
-import { camelCase, formatComment, isOneOfType, pascalCase } from "../utils";
+import { formatComment, isOneOfType, pascalCase } from "../utils";
 import { BaseVisitor, Context } from "@apexlang/core/model";
 import { expandType, parseNamespaceName } from "./helpers";
 
@@ -37,14 +37,21 @@ export class ServiceVisitor extends BaseVisitor {
         dependencies = a.arguments[0].value.getValue() as string[];
       }
     });
-    this.write(`  public class ${iface.name}Impl : ${iface.name} {\n\n`);
+    this.write(`  public class ${iface.name}Impl : ${iface.name} {\n`);
+
+    dependencies.map((value, index) => {
+      this.write(`    private ${value} ${value.toLowerCase()}\n`);
+      if (index == dependencies.length - 1) this.write(`\n`);
+    });
 
     dependencies.map((value, index) => {
       this.write(
-        `    public ${
-          iface.name
-        }Impl (${value}Impl ${value.toLowerCase()}) {}\n`
+        `    public ${iface.name}Impl (${value}Impl ${value.toLowerCase()}) {\n`
       );
+      this.write(
+        `      this.${value.toLowerCase()} = ${value.toLowerCase()};\n`
+      );
+      this.write(`\t }\n`);
       if (index == dependencies.length - 1) this.write(`\n`);
     });
 

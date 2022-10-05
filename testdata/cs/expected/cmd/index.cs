@@ -3,7 +3,7 @@
 using System;
 using Microsoft.AspNetCore.Builder;
 
-namespace Urlshortener {
+namespace Urlshortener.V1 {
 
   public class Setup {
     public Setup(WebApplication app, Shortener service) {
@@ -13,11 +13,14 @@ namespace Urlshortener {
   }
 }
 
-namespace Urlshortener {
+namespace Urlshortener.V1 {
 
   public class ShortenerImpl : Shortener {
+    private Repository repository
 
-    public ShortenerImpl (RepositoryImpl repository) {}
+    public ShortenerImpl (RepositoryImpl repository) {
+      this.repository = repository;
+	 }
 
     // Shorten a URL and return a generated identifier.
     public Url Shorten(string url)
@@ -34,7 +37,6 @@ namespace Urlshortener {
   }
 
   public class RepositoryImpl : Repository {
-
     // Load the URL by its identifier.
     public Url LoadById(string id)
     {
@@ -95,7 +97,7 @@ public record Url
 
   }
 
-namespace Urlshortener {
+namespace Urlshortener.V1 {
 
 public class MainClass {
 

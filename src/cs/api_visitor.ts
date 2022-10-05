@@ -1,5 +1,5 @@
 import { BaseVisitor, Context } from "@apexlang/core/model";
-import { camelCase, isService, pascalCase } from "../utils";
+import { isService, pascalCase } from "../utils";
 import { translations } from "./constant";
 import { PathDirective } from "../rest";
 import { parseNamespaceName } from "./helpers";

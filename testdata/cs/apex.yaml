@@ -2,7 +2,7 @@ spec: ../spec.apexlang
 generates:
   pkg/outputtest/main.cs:
     module: '@apexlang/codegen/cs'
-    visitorClass: Main_visitor
+    visitorClass: MainVisitor
   pkg/outputtest/interfaces.cs:
     module: '@apexlang/codegen/cs'
     visitorClass: InterfacesVisitor
@@ -24,7 +24,7 @@ generates:
   cmd/index.cs:
     #ifNotExists: false  # Change to true to control dependency injection
     module: '@apexlang/codegen/cs'
-    visitorClass: index_visitor
+    visitorClass: IndexVisitor
     config:
       names:
         - Repository
