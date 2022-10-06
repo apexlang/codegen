@@ -16,7 +16,7 @@ namespace Urlshortener.V1 {
 namespace Urlshortener.V1 {
 
   public class ShortenerImpl : Shortener {
-    private Repository repository
+    private Repository repository;
 
     public ShortenerImpl (RepositoryImpl repository) {
       this.repository = repository;
