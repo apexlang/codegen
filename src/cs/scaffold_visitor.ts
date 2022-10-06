@@ -40,7 +40,7 @@ export class ServiceVisitor extends BaseVisitor {
     this.write(`  public class ${iface.name}Impl : ${iface.name} {\n`);
 
     dependencies.map((value, index) => {
-      this.write(`    private ${value} ${value.toLowerCase()}\n`);
+      this.write(`    private ${value} ${value.toLowerCase()};\n`);
       if (index == dependencies.length - 1) this.write(`\n`);
     });
 
