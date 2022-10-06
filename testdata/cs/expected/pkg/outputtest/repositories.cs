@@ -1,23 +1,9 @@
-namespace Urlshortener.V1 {
+namespace Apex.Testing {
 
   public class RepositoryImpl : Repository {
-
-    // Load the URL by its identifier.
-    public Url LoadById(string id)
+    public MyType GetData()
     {
-      return new Url(); // TODO: Provide implementation.
-    }
-
-    // Load the ID by its URL.
-    public Url LoadByUrl(string url)
-    {
-      return new Url(); // TODO: Provide implementation.
-    }
-
-    // Store a URL and its identifier.
-    public object StoreUrl(Url url)
-    {
-      return new object(); // TODO: Provide implementation.
+      return new MyType(); // TODO: Provide implementation.
     }
 
   }

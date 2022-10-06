@@ -80,9 +80,13 @@ export class ServiceVisitor extends BaseVisitor {
       }
       this.write(`)\n    {\n`);
 
-      this.write(
-        `      return new ${type}(); // TODO: Provide implementation.\n`
-      );
+      if (type == "void") {
+        this.write(`      return; // TODO: Provide implementation.\n`);
+      } else {
+        this.write(
+          `      return new ${type}(); // TODO: Provide implementation.\n`
+        );
+      }
 
       this.write(`    }\n\n`);
     }

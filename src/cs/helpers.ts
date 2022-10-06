@@ -24,6 +24,8 @@ export const expandType = (type: AnyType): string => {
       )}>`;
     case Kind.List:
       return `List<${expandType((type as List).type)}>`;
+    case Kind.Void:
+      return `void`;
     case Kind.Optional:
       return `${expandType((type as Optional).type)}?`;
     default:

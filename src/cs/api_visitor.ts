@@ -2,7 +2,7 @@ import { BaseVisitor, Context } from "@apexlang/core/model";
 import { isService, pascalCase } from "../utils";
 import { translations } from "./constant";
 import { PathDirective } from "../rest";
-import { parseNamespaceName } from "./helpers";
+import { expandType, parseNamespaceName } from "./helpers";
 
 export class MinimalAPIVisitor extends BaseVisitor {
   visitNamespaceBefore(context: Context) {
@@ -44,38 +44,43 @@ export class ApiServiceVisitor extends BaseVisitor {
         context.interface.name
       )} service) {\n`
     );
-    context.interface.operations.forEach((method) => {
-      method.parameters.forEach((param) => {
-        const parameter = JSON.parse(JSON.stringify(param));
-        const type =
-          translations.get(parameter.type.name) || parameter.type.name;
-        if (method.annotation("GET")) {
-          this.write(
-            `      app.MapGet("${path}/${method.name}", (${type} ${
-              param.name
-            }) => service.${pascalCase(method.name)}(${param.name}));\n`
-          );
-        } else if (method.annotation("POST")) {
-          this.write(
-            `      app.MapPost("${path}/${method.name}", (${type} ${
-              param.name
-            }) => service.${pascalCase(method.name)}(${param.name}));\n`
-          );
-        } else if (method.annotation("PUT")) {
-          this.write(
-            `      app.MapPut("${path}/${method.name}", (${type} ${
-              param.name
-            }) => service.${pascalCase(method.name)}(${param.name}));\n`
-          );
-        } else if (method.annotation("DELETE")) {
-          this.write(
-            `      app.MapDelete("${path}/${method.name}", (${type} ${
-              param.name
-            }) => service.${pascalCase(method.name)}(${param.name}));\n`
-          );
-        }
+
+    for (const method of context.interface.operations) {
+      let subPath = "";
+      method.annotation("path", (a) => {
+        subPath = a?.convert<PathDirective>().value;
       });
-    });
+      this.write(`      app.`);
+
+      if (method.annotation("GET")) {
+        this.write(`MapGet`);
+      } else if (method.annotation("POST")) {
+        this.write(`MapPost`);
+      } else if (method.annotation("PUT")) {
+        this.write(`MapPut`);
+      } else if (method.annotation("DELETE")) {
+        this.write(`MapDelete`);
+      }
+
+      this.write(`("${path}${subPath}", (`);
+      let params = [];
+      if (method.parameters.length > 0) {
+        for (let i = 0; i < method.parameters.length; ++i) {
+          const param = method.parameters[i];
+          const type =
+            translations.get(expandType(param.type)) || expandType(param.type);
+          this.write(
+            `${type} ${param.name}${
+              i != method.parameters.length - 1 ? ", " : ""
+            }`
+          );
+          params.push(param.name);
+        }
+      }
+      this.write(
+        `) => service.${pascalCase(method.name)}(${params.join(", ")}));\n`
+      );
+    }
     this.write(`    }\n  }\n`);
   }
 }

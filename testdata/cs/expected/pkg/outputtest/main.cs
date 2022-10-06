@@ -1,9 +1,9 @@
-namespace Urlshortener.V1 {
+namespace Apex.Testing {
 
 public class MainClass {
 
 	 public static void Main(String[] args) {
-		 ShortenerImpl shortener = new ShortenerImpl(new RepositoryImpl());
+		 MyServiceImpl myservice = new MyServiceImpl(new RepositoryImpl());
 		 }
 	}
 }
