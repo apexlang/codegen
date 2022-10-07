@@ -10,7 +10,9 @@ module.exports = {
   resolver: "ts-jest-resolver",
   transformIgnorePatterns: [".*/node_modules/.*"],
   testEnvironment: "node",
-  testRegex: "/test/.*\\.test\\.ts$",
+  testMatch: ["**/test/**/*.test.ts"],
+  testPathIgnorePatterns: ["/node_modules/", "/templates/"],
+  // testRegex: "/test/.*\\.test\\.ts$",
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
   extensionsToTreatAsEsm: [".ts"],
 };
