@@ -1,4 +1,5 @@
 import { ObjectMap, Operation, Parameter } from "@apexlang/core/model";
+import * as utils from "@apexlang/codegen/utils";
 import { convertType } from "./types";
 
 /**
@@ -8,16 +9,15 @@ import { convertType } from "./types";
  * @returns A string suitable for the destination format or an empty string.
  */
 export function convertDescription(description?: string): string {
-  if (description) {
-    // Return what descriptions should look like in your destination format
-    // Oftentimes descriptions map to comments in code, e.g.
-    //
-    // return `// ${description}`;
-    return "";
-  } else {
-    // Else return nothing
-    return "";
-  }
+  // Add your comment prefix here.
+  // For Example:
+  // const prefix = "//";
+  const prefix = "";
+
+  // Change or remove the max length of comments here:
+  const wrapLength = 120;
+
+  return utils.formatComment(prefix, description, wrapLength);
 }
 
 /**
