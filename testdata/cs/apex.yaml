@@ -3,9 +3,9 @@ generates:
   pkg/outputtest/main.cs:
     module: '@apexlang/codegen/cs'
     visitorClass: MainVisitor
-    pkg/outputtest/interfaces.cs:
-      module: '@apexlang/codegen/cs'
-      visitorClass: InterfacesVisitor
+  pkg/outputtest/interfaces.cs:
+    module: '@apexlang/codegen/cs'
+    visitorClass: InterfacesVisitor
   pkg/outputtest/apis.cs:
     module: '@apexlang/codegen/cs'
     visitorClass: MinimalAPIVisitor

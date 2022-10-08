@@ -33,7 +33,7 @@ export class EnumVisitor extends BaseVisitor {
     public static int Value(this ${context.enum.name} enumValue)
     {
       //Do something here
-      return (int)enumValue; 
+      return (int)enumValue;
     }
   }\n`);
     super.visitEnumAfter(context);
