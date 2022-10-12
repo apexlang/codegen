@@ -6,7 +6,7 @@ import {
   ObjectMap,
   Union,
 } from "@apexlang/core/model";
-import { codegenType, isNamed } from "../../utils/index.js";
+import { codegenType, isNamed, isRecursiveType } from "../../utils/index.js";
 import {
   rustDoc,
   rustifyCaps,
@@ -14,6 +14,7 @@ import {
   deriveDirective,
   visibility,
   types,
+  customAttributes,
 } from "../utils/index.js";
 
 import { SourceGenerator } from "./base.js";
@@ -42,18 +43,22 @@ export class UnionVisitor extends SourceGenerator<Union> {
 
   getSource(): string {
     const variants = this.root.types.map((t) => {
-      let isRecursive = types.isRecursiveType(t);
+      let isRecursive = isRecursiveType(t);
       let isHeapAllocated = t.kind === Kind.Map || t.kind === Kind.List;
       let baseType = types.apexToRustType(t, this.config);
       let typeString =
         isRecursive && !isHeapAllocated ? `Box<${baseType}>` : baseType;
       return `${getTypeName(t)}(${typeString})`;
     });
-    return `
-    ${trimLines([
+
+    let prefix = trimLines([
       rustDoc(this.root.description),
       deriveDirective(this.root.name, this.config),
-    ])}
+      customAttributes(this.root.name, this.config),
+    ]);
+
+    return `
+    ${prefix}
     ${this.visibility} enum ${rustifyCaps(this.root.name)}{
       ${variants.join(",")}
     }

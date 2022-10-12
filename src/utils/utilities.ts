@@ -185,7 +185,7 @@ export function isVoid(t: AnyType): boolean {
   return t.kind === Kind.Void;
 }
 
-export function isNamed(t: AnyType): t is Enum | Type | Union | Alias {
+export function isNamed(t: AnyType): t is NamedType {
   switch (t.kind) {
     case Kind.Alias:
     case Kind.Enum:
@@ -606,7 +606,7 @@ export function convertUnionToType(tr: TypeResolver, union: Union): Type {
   );
 }
 
-function modelToAST(t: AnyType): ASTType {
+export function modelToAST(t: AnyType): ASTType {
   switch (t.kind) {
     case Kind.Primitive: {
       const p = t as Primitive;
@@ -643,7 +643,7 @@ function modelToAST(t: AnyType): ASTType {
   return new ASTNamed(undefined, new Name(undefined, "????"));
 }
 
-function typeName(t: AnyType): string {
+export function typeName(t: AnyType): string {
   switch (t.kind) {
     case Kind.Primitive: {
       const p = t as Primitive;
@@ -740,5 +740,102 @@ export function codegenType(t: AnyType): string {
       return `${codegenType((t as Optional).type)}?`;
     default:
       throw new Error(`Can not codegen type ${t.kind}`);
+  }
+}
+
+const defaultNineBox: NineBox = [
+  ["/**", "*", "**"],
+  [" * ", " ", " *"],
+  [" **", "*", "*/"],
+];
+
+type NineBox = [NineBoxRow, NineBoxRow, NineBoxRow];
+type NineBoxRow = [string, string, string];
+
+function fillToLengthWith(base: string, len: number, filler: string): string {
+  const left = len - base.length;
+  const numFill = Math.ceil(left / filler.length);
+  return base + filler.repeat(numFill);
+}
+function nineBoxRow(
+  rowDef: NineBoxRow,
+  content: string,
+  rowLength: number
+): string {
+  return `${rowDef[0]}${fillToLengthWith(
+    content,
+    rowLength - rowDef[0].length - rowDef[2].length,
+    rowDef[1]
+  )}${rowDef[2]}`;
+}
+
+export function generatedHeader(
+  lines: string[],
+  nineBox = defaultNineBox
+): string {
+  const maxLength =
+    lines.reduce((acc, next) => (next.length > acc ? next.length : acc), 0) +
+    nineBox[1][0].length +
+    nineBox[1][2].length;
+  const newLines = [];
+
+  newLines.push(nineBoxRow(nineBox[0], nineBox[0][1], maxLength));
+  for (let i = 0; i < lines.length; i++) {
+    newLines.push(nineBoxRow(nineBox[1], lines[i], maxLength));
+  }
+  newLines.push(nineBoxRow(nineBox[2], nineBox[2][1], maxLength));
+
+  return newLines.join("\n");
+}
+
+const OMIT_KEYS = ["node", "source"];
+
+export function inspect(o: any, omit = OMIT_KEYS) {
+  console.log(
+    JSON.stringify(o, (k, v) => (OMIT_KEYS.indexOf(k) === -1 ? v : undefined))
+  );
+}
+
+type NamedType = Enum | Type | Union | Alias;
+
+export function isRecursiveType(typ: AnyType, seen: NamedType[] = []): boolean {
+  if (isNamed(typ)) {
+    if (seen.find((t) => t.name == typ.name)) return true;
+    seen.push(typ);
+  }
+  switch (typ.kind) {
+    case Kind.List: {
+      const t = typ as List;
+      return isRecursiveType(t.type, seen);
+    }
+    case Kind.Map: {
+      const t = typ as Map;
+      return (
+        isRecursiveType(t.keyType, seen) || isRecursiveType(t.valueType, seen)
+      );
+    }
+    case Kind.Optional: {
+      const t = typ as Optional;
+      return isRecursiveType(t.type, seen);
+    }
+    case Kind.Union: {
+      const t = typ as Union;
+
+      return t.types.filter((t) => isRecursiveType(t, seen)).length > 0;
+    }
+
+    case Kind.Type: {
+      const t = typ as Type;
+      return t.fields.filter((v) => isRecursiveType(v.type, seen)).length > 0;
+    }
+    case Kind.Enum:
+    case Kind.Primitive:
+    case Kind.Alias:
+    case Kind.Void: {
+      return false;
+    }
+    default: {
+      throw new Error(`Unhandled type: ${typ.kind}`);
+    }
   }
 }

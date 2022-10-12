@@ -1,5 +1,5 @@
 import { Context, Kind, ObjectMap, Type } from "@apexlang/core/model";
-import { isPrimitive } from "../../utils/index.js";
+import { isPrimitive, isRecursiveType } from "../../utils/index.js";
 import {
   rustDoc,
   rustify,
@@ -9,6 +9,7 @@ import {
   useSerde,
   visibility,
   types,
+  customAttributes,
 } from "../utils/index.js";
 
 import { SourceGenerator } from "./base.js";
@@ -24,9 +25,14 @@ export class StructVisitor extends SourceGenerator<Type> {
   }
 
   getSource(): string {
+    let prefix = trimLines([
+      rustDoc(this.root.description),
+      deriveDirective(this.root.name, this.config),
+      customAttributes(this.root.name, this.config),
+    ]);
+
     return `
-    ${rustDoc(this.root.description)}
-    ${deriveDirective(this.root.name, this.config)}
+    ${prefix}
     ${this.visibility} struct ${rustifyCaps(this.root.name)}{
       ${this.source}
     }`;
@@ -34,7 +40,7 @@ export class StructVisitor extends SourceGenerator<Type> {
 
   visitTypeField(context: Context): void {
     const { field } = context;
-    let isRecursive = types.isRecursiveType(field.type, this.root);
+    let isRecursive = isRecursiveType(field.type);
     let isHeapAllocated =
       field.type.kind === Kind.Map || field.type.kind === Kind.List;
     let baseType = types.apexToRustType(field.type, context.config);

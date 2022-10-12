@@ -18,17 +18,13 @@ import { BaseVisitor, Context, Visitor, Writer } from "@apexlang/core/model";
 import { EnumVisitor } from "./enum_visitor.js";
 import { StructVisitor } from "./struct_visitor.js";
 import { ImportsVisitor } from "./imports_visitor.js";
-import { AliasVisitor, translateAlias } from "./alias_visitor.js";
+import { AliasVisitor } from "./alias_visitor.js";
 import {
-  formatComment,
   isHandler,
   isProvider,
-  isVoid,
-  noCode,
 } from "../utils/index.js";
 import { UnionVisitor } from "./union_visitor.js";
 import { InterfaceVisitor } from "./interface_visitor.js";
-import { expandType, mapParams, methodName, returnPointer } from "./helpers.js";
 
 export class InterfacesVisitor extends BaseVisitor {
   // Overridable visitor implementations

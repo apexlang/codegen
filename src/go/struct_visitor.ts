@@ -76,7 +76,11 @@ export class StructVisitor extends BaseVisitor {
     const receiver = type.name.substring(0, 1).toLowerCase();
     this.write(`}\n\n`);
 
-    if (this.writeTypeInfo) {
+    let writeTypeInfo = context.config.writeTypeInfo as boolean;
+    if (writeTypeInfo == undefined) {
+      writeTypeInfo = this.writeTypeInfo;
+    }
+    if (writeTypeInfo) {
       this.write(`func (${receiver} *${type.name}) Type() string {
         return "${type.name}"
       }\n\n`);

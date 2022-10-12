@@ -49,6 +49,33 @@ export function deriveDirective(name: string, config: ObjectMap<any>): string {
   return `#[derive(${derive.join(",")})]`;
 }
 
+export function customAttributes(name: string, config: ObjectMap<any>): string {
+  const attributes = [];
+  if (config.attributes) {
+    if (config.attributes._all) {
+      if (
+        Array.isArray(config.attributes._except) &&
+        !config.attributes._except.some((n: string) => n == name)
+      )
+        attributes.push(...config.attributes._all);
+    }
+    if (config.attributes[name]) {
+      attributes.push(...config.attributes[name]);
+    }
+  }
+  return attributes.join("\n");
+}
+
+export function isNewType(name: string, config: ObjectMap<any>): boolean {
+  if (config.newtype) {
+    if (config.newtype[name] !== undefined) {
+      return !!config.newtype[name];
+    }
+    return !!config.newtype._all;
+  }
+  return false;
+}
+
 export function useSerde(config: ObjectMap<any>): boolean {
   return !!config.serde;
 }
