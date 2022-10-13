@@ -1,0 +1,1 @@
+export { TypeVisitor as StructVisitor } from "./type-visitor";
