@@ -75,6 +75,7 @@ function convertPrimitive(typ: Primitive, config: ObjectMap): string {
     case PrimitiveName.Any:
       return "Object";
     default:
+      // return `${typ.name}`
       throw new Error(
         `Unhandled primitive type conversion for type: ${typ.name}`
       );

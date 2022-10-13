@@ -125,3 +125,8 @@
 
   }
 
+// MyEnum is an emuneration
+enum MyEnum {
+	 // ONE value,TWO value,THREE value
+	 ONE,TWO,THREE
+}
