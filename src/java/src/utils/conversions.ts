@@ -1,4 +1,4 @@
-import {PrimitiveName} from "@apexlang/core/model";
+import { PrimitiveName } from "@apexlang/core/model";
 
 export const convertSignedToUnsigned = (type: string, value: any) => {
   switch (type) {
@@ -13,4 +13,4 @@ export const convertSignedToUnsigned = (type: string, value: any) => {
     default:
       return `${value}`;
   }
-}
+};

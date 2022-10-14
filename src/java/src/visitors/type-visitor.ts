@@ -11,17 +11,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import {Argument, BaseVisitor, Context} from "@apexlang/core/model";
-import {camelCase, formatComment, pascalCase} from "../../../utils";
-import {convertType} from "../utils/types";
+import { Argument, BaseVisitor, Context } from "@apexlang/core/model";
+import { camelCase, formatComment, pascalCase } from "../../../utils";
+import { convertType } from "../utils/types";
 
 export class TypeVisitor extends BaseVisitor {
   visitTypeBefore(context: Context): void {
     const { type } = context;
 
     this.write(formatComment("  // ", type.description));
-    this.write(`  public class ${pascalCase(type.name)}\n  {\n`);
-
+    this.write(`class ${pascalCase(type.name)} {\n`);
+    this.write("\n");
     super.visitTypesBefore(context);
   }
 
@@ -81,13 +81,13 @@ export class TypeVisitor extends BaseVisitor {
     //   this.write("      }\n");
     //   this.write("    }\n");
     // } else {
-      this.write(formatComment("    // ", field.description));
-      this.write(`\t public ${type} ${pascalCase(field.name)};\n\n`);
+    this.write(formatComment("    // ", field.description));
+    this.write(`\t public ${type} ${pascalCase(field.name)};\n\n`);
     // }
   }
 
   visitTypeAfter(context: Context) {
-    this.write("  }\n\n");
+    this.write("}\n\n");
 
     super.visitTypeAfter(context);
   }
