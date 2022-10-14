@@ -90,8 +90,7 @@ import (
     }
     this.write(`\n`);
     if (http.enabled) {
-      this.write(`\t"github.com/apexlang/api-go/errorz"
-    "github.com/apexlang/api-go/transport/tfiber"\n`);
+      this.write(`\t"github.com/apexlang/api-go/transport/tfiber"\n`);
     }
     if (grpc.enabled) {
       this.write(`\t"github.com/apexlang/api-go/transport/tgrpc"\n`);
@@ -143,10 +142,7 @@ func main() {
       // Fiber app config with custom error handler
       config := fiber.Config{
         DisableStartupMessage: true,
-        ErrorHandler: func(c *fiber.Ctx, err error) error {
-          errz := errorz.From(err)
-          return c.Status(errz.Status).JSON(errz)
-        },
+        ErrorHandler: tfiber.ErrorHandler,
       }
       app := fiber.New(config)\n`);
 
