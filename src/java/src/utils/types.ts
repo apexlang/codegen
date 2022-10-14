@@ -1,24 +1,24 @@
 import {
-  Kind,
-  Named,
   AnyType,
-  Map,
-  PrimitiveName,
+  Kind,
   List,
+  Map,
+  Named,
+  ObjectMap,
   Optional,
   Primitive,
-  ObjectMap,
+  PrimitiveName,
 } from "@apexlang/core/model";
-import {pascalCase} from "../../../utils";
+import { pascalCase } from "../../../utils";
 
 export function convertType(typ: AnyType, config: ObjectMap): string {
   switch (typ.kind) {
     case Kind.List: {
-      return `List<${convertType((typ as List).type, config)}>`
+      return `List<${convertType((typ as List).type, config)}>`;
     }
     case Kind.Map: {
-      return `Map<${convertType((typ as Map).keyType, config)}, ${convertType(
-        (typ as Map).valueType, config
+      return `Map<${convertType((typ as Map).keyType, config)}, ${pascalCase(
+        convertType((typ as Map).valueType, config)
       )}>`;
     }
     case Kind.Optional: {
@@ -30,14 +30,16 @@ export function convertType(typ: AnyType, config: ObjectMap): string {
     case Kind.Type:
     case Kind.Union:
     case Kind.Enum:
-    case Kind.Alias:
       const namedValue = (typ as Named).name;
       return pascalCase(namedValue);
+    case Kind.Alias:
+      return (typ as Named).name.toUpperCase();
     case Kind.Primitive: {
-      return `${convertPrimitive((typ as Primitive), config)}`;
+      return `${convertPrimitive(typ as Primitive, config)}`;
     }
     default: {
-      throw new Error(`Unhandled type conversion for type: ${typ.kind}`);
+      return `${typ.kind}`;
+      // throw new Error(`Unhandled type conversion for type: ${typ.kind}`);
     }
   }
 }
@@ -75,9 +77,9 @@ function convertPrimitive(typ: Primitive, config: ObjectMap): string {
     case PrimitiveName.Any:
       return "Object";
     default:
-      // return `${typ.name}`
-      throw new Error(
-        `Unhandled primitive type conversion for type: ${typ.name}`
-      );
+      return `${typ.name}`;
+    // throw new Error(
+    //     `Unhandled primitive type conversion for type: ${typ.name}`
+    // );
   }
 }

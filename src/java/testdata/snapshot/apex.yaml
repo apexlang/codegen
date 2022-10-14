@@ -1,5 +1,5 @@
 spec: ../spec.apexlang
 generates:
-  interfaces.java:
+  index.java:
     module: '@apexlang/codegen/java'
     visitorClass: DefaultVisitor
