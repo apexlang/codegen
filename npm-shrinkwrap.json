@@ -1,12 +1,12 @@
 {
   "name": "@apexlang/codegen",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "lockfileVersion": 2,
   "requires": true,
   "packages": {
     "": {
       "name": "@apexlang/codegen",
-      "version": "0.0.13",
+      "version": "0.0.14",
       "license": "Apache-2.0",
       "dependencies": {
         "@apexlang/core": "^0.1.1",
