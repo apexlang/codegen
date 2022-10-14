@@ -86,6 +86,9 @@ export function isService(context: Context): boolean {
       }) != undefined
     );
   }
+  if (context.operation) {
+    return context.operation.annotation("nocode") != undefined;
+  }
   return false;
 }
 

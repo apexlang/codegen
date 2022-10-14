@@ -14,9 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Context, BaseVisitor } from "@apexlang/core/model";
+import { Context, BaseVisitor, Annotated } from "@apexlang/core/model";
 import { formatComment, pascalCase, typeName } from "../utils/index.js";
-import { expandType } from "./helpers.js";
+import { expandType, fieldName } from "./helpers.js";
 
 export class UnionVisitor extends BaseVisitor {
   visitUnion(context: Context): void {
@@ -28,7 +28,8 @@ export class UnionVisitor extends BaseVisitor {
       const tname = typeName(t);
       const expandedName = expandType(t);
       this.write(
-        `${pascalCase(
+        `${fieldName(
+          undefined as unknown as Annotated,
           tname
         )} *${expandedName} ${tick}json:"${tname},omitempty" yaml:"${tname},omitempty" msgpack:"${tname},omitempty`
       );

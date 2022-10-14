@@ -289,7 +289,7 @@ export const expandType = (
 };
 
 export function fieldName(annotated: Annotated, name: string): string {
-  const rename = renamed(annotated);
+  const rename = annotated ? renamed(annotated) : undefined;
   if (rename != undefined) {
     return rename;
   }

@@ -19,10 +19,7 @@ import { EnumVisitor } from "./enum_visitor.js";
 import { StructVisitor } from "./struct_visitor.js";
 import { ImportsVisitor } from "./imports_visitor.js";
 import { AliasVisitor } from "./alias_visitor.js";
-import {
-  isHandler,
-  isProvider,
-} from "../utils/index.js";
+import { isHandler, isProvider } from "../utils/index.js";
 import { UnionVisitor } from "./union_visitor.js";
 import { InterfaceVisitor } from "./interface_visitor.js";
 
