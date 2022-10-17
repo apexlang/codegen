@@ -1,8 +1,24 @@
 import { BaseVisitor, Context } from "@apexlang/core/model";
-import { camelCase, pascalCase } from "../../../utils";
 
 export class ImportVisitor extends BaseVisitor {
   visitNamespaceBefore(context: Context) {
+    this.write(`import java.util.*;`);
+    this.write(`\n`);
+    this.write(`import java.io.*;`);
+    this.write(`\n`);
+    this.write(`import java.lang.*;`);
+    this.write(`\n`);
+    this.write(`import java.math.*;`);
+    this.write(`\n`);
+    this.write(`import java.text.*;`);
+    this.write(`\n`);
+    this.write(`import java.time.*;`);
+    this.write(`\n`);
+    this.write(`\n`);
+    this.write(`public class Main {`);
+    this.write(`\n`);
+    this.write(`\n`);
+
     // const packageName = context.namespace.name
     //   .split(".")
     //   .map((n, i) => {
@@ -18,20 +34,10 @@ export class ImportVisitor extends BaseVisitor {
     super.visitNamespaceBefore(context);
   }
 
-  visitNamespaceAfter(context: Context) {
-    this.write(`import java.util.*;`);
-    this.write(`\n`);
-    this.write(`import java.io.*;`);
-    this.write(`\n`);
-    this.write(`import java.lang.*;`);
-    this.write(`\n`);
-    this.write(`import java.math.*;`);
-    this.write(`\n`);
-    this.write(`import java.text.*;`);
-    this.write(`\n`);
-    this.write(`import java.time.*;`);
-    this.write(`\n`);
-    this.write(`\n`);
-    super.visitImport(context);
-  }
+  // visitNamespaceAfter(context: Context) {
+  //     this.write(`\n`);
+  //     this.write(`\n`);
+  //     this.write(`}`);
+  //     super.visitNamespaceAfter(context);
+  // }
 }

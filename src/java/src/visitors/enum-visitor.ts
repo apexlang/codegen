@@ -13,7 +13,7 @@ export class EnumVisitor extends BaseVisitor {
 
   visitEnum(context: Context) {
     const { enum: enumNode } = context;
-    this.write(`enum ${enumNode.name} {`);
+    this.write(`public enum ${enumNode.name} {`);
     this.write(`\n`);
     super.visitEnum(context);
   }

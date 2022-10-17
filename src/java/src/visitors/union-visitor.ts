@@ -9,15 +9,16 @@ export class UnionVisitor extends BaseVisitor {
 
   visitUnion(context: Context) {
     const union = context.union;
-    this.write(`class ${union.name} { \n`);
+    this.write(`public static class ${union.name} { \n`);
     this.write(`\n`);
     union.types.forEach((type) => {
       this.write(
-        `\t public ${convertType(type, context.config)} ${camelCase(
+        `\t public static ${convertType(type, context.config)} ${camelCase(
           convertType(type, context.config)
         )};\n`
       );
     });
+    this.write(`\n`);
     this.write(`}\n`);
     this.write(`\n`);
     super.visitUnion(context);

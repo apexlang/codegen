@@ -45,4 +45,17 @@ export class DefaultVisitor extends BaseVisitor {
     const visitor = this.unionVisitor(this.writer);
     context.union.accept(context, visitor);
   }
+
+  visitNamespaceAfter(context: Context) {
+    this.write(`\n`);
+    this.write(`\n`);
+    this.write(`public static void main(String[] args) {`);
+    this.write(`\n`);
+    this.write(`\t System.out.println("Welcome to JAVA. Happy Coding :)");`);
+    this.write(`\n`);
+    this.write(`\t }`);
+    this.write(`\n`);
+    this.write(`}`);
+    super.visitNamespaceAfter(context);
+  }
 }
