@@ -20,7 +20,7 @@ export class TypeVisitor extends BaseVisitor {
     const { type } = context;
 
     this.write(formatComment("  // ", type.description));
-    this.write(`class ${pascalCase(type.name)} {\n`);
+    this.write(`public static class ${pascalCase(type.name)} {\n`);
     this.write("\n");
     super.visitTypesBefore(context);
   }
@@ -82,7 +82,7 @@ export class TypeVisitor extends BaseVisitor {
     //   this.write("    }\n");
     // } else {
     this.write(formatComment("    // ", field.description));
-    this.write(`\t public ${type} ${pascalCase(field.name)};\n\n`);
+    this.write(`\t public static ${type} ${pascalCase(field.name)};\n\n`);
     // }
   }
 
