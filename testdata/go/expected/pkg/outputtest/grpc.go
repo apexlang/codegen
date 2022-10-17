@@ -189,14 +189,14 @@ func (s *MyServiceGRPCWrapper) UnaryBytes(ctx context.Context, value *wrapperspb
 	return &wrapperspb.BytesValue{Value: result}, nil
 }
 
-func (s *MyServiceGRPCWrapper) FuncType(ctx context.Context, args *pb.FuncTypeArgs) (*pb.MyType, error) {
-	type FuncTypeArgs struct {
+func (s *MyServiceGRPCWrapper) FuncType(ctx context.Context, args *pb.MyServiceFuncTypeArgs) (*pb.MyType, error) {
+	type MyServiceFuncTypeArgs struct {
 		Value    MyType  `json:"value" yaml:"value" msgpack:"value"`
 		Optional *MyType `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 	}
 
 	var et errorz.Tracker
-	input := FuncTypeArgs{
+	input := MyServiceFuncTypeArgs{
 		Value:    *errorz.Track(&et, convertInputMyType, args.Value),
 		Optional: errorz.Track(&et, convertInputMyType, args.Optional),
 	}
@@ -210,14 +210,14 @@ func (s *MyServiceGRPCWrapper) FuncType(ctx context.Context, args *pb.FuncTypeAr
 	return convertOutputMyType(result), nil
 }
 
-func (s *MyServiceGRPCWrapper) FuncEnum(ctx context.Context, args *pb.FuncEnumArgs) (*pb.MyEnumValue, error) {
-	type FuncEnumArgs struct {
+func (s *MyServiceGRPCWrapper) FuncEnum(ctx context.Context, args *pb.MyServiceFuncEnumArgs) (*pb.MyEnumValue, error) {
+	type MyServiceFuncEnumArgs struct {
 		Value    MyEnum  `json:"value" yaml:"value" msgpack:"value"`
 		Optional *MyEnum `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 	}
 
 	var et errorz.Tracker
-	input := FuncEnumArgs{
+	input := MyServiceFuncEnumArgs{
 		Value:    MyEnum(args.Value),
 		Optional: (*MyEnum)(args.Optional),
 	}
@@ -231,14 +231,14 @@ func (s *MyServiceGRPCWrapper) FuncEnum(ctx context.Context, args *pb.FuncEnumAr
 	return &pb.MyEnumValue{Value: pb.MyEnum(result)}, nil
 }
 
-func (s *MyServiceGRPCWrapper) FuncAlias(ctx context.Context, args *pb.FuncAliasArgs) (*wrapperspb.StringValue, error) {
-	type FuncAliasArgs struct {
+func (s *MyServiceGRPCWrapper) FuncAlias(ctx context.Context, args *pb.MyServiceFuncAliasArgs) (*wrapperspb.StringValue, error) {
+	type MyServiceFuncAliasArgs struct {
 		Value    uuid.UUID  `json:"value" yaml:"value" msgpack:"value"`
 		Optional *uuid.UUID `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 	}
 
 	var et errorz.Tracker
-	input := FuncAliasArgs{
+	input := MyServiceFuncAliasArgs{
 		Value:    errorz.Track(&et, uuid.Parse, args.Value),
 		Optional: convert.NillableEt(&et, args.Optional, uuid.Parse),
 	}
@@ -252,14 +252,14 @@ func (s *MyServiceGRPCWrapper) FuncAlias(ctx context.Context, args *pb.FuncAlias
 	return &wrapperspb.StringValue{Value: result.String()}, nil
 }
 
-func (s *MyServiceGRPCWrapper) FuncString(ctx context.Context, args *pb.FuncStringArgs) (*wrapperspb.StringValue, error) {
-	type FuncStringArgs struct {
+func (s *MyServiceGRPCWrapper) FuncString(ctx context.Context, args *pb.MyServiceFuncStringArgs) (*wrapperspb.StringValue, error) {
+	type MyServiceFuncStringArgs struct {
 		Value    string  `json:"value" yaml:"value" msgpack:"value"`
 		Optional *string `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 	}
 
 	var et errorz.Tracker
-	input := FuncStringArgs{
+	input := MyServiceFuncStringArgs{
 		Value:    args.Value,
 		Optional: args.Optional,
 	}
@@ -273,14 +273,14 @@ func (s *MyServiceGRPCWrapper) FuncString(ctx context.Context, args *pb.FuncStri
 	return &wrapperspb.StringValue{Value: result}, nil
 }
 
-func (s *MyServiceGRPCWrapper) FuncI64(ctx context.Context, args *pb.FuncI64Args) (*wrapperspb.Int64Value, error) {
-	type FuncI64Args struct {
+func (s *MyServiceGRPCWrapper) FuncI64(ctx context.Context, args *pb.MyServiceFuncI64Args) (*wrapperspb.Int64Value, error) {
+	type MyServiceFuncI64Args struct {
 		Value    int64  `json:"value" yaml:"value" msgpack:"value"`
 		Optional *int64 `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 	}
 
 	var et errorz.Tracker
-	input := FuncI64Args{
+	input := MyServiceFuncI64Args{
 		Value:    args.Value,
 		Optional: args.Optional,
 	}
@@ -294,14 +294,14 @@ func (s *MyServiceGRPCWrapper) FuncI64(ctx context.Context, args *pb.FuncI64Args
 	return &wrapperspb.Int64Value{Value: result}, nil
 }
 
-func (s *MyServiceGRPCWrapper) FuncI32(ctx context.Context, args *pb.FuncI32Args) (*wrapperspb.Int32Value, error) {
-	type FuncI32Args struct {
+func (s *MyServiceGRPCWrapper) FuncI32(ctx context.Context, args *pb.MyServiceFuncI32Args) (*wrapperspb.Int32Value, error) {
+	type MyServiceFuncI32Args struct {
 		Value    int32  `json:"value" yaml:"value" msgpack:"value"`
 		Optional *int32 `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 	}
 
 	var et errorz.Tracker
-	input := FuncI32Args{
+	input := MyServiceFuncI32Args{
 		Value:    args.Value,
 		Optional: args.Optional,
 	}
@@ -315,14 +315,14 @@ func (s *MyServiceGRPCWrapper) FuncI32(ctx context.Context, args *pb.FuncI32Args
 	return &wrapperspb.Int32Value{Value: result}, nil
 }
 
-func (s *MyServiceGRPCWrapper) FuncI16(ctx context.Context, args *pb.FuncI16Args) (*wrapperspb.Int32Value, error) {
-	type FuncI16Args struct {
+func (s *MyServiceGRPCWrapper) FuncI16(ctx context.Context, args *pb.MyServiceFuncI16Args) (*wrapperspb.Int32Value, error) {
+	type MyServiceFuncI16Args struct {
 		Value    int16  `json:"value" yaml:"value" msgpack:"value"`
 		Optional *int16 `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 	}
 
 	var et errorz.Tracker
-	input := FuncI16Args{
+	input := MyServiceFuncI16Args{
 		Value:    int16(args.Value),
 		Optional: tgrpc.ConvertInputI16Ptr(args.Optional),
 	}
@@ -336,14 +336,14 @@ func (s *MyServiceGRPCWrapper) FuncI16(ctx context.Context, args *pb.FuncI16Args
 	return &wrapperspb.Int32Value{Value: int32(result)}, nil
 }
 
-func (s *MyServiceGRPCWrapper) FuncI8(ctx context.Context, args *pb.FuncI8Args) (*wrapperspb.Int32Value, error) {
-	type FuncI8Args struct {
+func (s *MyServiceGRPCWrapper) FuncI8(ctx context.Context, args *pb.MyServiceFuncI8Args) (*wrapperspb.Int32Value, error) {
+	type MyServiceFuncI8Args struct {
 		Value    int8  `json:"value" yaml:"value" msgpack:"value"`
 		Optional *int8 `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 	}
 
 	var et errorz.Tracker
-	input := FuncI8Args{
+	input := MyServiceFuncI8Args{
 		Value:    int8(args.Value),
 		Optional: tgrpc.ConvertInputI8Ptr(args.Optional),
 	}
@@ -357,14 +357,14 @@ func (s *MyServiceGRPCWrapper) FuncI8(ctx context.Context, args *pb.FuncI8Args) 
 	return &wrapperspb.Int32Value{Value: int32(result)}, nil
 }
 
-func (s *MyServiceGRPCWrapper) FuncU64(ctx context.Context, args *pb.FuncU64Args) (*wrapperspb.UInt64Value, error) {
-	type FuncU64Args struct {
+func (s *MyServiceGRPCWrapper) FuncU64(ctx context.Context, args *pb.MyServiceFuncU64Args) (*wrapperspb.UInt64Value, error) {
+	type MyServiceFuncU64Args struct {
 		Value    uint64  `json:"value" yaml:"value" msgpack:"value"`
 		Optional *uint64 `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 	}
 
 	var et errorz.Tracker
-	input := FuncU64Args{
+	input := MyServiceFuncU64Args{
 		Value:    args.Value,
 		Optional: args.Optional,
 	}
@@ -378,14 +378,14 @@ func (s *MyServiceGRPCWrapper) FuncU64(ctx context.Context, args *pb.FuncU64Args
 	return &wrapperspb.UInt64Value{Value: result}, nil
 }
 
-func (s *MyServiceGRPCWrapper) FuncU32(ctx context.Context, args *pb.FuncU32Args) (*wrapperspb.UInt32Value, error) {
-	type FuncU32Args struct {
+func (s *MyServiceGRPCWrapper) FuncU32(ctx context.Context, args *pb.MyServiceFuncU32Args) (*wrapperspb.UInt32Value, error) {
+	type MyServiceFuncU32Args struct {
 		Value    uint32  `json:"value" yaml:"value" msgpack:"value"`
 		Optional *uint32 `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 	}
 
 	var et errorz.Tracker
-	input := FuncU32Args{
+	input := MyServiceFuncU32Args{
 		Value:    args.Value,
 		Optional: args.Optional,
 	}
@@ -399,14 +399,14 @@ func (s *MyServiceGRPCWrapper) FuncU32(ctx context.Context, args *pb.FuncU32Args
 	return &wrapperspb.UInt32Value{Value: result}, nil
 }
 
-func (s *MyServiceGRPCWrapper) FuncU16(ctx context.Context, args *pb.FuncU16Args) (*wrapperspb.UInt32Value, error) {
-	type FuncU16Args struct {
+func (s *MyServiceGRPCWrapper) FuncU16(ctx context.Context, args *pb.MyServiceFuncU16Args) (*wrapperspb.UInt32Value, error) {
+	type MyServiceFuncU16Args struct {
 		Value    uint16  `json:"value" yaml:"value" msgpack:"value"`
 		Optional *uint16 `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 	}
 
 	var et errorz.Tracker
-	input := FuncU16Args{
+	input := MyServiceFuncU16Args{
 		Value:    uint16(args.Value),
 		Optional: tgrpc.ConvertInputU16Ptr(args.Optional),
 	}
@@ -420,14 +420,14 @@ func (s *MyServiceGRPCWrapper) FuncU16(ctx context.Context, args *pb.FuncU16Args
 	return &wrapperspb.UInt32Value{Value: uint32(result)}, nil
 }
 
-func (s *MyServiceGRPCWrapper) FuncU8(ctx context.Context, args *pb.FuncU8Args) (*wrapperspb.UInt32Value, error) {
-	type FuncU8Args struct {
+func (s *MyServiceGRPCWrapper) FuncU8(ctx context.Context, args *pb.MyServiceFuncU8Args) (*wrapperspb.UInt32Value, error) {
+	type MyServiceFuncU8Args struct {
 		Value    uint8  `json:"value" yaml:"value" msgpack:"value"`
 		Optional *uint8 `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 	}
 
 	var et errorz.Tracker
-	input := FuncU8Args{
+	input := MyServiceFuncU8Args{
 		Value:    uint8(args.Value),
 		Optional: tgrpc.ConvertInputU8Ptr(args.Optional),
 	}
@@ -441,14 +441,14 @@ func (s *MyServiceGRPCWrapper) FuncU8(ctx context.Context, args *pb.FuncU8Args) 
 	return &wrapperspb.UInt32Value{Value: uint32(result)}, nil
 }
 
-func (s *MyServiceGRPCWrapper) FuncF64(ctx context.Context, args *pb.FuncF64Args) (*wrapperspb.DoubleValue, error) {
-	type FuncF64Args struct {
+func (s *MyServiceGRPCWrapper) FuncF64(ctx context.Context, args *pb.MyServiceFuncF64Args) (*wrapperspb.DoubleValue, error) {
+	type MyServiceFuncF64Args struct {
 		Value    float64  `json:"value" yaml:"value" msgpack:"value"`
 		Optional *float64 `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 	}
 
 	var et errorz.Tracker
-	input := FuncF64Args{
+	input := MyServiceFuncF64Args{
 		Value:    args.Value,
 		Optional: args.Optional,
 	}
@@ -462,14 +462,14 @@ func (s *MyServiceGRPCWrapper) FuncF64(ctx context.Context, args *pb.FuncF64Args
 	return &wrapperspb.DoubleValue{Value: result}, nil
 }
 
-func (s *MyServiceGRPCWrapper) FuncF32(ctx context.Context, args *pb.FuncF32Args) (*wrapperspb.FloatValue, error) {
-	type FuncF32Args struct {
+func (s *MyServiceGRPCWrapper) FuncF32(ctx context.Context, args *pb.MyServiceFuncF32Args) (*wrapperspb.FloatValue, error) {
+	type MyServiceFuncF32Args struct {
 		Value    float32  `json:"value" yaml:"value" msgpack:"value"`
 		Optional *float32 `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 	}
 
 	var et errorz.Tracker
-	input := FuncF32Args{
+	input := MyServiceFuncF32Args{
 		Value:    args.Value,
 		Optional: args.Optional,
 	}
@@ -483,14 +483,14 @@ func (s *MyServiceGRPCWrapper) FuncF32(ctx context.Context, args *pb.FuncF32Args
 	return &wrapperspb.FloatValue{Value: result}, nil
 }
 
-func (s *MyServiceGRPCWrapper) FuncBytes(ctx context.Context, args *pb.FuncBytesArgs) (*wrapperspb.BytesValue, error) {
-	type FuncBytesArgs struct {
+func (s *MyServiceGRPCWrapper) FuncBytes(ctx context.Context, args *pb.MyServiceFuncBytesArgs) (*wrapperspb.BytesValue, error) {
+	type MyServiceFuncBytesArgs struct {
 		Value    []byte `json:"value" yaml:"value" msgpack:"value"`
 		Optional []byte `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 	}
 
 	var et errorz.Tracker
-	input := FuncBytesArgs{
+	input := MyServiceFuncBytesArgs{
 		Value:    args.Value,
 		Optional: args.Optional,
 	}

@@ -83,7 +83,7 @@ class FiberServiceVisitor extends BaseVisitor {
   }
 
   visitOperation(context: Context): void {
-    const { operation } = context;
+    const { interface: iface, operation } = context;
     const path = getPath(context);
     if (path == "") {
       return;
@@ -107,6 +107,7 @@ class FiberServiceVisitor extends BaseVisitor {
       } else if (operation.parameters.length > 0) {
         const argsType = convertOperationToType(
           context.getType.bind(context),
+          iface,
           operation
         );
         paramType = argsType;

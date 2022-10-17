@@ -10,12 +10,12 @@ import (
 
 var _ = convert.Package
 
-type myServiceFuncTypeArgs struct {
+type MyServiceFuncTypeArgs struct {
 	Value    MyType  `json:"value" yaml:"value" msgpack:"value"`
 	Optional *MyType `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 }
 
-func (o *myServiceFuncTypeArgs) Decode(decoder msgpack.Reader) error {
+func (o *MyServiceFuncTypeArgs) Decode(decoder msgpack.Reader) error {
 	numFields, err := decoder.ReadMapSize()
 	if err != nil {
 		return err
@@ -43,7 +43,7 @@ func (o *myServiceFuncTypeArgs) Decode(decoder msgpack.Reader) error {
 	return nil
 }
 
-func (o *myServiceFuncTypeArgs) Encode(encoder msgpack.Writer) error {
+func (o *MyServiceFuncTypeArgs) Encode(encoder msgpack.Writer) error {
 	if o == nil {
 		encoder.WriteNil()
 		return nil
@@ -57,12 +57,12 @@ func (o *myServiceFuncTypeArgs) Encode(encoder msgpack.Writer) error {
 	return nil
 }
 
-type myServiceFuncEnumArgs struct {
+type MyServiceFuncEnumArgs struct {
 	Value    MyEnum  `json:"value" yaml:"value" msgpack:"value"`
 	Optional *MyEnum `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 }
 
-func (o *myServiceFuncEnumArgs) Decode(decoder msgpack.Reader) error {
+func (o *MyServiceFuncEnumArgs) Decode(decoder msgpack.Reader) error {
 	numFields, err := decoder.ReadMapSize()
 	if err != nil {
 		return err
@@ -90,7 +90,7 @@ func (o *myServiceFuncEnumArgs) Decode(decoder msgpack.Reader) error {
 	return nil
 }
 
-func (o *myServiceFuncEnumArgs) Encode(encoder msgpack.Writer) error {
+func (o *MyServiceFuncEnumArgs) Encode(encoder msgpack.Writer) error {
 	if o == nil {
 		encoder.WriteNil()
 		return nil
@@ -104,12 +104,12 @@ func (o *myServiceFuncEnumArgs) Encode(encoder msgpack.Writer) error {
 	return nil
 }
 
-type myServiceFuncAliasArgs struct {
+type MyServiceFuncAliasArgs struct {
 	Value    uuid.UUID  `json:"value" yaml:"value" msgpack:"value"`
 	Optional *uuid.UUID `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 }
 
-func (o *myServiceFuncAliasArgs) Decode(decoder msgpack.Reader) error {
+func (o *MyServiceFuncAliasArgs) Decode(decoder msgpack.Reader) error {
 	numFields, err := decoder.ReadMapSize()
 	if err != nil {
 		return err
@@ -137,7 +137,7 @@ func (o *myServiceFuncAliasArgs) Decode(decoder msgpack.Reader) error {
 	return nil
 }
 
-func (o *myServiceFuncAliasArgs) Encode(encoder msgpack.Writer) error {
+func (o *MyServiceFuncAliasArgs) Encode(encoder msgpack.Writer) error {
 	if o == nil {
 		encoder.WriteNil()
 		return nil
@@ -155,12 +155,12 @@ func (o *myServiceFuncAliasArgs) Encode(encoder msgpack.Writer) error {
 	return nil
 }
 
-type myServiceFuncStringArgs struct {
+type MyServiceFuncStringArgs struct {
 	Value    string  `json:"value" yaml:"value" msgpack:"value"`
 	Optional *string `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 }
 
-func (o *myServiceFuncStringArgs) Decode(decoder msgpack.Reader) error {
+func (o *MyServiceFuncStringArgs) Decode(decoder msgpack.Reader) error {
 	numFields, err := decoder.ReadMapSize()
 	if err != nil {
 		return err
@@ -188,7 +188,7 @@ func (o *myServiceFuncStringArgs) Decode(decoder msgpack.Reader) error {
 	return nil
 }
 
-func (o *myServiceFuncStringArgs) Encode(encoder msgpack.Writer) error {
+func (o *MyServiceFuncStringArgs) Encode(encoder msgpack.Writer) error {
 	if o == nil {
 		encoder.WriteNil()
 		return nil
@@ -202,12 +202,12 @@ func (o *myServiceFuncStringArgs) Encode(encoder msgpack.Writer) error {
 	return nil
 }
 
-type myServiceFuncI64Args struct {
+type MyServiceFuncI64Args struct {
 	Value    int64  `json:"value" yaml:"value" msgpack:"value"`
 	Optional *int64 `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 }
 
-func (o *myServiceFuncI64Args) Decode(decoder msgpack.Reader) error {
+func (o *MyServiceFuncI64Args) Decode(decoder msgpack.Reader) error {
 	numFields, err := decoder.ReadMapSize()
 	if err != nil {
 		return err
@@ -235,7 +235,7 @@ func (o *myServiceFuncI64Args) Decode(decoder msgpack.Reader) error {
 	return nil
 }
 
-func (o *myServiceFuncI64Args) Encode(encoder msgpack.Writer) error {
+func (o *MyServiceFuncI64Args) Encode(encoder msgpack.Writer) error {
 	if o == nil {
 		encoder.WriteNil()
 		return nil
@@ -249,12 +249,12 @@ func (o *myServiceFuncI64Args) Encode(encoder msgpack.Writer) error {
 	return nil
 }
 
-type myServiceFuncI32Args struct {
+type MyServiceFuncI32Args struct {
 	Value    int32  `json:"value" yaml:"value" msgpack:"value"`
 	Optional *int32 `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 }
 
-func (o *myServiceFuncI32Args) Decode(decoder msgpack.Reader) error {
+func (o *MyServiceFuncI32Args) Decode(decoder msgpack.Reader) error {
 	numFields, err := decoder.ReadMapSize()
 	if err != nil {
 		return err
@@ -282,7 +282,7 @@ func (o *myServiceFuncI32Args) Decode(decoder msgpack.Reader) error {
 	return nil
 }
 
-func (o *myServiceFuncI32Args) Encode(encoder msgpack.Writer) error {
+func (o *MyServiceFuncI32Args) Encode(encoder msgpack.Writer) error {
 	if o == nil {
 		encoder.WriteNil()
 		return nil
@@ -296,12 +296,12 @@ func (o *myServiceFuncI32Args) Encode(encoder msgpack.Writer) error {
 	return nil
 }
 
-type myServiceFuncI16Args struct {
+type MyServiceFuncI16Args struct {
 	Value    int16  `json:"value" yaml:"value" msgpack:"value"`
 	Optional *int16 `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 }
 
-func (o *myServiceFuncI16Args) Decode(decoder msgpack.Reader) error {
+func (o *MyServiceFuncI16Args) Decode(decoder msgpack.Reader) error {
 	numFields, err := decoder.ReadMapSize()
 	if err != nil {
 		return err
@@ -329,7 +329,7 @@ func (o *myServiceFuncI16Args) Decode(decoder msgpack.Reader) error {
 	return nil
 }
 
-func (o *myServiceFuncI16Args) Encode(encoder msgpack.Writer) error {
+func (o *MyServiceFuncI16Args) Encode(encoder msgpack.Writer) error {
 	if o == nil {
 		encoder.WriteNil()
 		return nil
@@ -343,12 +343,12 @@ func (o *myServiceFuncI16Args) Encode(encoder msgpack.Writer) error {
 	return nil
 }
 
-type myServiceFuncI8Args struct {
+type MyServiceFuncI8Args struct {
 	Value    int8  `json:"value" yaml:"value" msgpack:"value"`
 	Optional *int8 `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 }
 
-func (o *myServiceFuncI8Args) Decode(decoder msgpack.Reader) error {
+func (o *MyServiceFuncI8Args) Decode(decoder msgpack.Reader) error {
 	numFields, err := decoder.ReadMapSize()
 	if err != nil {
 		return err
@@ -376,7 +376,7 @@ func (o *myServiceFuncI8Args) Decode(decoder msgpack.Reader) error {
 	return nil
 }
 
-func (o *myServiceFuncI8Args) Encode(encoder msgpack.Writer) error {
+func (o *MyServiceFuncI8Args) Encode(encoder msgpack.Writer) error {
 	if o == nil {
 		encoder.WriteNil()
 		return nil
@@ -390,12 +390,12 @@ func (o *myServiceFuncI8Args) Encode(encoder msgpack.Writer) error {
 	return nil
 }
 
-type myServiceFuncU64Args struct {
+type MyServiceFuncU64Args struct {
 	Value    uint64  `json:"value" yaml:"value" msgpack:"value"`
 	Optional *uint64 `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 }
 
-func (o *myServiceFuncU64Args) Decode(decoder msgpack.Reader) error {
+func (o *MyServiceFuncU64Args) Decode(decoder msgpack.Reader) error {
 	numFields, err := decoder.ReadMapSize()
 	if err != nil {
 		return err
@@ -423,7 +423,7 @@ func (o *myServiceFuncU64Args) Decode(decoder msgpack.Reader) error {
 	return nil
 }
 
-func (o *myServiceFuncU64Args) Encode(encoder msgpack.Writer) error {
+func (o *MyServiceFuncU64Args) Encode(encoder msgpack.Writer) error {
 	if o == nil {
 		encoder.WriteNil()
 		return nil
@@ -437,12 +437,12 @@ func (o *myServiceFuncU64Args) Encode(encoder msgpack.Writer) error {
 	return nil
 }
 
-type myServiceFuncU32Args struct {
+type MyServiceFuncU32Args struct {
 	Value    uint32  `json:"value" yaml:"value" msgpack:"value"`
 	Optional *uint32 `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 }
 
-func (o *myServiceFuncU32Args) Decode(decoder msgpack.Reader) error {
+func (o *MyServiceFuncU32Args) Decode(decoder msgpack.Reader) error {
 	numFields, err := decoder.ReadMapSize()
 	if err != nil {
 		return err
@@ -470,7 +470,7 @@ func (o *myServiceFuncU32Args) Decode(decoder msgpack.Reader) error {
 	return nil
 }
 
-func (o *myServiceFuncU32Args) Encode(encoder msgpack.Writer) error {
+func (o *MyServiceFuncU32Args) Encode(encoder msgpack.Writer) error {
 	if o == nil {
 		encoder.WriteNil()
 		return nil
@@ -484,12 +484,12 @@ func (o *myServiceFuncU32Args) Encode(encoder msgpack.Writer) error {
 	return nil
 }
 
-type myServiceFuncU16Args struct {
+type MyServiceFuncU16Args struct {
 	Value    uint16  `json:"value" yaml:"value" msgpack:"value"`
 	Optional *uint16 `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 }
 
-func (o *myServiceFuncU16Args) Decode(decoder msgpack.Reader) error {
+func (o *MyServiceFuncU16Args) Decode(decoder msgpack.Reader) error {
 	numFields, err := decoder.ReadMapSize()
 	if err != nil {
 		return err
@@ -517,7 +517,7 @@ func (o *myServiceFuncU16Args) Decode(decoder msgpack.Reader) error {
 	return nil
 }
 
-func (o *myServiceFuncU16Args) Encode(encoder msgpack.Writer) error {
+func (o *MyServiceFuncU16Args) Encode(encoder msgpack.Writer) error {
 	if o == nil {
 		encoder.WriteNil()
 		return nil
@@ -531,12 +531,12 @@ func (o *myServiceFuncU16Args) Encode(encoder msgpack.Writer) error {
 	return nil
 }
 
-type myServiceFuncU8Args struct {
+type MyServiceFuncU8Args struct {
 	Value    uint8  `json:"value" yaml:"value" msgpack:"value"`
 	Optional *uint8 `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 }
 
-func (o *myServiceFuncU8Args) Decode(decoder msgpack.Reader) error {
+func (o *MyServiceFuncU8Args) Decode(decoder msgpack.Reader) error {
 	numFields, err := decoder.ReadMapSize()
 	if err != nil {
 		return err
@@ -564,7 +564,7 @@ func (o *myServiceFuncU8Args) Decode(decoder msgpack.Reader) error {
 	return nil
 }
 
-func (o *myServiceFuncU8Args) Encode(encoder msgpack.Writer) error {
+func (o *MyServiceFuncU8Args) Encode(encoder msgpack.Writer) error {
 	if o == nil {
 		encoder.WriteNil()
 		return nil
@@ -578,12 +578,12 @@ func (o *myServiceFuncU8Args) Encode(encoder msgpack.Writer) error {
 	return nil
 }
 
-type myServiceFuncF64Args struct {
+type MyServiceFuncF64Args struct {
 	Value    float64  `json:"value" yaml:"value" msgpack:"value"`
 	Optional *float64 `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 }
 
-func (o *myServiceFuncF64Args) Decode(decoder msgpack.Reader) error {
+func (o *MyServiceFuncF64Args) Decode(decoder msgpack.Reader) error {
 	numFields, err := decoder.ReadMapSize()
 	if err != nil {
 		return err
@@ -611,7 +611,7 @@ func (o *myServiceFuncF64Args) Decode(decoder msgpack.Reader) error {
 	return nil
 }
 
-func (o *myServiceFuncF64Args) Encode(encoder msgpack.Writer) error {
+func (o *MyServiceFuncF64Args) Encode(encoder msgpack.Writer) error {
 	if o == nil {
 		encoder.WriteNil()
 		return nil
@@ -625,12 +625,12 @@ func (o *myServiceFuncF64Args) Encode(encoder msgpack.Writer) error {
 	return nil
 }
 
-type myServiceFuncF32Args struct {
+type MyServiceFuncF32Args struct {
 	Value    float32  `json:"value" yaml:"value" msgpack:"value"`
 	Optional *float32 `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 }
 
-func (o *myServiceFuncF32Args) Decode(decoder msgpack.Reader) error {
+func (o *MyServiceFuncF32Args) Decode(decoder msgpack.Reader) error {
 	numFields, err := decoder.ReadMapSize()
 	if err != nil {
 		return err
@@ -658,7 +658,7 @@ func (o *myServiceFuncF32Args) Decode(decoder msgpack.Reader) error {
 	return nil
 }
 
-func (o *myServiceFuncF32Args) Encode(encoder msgpack.Writer) error {
+func (o *MyServiceFuncF32Args) Encode(encoder msgpack.Writer) error {
 	if o == nil {
 		encoder.WriteNil()
 		return nil
@@ -672,12 +672,12 @@ func (o *myServiceFuncF32Args) Encode(encoder msgpack.Writer) error {
 	return nil
 }
 
-type myServiceFuncBytesArgs struct {
+type MyServiceFuncBytesArgs struct {
 	Value    []byte `json:"value" yaml:"value" msgpack:"value"`
 	Optional []byte `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 }
 
-func (o *myServiceFuncBytesArgs) Decode(decoder msgpack.Reader) error {
+func (o *MyServiceFuncBytesArgs) Decode(decoder msgpack.Reader) error {
 	numFields, err := decoder.ReadMapSize()
 	if err != nil {
 		return err
@@ -705,7 +705,7 @@ func (o *myServiceFuncBytesArgs) Decode(decoder msgpack.Reader) error {
 	return nil
 }
 
-func (o *myServiceFuncBytesArgs) Encode(encoder msgpack.Writer) error {
+func (o *MyServiceFuncBytesArgs) Encode(encoder msgpack.Writer) error {
 	if o == nil {
 		encoder.WriteNil()
 		return nil

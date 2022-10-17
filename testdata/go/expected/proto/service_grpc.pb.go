@@ -40,21 +40,21 @@ type MyServiceClient interface {
 	UnaryF64(ctx context.Context, in *wrapperspb.DoubleValue, opts ...grpc.CallOption) (*wrapperspb.DoubleValue, error)
 	UnaryF32(ctx context.Context, in *wrapperspb.FloatValue, opts ...grpc.CallOption) (*wrapperspb.FloatValue, error)
 	UnaryBytes(ctx context.Context, in *wrapperspb.BytesValue, opts ...grpc.CallOption) (*wrapperspb.BytesValue, error)
-	FuncType(ctx context.Context, in *FuncTypeArgs, opts ...grpc.CallOption) (*MyType, error)
-	FuncEnum(ctx context.Context, in *FuncEnumArgs, opts ...grpc.CallOption) (*MyEnumValue, error)
-	FuncAlias(ctx context.Context, in *FuncAliasArgs, opts ...grpc.CallOption) (*wrapperspb.StringValue, error)
-	FuncString(ctx context.Context, in *FuncStringArgs, opts ...grpc.CallOption) (*wrapperspb.StringValue, error)
-	FuncI64(ctx context.Context, in *FuncI64Args, opts ...grpc.CallOption) (*wrapperspb.Int64Value, error)
-	FuncI32(ctx context.Context, in *FuncI32Args, opts ...grpc.CallOption) (*wrapperspb.Int32Value, error)
-	FuncI16(ctx context.Context, in *FuncI16Args, opts ...grpc.CallOption) (*wrapperspb.Int32Value, error)
-	FuncI8(ctx context.Context, in *FuncI8Args, opts ...grpc.CallOption) (*wrapperspb.Int32Value, error)
-	FuncU64(ctx context.Context, in *FuncU64Args, opts ...grpc.CallOption) (*wrapperspb.UInt64Value, error)
-	FuncU32(ctx context.Context, in *FuncU32Args, opts ...grpc.CallOption) (*wrapperspb.UInt32Value, error)
-	FuncU16(ctx context.Context, in *FuncU16Args, opts ...grpc.CallOption) (*wrapperspb.UInt32Value, error)
-	FuncU8(ctx context.Context, in *FuncU8Args, opts ...grpc.CallOption) (*wrapperspb.UInt32Value, error)
-	FuncF64(ctx context.Context, in *FuncF64Args, opts ...grpc.CallOption) (*wrapperspb.DoubleValue, error)
-	FuncF32(ctx context.Context, in *FuncF32Args, opts ...grpc.CallOption) (*wrapperspb.FloatValue, error)
-	FuncBytes(ctx context.Context, in *FuncBytesArgs, opts ...grpc.CallOption) (*wrapperspb.BytesValue, error)
+	FuncType(ctx context.Context, in *MyServiceFuncTypeArgs, opts ...grpc.CallOption) (*MyType, error)
+	FuncEnum(ctx context.Context, in *MyServiceFuncEnumArgs, opts ...grpc.CallOption) (*MyEnumValue, error)
+	FuncAlias(ctx context.Context, in *MyServiceFuncAliasArgs, opts ...grpc.CallOption) (*wrapperspb.StringValue, error)
+	FuncString(ctx context.Context, in *MyServiceFuncStringArgs, opts ...grpc.CallOption) (*wrapperspb.StringValue, error)
+	FuncI64(ctx context.Context, in *MyServiceFuncI64Args, opts ...grpc.CallOption) (*wrapperspb.Int64Value, error)
+	FuncI32(ctx context.Context, in *MyServiceFuncI32Args, opts ...grpc.CallOption) (*wrapperspb.Int32Value, error)
+	FuncI16(ctx context.Context, in *MyServiceFuncI16Args, opts ...grpc.CallOption) (*wrapperspb.Int32Value, error)
+	FuncI8(ctx context.Context, in *MyServiceFuncI8Args, opts ...grpc.CallOption) (*wrapperspb.Int32Value, error)
+	FuncU64(ctx context.Context, in *MyServiceFuncU64Args, opts ...grpc.CallOption) (*wrapperspb.UInt64Value, error)
+	FuncU32(ctx context.Context, in *MyServiceFuncU32Args, opts ...grpc.CallOption) (*wrapperspb.UInt32Value, error)
+	FuncU16(ctx context.Context, in *MyServiceFuncU16Args, opts ...grpc.CallOption) (*wrapperspb.UInt32Value, error)
+	FuncU8(ctx context.Context, in *MyServiceFuncU8Args, opts ...grpc.CallOption) (*wrapperspb.UInt32Value, error)
+	FuncF64(ctx context.Context, in *MyServiceFuncF64Args, opts ...grpc.CallOption) (*wrapperspb.DoubleValue, error)
+	FuncF32(ctx context.Context, in *MyServiceFuncF32Args, opts ...grpc.CallOption) (*wrapperspb.FloatValue, error)
+	FuncBytes(ctx context.Context, in *MyServiceFuncBytesArgs, opts ...grpc.CallOption) (*wrapperspb.BytesValue, error)
 }
 
 type myServiceClient struct {
@@ -209,7 +209,7 @@ func (c *myServiceClient) UnaryBytes(ctx context.Context, in *wrapperspb.BytesVa
 	return out, nil
 }
 
-func (c *myServiceClient) FuncType(ctx context.Context, in *FuncTypeArgs, opts ...grpc.CallOption) (*MyType, error) {
+func (c *myServiceClient) FuncType(ctx context.Context, in *MyServiceFuncTypeArgs, opts ...grpc.CallOption) (*MyType, error) {
 	out := new(MyType)
 	err := c.cc.Invoke(ctx, "/apex.testing.MyService/FuncType", in, out, opts...)
 	if err != nil {
@@ -218,7 +218,7 @@ func (c *myServiceClient) FuncType(ctx context.Context, in *FuncTypeArgs, opts .
 	return out, nil
 }
 
-func (c *myServiceClient) FuncEnum(ctx context.Context, in *FuncEnumArgs, opts ...grpc.CallOption) (*MyEnumValue, error) {
+func (c *myServiceClient) FuncEnum(ctx context.Context, in *MyServiceFuncEnumArgs, opts ...grpc.CallOption) (*MyEnumValue, error) {
 	out := new(MyEnumValue)
 	err := c.cc.Invoke(ctx, "/apex.testing.MyService/FuncEnum", in, out, opts...)
 	if err != nil {
@@ -227,7 +227,7 @@ func (c *myServiceClient) FuncEnum(ctx context.Context, in *FuncEnumArgs, opts .
 	return out, nil
 }
 
-func (c *myServiceClient) FuncAlias(ctx context.Context, in *FuncAliasArgs, opts ...grpc.CallOption) (*wrapperspb.StringValue, error) {
+func (c *myServiceClient) FuncAlias(ctx context.Context, in *MyServiceFuncAliasArgs, opts ...grpc.CallOption) (*wrapperspb.StringValue, error) {
 	out := new(wrapperspb.StringValue)
 	err := c.cc.Invoke(ctx, "/apex.testing.MyService/FuncAlias", in, out, opts...)
 	if err != nil {
@@ -236,7 +236,7 @@ func (c *myServiceClient) FuncAlias(ctx context.Context, in *FuncAliasArgs, opts
 	return out, nil
 }
 
-func (c *myServiceClient) FuncString(ctx context.Context, in *FuncStringArgs, opts ...grpc.CallOption) (*wrapperspb.StringValue, error) {
+func (c *myServiceClient) FuncString(ctx context.Context, in *MyServiceFuncStringArgs, opts ...grpc.CallOption) (*wrapperspb.StringValue, error) {
 	out := new(wrapperspb.StringValue)
 	err := c.cc.Invoke(ctx, "/apex.testing.MyService/FuncString", in, out, opts...)
 	if err != nil {
@@ -245,7 +245,7 @@ func (c *myServiceClient) FuncString(ctx context.Context, in *FuncStringArgs, op
 	return out, nil
 }
 
-func (c *myServiceClient) FuncI64(ctx context.Context, in *FuncI64Args, opts ...grpc.CallOption) (*wrapperspb.Int64Value, error) {
+func (c *myServiceClient) FuncI64(ctx context.Context, in *MyServiceFuncI64Args, opts ...grpc.CallOption) (*wrapperspb.Int64Value, error) {
 	out := new(wrapperspb.Int64Value)
 	err := c.cc.Invoke(ctx, "/apex.testing.MyService/FuncI64", in, out, opts...)
 	if err != nil {
@@ -254,7 +254,7 @@ func (c *myServiceClient) FuncI64(ctx context.Context, in *FuncI64Args, opts ...
 	return out, nil
 }
 
-func (c *myServiceClient) FuncI32(ctx context.Context, in *FuncI32Args, opts ...grpc.CallOption) (*wrapperspb.Int32Value, error) {
+func (c *myServiceClient) FuncI32(ctx context.Context, in *MyServiceFuncI32Args, opts ...grpc.CallOption) (*wrapperspb.Int32Value, error) {
 	out := new(wrapperspb.Int32Value)
 	err := c.cc.Invoke(ctx, "/apex.testing.MyService/FuncI32", in, out, opts...)
 	if err != nil {
@@ -263,7 +263,7 @@ func (c *myServiceClient) FuncI32(ctx context.Context, in *FuncI32Args, opts ...
 	return out, nil
 }
 
-func (c *myServiceClient) FuncI16(ctx context.Context, in *FuncI16Args, opts ...grpc.CallOption) (*wrapperspb.Int32Value, error) {
+func (c *myServiceClient) FuncI16(ctx context.Context, in *MyServiceFuncI16Args, opts ...grpc.CallOption) (*wrapperspb.Int32Value, error) {
 	out := new(wrapperspb.Int32Value)
 	err := c.cc.Invoke(ctx, "/apex.testing.MyService/FuncI16", in, out, opts...)
 	if err != nil {
@@ -272,7 +272,7 @@ func (c *myServiceClient) FuncI16(ctx context.Context, in *FuncI16Args, opts ...
 	return out, nil
 }
 
-func (c *myServiceClient) FuncI8(ctx context.Context, in *FuncI8Args, opts ...grpc.CallOption) (*wrapperspb.Int32Value, error) {
+func (c *myServiceClient) FuncI8(ctx context.Context, in *MyServiceFuncI8Args, opts ...grpc.CallOption) (*wrapperspb.Int32Value, error) {
 	out := new(wrapperspb.Int32Value)
 	err := c.cc.Invoke(ctx, "/apex.testing.MyService/FuncI8", in, out, opts...)
 	if err != nil {
@@ -281,7 +281,7 @@ func (c *myServiceClient) FuncI8(ctx context.Context, in *FuncI8Args, opts ...gr
 	return out, nil
 }
 
-func (c *myServiceClient) FuncU64(ctx context.Context, in *FuncU64Args, opts ...grpc.CallOption) (*wrapperspb.UInt64Value, error) {
+func (c *myServiceClient) FuncU64(ctx context.Context, in *MyServiceFuncU64Args, opts ...grpc.CallOption) (*wrapperspb.UInt64Value, error) {
 	out := new(wrapperspb.UInt64Value)
 	err := c.cc.Invoke(ctx, "/apex.testing.MyService/FuncU64", in, out, opts...)
 	if err != nil {
@@ -290,7 +290,7 @@ func (c *myServiceClient) FuncU64(ctx context.Context, in *FuncU64Args, opts ...
 	return out, nil
 }
 
-func (c *myServiceClient) FuncU32(ctx context.Context, in *FuncU32Args, opts ...grpc.CallOption) (*wrapperspb.UInt32Value, error) {
+func (c *myServiceClient) FuncU32(ctx context.Context, in *MyServiceFuncU32Args, opts ...grpc.CallOption) (*wrapperspb.UInt32Value, error) {
 	out := new(wrapperspb.UInt32Value)
 	err := c.cc.Invoke(ctx, "/apex.testing.MyService/FuncU32", in, out, opts...)
 	if err != nil {
@@ -299,7 +299,7 @@ func (c *myServiceClient) FuncU32(ctx context.Context, in *FuncU32Args, opts ...
 	return out, nil
 }
 
-func (c *myServiceClient) FuncU16(ctx context.Context, in *FuncU16Args, opts ...grpc.CallOption) (*wrapperspb.UInt32Value, error) {
+func (c *myServiceClient) FuncU16(ctx context.Context, in *MyServiceFuncU16Args, opts ...grpc.CallOption) (*wrapperspb.UInt32Value, error) {
 	out := new(wrapperspb.UInt32Value)
 	err := c.cc.Invoke(ctx, "/apex.testing.MyService/FuncU16", in, out, opts...)
 	if err != nil {
@@ -308,7 +308,7 @@ func (c *myServiceClient) FuncU16(ctx context.Context, in *FuncU16Args, opts ...
 	return out, nil
 }
 
-func (c *myServiceClient) FuncU8(ctx context.Context, in *FuncU8Args, opts ...grpc.CallOption) (*wrapperspb.UInt32Value, error) {
+func (c *myServiceClient) FuncU8(ctx context.Context, in *MyServiceFuncU8Args, opts ...grpc.CallOption) (*wrapperspb.UInt32Value, error) {
 	out := new(wrapperspb.UInt32Value)
 	err := c.cc.Invoke(ctx, "/apex.testing.MyService/FuncU8", in, out, opts...)
 	if err != nil {
@@ -317,7 +317,7 @@ func (c *myServiceClient) FuncU8(ctx context.Context, in *FuncU8Args, opts ...gr
 	return out, nil
 }
 
-func (c *myServiceClient) FuncF64(ctx context.Context, in *FuncF64Args, opts ...grpc.CallOption) (*wrapperspb.DoubleValue, error) {
+func (c *myServiceClient) FuncF64(ctx context.Context, in *MyServiceFuncF64Args, opts ...grpc.CallOption) (*wrapperspb.DoubleValue, error) {
 	out := new(wrapperspb.DoubleValue)
 	err := c.cc.Invoke(ctx, "/apex.testing.MyService/FuncF64", in, out, opts...)
 	if err != nil {
@@ -326,7 +326,7 @@ func (c *myServiceClient) FuncF64(ctx context.Context, in *FuncF64Args, opts ...
 	return out, nil
 }
 
-func (c *myServiceClient) FuncF32(ctx context.Context, in *FuncF32Args, opts ...grpc.CallOption) (*wrapperspb.FloatValue, error) {
+func (c *myServiceClient) FuncF32(ctx context.Context, in *MyServiceFuncF32Args, opts ...grpc.CallOption) (*wrapperspb.FloatValue, error) {
 	out := new(wrapperspb.FloatValue)
 	err := c.cc.Invoke(ctx, "/apex.testing.MyService/FuncF32", in, out, opts...)
 	if err != nil {
@@ -335,7 +335,7 @@ func (c *myServiceClient) FuncF32(ctx context.Context, in *FuncF32Args, opts ...
 	return out, nil
 }
 
-func (c *myServiceClient) FuncBytes(ctx context.Context, in *FuncBytesArgs, opts ...grpc.CallOption) (*wrapperspb.BytesValue, error) {
+func (c *myServiceClient) FuncBytes(ctx context.Context, in *MyServiceFuncBytesArgs, opts ...grpc.CallOption) (*wrapperspb.BytesValue, error) {
 	out := new(wrapperspb.BytesValue)
 	err := c.cc.Invoke(ctx, "/apex.testing.MyService/FuncBytes", in, out, opts...)
 	if err != nil {
@@ -364,21 +364,21 @@ type MyServiceServer interface {
 	UnaryF64(context.Context, *wrapperspb.DoubleValue) (*wrapperspb.DoubleValue, error)
 	UnaryF32(context.Context, *wrapperspb.FloatValue) (*wrapperspb.FloatValue, error)
 	UnaryBytes(context.Context, *wrapperspb.BytesValue) (*wrapperspb.BytesValue, error)
-	FuncType(context.Context, *FuncTypeArgs) (*MyType, error)
-	FuncEnum(context.Context, *FuncEnumArgs) (*MyEnumValue, error)
-	FuncAlias(context.Context, *FuncAliasArgs) (*wrapperspb.StringValue, error)
-	FuncString(context.Context, *FuncStringArgs) (*wrapperspb.StringValue, error)
-	FuncI64(context.Context, *FuncI64Args) (*wrapperspb.Int64Value, error)
-	FuncI32(context.Context, *FuncI32Args) (*wrapperspb.Int32Value, error)
-	FuncI16(context.Context, *FuncI16Args) (*wrapperspb.Int32Value, error)
-	FuncI8(context.Context, *FuncI8Args) (*wrapperspb.Int32Value, error)
-	FuncU64(context.Context, *FuncU64Args) (*wrapperspb.UInt64Value, error)
-	FuncU32(context.Context, *FuncU32Args) (*wrapperspb.UInt32Value, error)
-	FuncU16(context.Context, *FuncU16Args) (*wrapperspb.UInt32Value, error)
-	FuncU8(context.Context, *FuncU8Args) (*wrapperspb.UInt32Value, error)
-	FuncF64(context.Context, *FuncF64Args) (*wrapperspb.DoubleValue, error)
-	FuncF32(context.Context, *FuncF32Args) (*wrapperspb.FloatValue, error)
-	FuncBytes(context.Context, *FuncBytesArgs) (*wrapperspb.BytesValue, error)
+	FuncType(context.Context, *MyServiceFuncTypeArgs) (*MyType, error)
+	FuncEnum(context.Context, *MyServiceFuncEnumArgs) (*MyEnumValue, error)
+	FuncAlias(context.Context, *MyServiceFuncAliasArgs) (*wrapperspb.StringValue, error)
+	FuncString(context.Context, *MyServiceFuncStringArgs) (*wrapperspb.StringValue, error)
+	FuncI64(context.Context, *MyServiceFuncI64Args) (*wrapperspb.Int64Value, error)
+	FuncI32(context.Context, *MyServiceFuncI32Args) (*wrapperspb.Int32Value, error)
+	FuncI16(context.Context, *MyServiceFuncI16Args) (*wrapperspb.Int32Value, error)
+	FuncI8(context.Context, *MyServiceFuncI8Args) (*wrapperspb.Int32Value, error)
+	FuncU64(context.Context, *MyServiceFuncU64Args) (*wrapperspb.UInt64Value, error)
+	FuncU32(context.Context, *MyServiceFuncU32Args) (*wrapperspb.UInt32Value, error)
+	FuncU16(context.Context, *MyServiceFuncU16Args) (*wrapperspb.UInt32Value, error)
+	FuncU8(context.Context, *MyServiceFuncU8Args) (*wrapperspb.UInt32Value, error)
+	FuncF64(context.Context, *MyServiceFuncF64Args) (*wrapperspb.DoubleValue, error)
+	FuncF32(context.Context, *MyServiceFuncF32Args) (*wrapperspb.FloatValue, error)
+	FuncBytes(context.Context, *MyServiceFuncBytesArgs) (*wrapperspb.BytesValue, error)
 	mustEmbedUnimplementedMyServiceServer()
 }
 
@@ -434,49 +434,49 @@ func (UnimplementedMyServiceServer) UnaryF32(context.Context, *wrapperspb.FloatV
 func (UnimplementedMyServiceServer) UnaryBytes(context.Context, *wrapperspb.BytesValue) (*wrapperspb.BytesValue, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UnaryBytes not implemented")
 }
-func (UnimplementedMyServiceServer) FuncType(context.Context, *FuncTypeArgs) (*MyType, error) {
+func (UnimplementedMyServiceServer) FuncType(context.Context, *MyServiceFuncTypeArgs) (*MyType, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FuncType not implemented")
 }
-func (UnimplementedMyServiceServer) FuncEnum(context.Context, *FuncEnumArgs) (*MyEnumValue, error) {
+func (UnimplementedMyServiceServer) FuncEnum(context.Context, *MyServiceFuncEnumArgs) (*MyEnumValue, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FuncEnum not implemented")
 }
-func (UnimplementedMyServiceServer) FuncAlias(context.Context, *FuncAliasArgs) (*wrapperspb.StringValue, error) {
+func (UnimplementedMyServiceServer) FuncAlias(context.Context, *MyServiceFuncAliasArgs) (*wrapperspb.StringValue, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FuncAlias not implemented")
 }
-func (UnimplementedMyServiceServer) FuncString(context.Context, *FuncStringArgs) (*wrapperspb.StringValue, error) {
+func (UnimplementedMyServiceServer) FuncString(context.Context, *MyServiceFuncStringArgs) (*wrapperspb.StringValue, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FuncString not implemented")
 }
-func (UnimplementedMyServiceServer) FuncI64(context.Context, *FuncI64Args) (*wrapperspb.Int64Value, error) {
+func (UnimplementedMyServiceServer) FuncI64(context.Context, *MyServiceFuncI64Args) (*wrapperspb.Int64Value, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FuncI64 not implemented")
 }
-func (UnimplementedMyServiceServer) FuncI32(context.Context, *FuncI32Args) (*wrapperspb.Int32Value, error) {
+func (UnimplementedMyServiceServer) FuncI32(context.Context, *MyServiceFuncI32Args) (*wrapperspb.Int32Value, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FuncI32 not implemented")
 }
-func (UnimplementedMyServiceServer) FuncI16(context.Context, *FuncI16Args) (*wrapperspb.Int32Value, error) {
+func (UnimplementedMyServiceServer) FuncI16(context.Context, *MyServiceFuncI16Args) (*wrapperspb.Int32Value, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FuncI16 not implemented")
 }
-func (UnimplementedMyServiceServer) FuncI8(context.Context, *FuncI8Args) (*wrapperspb.Int32Value, error) {
+func (UnimplementedMyServiceServer) FuncI8(context.Context, *MyServiceFuncI8Args) (*wrapperspb.Int32Value, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FuncI8 not implemented")
 }
-func (UnimplementedMyServiceServer) FuncU64(context.Context, *FuncU64Args) (*wrapperspb.UInt64Value, error) {
+func (UnimplementedMyServiceServer) FuncU64(context.Context, *MyServiceFuncU64Args) (*wrapperspb.UInt64Value, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FuncU64 not implemented")
 }
-func (UnimplementedMyServiceServer) FuncU32(context.Context, *FuncU32Args) (*wrapperspb.UInt32Value, error) {
+func (UnimplementedMyServiceServer) FuncU32(context.Context, *MyServiceFuncU32Args) (*wrapperspb.UInt32Value, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FuncU32 not implemented")
 }
-func (UnimplementedMyServiceServer) FuncU16(context.Context, *FuncU16Args) (*wrapperspb.UInt32Value, error) {
+func (UnimplementedMyServiceServer) FuncU16(context.Context, *MyServiceFuncU16Args) (*wrapperspb.UInt32Value, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FuncU16 not implemented")
 }
-func (UnimplementedMyServiceServer) FuncU8(context.Context, *FuncU8Args) (*wrapperspb.UInt32Value, error) {
+func (UnimplementedMyServiceServer) FuncU8(context.Context, *MyServiceFuncU8Args) (*wrapperspb.UInt32Value, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FuncU8 not implemented")
 }
-func (UnimplementedMyServiceServer) FuncF64(context.Context, *FuncF64Args) (*wrapperspb.DoubleValue, error) {
+func (UnimplementedMyServiceServer) FuncF64(context.Context, *MyServiceFuncF64Args) (*wrapperspb.DoubleValue, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FuncF64 not implemented")
 }
-func (UnimplementedMyServiceServer) FuncF32(context.Context, *FuncF32Args) (*wrapperspb.FloatValue, error) {
+func (UnimplementedMyServiceServer) FuncF32(context.Context, *MyServiceFuncF32Args) (*wrapperspb.FloatValue, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FuncF32 not implemented")
 }
-func (UnimplementedMyServiceServer) FuncBytes(context.Context, *FuncBytesArgs) (*wrapperspb.BytesValue, error) {
+func (UnimplementedMyServiceServer) FuncBytes(context.Context, *MyServiceFuncBytesArgs) (*wrapperspb.BytesValue, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FuncBytes not implemented")
 }
 func (UnimplementedMyServiceServer) mustEmbedUnimplementedMyServiceServer() {}
@@ -781,7 +781,7 @@ func _MyService_UnaryBytes_Handler(srv interface{}, ctx context.Context, dec fun
 }
 
 func _MyService_FuncType_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FuncTypeArgs)
+	in := new(MyServiceFuncTypeArgs)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -793,13 +793,13 @@ func _MyService_FuncType_Handler(srv interface{}, ctx context.Context, dec func(
 		FullMethod: "/apex.testing.MyService/FuncType",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MyServiceServer).FuncType(ctx, req.(*FuncTypeArgs))
+		return srv.(MyServiceServer).FuncType(ctx, req.(*MyServiceFuncTypeArgs))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _MyService_FuncEnum_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FuncEnumArgs)
+	in := new(MyServiceFuncEnumArgs)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -811,13 +811,13 @@ func _MyService_FuncEnum_Handler(srv interface{}, ctx context.Context, dec func(
 		FullMethod: "/apex.testing.MyService/FuncEnum",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MyServiceServer).FuncEnum(ctx, req.(*FuncEnumArgs))
+		return srv.(MyServiceServer).FuncEnum(ctx, req.(*MyServiceFuncEnumArgs))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _MyService_FuncAlias_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FuncAliasArgs)
+	in := new(MyServiceFuncAliasArgs)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -829,13 +829,13 @@ func _MyService_FuncAlias_Handler(srv interface{}, ctx context.Context, dec func
 		FullMethod: "/apex.testing.MyService/FuncAlias",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MyServiceServer).FuncAlias(ctx, req.(*FuncAliasArgs))
+		return srv.(MyServiceServer).FuncAlias(ctx, req.(*MyServiceFuncAliasArgs))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _MyService_FuncString_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FuncStringArgs)
+	in := new(MyServiceFuncStringArgs)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -847,13 +847,13 @@ func _MyService_FuncString_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: "/apex.testing.MyService/FuncString",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MyServiceServer).FuncString(ctx, req.(*FuncStringArgs))
+		return srv.(MyServiceServer).FuncString(ctx, req.(*MyServiceFuncStringArgs))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _MyService_FuncI64_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FuncI64Args)
+	in := new(MyServiceFuncI64Args)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -865,13 +865,13 @@ func _MyService_FuncI64_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: "/apex.testing.MyService/FuncI64",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MyServiceServer).FuncI64(ctx, req.(*FuncI64Args))
+		return srv.(MyServiceServer).FuncI64(ctx, req.(*MyServiceFuncI64Args))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _MyService_FuncI32_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FuncI32Args)
+	in := new(MyServiceFuncI32Args)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -883,13 +883,13 @@ func _MyService_FuncI32_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: "/apex.testing.MyService/FuncI32",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MyServiceServer).FuncI32(ctx, req.(*FuncI32Args))
+		return srv.(MyServiceServer).FuncI32(ctx, req.(*MyServiceFuncI32Args))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _MyService_FuncI16_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FuncI16Args)
+	in := new(MyServiceFuncI16Args)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -901,13 +901,13 @@ func _MyService_FuncI16_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: "/apex.testing.MyService/FuncI16",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MyServiceServer).FuncI16(ctx, req.(*FuncI16Args))
+		return srv.(MyServiceServer).FuncI16(ctx, req.(*MyServiceFuncI16Args))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _MyService_FuncI8_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FuncI8Args)
+	in := new(MyServiceFuncI8Args)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -919,13 +919,13 @@ func _MyService_FuncI8_Handler(srv interface{}, ctx context.Context, dec func(in
 		FullMethod: "/apex.testing.MyService/FuncI8",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MyServiceServer).FuncI8(ctx, req.(*FuncI8Args))
+		return srv.(MyServiceServer).FuncI8(ctx, req.(*MyServiceFuncI8Args))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _MyService_FuncU64_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FuncU64Args)
+	in := new(MyServiceFuncU64Args)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -937,13 +937,13 @@ func _MyService_FuncU64_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: "/apex.testing.MyService/FuncU64",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MyServiceServer).FuncU64(ctx, req.(*FuncU64Args))
+		return srv.(MyServiceServer).FuncU64(ctx, req.(*MyServiceFuncU64Args))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _MyService_FuncU32_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FuncU32Args)
+	in := new(MyServiceFuncU32Args)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -955,13 +955,13 @@ func _MyService_FuncU32_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: "/apex.testing.MyService/FuncU32",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MyServiceServer).FuncU32(ctx, req.(*FuncU32Args))
+		return srv.(MyServiceServer).FuncU32(ctx, req.(*MyServiceFuncU32Args))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _MyService_FuncU16_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FuncU16Args)
+	in := new(MyServiceFuncU16Args)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -973,13 +973,13 @@ func _MyService_FuncU16_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: "/apex.testing.MyService/FuncU16",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MyServiceServer).FuncU16(ctx, req.(*FuncU16Args))
+		return srv.(MyServiceServer).FuncU16(ctx, req.(*MyServiceFuncU16Args))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _MyService_FuncU8_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FuncU8Args)
+	in := new(MyServiceFuncU8Args)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -991,13 +991,13 @@ func _MyService_FuncU8_Handler(srv interface{}, ctx context.Context, dec func(in
 		FullMethod: "/apex.testing.MyService/FuncU8",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MyServiceServer).FuncU8(ctx, req.(*FuncU8Args))
+		return srv.(MyServiceServer).FuncU8(ctx, req.(*MyServiceFuncU8Args))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _MyService_FuncF64_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FuncF64Args)
+	in := new(MyServiceFuncF64Args)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1009,13 +1009,13 @@ func _MyService_FuncF64_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: "/apex.testing.MyService/FuncF64",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MyServiceServer).FuncF64(ctx, req.(*FuncF64Args))
+		return srv.(MyServiceServer).FuncF64(ctx, req.(*MyServiceFuncF64Args))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _MyService_FuncF32_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FuncF32Args)
+	in := new(MyServiceFuncF32Args)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1027,13 +1027,13 @@ func _MyService_FuncF32_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: "/apex.testing.MyService/FuncF32",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MyServiceServer).FuncF32(ctx, req.(*FuncF32Args))
+		return srv.(MyServiceServer).FuncF32(ctx, req.(*MyServiceFuncF32Args))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _MyService_FuncBytes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FuncBytesArgs)
+	in := new(MyServiceFuncBytesArgs)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -1045,7 +1045,7 @@ func _MyService_FuncBytes_Handler(srv interface{}, ctx context.Context, dec func
 		FullMethod: "/apex.testing.MyService/FuncBytes",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MyServiceServer).FuncBytes(ctx, req.(*FuncBytesArgs))
+		return srv.(MyServiceServer).FuncBytes(ctx, req.(*MyServiceFuncBytesArgs))
 	}
 	return interceptor(ctx, in, info, handler)
 }

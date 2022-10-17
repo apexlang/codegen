@@ -40,6 +40,7 @@ import {
   isPrimitive,
   isService,
   isVoid,
+  operationArgsType,
   pascalCase,
   unwrapKinds,
 } from "../utils/index.js";
@@ -146,7 +147,7 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
           throw new Error(`unhandled type ${pt.kind}`);
       }
     } else if (operation.parameters.length > 0) {
-      this.write(`args *pb.${operName}Args`);
+      this.write(`args *pb.${operationArgsType(iface, operation)}`);
     } else {
       this.write(`_ *emptypb.Empty`);
     }
@@ -237,6 +238,7 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
       if (operation.parameters.length > 0) {
         const argsType = convertOperationToType(
           context.getType.bind(context),
+          iface,
           operation
         );
         const structVisitor = new StructVisitor(this.writer);
