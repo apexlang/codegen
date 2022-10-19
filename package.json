@@ -1,6 +1,6 @@
 {
   "name": "@apexlang/codegen",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "Apex built-in code generators",
   "keywords": [
     "apex",
