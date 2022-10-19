@@ -781,9 +781,9 @@ func (o *MyType) Decode(decoder msgpack.Reader) error {
 		case "f32Option":
 			o.F32Option, err = decoder.ReadNillableFloat32()
 		case "datetimeValue":
-			o.DatetimeValue, err = convert.StringToTime(decoder.ReadString())
+			o.DatetimeValue, err = decoder.ReadTime()
 		case "datetimeOption":
-			o.DatetimeOption, err = convert.StringToTimePtr(decoder.ReadNillableString())
+			o.DatetimeOption, err = decoder.ReadNillableTime()
 		case "bytesValue":
 			o.BytesValue, err = decoder.ReadByteArray()
 		case "bytesOption":
@@ -932,9 +932,9 @@ func (o *MyType) Encode(encoder msgpack.Writer) error {
 	encoder.WriteString("f32Option")
 	encoder.WriteNillableFloat32(o.F32Option)
 	encoder.WriteString("datetimeValue")
-	encoder.WriteString(convert.TimeToString(o.DatetimeValue))
+	encoder.WriteTime(o.DatetimeValue)
 	encoder.WriteString("datetimeOption")
-	encoder.WriteNillableString(convert.TimeToStringPtr(o.DatetimeOption))
+	encoder.WriteNillableTime(o.DatetimeOption)
 	encoder.WriteString("bytesValue")
 	encoder.WriteByteArray(o.BytesValue)
 	encoder.WriteString("bytesOption")

@@ -9,7 +9,7 @@ require (
 	github.com/gofiber/fiber/v2 v2.38.1
 	github.com/google/uuid v1.3.0
 	github.com/oklog/run v1.1.0
-	github.com/wapc/tinygo-msgpack v0.1.4
+	github.com/wapc/tinygo-msgpack v0.1.5
 	go.uber.org/zap v1.23.0
 	google.golang.org/grpc v1.50.0
 	google.golang.org/protobuf v1.28.1
