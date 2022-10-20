@@ -16,7 +16,9 @@ export class InterfaceVisitor extends BaseVisitor {
     for (let i = 0; i < operations.length; ++i) {
       const operation = operations[i];
       const type = expandType(operation.type);
-
+      if (i > 0) {
+        this.write(`\n`);
+      }
       this.write(formatComment("    // ", operation.description));
       this.write(`    public ${type} ${pascalCase(operation.name)}(`);
 
@@ -27,7 +29,7 @@ export class InterfaceVisitor extends BaseVisitor {
         this.write(`${expandType(parameter.type)} ${parameter.name}`);
         if (j < parameters.length - 1) this.write(`, `);
       }
-      this.write(`);\n\n`);
+      this.write(`);\n`);
     }
     super.visitInterface(context);
   }

@@ -28,7 +28,7 @@ export class AliasVisitor extends BaseVisitor {
 
     this.write(formatComment("// ", alias.description));
     this.write(
-      `  using ${pascalCase(alias.name)} = ${expandType(alias.type)};\n`
+      `  using ${pascalCase(alias.name)} = ${expandType(alias.type)};\n\n`
     );
     super.triggerTypeField(context);
   }

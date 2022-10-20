@@ -281,14 +281,12 @@ namespace Apex.Testing {
     public float FuncF32(float value, float? optional);
 
     public byte[] FuncBytes(byte[] value, byte[]? optional);
-
   }
 
 
   public interface Repository
   {
     public MyType GetData();
-
   }
 
 

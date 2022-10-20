@@ -3,6 +3,7 @@
 namespace Apex.Testing {
 
   using Uuid = string;
+
   public interface MyService
   {
     public void EmptyVoid();
@@ -66,7 +67,6 @@ namespace Apex.Testing {
     public float FuncF32(float value, float? optional);
 
     public byte[] FuncBytes(byte[] value, byte[]? optional);
-
   }
 
   public interface Repository
