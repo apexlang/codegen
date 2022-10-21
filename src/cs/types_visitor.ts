@@ -29,6 +29,9 @@ export class TypeVisitor extends BaseVisitor {
   }
 
   visitTypeField(context: Context) {
+    if (context.fieldIndex > 0) {
+      this.write(`\n`);
+    }
     const { field } = context;
     const type = expandType(field.type);
 
@@ -86,7 +89,7 @@ export class TypeVisitor extends BaseVisitor {
     } else {
       this.write(formatComment("    // ", field.description));
       this.write(`\t public ${type} ${pascalCase(field.name)}`);
-      this.write("   { get; set; }\n\n");
+      this.write("   { get; set; }\n");
     }
   }
 

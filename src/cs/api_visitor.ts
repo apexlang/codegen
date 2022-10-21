@@ -12,7 +12,7 @@ export class MinimalAPIVisitor extends BaseVisitor {
   }
 
   visitNamespace(context: Context) {
-    this.write(`namespace ${parseNamespaceName(context.namespace.name)} {\n\n`);
+    this.write(`namespace ${parseNamespaceName(context.namespace.name)} {\n`);
     super.visitNamespace(context);
   }
 

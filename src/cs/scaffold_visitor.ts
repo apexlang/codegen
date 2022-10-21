@@ -10,7 +10,7 @@ export class ScaffoldVisitor extends BaseVisitor {
   // }
 
   visitNamespace(context: Context) {
-    this.write(`namespace ${parseNamespaceName(context.namespace.name)} {\n\n`);
+    this.write(`namespace ${parseNamespaceName(context.namespace.name)} {\n`);
 
     const service = new ServiceVisitor(this.writer);
     context.namespace.accept(context, service);
@@ -65,6 +65,9 @@ export class ServiceVisitor extends BaseVisitor {
 
     const operations = context.interface.operations;
     for (let i = 0; i < operations.length; ++i) {
+      if (i > 0) {
+        this.write(`\n`);
+      }
       const operation = operations[i];
       const type = expandType(operation.type);
 
@@ -88,7 +91,7 @@ export class ServiceVisitor extends BaseVisitor {
         );
       }
 
-      this.write(`    }\n\n`);
+      this.write(`    }\n`);
     }
     this.write(`  }\n\n`);
     super.visitInterface(context);

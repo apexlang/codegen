@@ -6,12 +6,12 @@ import { parseNamespaceName } from "./helpers";
 
 export class MainVisitor extends BaseVisitor {
   visitNamespaceBefore(context: Context) {
-    this.write(`namespace ${parseNamespaceName(context.namespace.name)} {\n\n`);
+    this.write(`namespace ${parseNamespaceName(context.namespace.name)} {\n`);
     super.visitNamespace(context);
   }
 
   visitNamespace(context: Context) {
-    this.write(`public class MainClass {\n\n`);
+    this.write(`public class MainClass {\n`);
     this.write(`\t public static void Main(String[] args) {\n`);
     super.visitNamespace(context);
   }
