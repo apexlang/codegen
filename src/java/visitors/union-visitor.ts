@@ -1,6 +1,6 @@
 import { BaseVisitor, Context } from "@apexlang/core/model";
 import { convertType } from "../utils/types";
-import { camelCase } from "../../../utils";
+import { camelCase } from "../../utils";
 
 export class UnionVisitor extends BaseVisitor {
   visitUnionsBefore(context: Context) {

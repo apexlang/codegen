@@ -9,7 +9,7 @@ import {
   Primitive,
   PrimitiveName,
 } from "@apexlang/core/model";
-import { pascalCase } from "../../../utils";
+import { pascalCase } from "../../utils";
 
 export function convertType(typ: AnyType, config: ObjectMap): string {
   switch (typ.kind) {

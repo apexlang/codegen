@@ -1,5 +1,4 @@
 import { BaseVisitor, Context } from "@apexlang/core/model";
-import { pascalCase } from "../../../utils";
 
 export class AliasVisitor extends BaseVisitor {
   visitAliasBefore(context: Context) {

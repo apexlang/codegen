@@ -12,7 +12,7 @@ limitations under the License.
 */
 
 import { Argument, BaseVisitor, Context } from "@apexlang/core/model";
-import { camelCase, formatComment, pascalCase } from "../../../utils";
+import { camelCase, formatComment, pascalCase } from "../../utils";
 import { convertType } from "../utils/types";
 
 export class TypeVisitor extends BaseVisitor {
