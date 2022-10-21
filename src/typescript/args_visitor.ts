@@ -20,7 +20,7 @@ import { ClassVisitor } from "./class_visitor.js";
 
 export class ArgsVisitor extends BaseVisitor {
   visitOperation(context: Context): void {
-    const { operation } = context;
+    const { interface: iface, operation } = context;
     if (noCode(operation)) {
       return;
     }
@@ -29,6 +29,7 @@ export class ArgsVisitor extends BaseVisitor {
     }
     const argObject = convertOperationToType(
       context.getType.bind(context),
+      iface,
       operation
     );
     const args = new ClassVisitor(this.writer);

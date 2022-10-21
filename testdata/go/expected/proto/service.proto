@@ -25,21 +25,21 @@ service MyService {
   rpc UnaryF64(google.protobuf.DoubleValue) returns (google.protobuf.DoubleValue) {};
   rpc UnaryF32(google.protobuf.FloatValue) returns (google.protobuf.FloatValue) {};
   rpc UnaryBytes(google.protobuf.BytesValue) returns (google.protobuf.BytesValue) {};
-  rpc FuncType(FuncTypeArgs) returns (MyType) {};
-  rpc FuncEnum(FuncEnumArgs) returns (MyEnumValue) {};
-  rpc FuncAlias(FuncAliasArgs) returns (google.protobuf.StringValue) {};
-  rpc FuncString(FuncStringArgs) returns (google.protobuf.StringValue) {};
-  rpc FuncI64(FuncI64Args) returns (google.protobuf.Int64Value) {};
-  rpc FuncI32(FuncI32Args) returns (google.protobuf.Int32Value) {};
-  rpc FuncI16(FuncI16Args) returns (google.protobuf.Int32Value) {};
-  rpc FuncI8(FuncI8Args) returns (google.protobuf.Int32Value) {};
-  rpc FuncU64(FuncU64Args) returns (google.protobuf.UInt64Value) {};
-  rpc FuncU32(FuncU32Args) returns (google.protobuf.UInt32Value) {};
-  rpc FuncU16(FuncU16Args) returns (google.protobuf.UInt32Value) {};
-  rpc FuncU8(FuncU8Args) returns (google.protobuf.UInt32Value) {};
-  rpc FuncF64(FuncF64Args) returns (google.protobuf.DoubleValue) {};
-  rpc FuncF32(FuncF32Args) returns (google.protobuf.FloatValue) {};
-  rpc FuncBytes(FuncBytesArgs) returns (google.protobuf.BytesValue) {};
+  rpc FuncType(MyServiceFuncTypeArgs) returns (MyType) {};
+  rpc FuncEnum(MyServiceFuncEnumArgs) returns (MyEnumValue) {};
+  rpc FuncAlias(MyServiceFuncAliasArgs) returns (google.protobuf.StringValue) {};
+  rpc FuncString(MyServiceFuncStringArgs) returns (google.protobuf.StringValue) {};
+  rpc FuncI64(MyServiceFuncI64Args) returns (google.protobuf.Int64Value) {};
+  rpc FuncI32(MyServiceFuncI32Args) returns (google.protobuf.Int32Value) {};
+  rpc FuncI16(MyServiceFuncI16Args) returns (google.protobuf.Int32Value) {};
+  rpc FuncI8(MyServiceFuncI8Args) returns (google.protobuf.Int32Value) {};
+  rpc FuncU64(MyServiceFuncU64Args) returns (google.protobuf.UInt64Value) {};
+  rpc FuncU32(MyServiceFuncU32Args) returns (google.protobuf.UInt32Value) {};
+  rpc FuncU16(MyServiceFuncU16Args) returns (google.protobuf.UInt32Value) {};
+  rpc FuncU8(MyServiceFuncU8Args) returns (google.protobuf.UInt32Value) {};
+  rpc FuncF64(MyServiceFuncF64Args) returns (google.protobuf.DoubleValue) {};
+  rpc FuncF32(MyServiceFuncF32Args) returns (google.protobuf.FloatValue) {};
+  rpc FuncBytes(MyServiceFuncBytesArgs) returns (google.protobuf.BytesValue) {};
 }
 
 // MyType is a class
@@ -149,77 +149,77 @@ message MyEnumValue {
   MyEnum value = 1;
 }
 
-message FuncTypeArgs {
+message MyServiceFuncTypeArgs {
   MyType value = 1;
   optional MyType optional = 2;
 }
 
-message FuncEnumArgs {
+message MyServiceFuncEnumArgs {
   MyEnum value = 1;
   optional MyEnum optional = 2;
 }
 
-message FuncAliasArgs {
+message MyServiceFuncAliasArgs {
   string value = 1;
   optional string optional = 2;
 }
 
-message FuncStringArgs {
+message MyServiceFuncStringArgs {
   string value = 1;
   optional string optional = 2;
 }
 
-message FuncI64Args {
+message MyServiceFuncI64Args {
   int64 value = 1;
   optional int64 optional = 2;
 }
 
-message FuncI32Args {
+message MyServiceFuncI32Args {
   int32 value = 1;
   optional int32 optional = 2;
 }
 
-message FuncI16Args {
+message MyServiceFuncI16Args {
   int32 value = 1;
   optional int32 optional = 2;
 }
 
-message FuncI8Args {
+message MyServiceFuncI8Args {
   int32 value = 1;
   optional int32 optional = 2;
 }
 
-message FuncU64Args {
+message MyServiceFuncU64Args {
   uint64 value = 1;
   optional uint64 optional = 2;
 }
 
-message FuncU32Args {
+message MyServiceFuncU32Args {
   uint32 value = 1;
   optional uint32 optional = 2;
 }
 
-message FuncU16Args {
+message MyServiceFuncU16Args {
   uint32 value = 1;
   optional uint32 optional = 2;
 }
 
-message FuncU8Args {
+message MyServiceFuncU8Args {
   uint32 value = 1;
   optional uint32 optional = 2;
 }
 
-message FuncF64Args {
+message MyServiceFuncF64Args {
   double value = 1;
   optional double optional = 2;
 }
 
-message FuncF32Args {
+message MyServiceFuncF32Args {
   float value = 1;
   optional float optional = 2;
 }
 
-message FuncBytesArgs {
+message MyServiceFuncBytesArgs {
   bytes value = 1;
   optional bytes optional = 2;
 }

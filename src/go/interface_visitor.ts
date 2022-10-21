@@ -15,13 +15,7 @@ limitations under the License.
 */
 
 import { BaseVisitor, Context } from "@apexlang/core/model";
-import {
-  expandType,
-  mapParam,
-  mapParams,
-  methodName,
-  returnPointer,
-} from "./helpers.js";
+import { expandType, mapParam, methodName, returnPointer } from "./helpers.js";
 import { translateAlias } from "./alias_visitor.js";
 import { formatComment, isVoid, noCode } from "../utils/index.js";
 

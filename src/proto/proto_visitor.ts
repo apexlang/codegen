@@ -201,7 +201,7 @@ class RoleVisitor extends BaseVisitor {
     if (!shouldIncludeHandler(context)) {
       return;
     }
-    const { operation } = context;
+    const { interface: iface, operation } = context;
     this.write(formatComment("  // ", operation.description));
     this.write(`  rpc ${pascalCase(operation.name)}(`);
     if (operation.parameters.length == 0) {
@@ -225,11 +225,12 @@ class RoleVisitor extends BaseVisitor {
     } else {
       const argsType = convertOperationToType(
         context.getType.bind(context),
+        iface,
         operation
       );
       this.requestTypes.push(argsType);
       this.exposedTypes.add(argsType.name);
-      this.write(`${pascalCase(operation.name)}Args`);
+      this.write(`${argsType.name}`);
     }
     this.write(`) returns (`);
     const ot = unwrapKinds(operation.type, Kind.Alias);

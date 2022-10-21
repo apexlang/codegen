@@ -29,8 +29,8 @@ export class ArgsVisitor extends BaseVisitor {
     }
     const argObject = convertOperationToType(
       context.getType.bind(context),
-      operation,
-      iface.name
+      iface,
+      operation
     );
     const args = new ClassVisitor(this.writer);
     argObject.accept(context.clone({ type: argObject }), args);

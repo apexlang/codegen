@@ -12,7 +12,6 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 
-	"github.com/apexlang/api-go/errorz"
 	"github.com/apexlang/api-go/transport/tfiber"
 	"github.com/apexlang/api-go/transport/tgrpc"
 
@@ -44,10 +43,7 @@ func main() {
 		// Fiber app config with custom error handler
 		config := fiber.Config{
 			DisableStartupMessage: true,
-			ErrorHandler: func(c *fiber.Ctx, err error) error {
-				errz := errorz.From(err)
-				return c.Status(errz.Status).JSON(errz)
-			},
+			ErrorHandler:          tfiber.ErrorHandler,
 		}
 		app := fiber.New(config)
 		tfiber.Register(app, outputtest.MyServiceFiber(myServiceService))

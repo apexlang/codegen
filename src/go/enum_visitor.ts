@@ -61,9 +61,13 @@ export class EnumVisitor extends BaseVisitor {
     func (e *${context.enum.name}) FromString(str string) (ok bool) {
       *e, ok = toID${context.enum.name}[str]
       return ok
-    }
+    }\n\n`);
 
-    // MarshalJSON marshals the enum as a quoted json string
+    const jsonSupport = context.config.noEnumJSON
+      ? !context.config.noEnumJSON
+      : true;
+    if (jsonSupport) {
+      this.write(`// MarshalJSON marshals the enum as a quoted json string
 func (e ${context.enum.name}) MarshalJSON() ([]byte, error) {
   return json.Marshal(e.String())
 }
@@ -81,6 +85,7 @@ func (e *${context.enum.name}) UnmarshalJSON(b []byte) error {
 	return nil
 }
 \n\n`);
+    }
     super.triggerEnumsAfter(context);
   }
 }

@@ -127,15 +127,6 @@ export function msgpackRead(
     case Kind.Union:
     case Kind.Type:
     case Kind.Primitive: {
-      if (t.kind == Kind.Primitive) {
-        const prim = t as Primitive;
-        if (prim.name == PrimitiveName.DateTime) {
-          if (prevOptional) {
-            return `${prefix}convert.StringToTimePtr(decoder.ReadNillableString())\n`;
-          }
-          return `${prefix}convert.StringToTime(decoder.ReadString())\n`;
-        }
-      }
       let namedNode = t as Named;
       const amp = typeInstRef ? "&" : "";
       let decodeFn = `msgpack.Decode[${namedNode.name}](${amp}decoder)`;
@@ -337,15 +328,6 @@ export function msgpackWrite(
     case Kind.Union:
     case Kind.Type:
     case Kind.Primitive:
-      if (t.kind == Kind.Primitive) {
-        const prim = t as Primitive;
-        if (prim.name == PrimitiveName.DateTime) {
-          if (prevOptional) {
-            return `${typeInst}.WriteNillableString(convert.TimeToStringPtr(${variable}))\n`;
-          }
-          return `${typeInst}.WriteString(convert.TimeToString(${variable}))\n`;
-        }
-      }
       const namedNode = t as Named;
       if (prevOptional && msgpackEncodeNillableFuncs.has(namedNode.name)) {
         return `${typeInst}.${msgpackEncodeNillableFuncs.get(

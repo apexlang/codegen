@@ -40,11 +40,7 @@ export class MsgPackVisitor extends BaseVisitor {
         return;
       }
       const tr = context.getType.bind(context);
-      const type = convertOperationToType(
-        tr,
-        operation,
-        iface != undefined ? uncapitalize(iface.name) : undefined
-      );
+      const type = convertOperationToType(tr, iface, operation);
       const ctx = context.clone({ type: type });
       const struct = new StructVisitor(this.writer);
       type.accept(ctx, struct);

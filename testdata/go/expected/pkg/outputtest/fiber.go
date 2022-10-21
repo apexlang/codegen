@@ -174,12 +174,12 @@ func MyServiceFiber(service MyService) tfiber.RegisterFn {
 		router.Post("/v1/funcType", func(c *fiber.Ctx) error {
 			resp := httpresponse.New()
 			ctx := httpresponse.NewContext(c.Context(), resp)
-			type FuncTypeArgs struct {
+			type MyServiceFuncTypeArgs struct {
 				Value    MyType  `json:"value" yaml:"value" msgpack:"value"`
 				Optional *MyType `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 			}
 
-			var args FuncTypeArgs
+			var args MyServiceFuncTypeArgs
 			if err := c.BodyParser(&args); err != nil {
 				return err
 			}
@@ -189,12 +189,12 @@ func MyServiceFiber(service MyService) tfiber.RegisterFn {
 		router.Post("/v1/funcEnum", func(c *fiber.Ctx) error {
 			resp := httpresponse.New()
 			ctx := httpresponse.NewContext(c.Context(), resp)
-			type FuncEnumArgs struct {
+			type MyServiceFuncEnumArgs struct {
 				Value    MyEnum  `json:"value" yaml:"value" msgpack:"value"`
 				Optional *MyEnum `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 			}
 
-			var args FuncEnumArgs
+			var args MyServiceFuncEnumArgs
 			if err := c.BodyParser(&args); err != nil {
 				return err
 			}
@@ -204,12 +204,12 @@ func MyServiceFiber(service MyService) tfiber.RegisterFn {
 		router.Post("/v1/funcEnum", func(c *fiber.Ctx) error {
 			resp := httpresponse.New()
 			ctx := httpresponse.NewContext(c.Context(), resp)
-			type FuncAliasArgs struct {
+			type MyServiceFuncAliasArgs struct {
 				Value    uuid.UUID  `json:"value" yaml:"value" msgpack:"value"`
 				Optional *uuid.UUID `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 			}
 
-			var args FuncAliasArgs
+			var args MyServiceFuncAliasArgs
 			if err := c.BodyParser(&args); err != nil {
 				return err
 			}
@@ -219,12 +219,12 @@ func MyServiceFiber(service MyService) tfiber.RegisterFn {
 		router.Post("/v1/funcString", func(c *fiber.Ctx) error {
 			resp := httpresponse.New()
 			ctx := httpresponse.NewContext(c.Context(), resp)
-			type FuncStringArgs struct {
+			type MyServiceFuncStringArgs struct {
 				Value    string  `json:"value" yaml:"value" msgpack:"value"`
 				Optional *string `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 			}
 
-			var args FuncStringArgs
+			var args MyServiceFuncStringArgs
 			if err := c.BodyParser(&args); err != nil {
 				return err
 			}
@@ -234,12 +234,12 @@ func MyServiceFiber(service MyService) tfiber.RegisterFn {
 		router.Post("/v1/funcI64", func(c *fiber.Ctx) error {
 			resp := httpresponse.New()
 			ctx := httpresponse.NewContext(c.Context(), resp)
-			type FuncI64Args struct {
+			type MyServiceFuncI64Args struct {
 				Value    int64  `json:"value" yaml:"value" msgpack:"value"`
 				Optional *int64 `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 			}
 
-			var args FuncI64Args
+			var args MyServiceFuncI64Args
 			if err := c.BodyParser(&args); err != nil {
 				return err
 			}
@@ -249,12 +249,12 @@ func MyServiceFiber(service MyService) tfiber.RegisterFn {
 		router.Post("/v1/funcI32", func(c *fiber.Ctx) error {
 			resp := httpresponse.New()
 			ctx := httpresponse.NewContext(c.Context(), resp)
-			type FuncI32Args struct {
+			type MyServiceFuncI32Args struct {
 				Value    int32  `json:"value" yaml:"value" msgpack:"value"`
 				Optional *int32 `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 			}
 
-			var args FuncI32Args
+			var args MyServiceFuncI32Args
 			if err := c.BodyParser(&args); err != nil {
 				return err
 			}
@@ -264,12 +264,12 @@ func MyServiceFiber(service MyService) tfiber.RegisterFn {
 		router.Post("/v1/funcI16", func(c *fiber.Ctx) error {
 			resp := httpresponse.New()
 			ctx := httpresponse.NewContext(c.Context(), resp)
-			type FuncI16Args struct {
+			type MyServiceFuncI16Args struct {
 				Value    int16  `json:"value" yaml:"value" msgpack:"value"`
 				Optional *int16 `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 			}
 
-			var args FuncI16Args
+			var args MyServiceFuncI16Args
 			if err := c.BodyParser(&args); err != nil {
 				return err
 			}
@@ -279,12 +279,12 @@ func MyServiceFiber(service MyService) tfiber.RegisterFn {
 		router.Post("/v1/funcI8", func(c *fiber.Ctx) error {
 			resp := httpresponse.New()
 			ctx := httpresponse.NewContext(c.Context(), resp)
-			type FuncI8Args struct {
+			type MyServiceFuncI8Args struct {
 				Value    int8  `json:"value" yaml:"value" msgpack:"value"`
 				Optional *int8 `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 			}
 
-			var args FuncI8Args
+			var args MyServiceFuncI8Args
 			if err := c.BodyParser(&args); err != nil {
 				return err
 			}
@@ -294,12 +294,12 @@ func MyServiceFiber(service MyService) tfiber.RegisterFn {
 		router.Post("/v1/funcU64", func(c *fiber.Ctx) error {
 			resp := httpresponse.New()
 			ctx := httpresponse.NewContext(c.Context(), resp)
-			type FuncU64Args struct {
+			type MyServiceFuncU64Args struct {
 				Value    uint64  `json:"value" yaml:"value" msgpack:"value"`
 				Optional *uint64 `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 			}
 
-			var args FuncU64Args
+			var args MyServiceFuncU64Args
 			if err := c.BodyParser(&args); err != nil {
 				return err
 			}
@@ -309,12 +309,12 @@ func MyServiceFiber(service MyService) tfiber.RegisterFn {
 		router.Post("/v1/funcU32", func(c *fiber.Ctx) error {
 			resp := httpresponse.New()
 			ctx := httpresponse.NewContext(c.Context(), resp)
-			type FuncU32Args struct {
+			type MyServiceFuncU32Args struct {
 				Value    uint32  `json:"value" yaml:"value" msgpack:"value"`
 				Optional *uint32 `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 			}
 
-			var args FuncU32Args
+			var args MyServiceFuncU32Args
 			if err := c.BodyParser(&args); err != nil {
 				return err
 			}
@@ -324,12 +324,12 @@ func MyServiceFiber(service MyService) tfiber.RegisterFn {
 		router.Post("/v1/funcU16", func(c *fiber.Ctx) error {
 			resp := httpresponse.New()
 			ctx := httpresponse.NewContext(c.Context(), resp)
-			type FuncU16Args struct {
+			type MyServiceFuncU16Args struct {
 				Value    uint16  `json:"value" yaml:"value" msgpack:"value"`
 				Optional *uint16 `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 			}
 
-			var args FuncU16Args
+			var args MyServiceFuncU16Args
 			if err := c.BodyParser(&args); err != nil {
 				return err
 			}
@@ -339,12 +339,12 @@ func MyServiceFiber(service MyService) tfiber.RegisterFn {
 		router.Post("/v1/funcU8", func(c *fiber.Ctx) error {
 			resp := httpresponse.New()
 			ctx := httpresponse.NewContext(c.Context(), resp)
-			type FuncU8Args struct {
+			type MyServiceFuncU8Args struct {
 				Value    uint8  `json:"value" yaml:"value" msgpack:"value"`
 				Optional *uint8 `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 			}
 
-			var args FuncU8Args
+			var args MyServiceFuncU8Args
 			if err := c.BodyParser(&args); err != nil {
 				return err
 			}
@@ -354,12 +354,12 @@ func MyServiceFiber(service MyService) tfiber.RegisterFn {
 		router.Post("/v1/funcF64", func(c *fiber.Ctx) error {
 			resp := httpresponse.New()
 			ctx := httpresponse.NewContext(c.Context(), resp)
-			type FuncF64Args struct {
+			type MyServiceFuncF64Args struct {
 				Value    float64  `json:"value" yaml:"value" msgpack:"value"`
 				Optional *float64 `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 			}
 
-			var args FuncF64Args
+			var args MyServiceFuncF64Args
 			if err := c.BodyParser(&args); err != nil {
 				return err
 			}
@@ -369,12 +369,12 @@ func MyServiceFiber(service MyService) tfiber.RegisterFn {
 		router.Post("/v1/funcF32", func(c *fiber.Ctx) error {
 			resp := httpresponse.New()
 			ctx := httpresponse.NewContext(c.Context(), resp)
-			type FuncF32Args struct {
+			type MyServiceFuncF32Args struct {
 				Value    float32  `json:"value" yaml:"value" msgpack:"value"`
 				Optional *float32 `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 			}
 
-			var args FuncF32Args
+			var args MyServiceFuncF32Args
 			if err := c.BodyParser(&args); err != nil {
 				return err
 			}
@@ -384,12 +384,12 @@ func MyServiceFiber(service MyService) tfiber.RegisterFn {
 		router.Post("/v1/funcBytes", func(c *fiber.Ctx) error {
 			resp := httpresponse.New()
 			ctx := httpresponse.NewContext(c.Context(), resp)
-			type FuncBytesArgs struct {
+			type MyServiceFuncBytesArgs struct {
 				Value    []byte `json:"value" yaml:"value" msgpack:"value"`
 				Optional []byte `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`
 			}
 
-			var args FuncBytesArgs
+			var args MyServiceFuncBytesArgs
 			if err := c.BodyParser(&args); err != nil {
 				return err
 			}

@@ -86,6 +86,9 @@ export function isService(context: Context): boolean {
       }) != undefined
     );
   }
+  if (context.operation) {
+    return context.operation.annotation("nocode") != undefined;
+  }
   return false;
 }
 
@@ -152,8 +155,8 @@ export function isEvents(context: Context): boolean {
 }
 
 export function isProvider(context: Context): boolean {
-  if (context.interface) {
-    const { interface: iface } = context;
+  const { interface: iface, operation } = context;
+  if (iface) {
     if (
       iface.annotation("provider") == undefined &&
       iface.annotation("dependency") == undefined &&
@@ -166,6 +169,9 @@ export function isProvider(context: Context): boolean {
         return o.annotation("nocode") == undefined;
       }) != undefined
     );
+  }
+  if (operation && operation.annotation("provider")) {
+    return true;
   }
   return false;
 }
@@ -538,12 +544,30 @@ export function renamed(
   return ret;
 }
 
+export function interfaceTypeName(iface: Interface): string {
+  return capitalize(renamed(iface, iface.name)!);
+}
+
 export function operationTypeName(operation: Operation): string {
   return capitalize(renamed(operation, operation.name)!);
 }
 
+export function operationArgsType(
+  iface: Interface | undefined,
+  operation: Operation,
+  prefix?: string
+): string {
+  return (
+    (prefix || "") +
+    (iface ? interfaceTypeName(iface) : "") +
+    operationTypeName(operation) +
+    "Args"
+  );
+}
+
 export function convertOperationToType(
   tr: TypeResolver,
+  iface: Interface | undefined,
   operation: Operation,
   prefix?: string
 ): Type {
@@ -566,9 +590,7 @@ export function convertOperationToType(
       operation.node.loc,
       new Name(
         operation.node.name.loc,
-        (prefix != undefined ? prefix : "") +
-          operationTypeName(operation) +
-          "Args"
+        operationArgsType(iface, operation, prefix)
       ),
       undefined,
       [],
