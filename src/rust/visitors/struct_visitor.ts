@@ -50,7 +50,11 @@ export class StructVisitor extends SourceGenerator<Type> {
     let serdeAnnotation = "";
     if (useSerde(context.config)) {
       let date_with = "";
-      if (isPrimitive(field.type) && field.type.name === "datetime") {
+      if (
+        isPrimitive(field.type) &&
+        field.type.name === "datetime" &&
+        !this.config.datetime
+      ) {
         date_with = ',with = "time::serde::rfc3339"';
       }
       serdeAnnotation = `#[serde(rename = "${field.name}"${date_with})]`;
