@@ -12,6 +12,7 @@ import {
   ObjectMap,
   Enum,
   Alias,
+  Stream,
 } from "@apexlang/core/model";
 import { rustifyCaps } from "./index.js";
 
@@ -40,6 +41,13 @@ export function apexToRustType(
       const t = typ as Optional;
       const innerType = apexToRustType(t.type, config);
       return `${ref}Option<${innerType}>`;
+    }
+    case Kind.Stream: {
+      const t = typ as Stream;
+      const outputType = apexToRustType(t.type, config);
+      return asRef
+        ? `${ref}dyn Stream<Item=${outputType}>`
+        : `Box<dyn Stream<Item=${outputType}>>`;
     }
     case Kind.Union:
     case Kind.Enum:
