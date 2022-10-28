@@ -8,6 +8,12 @@ import {
   UnionVisitor,
 } from "./visitors";
 
+interface Config {
+  package: string;
+  module: string;
+  imports: string[];
+}
+
 export class DefaultVisitor extends BaseVisitor {
   importVisitor = (writer: Writer): Visitor => new ImportVisitor(writer);
   typeVisitor = (writer: Writer): Visitor => new TypeVisitor(writer);
@@ -15,6 +21,13 @@ export class DefaultVisitor extends BaseVisitor {
   enumVisitor = (writer: Writer): Visitor => new EnumVisitor(writer);
   aliasVisitor = (writer: Writer): Visitor => new AliasVisitor(writer);
   unionVisitor = (writer: Writer): Visitor => new UnionVisitor(writer);
+
+  visitNamespaceBefore(context: Context): void {
+    const config = context.config as Config;
+    const packageName = config.package || "com.apexlang";
+    this.write(`package ${packageName};\n\n`);
+    super.visitNamespaceBefore(context);
+  }
 
   visitNamespace(context: Context) {
     const visitor = this.importVisitor(this.writer);

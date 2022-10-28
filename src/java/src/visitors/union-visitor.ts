@@ -9,7 +9,7 @@ export class UnionVisitor extends BaseVisitor {
 
   visitUnion(context: Context) {
     const union = context.union;
-    this.write(`public static class ${union.name} { \n`);
+    this.write(`public static class ${union.name} {\n`);
     this.write(`\n`);
     union.types.forEach((type) => {
       this.write(

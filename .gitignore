@@ -7,3 +7,4 @@ coverage
 !/testdata/*/actual/go.*
 !/testdata/*/actual/package.*
 !/testdata/*/actual/requirements.txt
+/testdata/java/data/
