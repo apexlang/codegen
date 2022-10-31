@@ -12,15 +12,22 @@ import {
   ObjectMap,
   Enum,
   Alias,
+  Stream,
 } from "@apexlang/core/model";
 import { rustifyCaps } from "./index.js";
 
-export function apexToRustType(typ: AnyType, config: ObjectMap<any>): string {
+export function apexToRustType(
+  typ: AnyType,
+  config: ObjectMap<any>,
+  asRef = false,
+  lifetime = ""
+): string {
+  const ref = asRef ? `&${lifetime} ` : "";
   switch (typ.kind) {
     case Kind.List: {
       const t = typ as List;
       const itemType = apexToRustType(t.type, config);
-      return `Vec<${itemType}>`;
+      return asRef ? `${ref}[${itemType}]` : `Vec<${itemType}>`;
     }
     case Kind.Map: {
       const t = typ as Map;
@@ -28,25 +35,32 @@ export function apexToRustType(typ: AnyType, config: ObjectMap<any>): string {
       const keyType = apexToRustType(t.keyType, config);
       const valueType = apexToRustType(t.valueType, config);
 
-      return `std::collections::HashMap<${keyType},${valueType}>`;
+      return `${ref}std::collections::HashMap<${keyType},${valueType}>`;
     }
     case Kind.Optional: {
       const t = typ as Optional;
       const innerType = apexToRustType(t.type, config);
-      return `Option<${innerType}>`;
+      return `${ref}Option<${innerType}>`;
+    }
+    case Kind.Stream: {
+      const t = typ as Stream;
+      const outputType = apexToRustType(t.type, config);
+      return asRef
+        ? `${ref}dyn Stream<Item=${outputType}>`
+        : `Box<dyn Stream<Item=${outputType}>>`;
     }
     case Kind.Union:
     case Kind.Enum:
     case Kind.Alias:
     case Kind.Type: {
-      return rustifyCaps((typ as Named).name);
+      return `${ref}${rustifyCaps((typ as Named).name)}`;
     }
     case Kind.Void: {
       return "()";
     }
     case Kind.Primitive: {
       const t = typ as Primitive;
-      return primitiveToRust(t, config);
+      return primitiveToRust(t, config, asRef, lifetime);
     }
     default: {
       throw new Error(`Unhandled type conversion for type: ${typ.kind}`);
@@ -54,38 +68,52 @@ export function apexToRustType(typ: AnyType, config: ObjectMap<any>): string {
   }
 }
 
-function primitiveToRust(t: Primitive, config: ObjectMap<any>): string {
+function primitiveToRust(
+  t: Primitive,
+  config: ObjectMap<any>,
+  asRef = false,
+  lifetime = ""
+): string {
+  const ref = asRef ? `&${lifetime} ` : "";
   switch (t.name) {
     case PrimitiveName.Bool:
-      return "bool";
-    case PrimitiveName.Bytes:
-      return config.bytes ? config.bytes : "Vec<u8>";
-    case PrimitiveName.DateTime:
-      return "time::OffsetDateTime";
+      return `${ref}bool`;
+    case PrimitiveName.Bytes: {
+      const typ = config.bytes ? config.bytes : "Vec<u8>";
+      return `${ref}${typ}`;
+    }
+    case PrimitiveName.DateTime: {
+      const typ = config.datetime ? config.datetime : "time::OffsetDateTime";
+      return `${ref}${typ}`;
+    }
     case PrimitiveName.F32:
-      return "f32";
+      return `${ref}f32`;
     case PrimitiveName.F64:
-      return "f64";
+      return `${ref}f64`;
     case PrimitiveName.U64:
-      return "u64";
+      return `${ref}u64`;
     case PrimitiveName.U32:
-      return "u32";
+      return `${ref}u32`;
     case PrimitiveName.U16:
-      return "u16";
+      return `${ref}u16`;
     case PrimitiveName.U8:
-      return "u8";
+      return `${ref}u8`;
     case PrimitiveName.I64:
-      return "i64";
+      return `${ref}i64`;
     case PrimitiveName.I32:
-      return "i32";
+      return `${ref}i32`;
     case PrimitiveName.I16:
-      return "i16";
+      return `${ref}i16`;
     case PrimitiveName.I8:
-      return "i8";
+      return `${ref}i8`;
     case PrimitiveName.String:
-      return "String";
-    case PrimitiveName.Any:
-      return config.anyType ? config.anyType.toString() : "serde_value::Value";
+      return asRef ? `${ref}str` : "String";
+    case PrimitiveName.Any: {
+      const typ = config.anyType
+        ? config.anyType.toString()
+        : "serde_value::Value";
+      return `${ref}${typ}`;
+    }
     default:
       throw new Error(
         `Unhandled primitive type conversion for type: ${t.name}`
