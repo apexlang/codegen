@@ -1,0 +1,7 @@
+spec: ../spec.apexlang
+config:
+  package: actual
+generates:
+  Main.java:
+    module: '@apexlang/codegen/java'
+    visitorClass: DefaultVisitor
