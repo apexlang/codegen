@@ -1,0 +1,935 @@
+openapi: 3.0.3
+info:
+  title: Test Output API
+  description: Apex spec used to test the output of code generators.
+  version: 1.0.0
+  termsOfService: https://api.goodcorp.com/terms/
+  contact:
+    name: API Support
+    url: https://api.goodcorp.com/support
+    email: api@goodcorp.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+paths:
+  /v1:
+    get:
+      operationId: emptyVoid
+      responses:
+        "204":
+          description: No Content
+      tags:
+        - MyService
+  /v1/unaryType:
+    post:
+      operationId: unaryType
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MyType"
+      tags:
+        - MyService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MyType"
+        required: true
+  /v1/unaryEnum:
+    post:
+      operationId: unaryEnum
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MyEnum"
+      tags:
+        - MyService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MyEnum"
+        required: true
+  /v1/unaryAlias:
+    post:
+      operationId: unaryAlias
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+      tags:
+        - MyService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UUID"
+        required: true
+  /v1/unaryString:
+    post:
+      operationId: unaryString
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+      tags:
+        - MyService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+        required: true
+  /v1/unaryI64:
+    post:
+      operationId: unaryI64
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+      tags:
+        - MyService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: integer
+              format: int64
+        required: true
+  /v1/unaryI32:
+    post:
+      operationId: unaryI32
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int32
+      tags:
+        - MyService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: integer
+              format: int32
+        required: true
+  /v1/unaryI16:
+    post:
+      operationId: unaryI16
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int32
+                minimum: -32768
+                maximum: 32767
+      tags:
+        - MyService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: integer
+              format: int32
+              minimum: -32768
+              maximum: 32767
+        required: true
+  /v1/unaryI8:
+    post:
+      operationId: unaryI8
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int32
+                minimum: -128
+                maximum: 127
+      tags:
+        - MyService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: integer
+              format: int32
+              minimum: -128
+              maximum: 127
+        required: true
+  /v1/unaryU64:
+    post:
+      operationId: unaryU64
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+      tags:
+        - MyService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: integer
+              format: int64
+        required: true
+  /v1/unaryU32:
+    post:
+      operationId: unaryU32
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+                maximum: 4294967295
+      tags:
+        - MyService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: integer
+              format: int64
+              maximum: 4294967295
+        required: true
+  /v1/unaryU16:
+    post:
+      operationId: unaryU16
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int32
+                maximum: 65535
+      tags:
+        - MyService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: integer
+              format: int32
+              maximum: 65535
+        required: true
+  /v1/unaryU8:
+    post:
+      operationId: unaryU8
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int32
+                maximum: 255
+      tags:
+        - MyService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: integer
+              format: int32
+              maximum: 255
+        required: true
+  /v1/unaryF64:
+    post:
+      operationId: unaryF64
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: number
+                format: double
+      tags:
+        - MyService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: number
+              format: double
+        required: true
+  /v1/unaryF32:
+    post:
+      operationId: unaryF32
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: number
+                format: float
+      tags:
+        - MyService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: number
+              format: float
+        required: true
+  /v1/unaryBytes:
+    post:
+      operationId: unaryBytes
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+                format: byte
+      tags:
+        - MyService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+              format: byte
+        required: true
+  /v1/funcType:
+    post:
+      operationId: funcType
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MyType"
+      tags:
+        - MyService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                value:
+                  $ref: "#/components/schemas/MyType"
+                optional:
+                  $ref: "#/components/schemas/MyType"
+        required: true
+  /v1/funcEnum:
+    post:
+      operationId: funcAlias
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+      tags:
+        - MyService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                value:
+                  $ref: "#/components/schemas/UUID"
+                optional:
+                  $ref: "#/components/schemas/UUID"
+        required: true
+  /v1/funcString:
+    post:
+      operationId: funcString
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+      tags:
+        - MyService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                value:
+                  type: string
+                optional:
+                  type: string
+              required:
+                - value
+        required: true
+  /v1/funcI64:
+    post:
+      operationId: funcI64
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+      tags:
+        - MyService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                value:
+                  type: integer
+                  format: int64
+                optional:
+                  type: integer
+                  format: int64
+              required:
+                - value
+        required: true
+  /v1/funcI32:
+    post:
+      operationId: funcI32
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int32
+      tags:
+        - MyService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                value:
+                  type: integer
+                  format: int32
+                optional:
+                  type: integer
+                  format: int32
+              required:
+                - value
+        required: true
+  /v1/funcI16:
+    post:
+      operationId: funcI16
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int32
+                minimum: -32768
+                maximum: 32767
+      tags:
+        - MyService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                value:
+                  type: integer
+                  format: int32
+                  minimum: -32768
+                  maximum: 32767
+                optional:
+                  type: integer
+                  format: int32
+                  minimum: -32768
+                  maximum: 32767
+              required:
+                - value
+        required: true
+  /v1/funcI8:
+    post:
+      operationId: funcI8
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int32
+                minimum: -128
+                maximum: 127
+      tags:
+        - MyService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                value:
+                  type: integer
+                  format: int32
+                  minimum: -128
+                  maximum: 127
+                optional:
+                  type: integer
+                  format: int32
+                  minimum: -128
+                  maximum: 127
+              required:
+                - value
+        required: true
+  /v1/funcU64:
+    post:
+      operationId: funcU64
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+      tags:
+        - MyService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                value:
+                  type: integer
+                  format: int64
+                optional:
+                  type: integer
+                  format: int64
+              required:
+                - value
+        required: true
+  /v1/funcU32:
+    post:
+      operationId: funcU32
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+                maximum: 4294967295
+      tags:
+        - MyService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                value:
+                  type: integer
+                  format: int64
+                  maximum: 4294967295
+                optional:
+                  type: integer
+                  format: int64
+                  maximum: 4294967295
+              required:
+                - value
+        required: true
+  /v1/funcU16:
+    post:
+      operationId: funcU16
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int32
+                maximum: 65535
+      tags:
+        - MyService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                value:
+                  type: integer
+                  format: int32
+                  maximum: 65535
+                optional:
+                  type: integer
+                  format: int32
+                  maximum: 65535
+              required:
+                - value
+        required: true
+  /v1/funcU8:
+    post:
+      operationId: funcU8
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int32
+                maximum: 255
+      tags:
+        - MyService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                value:
+                  type: integer
+                  format: int32
+                  maximum: 255
+                optional:
+                  type: integer
+                  format: int32
+                  maximum: 255
+              required:
+                - value
+        required: true
+  /v1/funcF64:
+    post:
+      operationId: funcF64
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: number
+                format: double
+      tags:
+        - MyService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                value:
+                  type: number
+                  format: double
+                optional:
+                  type: number
+                  format: double
+              required:
+                - value
+        required: true
+  /v1/funcF32:
+    post:
+      operationId: funcF32
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: number
+                format: float
+      tags:
+        - MyService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                value:
+                  type: number
+                  format: float
+                optional:
+                  type: number
+                  format: float
+              required:
+                - value
+        required: true
+  /v1/funcBytes:
+    post:
+      operationId: funcBytes
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+                format: byte
+      tags:
+        - MyService
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                value:
+                  type: string
+                  format: byte
+                optional:
+                  type: string
+                  format: byte
+              required:
+                - value
+        required: true
+components:
+  schemas:
+    UUID:
+      type: string
+    MyType:
+      description: MyType is a class
+      type: object
+      properties:
+        sameValue:
+          description: same type value
+          $ref: "#/components/schemas/MyType"
+        typeValue:
+          description: type value
+          $ref: "#/components/schemas/MyOtherType"
+        stringValue:
+          description: string value
+          type: string
+        stringOption:
+          description: string option
+          type: string
+        i64Value:
+          description: i64 value
+          type: integer
+          format: int64
+        i64Option:
+          description: i64 option
+          type: integer
+          format: int64
+        i32Value:
+          description: i32 value
+          type: integer
+          format: int32
+        i32Option:
+          description: i32 option
+          type: integer
+          format: int32
+        i16Value:
+          description: i16 value
+          type: integer
+          format: int32
+          minimum: -32768
+          maximum: 32767
+        i16Option:
+          description: i16 option
+          type: integer
+          format: int32
+          minimum: -32768
+          maximum: 32767
+        i8Value:
+          description: i8 value
+          type: integer
+          format: int32
+          minimum: -128
+          maximum: 127
+        i8Option:
+          description: i8 option
+          type: integer
+          format: int32
+          minimum: -128
+          maximum: 127
+        u64Value:
+          description: u64 value
+          type: integer
+          format: int64
+        u64Option:
+          description: u64 option
+          type: integer
+          format: int64
+        u32Value:
+          description: u32 value
+          type: integer
+          format: int64
+          maximum: 4294967295
+        u32Option:
+          description: u32 option
+          type: integer
+          format: int64
+          maximum: 4294967295
+        u16Value:
+          description: u16 value
+          type: integer
+          format: int32
+          maximum: 65535
+        u16Option:
+          description: u16 option
+          type: integer
+          format: int32
+          maximum: 65535
+        u8Value:
+          description: u8 value
+          type: integer
+          format: int32
+          maximum: 255
+        u8Option:
+          description: u8 option
+          type: integer
+          format: int32
+          maximum: 255
+        f64Value:
+          description: f64 value
+          type: number
+          format: double
+        f64Option:
+          description: f64 option
+          type: number
+          format: double
+        f32Value:
+          description: f32 value
+          type: number
+          format: float
+        f32Option:
+          description: f32 option
+          type: number
+          format: float
+        datetimeValue:
+          description: datetime value
+          type: string
+          format: date-time
+        datetimeOption:
+          description: datetime option
+          type: string
+          format: date-time
+        bytesValue:
+          description: bytes value
+          type: string
+          format: byte
+        bytesOption:
+          description: bytes option
+          type: string
+          format: byte
+        mapValue:
+          description: map value
+          type: object
+          additionalProperties:
+            type: integer
+            format: int64
+        mapOfTypes:
+          description: map of types
+          type: object
+          additionalProperties:
+            $ref: "#/components/schemas/MyType"
+        arrayValue:
+          description: array value
+          type: array
+          items:
+            type: string
+        arrayOfTypes:
+          description: array of types
+          type: array
+          items:
+            $ref: "#/components/schemas/MyType"
+        unionValue:
+          description: union value
+          $ref: "#/components/schemas/MyUnion"
+        unionOption:
+          description: union option
+          $ref: "#/components/schemas/MyUnion"
+        enumValue:
+          description: enum value
+          $ref: "#/components/schemas/MyEnum"
+        enumOption:
+          description: enum option
+          $ref: "#/components/schemas/MyEnum"
+        aliasValue:
+          description: enum value
+          type: string
+        aliasOption:
+          description: enum option
+          type: string
+      required:
+        - typeValue
+        - stringValue
+        - i64Value
+        - i32Value
+        - i16Value
+        - i8Value
+        - u64Value
+        - u32Value
+        - u16Value
+        - u8Value
+        - f64Value
+        - f32Value
+        - datetimeValue
+        - bytesValue
+        - mapValue
+        - mapOfTypes
+        - arrayValue
+        - arrayOfTypes
+        - unionValue
+        - enumValue
+        - aliasValue
+    MyOtherType:
+      type: object
+      properties:
+        foo:
+          type: string
+        bar:
+          type: string
+      required:
+        - foo
+        - bar
+    MyUnion:
+      type: object
+      properties:
+        MyType:
+          $ref: "#/components/schemas/MyType"
+        MyEnum:
+          $ref: "#/components/schemas/MyEnum"
+        string:
+          type: string
+    MyEnum:
+      type: string
+      description: MyEnum is an emuneration
+      enum:
+        - one
+        - TWO
+        - three
+tags:
+  - name: MyService
+servers:
+  - url: https://api.goodcorp.com

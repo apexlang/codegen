@@ -1,0 +1,226 @@
+syntax = "proto3";
+
+package apex.testing;
+
+option go_package = "github.com/apexlang/outputtest/proto";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+
+service MyService {
+  rpc EmptyVoid(google.protobuf.Empty) returns (google.protobuf.Empty) {};
+  rpc UnaryType(MyType) returns (MyType) {};
+  rpc UnaryEnum(MyEnumValue) returns (MyEnumValue) {};
+  rpc UnaryAlias(google.protobuf.StringValue) returns (google.protobuf.StringValue) {};
+  rpc UnaryString(google.protobuf.StringValue) returns (google.protobuf.StringValue) {};
+  rpc UnaryI64(google.protobuf.Int64Value) returns (google.protobuf.Int64Value) {};
+  rpc UnaryI32(google.protobuf.Int32Value) returns (google.protobuf.Int32Value) {};
+  rpc UnaryI16(google.protobuf.Int32Value) returns (google.protobuf.Int32Value) {};
+  rpc UnaryI8(google.protobuf.Int32Value) returns (google.protobuf.Int32Value) {};
+  rpc UnaryU64(google.protobuf.UInt64Value) returns (google.protobuf.UInt64Value) {};
+  rpc UnaryU32(google.protobuf.UInt32Value) returns (google.protobuf.UInt32Value) {};
+  rpc UnaryU16(google.protobuf.UInt32Value) returns (google.protobuf.UInt32Value) {};
+  rpc UnaryU8(google.protobuf.UInt32Value) returns (google.protobuf.UInt32Value) {};
+  rpc UnaryF64(google.protobuf.DoubleValue) returns (google.protobuf.DoubleValue) {};
+  rpc UnaryF32(google.protobuf.FloatValue) returns (google.protobuf.FloatValue) {};
+  rpc UnaryBytes(google.protobuf.BytesValue) returns (google.protobuf.BytesValue) {};
+  rpc FuncType(FuncTypeArgs) returns (MyType) {};
+  rpc FuncEnum(FuncEnumArgs) returns (MyEnumValue) {};
+  rpc FuncAlias(FuncAliasArgs) returns (google.protobuf.StringValue) {};
+  rpc FuncString(FuncStringArgs) returns (google.protobuf.StringValue) {};
+  rpc FuncI64(FuncI64Args) returns (google.protobuf.Int64Value) {};
+  rpc FuncI32(FuncI32Args) returns (google.protobuf.Int32Value) {};
+  rpc FuncI16(FuncI16Args) returns (google.protobuf.Int32Value) {};
+  rpc FuncI8(FuncI8Args) returns (google.protobuf.Int32Value) {};
+  rpc FuncU64(FuncU64Args) returns (google.protobuf.UInt64Value) {};
+  rpc FuncU32(FuncU32Args) returns (google.protobuf.UInt32Value) {};
+  rpc FuncU16(FuncU16Args) returns (google.protobuf.UInt32Value) {};
+  rpc FuncU8(FuncU8Args) returns (google.protobuf.UInt32Value) {};
+  rpc FuncF64(FuncF64Args) returns (google.protobuf.DoubleValue) {};
+  rpc FuncF32(FuncF32Args) returns (google.protobuf.FloatValue) {};
+  rpc FuncBytes(FuncBytesArgs) returns (google.protobuf.BytesValue) {};
+}
+
+// MyType is a class
+message MyType {
+  // same type value
+  optional MyType same_value = 1;
+  // type value
+  MyOtherType type_value = 2;
+  // string value
+  string string_value = 3;
+  // string option
+  optional string string_option = 4;
+  // i64 value
+  int64 i64_value = 5;
+  // i64 option
+  optional int64 i64_option = 6;
+  // i32 value
+  int32 i32_value = 7;
+  // i32 option
+  optional int32 i32_option = 8;
+  // i16 value
+  int32 i16_value = 9;
+  // i16 option
+  optional int32 i16_option = 10;
+  // i8 value
+  int32 i8_value = 11;
+  // i8 option
+  optional int32 i8_option = 12;
+  // u64 value
+  uint64 u64_value = 13;
+  // u64 option
+  optional uint64 u64_option = 14;
+  // u32 value
+  uint32 u32_value = 15;
+  // u32 option
+  optional uint32 u32_option = 16;
+  // u16 value
+  uint32 u16_value = 17;
+  // u16 option
+  optional uint32 u16_option = 18;
+  // u8 value
+  uint32 u8_value = 19;
+  // u8 option
+  optional uint32 u8_option = 20;
+  // f64 value
+  double f64_value = 21;
+  // f64 option
+  optional double f64_option = 22;
+  // f32 value
+  float f32_value = 23;
+  // f32 option
+  optional float f32_option = 24;
+  // datetime value
+  google.protobuf.Timestamp datetime_value = 25;
+  // datetime option
+  optional google.protobuf.Timestamp datetime_option = 26;
+  // bytes value
+  bytes bytes_value = 27;
+  // bytes option
+  optional bytes bytes_option = 28;
+  // map value
+  map<string, int64> map_value = 29;
+  // map of types
+  map<string, MyType> map_of_types = 30;
+  // array value
+  repeated string array_value = 31;
+  // array of types
+  repeated MyType array_of_types = 32;
+  // union value
+  MyUnion union_value = 33;
+  // union option
+  optional MyUnion union_option = 34;
+  // enum value
+  MyEnum enum_value = 35;
+  // enum option
+  optional MyEnum enum_option = 36;
+  // enum value
+  string alias_value = 37;
+  // enum option
+  optional string alias_option = 38;
+}
+
+message MyOtherType {
+  string foo = 1;
+  string bar = 2;
+}
+
+message MyUnion {
+  oneof value {
+    MyType my_type_value = 1;
+    MyEnum my_enum_value = 2;
+    string string_value = 3;
+  }
+}
+
+// MyEnum is an emuneration
+enum MyEnum {
+  // ONE value
+  ONE = 0;
+  // TWO value
+  TWO = 1;
+  // THREE value
+  THREE = 2;
+}
+
+message MyEnumValue {
+  MyEnum value = 1;
+}
+
+message FuncTypeArgs {
+  MyType value = 1;
+  optional MyType optional = 2;
+}
+
+message FuncEnumArgs {
+  MyEnum value = 1;
+  optional MyEnum optional = 2;
+}
+
+message FuncAliasArgs {
+  string value = 1;
+  optional string optional = 2;
+}
+
+message FuncStringArgs {
+  string value = 1;
+  optional string optional = 2;
+}
+
+message FuncI64Args {
+  int64 value = 1;
+  optional int64 optional = 2;
+}
+
+message FuncI32Args {
+  int32 value = 1;
+  optional int32 optional = 2;
+}
+
+message FuncI16Args {
+  int32 value = 1;
+  optional int32 optional = 2;
+}
+
+message FuncI8Args {
+  int32 value = 1;
+  optional int32 optional = 2;
+}
+
+message FuncU64Args {
+  uint64 value = 1;
+  optional uint64 optional = 2;
+}
+
+message FuncU32Args {
+  uint32 value = 1;
+  optional uint32 optional = 2;
+}
+
+message FuncU16Args {
+  uint32 value = 1;
+  optional uint32 optional = 2;
+}
+
+message FuncU8Args {
+  uint32 value = 1;
+  optional uint32 optional = 2;
+}
+
+message FuncF64Args {
+  double value = 1;
+  optional double optional = 2;
+}
+
+message FuncF32Args {
+  float value = 1;
+  optional float optional = 2;
+}
+
+message FuncBytesArgs {
+  bytes value = 1;
+  optional bytes optional = 2;
+}
+
