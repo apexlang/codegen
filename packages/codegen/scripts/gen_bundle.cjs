@@ -16,7 +16,7 @@ async function main() {
   const files = [];
   for (const dir of deps) {
     // add/update module in package.json dependencies;
-    pkg.dependencies[dir] = `file://../${dir}`;
+    pkg.dependencies[`@apexlang/${dir}`] = `file://../${dir}`;
 
     // add export line to our index.js src
     indexSrc.push(`export * as ${camelCase(dir)} from "@apexlang/${dir}";`);
@@ -31,7 +31,7 @@ async function main() {
   files.push([path.join(root, "src", "index.ts"), indexSrc.join("\n")]);
 
   // add our package.json src to list of files to write.
-  files.push([path.join(root, "package.json"), JSON.stringify(pkg)]);
+  files.push([path.join(root, "package.json"), JSON.stringify(pkg, null, 2)]);
 
   // write files.
   for (const pair of files) {

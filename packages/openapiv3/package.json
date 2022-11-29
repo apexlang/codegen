@@ -54,13 +54,12 @@
   },
   "dependencies": {
     "@apexlang/core": "^0.1.1",
-    "@apexlang/rest": "file://../rest",
-    "@apexlang/utils": "file://../utils",
     "openapi3-ts": "^2.0.2",
-    "yaml": "^1.10.2"
+    "yaml": "^1.10.2",
+    "@apexlang/rest": "file://../rest",
+    "@apexlang/utils": "file://../utils"
   },
   "devDependencies": {
-    "@types/jest": "^29.2.3",
     "@types/node": "^18.7.23",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",

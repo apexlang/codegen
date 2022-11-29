@@ -2,8 +2,8 @@ node_modules
 dist
 docs
 coverage
-testdata/*/actual/*
+packages/codegen/testdata/*/actual/*
 
-!testdata/*/actual/go.*
-!testdata/*/actual/package.*
-!testdata/*/actual/requirements.txt
+!packages/codegen/testdata/*/actual/go.*
+!packages/codegen/testdata/*/actual/package.*
+!packages/codegen/testdata/*/actual/requirements.txt

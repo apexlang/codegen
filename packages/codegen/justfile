@@ -1,0 +1,6 @@
+
+build:
+  npm run build
+
+apex-install: build
+  apex install file:.
