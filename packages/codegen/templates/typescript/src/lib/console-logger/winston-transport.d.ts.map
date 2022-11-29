@@ -1,1 +1,0 @@
-{"version":3,"file":"winston-transport.d.ts","sourceRoot":"","sources":["winston-transport.ts"],"names":[],"mappings":"AACA,OAAO,SAAS,MAAM,mBAAmB,CAAC;AAY1C,MAAM,CAAC,OAAO,OAAO,mBAAoB,SAAQ,SAAS;IACxD,OAAO,CAAC,MAAM,CAAuB;IAErC,GAAG,CAAC,IAAI,EAAE,GAAG,EAAE,QAAQ,EAAE;QAAE,IAAI,IAAI,CAAA;KAAE;CAWtC"}
