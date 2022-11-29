@@ -1,4 +1,4 @@
-const fs = require("fs-extra");
+const fs = require("fs");
 const path = require("path");
 
 const root = path.join(__dirname, "..");
@@ -8,8 +8,8 @@ function camelCase(str) {
   return str.replace(/\-(\w)/g, (match, a) => a.toUpperCase());
 }
 
-async function main() {
-  const dirs = await fs.readdir(path.join(root, ".."));
+function main() {
+  const dirs = fs.readdirSync(path.join(root, ".."));
   const deps = dirs.filter((dir) => dir !== "codegen");
 
   const indexSrc = [];
@@ -36,7 +36,7 @@ async function main() {
   // write files.
   for (const pair of files) {
     console.log(`Writing ${pair[0]}...`);
-    await fs.writeFile(pair[0], pair[1]);
+    fs.writeFileSync(pair[0], pair[1]);
   }
 }
 
