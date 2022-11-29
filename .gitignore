@@ -7,3 +7,5 @@ packages/codegen/testdata/*/actual/*
 !packages/codegen/testdata/*/actual/go.*
 !packages/codegen/testdata/*/actual/package.*
 !packages/codegen/testdata/*/actual/requirements.txt
+
+pnpm-publish-summary.json

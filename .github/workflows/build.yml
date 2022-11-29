@@ -49,7 +49,7 @@ jobs:
 
       - name: Validate generated OpenAPI
         run: find . -name 'openapi.yaml' -exec swagger-cli validate {} \;
-        working-directory: ./testdata
+        working-directory: ./packages/codegen/testdata
 
       - run: just integration
 
