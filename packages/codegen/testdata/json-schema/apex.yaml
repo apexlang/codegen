@@ -1,5 +1,5 @@
 spec: ../spec.apexlang
 generates:
   schema-test.json:
-    module: "@apexlang/codegen/json-schema"
+    module: "../../../json-schema"
     visitorClass: JsonSchemaVisitor

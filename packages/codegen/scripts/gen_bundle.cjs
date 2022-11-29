@@ -16,7 +16,7 @@ async function main() {
   const files = [];
   for (const dir of deps) {
     // add/update module in package.json dependencies;
-    pkg.dependencies[`@apexlang/${dir}`] = `file://../${dir}`;
+    pkg.dependencies[`@apexlang/${dir}`] = `file:../${dir}`;
 
     // add export line to our index.js src
     indexSrc.push(`export * as ${camelCase(dir)} from "@apexlang/${dir}";`);

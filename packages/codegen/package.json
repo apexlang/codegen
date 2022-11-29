@@ -37,7 +37,9 @@
   "sideEffects": false,
   "scripts": {
     "devbuild": "npm run format:fix && npm run build && apex install file:.",
-    "prebuild": "npm run clean && node scripts/gen_bundle.cjs",
+    "preinstall": "npm run codegen",
+    "prebuild": "npm run clean && npm run codegen",
+    "codegen": "node scripts/gen_bundle.cjs",
     "build": "tsc",
     "watch": "tsc -w",
     "clean": "shx rm -rf dist",
@@ -54,16 +56,16 @@
     "prerelease": "npm run build"
   },
   "dependencies": {
-    "@apexlang/cs": "file://../cs",
-    "@apexlang/go": "file://../go",
-    "@apexlang/json-schema": "file://../json-schema",
-    "@apexlang/openapiv3": "file://../openapiv3",
-    "@apexlang/proto": "file://../proto",
-    "@apexlang/python": "file://../python",
-    "@apexlang/rest": "file://../rest",
-    "@apexlang/rust": "file://../rust",
-    "@apexlang/typescript": "file://../typescript",
-    "@apexlang/utils": "file://../utils"
+    "@apexlang/cs": "file:../cs",
+    "@apexlang/go": "file:../go",
+    "@apexlang/json-schema": "file:../json-schema",
+    "@apexlang/openapiv3": "file:../openapiv3",
+    "@apexlang/proto": "file:../proto",
+    "@apexlang/python": "file:../python",
+    "@apexlang/rest": "file:../rest",
+    "@apexlang/rust": "file:../rust",
+    "@apexlang/typescript": "file:../typescript",
+    "@apexlang/utils": "file:../utils"
   },
   "devDependencies": {
     "@types/jest": "^29.2.3",

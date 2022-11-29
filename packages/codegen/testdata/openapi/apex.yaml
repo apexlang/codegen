@@ -1,5 +1,5 @@
 spec: ../spec.apexlang
 generates:
   openapi.yaml:
-    module: "@apexlang/codegen/openapiv3"
+    module: "../../../openapiv3"
     visitorClass: OpenAPIV3Visitor

@@ -4,3 +4,6 @@ build:
 
 apex-install: build
   apex install file:.
+
+test: build
+  npm run test:snapshot

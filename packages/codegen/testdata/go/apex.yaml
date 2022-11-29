@@ -13,10 +13,10 @@ config:
     interface: logr.Logger
 generates:
   openapi.yaml:
-    module: '@apexlang/codegen/openapiv3'
+    module: "../../../openapiv3"
     visitorClass: OpenAPIV3Visitor
   proto/service.proto:
-    module: '@apexlang/codegen/proto'
+    module: "../../../proto"
     visitorClass: ProtoVisitor
     config:
       options:
@@ -30,34 +30,34 @@ generates:
           --go-grpc_opt=paths=source_relative
           proto/service.proto
   pkg/outputtest/interfaces.go:
-    module: '@apexlang/codegen/go'
+    module: "../../../go"
     visitorClass: InterfacesVisitor
   pkg/outputtest/msgpack.go:
-    module: '@apexlang/codegen/go'
+    module: "../../../go"
     visitorClass: MsgPackVisitor
   pkg/outputtest/fiber.go:
-    module: '@apexlang/codegen/go'
+    module: "../../../go"
     visitorClass: FiberVisitor
   pkg/outputtest/grpc.go:
-    module: '@apexlang/codegen/go'
+    module: "../../../go"
     visitorClass: GRPCVisitor
     config:
       protoPackage: github.com/apexlang/outputtest/proto
   pkg/outputtest/services.go:
     #ifNotExists: true
-    module: '@apexlang/codegen/go'
+    module: "../../../go"
     visitorClass: ScaffoldVisitor
     config:
       types:
         - service
   pkg/outputtest/repositories.go:
     #ifNotExists: true
-    module: '@apexlang/codegen/go'
+    module: "../../../go"
     visitorClass: ScaffoldVisitor
     config:
       names:
         - Repository
   cmd/main.go:
     #ifNotExists: false  # Change to true to control dependency injection
-    module: '@apexlang/codegen/go'
+    module: "../../../go"
     visitorClass: MainVisitor

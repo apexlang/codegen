@@ -28,9 +28,3 @@ just build
 ```
 just test
 ```
-
-## Install local build for apex
-
-```
-just apex-install
-```

@@ -12,16 +12,16 @@ importers:
 
   packages/codegen:
     specifiers:
-      '@apexlang/cs': file://../cs
-      '@apexlang/go': file://../go
-      '@apexlang/json-schema': file://../json-schema
-      '@apexlang/openapiv3': file://../openapiv3
-      '@apexlang/proto': file://../proto
-      '@apexlang/python': file://../python
-      '@apexlang/rest': file://../rest
-      '@apexlang/rust': file://../rust
-      '@apexlang/typescript': file://../typescript
-      '@apexlang/utils': file://../utils
+      '@apexlang/cs': file:///../cs
+      '@apexlang/go': file:///../go
+      '@apexlang/json-schema': file:///../json-schema
+      '@apexlang/openapiv3': file:///../openapiv3
+      '@apexlang/proto': file:///../proto
+      '@apexlang/python': file:///../python
+      '@apexlang/rest': file:///../rest
+      '@apexlang/rust': file:///../rust
+      '@apexlang/typescript': file:///../typescript
+      '@apexlang/utils': file:///../utils
       '@types/jest': ^29.2.3
       '@types/node': ^18.7.23
       '@typescript-eslint/eslint-plugin': ^4.22.0

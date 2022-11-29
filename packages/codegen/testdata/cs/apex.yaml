@@ -1,29 +1,29 @@
 spec: ../spec.apexlang
 generates:
   pkg/outputtest/main.cs:
-    module: '@apexlang/codegen/cs'
+    module: "../../../cs"
     visitorClass: MainVisitor
   pkg/outputtest/interfaces.cs:
-    module: '@apexlang/codegen/cs'
+    module: "../../../cs"
     visitorClass: InterfacesVisitor
   pkg/outputtest/apis.cs:
-    module: '@apexlang/codegen/cs'
+    module: "../../../cs"
     visitorClass: MinimalAPIVisitor
   pkg/outputtest/repositories.cs:
-    module: '@apexlang/codegen/cs'
+    module: "../../../cs"
     visitorClass: ScaffoldVisitor
     config:
       names:
         - Repository
   pkg/outputtest/services.cs:
-    module: '@apexlang/codegen/cs'
+    module: "../../../cs"
     visitorClass: ScaffoldVisitor
     config:
       types:
         - service
   cmd/index.cs:
     #ifNotExists: false  # Change to true to control dependency injection
-    module: '@apexlang/codegen/cs'
+    module: "../../../cs"
     visitorClass: IndexVisitor
     config:
       names:
