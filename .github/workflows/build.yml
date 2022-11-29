@@ -17,13 +17,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+      - uses: extractions/setup-just@v1
       - uses: actions/setup-node@v1
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
-      - run: npm install
-      #- run: npm run lint
-      - run: npm run build
+      - run: just install
+      - run: just build
+      - run: just unit
 
       - uses: actions/setup-go@v3
         with:
@@ -50,7 +51,7 @@ jobs:
         run: find . -name 'openapi.yaml' -exec swagger-cli validate {} \;
         working-directory: ./testdata
 
-      - run: npm run test
+      - run: just integration
 
       - name: Is Release?
         if: startswith(github.ref, 'refs/tags/v')

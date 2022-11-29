@@ -8,7 +8,14 @@ watch:
   npx pnpm -r watch
 
 test:
-  npx pnpm -r test
+  just unit
+  just integration
+
+unit:
+  npx pnpm -r test:unit
+
+integration:
+  npx pnpm run --filter codegen test:snapshot
 
 apex-install:
   just packages/codegen/apex-install
