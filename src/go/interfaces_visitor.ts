@@ -15,13 +15,13 @@ limitations under the License.
 */
 
 import { BaseVisitor, Context, Visitor, Writer } from "@apexlang/core/model";
-import { EnumVisitor } from "./enum_visitor.js";
-import { StructVisitor } from "./struct_visitor.js";
-import { ImportsVisitor } from "./imports_visitor.js";
-import { AliasVisitor } from "./alias_visitor.js";
-import { isHandler, isProvider } from "../utils/index.js";
-import { UnionVisitor } from "./union_visitor.js";
-import { InterfaceVisitor } from "./interface_visitor.js";
+import { EnumVisitor } from "./enum_visitor.ts";
+import { StructVisitor } from "./struct_visitor.ts";
+import { ImportsVisitor } from "./imports_visitor.ts";
+import { AliasVisitor } from "./alias_visitor.ts";
+import { isHandler, isProvider } from "../utils/index.ts";
+import { UnionVisitor } from "./union_visitor.ts";
+import { InterfaceVisitor } from "./interface_visitor.ts";
 
 export class InterfacesVisitor extends BaseVisitor {
   // Overridable visitor implementations

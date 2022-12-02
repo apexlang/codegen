@@ -32,8 +32,8 @@ import {
   isVoid,
   pascalCase,
   noCode,
-} from "../utils/index.js";
-import { defaultValueForType, expandType, mapArg, mapArgs } from "./helpers.js";
+} from "../utils/index.ts";
+import { defaultValueForType, expandType, mapArg, mapArgs } from "./helpers.ts";
 
 export class ScaffoldVisitor extends BaseVisitor {
   visitNamespaceBefore(context: Context): void {

@@ -34,11 +34,11 @@ import {
   isObject,
   isService,
   unwrapKinds,
-} from "../utils/index.js";
-import { getMethods, getPath, hasBody } from "../rest/index.js";
-import { StructVisitor } from "./struct_visitor.js";
-import { expandType, fieldName, methodName } from "./helpers.js";
-import { Import, translateAlias } from "./alias_visitor.js";
+} from "../utils/index.ts";
+import { getMethods, getPath, hasBody } from "../rest/index.ts";
+import { StructVisitor } from "./struct_visitor.ts";
+import { expandType, fieldName, methodName } from "./helpers.ts";
+import { Import, translateAlias } from "./alias_visitor.ts";
 
 export class FiberVisitor extends BaseVisitor {
   visitNamespaceBefore(context: Context): void {

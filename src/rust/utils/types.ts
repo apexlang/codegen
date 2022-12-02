@@ -13,8 +13,8 @@ import {
   Enum,
   Alias,
   Stream,
-} from "@apexlang/core/model";
-import { rustifyCaps } from "./index.js";
+} from "../../../../apex-js/src/model/index.ts";
+import { rustifyCaps } from "./index.ts";
 
 export function apexToRustType(
   typ: AnyType,

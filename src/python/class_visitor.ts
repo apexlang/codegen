@@ -15,8 +15,8 @@ limitations under the License.
 */
 
 import { Context, BaseVisitor, Kind } from "@apexlang/core/model";
-import { expandType, defValue } from "./helpers.js";
-import { formatComment, snakeCase } from "../utils/index.js";
+import { expandType, defValue } from "./helpers.ts";
+import { formatComment, snakeCase } from "../utils/index.ts";
 
 export class ClassVisitor extends BaseVisitor {
   visitTypeBefore(context: Context): void {

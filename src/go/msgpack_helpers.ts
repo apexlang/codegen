@@ -28,9 +28,9 @@ import {
   PrimitiveName,
   Enum,
 } from "@apexlang/core/model";
-import { Import, translateAlias } from "./alias_visitor.js";
-import { translations } from "./constant.js";
-import { expandType, fieldName, returnShare } from "./helpers.js";
+import { Import, translateAlias } from "./alias_visitor.ts";
+import { translations } from "./constant.ts";
+import { expandType, fieldName, returnShare } from "./helpers.ts";
 import {
   msgpackCastFuncs,
   msgpackCastNillableFuncs,
@@ -38,7 +38,7 @@ import {
   msgpackDecodeNillableFuncs,
   msgpackEncodeFuncs,
   msgpackEncodeNillableFuncs,
-} from "./msgpack_constants.js";
+} from "./msgpack_constants.ts";
 
 /**
  * Creates string that is an msgpack read code block

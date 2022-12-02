@@ -14,6 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-export * from "./proto_visitor.js";
+export * from "./proto_visitor.ts";
 
-export { ProtoVisitor as default } from "./proto_visitor.js";
+export { ProtoVisitor as default } from "./proto_visitor.ts";

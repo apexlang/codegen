@@ -24,7 +24,7 @@ import {
   Optional,
   AnyType,
 } from "@apexlang/core/model";
-import { Import } from "./alias_visitor.js";
+import { Import } from "./alias_visitor.ts";
 
 export class ImportsVisitor extends BaseVisitor {
   private imports: { [key: string]: Import } = {};

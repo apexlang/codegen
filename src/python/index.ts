@@ -14,15 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-export * from "./args_visitor.js";
-export * from "./class_visitor.js";
-export * from "./handler_visitor.js";
-export * from "./helpers.js";
-export * from "./interface_visitor.js";
-export * from "./interfaces_visitor.js";
-export * from "./provider_visitor.js";
-export * from "./scaffold_visitor.js";
-export * from "./wrapper_visitor.js";
-export * from "./constant.js";
+export * from "./args_visitor.ts";
+export * from "./class_visitor.ts";
+export * from "./handler_visitor.ts";
+export * from "./helpers.ts";
+export * from "./interface_visitor.ts";
+export * from "./interfaces_visitor.ts";
+export * from "./provider_visitor.ts";
+export * from "./scaffold_visitor.ts";
+export * from "./wrapper_visitor.ts";
+export * from "./constant.ts";
 
-export { InterfacesVisitor as default } from "./interfaces_visitor.js";
+export { InterfacesVisitor as default } from "./interfaces_visitor.ts";

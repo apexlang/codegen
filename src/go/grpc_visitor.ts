@@ -43,10 +43,10 @@ import {
   operationArgsType,
   pascalCase,
   unwrapKinds,
-} from "../utils/index.js";
-import { Import } from "./alias_visitor.js";
-import { expandType, fieldName, methodName, returnShare } from "./helpers.js";
-import { StructVisitor } from "./struct_visitor.js";
+} from "../utils/index.ts";
+import { Import } from "./alias_visitor.ts";
+import { expandType, fieldName, methodName, returnShare } from "./helpers.ts";
+import { StructVisitor } from "./struct_visitor.ts";
 
 export type NamedType = Alias | Type | Union | Enum;
 

@@ -15,8 +15,8 @@ limitations under the License.
 */
 
 import { BaseVisitor, Context } from "@apexlang/core/model";
-import { expandType } from "./helpers.js";
-import { formatComment } from "../utils/index.js";
+import { expandType } from "./helpers.ts";
+import { formatComment } from "../utils/index.ts";
 
 export interface Import {
   type?: boolean;

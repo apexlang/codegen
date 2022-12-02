@@ -15,10 +15,10 @@ limitations under the License.
 */
 
 import { Context, BaseVisitor } from "@apexlang/core/model";
-import { ClassVisitor } from "./class_visitor.js";
-import { InterfaceVisitor } from "./interface_visitor.js";
-import { AliasVisitor } from "./alias_visitor.js";
-import { ImportsVisitor } from "./imports_visitor.js";
+import { ClassVisitor } from "./class_visitor.ts";
+import { InterfaceVisitor } from "./interface_visitor.ts";
+import { AliasVisitor } from "./alias_visitor.ts";
+import { ImportsVisitor } from "./imports_visitor.ts";
 
 export class InterfacesVisitor extends BaseVisitor {
   visitNamespaceBefore(context: Context): void {

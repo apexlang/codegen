@@ -26,14 +26,14 @@ import {
   List,
   Map,
 } from "@apexlang/core/model";
-import { defaultValueForType, expandType, mapArg, mapArgs } from "./helpers.js";
+import { defaultValueForType, expandType, mapArg, mapArgs } from "./helpers.ts";
 import {
   isHandler,
   isProvider,
   noCode,
   isVoid,
   snakeCase,
-} from "../utils/index.js";
+} from "../utils/index.ts";
 
 export class ScaffoldVisitor extends BaseVisitor {
   visitNamespaceBefore(context: Context): void {

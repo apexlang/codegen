@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 import { Context, BaseVisitor } from "@apexlang/core/model";
-import { formatComment, pascalCase } from "../utils/index.js";
+import { formatComment, pascalCase } from "../utils/index.ts";
 
 export class EnumVisitor extends BaseVisitor {
   visitEnumBefore(context: Context): void {
