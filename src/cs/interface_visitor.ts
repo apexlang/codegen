@@ -1,4 +1,4 @@
-import { BaseVisitor, Context } from "@apexlang/core/model";
+import { BaseVisitor, Context } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
 import { formatComment, pascalCase } from "../utils";
 import { expandType } from "./helpers";
 

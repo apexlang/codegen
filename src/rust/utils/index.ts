@@ -29,7 +29,7 @@ export function rustifyCaps(name: string): string {
   return base;
 }
 
-import { ObjectMap } from "../../../../apex-js/src/model/index.ts";
+import { ObjectMap } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
 
 export type visibility = "pub" | "pub(crate)" | "";
 

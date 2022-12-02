@@ -1,4 +1,4 @@
-import { BaseVisitor, Context } from "@apexlang/core/model";
+import { BaseVisitor, Context } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
 import { isService, pascalCase } from "../utils";
 import { translations } from "./constant";
 import { PathDirective } from "../rest";

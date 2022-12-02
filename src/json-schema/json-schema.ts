@@ -1,4 +1,4 @@
-import { Named } from "@apexlang/core/dist/ast";
+import { Named } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/dist/ast";
 import {
   BaseVisitor,
   Context,
@@ -11,7 +11,7 @@ import {
   List,
   Map,
   Optional,
-} from "@apexlang/core/model";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
 import { SchemaObject, ReferenceObject } from "openapi3-ts";
 import { convertArrayToObject } from "../utils/index.ts";
 

@@ -1,7 +1,7 @@
 // This Visitor generates the Main method, which is the entry point for C# code.
 
-import { BaseVisitor } from "@apexlang/core/model";
-import { Context } from "@apexlang/core/dist/model";
+import { BaseVisitor } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
+import { Context } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/dist/model";
 import { parseNamespaceName } from "./helpers";
 
 export class MainVisitor extends BaseVisitor {

@@ -8,7 +8,7 @@ import {
   Optional,
   Primitive,
   ObjectMap,
-} from "@apexlang/core/model";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
 
 /**
  * Convert an Apex type to a type suitable for the destination format.

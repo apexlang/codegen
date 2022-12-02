@@ -24,7 +24,7 @@ import {
   Map,
   Writer,
   AnyType,
-} from "@apexlang/core/model";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
 import {
   camelCase,
   isHandler,

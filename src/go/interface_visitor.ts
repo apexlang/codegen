@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, Context } from "@apexlang/core/model";
+import { BaseVisitor, Context } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
 import { expandType, mapParam, methodName, returnPointer } from "./helpers.ts";
 import { translateAlias } from "./alias_visitor.ts";
 import { formatComment, isVoid, noCode } from "../utils/index.ts";

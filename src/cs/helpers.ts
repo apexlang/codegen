@@ -5,7 +5,7 @@ import {
   Map,
   Named,
   Optional,
-} from "@apexlang/core/model";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
 import { pascalCase } from "../utils";
 import { translations } from "./constant";
 

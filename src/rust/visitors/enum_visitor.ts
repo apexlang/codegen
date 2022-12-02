@@ -1,4 +1,4 @@
-import { Context, Enum, ObjectMap, Type } from "../../../../apex-js/src/model/index.ts";
+import { Context, Enum, ObjectMap, Type } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
 import { IndexTypeDirective } from "../directives.ts";
 import {
   customAttributes,

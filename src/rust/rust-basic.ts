@@ -1,4 +1,4 @@
-import { Context, Writer } from "../../../apex-js/src/model/index.ts";
+import { Context, Writer } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
 import { ContextWriter } from "./visitors/base.ts";
 import { StructVisitor } from "./visitors/struct_visitor.ts";
 import {

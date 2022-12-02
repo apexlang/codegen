@@ -31,7 +31,7 @@ import {
   List,
   Field,
   Writer,
-} from "@apexlang/core/model";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
 import {
   capitalize,
   convertOperationToType,

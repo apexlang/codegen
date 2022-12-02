@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Context, BaseVisitor, Writer } from "@apexlang/core/model";
+import { Context, BaseVisitor, Writer } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
 import { expandType, mapArg, mapArgs } from "./helpers.ts";
 import { camelCase, formatComment } from "../utils/index.ts";
 

@@ -1,7 +1,7 @@
 // This Visitor generates how final output should look like by combining all the visitors together
 
-import { BaseVisitor, Context } from "@apexlang/core/model";
-import { Visitor, Writer } from "@apexlang/core/dist/model";
+import { BaseVisitor, Context } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
+import { Visitor, Writer } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/dist/model";
 import { InterfacesVisitor } from "./interfaces_visitor";
 import { MinimalAPIVisitor } from "./api_visitor";
 import { ScaffoldVisitor } from "./scaffold_visitor";

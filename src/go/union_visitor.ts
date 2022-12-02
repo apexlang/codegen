@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Context, BaseVisitor, Annotated } from "@apexlang/core/model";
+import { Context, BaseVisitor, Annotated } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
 import { formatComment, pascalCase, typeName } from "../utils/index.ts";
 import { expandType, fieldName } from "./helpers.ts";
 

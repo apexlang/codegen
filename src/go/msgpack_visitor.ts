@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, Context, Kind, Writer } from "@apexlang/core/model";
+import { BaseVisitor, Context, Kind, Writer } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
 import {
   convertOperationToType,
   convertUnionToType,
@@ -70,7 +70,7 @@ export class MsgPackVisitor extends BaseVisitor {
       }
     }
     this.write(`)
-    
+
     var _ = convert.Package\n\n`);
     super.triggerNamespaceBefore(context);
   }

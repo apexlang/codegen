@@ -26,7 +26,7 @@ import {
   Map,
   List,
   Optional,
-} from "../../../apex-js/src/model/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
 import { isNamed, isService } from "./utilities.ts";
 
 export class ExposedTypesVisitor extends BaseVisitor {

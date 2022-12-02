@@ -1,4 +1,4 @@
-import { Context, Interface, ObjectMap, Operation } from "../../../../apex-js/src/model/index.ts";
+import { Context, Interface, ObjectMap, Operation } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
 import {
   customAttributes,
   rustDoc,

@@ -8,7 +8,7 @@ import {
   Union,
   Writer,
   Interface,
-} from "../../../../apex-js/src/model/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
 
 export type VisitorTypes = Alias | Type | Union | Enum | Interface;
 

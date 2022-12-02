@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, Context, Visitor, Writer } from "@apexlang/core/model";
+import { BaseVisitor, Context, Visitor, Writer } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
 import { EnumVisitor } from "./enum_visitor.ts";
 import { StructVisitor } from "./struct_visitor.ts";
 import { ImportsVisitor } from "./imports_visitor.ts";

@@ -5,7 +5,7 @@ import {
   Named,
   ObjectMap,
   Union,
-} from "../../../../apex-js/src/model/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
 import { codegenType, isNamed, isRecursiveType } from "../../utils/index.ts";
 import {
   rustDoc,

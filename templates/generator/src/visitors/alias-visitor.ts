@@ -1,4 +1,4 @@
-import { Alias, Context } from "@apexlang/core/model";
+import { Alias, Context } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
 import { convertDescription } from "../utils/conversions.js";
 import { convertType } from "../utils/types.js";
 

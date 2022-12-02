@@ -34,7 +34,7 @@ import {
   Named,
   Interface,
   Void,
-} from "../../../apex-js/src/model/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
 import {
   FieldDefinition,
   Name,
@@ -46,7 +46,7 @@ import {
   MapType,
   Stream as StreamType,
   StringValue,
-} from "../../../apex-js/src/ast/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/ast/index.ts";
 
 export function isOneOfType(context: Context, types: string[]): boolean {
   if (context.interface) {

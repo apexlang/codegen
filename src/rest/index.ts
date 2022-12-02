@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Context, Operation } from "@apexlang/core/model";
+import { Context, Operation } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
 
 export interface PathDirective {
   value: string;

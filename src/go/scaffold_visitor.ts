@@ -26,7 +26,7 @@ import {
   Alias,
   PrimitiveName,
   Type,
-} from "@apexlang/core/model";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
 import {
   defaultValueForType,
   expandType,

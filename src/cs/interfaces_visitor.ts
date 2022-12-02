@@ -1,4 +1,4 @@
-import { BaseVisitor, Context, Visitor, Writer } from "@apexlang/core/model";
+import { BaseVisitor, Context, Visitor, Writer } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
 import { TypeVisitor } from "./types_visitor";
 import { InterfaceVisitor } from "./interface_visitor";
 import { parseNamespaceName } from "./helpers";

@@ -32,7 +32,7 @@ import {
   PrimitiveName,
   Interface,
   Stream,
-} from "@apexlang/core/model";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
 import { capitalize, renamed } from "../utils/index.ts";
 import { Import } from "./alias_visitor.ts";
 import { translations } from "./constant.ts";

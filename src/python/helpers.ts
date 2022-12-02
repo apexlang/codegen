@@ -29,7 +29,7 @@ import {
   Alias,
   Primitive,
   PrimitiveName,
-} from "@apexlang/core/model";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
 import { capitalize, snakeCase } from "../utils/index.ts";
 import { translations } from "./constant.ts";
 

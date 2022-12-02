@@ -13,7 +13,7 @@ import {
   Enum,
   Alias,
   Stream,
-} from "../../../../apex-js/src/model/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
 import { rustifyCaps } from "./index.ts";
 
 export function apexToRustType(

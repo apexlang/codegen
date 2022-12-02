@@ -1,4 +1,4 @@
-import { ObjectMap, Operation, Parameter } from "@apexlang/core/model";
+import { ObjectMap, Operation, Parameter } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
 import * as utils from "@apexlang/codegen/utils";
 import { convertType } from "./types";
 

@@ -23,7 +23,7 @@ import {
   Map,
   Optional,
   AnyType,
-} from "@apexlang/core/model";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
 import { Import } from "./alias_visitor.ts";
 
 export class ImportsVisitor extends BaseVisitor {

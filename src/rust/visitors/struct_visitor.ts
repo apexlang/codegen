@@ -1,4 +1,4 @@
-import { Context, Kind, ObjectMap, Type } from "../../../../apex-js/src/model/index.ts";
+import { Context, Kind, ObjectMap, Type } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
 import { isPrimitive, isRecursiveType } from "../../utils/index.ts";
 import {
   rustDoc,

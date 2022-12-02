@@ -1,4 +1,4 @@
-import { Context, Interface } from "@apexlang/core/model";
+import { Context, Interface } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
 import { convertDescription, convertOperation } from "../utils/conversions.js";
 
 import { SourceGenerator } from "./base.js";
