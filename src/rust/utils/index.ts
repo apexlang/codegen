@@ -1,6 +1,6 @@
-import { pascalCase, snakeCase } from "../../utils/index.js";
+import { pascalCase, snakeCase } from "../../utils/index.ts";
 
-export * as types from "./types.js";
+export * as types from "./types.ts";
 
 export function rustDoc(doc?: string): string {
   return doc ? `/// ${doc}` : "";
@@ -29,7 +29,7 @@ export function rustifyCaps(name: string): string {
   return base;
 }
 
-import { ObjectMap } from "@apexlang/core/model";
+import { ObjectMap } from "../../../../apex-js/src/model/index.ts";
 
 export type visibility = "pub" | "pub(crate)" | "";
 

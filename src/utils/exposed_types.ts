@@ -26,8 +26,8 @@ import {
   Map,
   List,
   Optional,
-} from "@apexlang/core/model";
-import { isNamed, isService } from "./utilities.js";
+} from "../../../apex-js/src/model/index.ts";
+import { isNamed, isService } from "./utilities.ts";
 
 export class ExposedTypesVisitor extends BaseVisitor {
   found: Set<string> = new Set<string>();

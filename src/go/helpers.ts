@@ -33,9 +33,9 @@ import {
   Interface,
   Stream,
 } from "@apexlang/core/model";
-import { capitalize, renamed } from "../utils/index.js";
-import { Import } from "./alias_visitor.js";
-import { translations } from "./constant.js";
+import { capitalize, renamed } from "../utils/index.ts";
+import { Import } from "./alias_visitor.ts";
+import { translations } from "./constant.ts";
 
 /**
  * Takes an array of ValuedDefintions and returns a string based on supplied params.

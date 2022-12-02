@@ -14,8 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Context, BaseVisitor, Writer } from "@apexlang/core/model";
-import { formatComment, pascalCase } from "../utils/index.js";
+import { Context, BaseVisitor } from "@apexlang/core/model";
+import { formatComment, pascalCase } from "../utils/index.ts";
 
 export class EnumVisitor extends BaseVisitor {
   private writeTypeInfo: boolean;

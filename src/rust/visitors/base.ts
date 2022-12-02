@@ -8,7 +8,7 @@ import {
   Union,
   Writer,
   Interface,
-} from "@apexlang/core/model";
+} from "../../../../apex-js/src/model/index.ts";
 
 export type VisitorTypes = Alias | Type | Union | Enum | Interface;
 

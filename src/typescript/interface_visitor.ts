@@ -15,8 +15,8 @@ limitations under the License.
 */
 
 import { Context, BaseVisitor, Writer } from "@apexlang/core/model";
-import { expandType, mapArg, mapArgs } from "./helpers.js";
-import { camelCase, formatComment } from "../utils/index.js";
+import { expandType, mapArg, mapArgs } from "./helpers.ts";
+import { camelCase, formatComment } from "../utils/index.ts";
 
 export class InterfaceVisitor extends BaseVisitor {
   private stateful: boolean;

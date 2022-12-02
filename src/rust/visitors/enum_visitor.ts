@@ -1,13 +1,13 @@
-import { Context, Enum, ObjectMap, Type } from "@apexlang/core/model";
-import { IndexTypeDirective } from "../directives.js";
+import { Context, Enum, ObjectMap, Type } from "../../../../apex-js/src/model/index.ts";
+import { IndexTypeDirective } from "../directives.ts";
 import {
   customAttributes,
   rustDoc,
   rustifyCaps,
   trimLines,
-} from "../utils/index.js";
-import { deriveDirective, visibility } from "../utils/index.js";
-import { SourceGenerator } from "./base.js";
+} from "../utils/index.ts";
+import { deriveDirective, visibility } from "../utils/index.ts";
+import { SourceGenerator } from "./base.ts";
 
 export class EnumVisitor extends SourceGenerator<Enum> {
   hasDisplayValues = false;

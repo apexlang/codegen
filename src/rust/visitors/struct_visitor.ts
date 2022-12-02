@@ -1,5 +1,5 @@
-import { Context, Kind, ObjectMap, Type } from "@apexlang/core/model";
-import { isPrimitive, isRecursiveType } from "../../utils/index.js";
+import { Context, Kind, ObjectMap, Type } from "../../../../apex-js/src/model/index.ts";
+import { isPrimitive, isRecursiveType } from "../../utils/index.ts";
 import {
   rustDoc,
   rustify,
@@ -10,9 +10,9 @@ import {
   visibility,
   types,
   customAttributes,
-} from "../utils/index.js";
+} from "../utils/index.ts";
 
-import { SourceGenerator } from "./base.js";
+import { SourceGenerator } from "./base.ts";
 
 export class StructVisitor extends SourceGenerator<Type> {
   config: ObjectMap<any>;

@@ -35,15 +35,15 @@ import {
   receiver,
   returnPointer,
   returnShare,
-} from "./helpers.js";
+} from "./helpers.ts";
 import {
   camelCase,
   hasServiceCode,
   isOneOfType,
   isVoid,
   noCode,
-} from "../utils/index.js";
-import { Import, translateAlias } from "./alias_visitor.js";
+} from "../utils/index.ts";
+import { Import, translateAlias } from "./alias_visitor.ts";
 
 interface Logger {
   import: string;

@@ -14,6 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-export * from "./openapiv3.js";
+export * from "./openapiv3.ts";
 
-export { OpenAPIV3Visitor as default } from "./openapiv3.js";
+export { OpenAPIV3Visitor as default } from "./openapiv3.ts";

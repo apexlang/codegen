@@ -15,8 +15,8 @@ limitations under the License.
 */
 
 import { Context, BaseVisitor, Annotated } from "@apexlang/core/model";
-import { formatComment, pascalCase, typeName } from "../utils/index.js";
-import { expandType, fieldName } from "./helpers.js";
+import { formatComment, pascalCase, typeName } from "../utils/index.ts";
+import { expandType, fieldName } from "./helpers.ts";
 
 interface UnionKey {
   value: string;

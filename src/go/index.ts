@@ -14,23 +14,23 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-export * from "./alias_visitor.js";
-export * from "./constant.js";
-export * from "./enum_visitor.js";
-export * from "./fiber_visitor.js";
-export * from "./grpc_visitor.js";
-export * from "./helpers.js";
-export * from "./imports_visitor.js";
-export * from "./interface_visitor.js";
-export * from "./interfaces_visitor.js";
-export * from "./main_visitor.js";
-export * from "./scaffold_visitor.js";
-export * from "./struct_visitor.js";
-export * from "./union_visitor.js";
-export * from "./msgpack_visitor.js";
-export * from "./msgpack_constants.js";
-export * from "./msgpack_decoder_visitor.js";
-export * from "./msgpack_encoder_visitor.js";
-export * from "./msgpack_helpers.js";
+export * from "./alias_visitor.ts";
+export * from "./constant.ts";
+export * from "./enum_visitor.ts";
+export * from "./fiber_visitor.ts";
+export * from "./grpc_visitor.ts";
+export * from "./helpers.ts";
+export * from "./imports_visitor.ts";
+export * from "./interface_visitor.ts";
+export * from "./interfaces_visitor.ts";
+export * from "./main_visitor.ts";
+export * from "./scaffold_visitor.ts";
+export * from "./struct_visitor.ts";
+export * from "./union_visitor.ts";
+export * from "./msgpack_visitor.ts";
+export * from "./msgpack_constants.ts";
+export * from "./msgpack_decoder_visitor.ts";
+export * from "./msgpack_encoder_visitor.ts";
+export * from "./msgpack_helpers.ts";
 
-export { InterfacesVisitor as default } from "./interfaces_visitor.js";
+export { InterfacesVisitor as default } from "./interfaces_visitor.ts";

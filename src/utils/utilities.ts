@@ -34,7 +34,7 @@ import {
   Named,
   Interface,
   Void,
-} from "@apexlang/core/model";
+} from "../../../apex-js/src/model/index.ts";
 import {
   FieldDefinition,
   Name,
@@ -46,7 +46,7 @@ import {
   MapType,
   Stream as StreamType,
   StringValue,
-} from "@apexlang/core/ast";
+} from "../../../apex-js/src/ast/index.ts";
 
 export function isOneOfType(context: Context, types: string[]): boolean {
   if (context.interface) {

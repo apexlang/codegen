@@ -5,8 +5,8 @@ import {
   Named,
   ObjectMap,
   Union,
-} from "@apexlang/core/model";
-import { codegenType, isNamed, isRecursiveType } from "../../utils/index.js";
+} from "../../../../apex-js/src/model/index.ts";
+import { codegenType, isNamed, isRecursiveType } from "../../utils/index.ts";
 import {
   rustDoc,
   rustifyCaps,
@@ -15,9 +15,9 @@ import {
   visibility,
   types,
   customAttributes,
-} from "../utils/index.js";
+} from "../utils/index.ts";
 
-import { SourceGenerator } from "./base.js";
+import { SourceGenerator } from "./base.ts";
 
 function getTypeName(t: AnyType): string {
   if (isNamed(t)) {

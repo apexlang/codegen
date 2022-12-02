@@ -21,9 +21,9 @@ import {
   Kind,
   Named,
 } from "@apexlang/core/model";
-import { expandType, fieldName } from "./helpers.js";
-import { translateAlias } from "./alias_visitor.js";
-import { formatComment } from "../utils/index.js";
+import { expandType, fieldName } from "./helpers.ts";
+import { translateAlias } from "./alias_visitor.ts";
+import { formatComment } from "../utils/index.ts";
 
 interface Serialize {
   value: string;

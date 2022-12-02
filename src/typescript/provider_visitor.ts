@@ -15,14 +15,14 @@ limitations under the License.
 */
 
 import { Context, BaseVisitor } from "@apexlang/core/model";
-import { expandType, strQuote } from "./helpers.js";
+import { expandType, strQuote } from "./helpers.ts";
 import {
   capitalize,
   camelCase,
   formatComment,
   isProvider,
   isVoid,
-} from "../utils/index.js";
+} from "../utils/index.ts";
 
 export class ProviderVisitor extends BaseVisitor {
   visitInterfaceBefore(context: Context): void {

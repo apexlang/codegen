@@ -15,8 +15,8 @@ limitations under the License.
 */
 
 import { Context, BaseVisitor } from "@apexlang/core/model";
-import { expandType } from "./helpers.js";
-import { formatComment, noCode, isVoid, snakeCase } from "../utils/index.js";
+import { expandType } from "./helpers.ts";
+import { formatComment, noCode, isVoid, snakeCase } from "../utils/index.ts";
 
 export class HandlerVisitor extends BaseVisitor {
   visitInterfaceBefore(context: Context): void {

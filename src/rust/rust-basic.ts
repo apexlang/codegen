@@ -1,12 +1,12 @@
-import { Context, Writer } from "@apexlang/core/model";
-import { ContextWriter } from "./visitors/base.js";
-import { StructVisitor } from "./visitors/struct_visitor.js";
+import { Context, Writer } from "../../../apex-js/src/model/index.ts";
+import { ContextWriter } from "./visitors/base.ts";
+import { StructVisitor } from "./visitors/struct_visitor.ts";
 import {
   genOperation,
   InterfaceVisitor,
-} from "./visitors/interface_visitor.js";
-import { EnumVisitor } from "./visitors/enum_visitor.js";
-import { UnionVisitor } from "./visitors/union_visitor.js";
+} from "./visitors/interface_visitor.ts";
+import { EnumVisitor } from "./visitors/enum_visitor.ts";
+import { UnionVisitor } from "./visitors/union_visitor.ts";
 import {
   customAttributes,
   deriveDirective,
@@ -15,11 +15,11 @@ import {
   rustifyCaps,
   trimLines,
   types,
-} from "./utils/index.js";
-import { visibility } from "./utils/index.js";
-import * as utils from "../utils/index.js";
+} from "./utils/index.ts";
+import { visibility } from "./utils/index.ts";
+import * as utils from "../utils/index.ts";
 
-export class RustBasic extends ContextWriter {
+export default class RustBasic extends ContextWriter {
   constructor(writer: Writer) {
     super(writer);
   }

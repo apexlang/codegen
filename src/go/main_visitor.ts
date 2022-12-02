@@ -19,7 +19,7 @@ import {
   camelCase,
   InterfaceUsesVisitor,
   UsesVisitor,
-} from "../utils/index.js";
+} from "../utils/index.ts";
 
 interface Config {
   http: Listener;
