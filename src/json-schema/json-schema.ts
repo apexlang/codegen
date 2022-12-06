@@ -1,4 +1,4 @@
-import { Named } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/dist/ast";
+import { Named } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/ast/index.ts";
 import {
   BaseVisitor,
   Context,
@@ -11,8 +11,12 @@ import {
   List,
   Map,
   Optional,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
-import { SchemaObject, ReferenceObject } from "openapi3-ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+import {
+  SchemaObject,
+  ReferenceObject,
+  ArraySchemaObject,
+} from "https://deno.land/x/openapi@0.1.0/mod.ts";
 import { convertArrayToObject } from "../utils/index.ts";
 
 interface Definitions {
@@ -39,13 +43,12 @@ type JsonSchemaRoot = SchemaObject &
   PatternProperties &
   Definitions;
 type JsonSchemaDef = SchemaObject & ReferenceType & PatternProperties;
+type Mutable<T> = { -readonly [P in keyof T]: T[P] };
 
 export class JsonSchemaVisitor extends BaseVisitor {
   protected path: string = "";
   protected method: string = "";
-  protected schema: JsonSchemaRoot = {
-    $schema: "https://json-schema.org/draft/2020-12/schema",
-  };
+  protected schema: Mutable<JsonSchemaRoot> = {};
 
   constructor(writer: Writer) {
     super(writer);
@@ -106,7 +109,7 @@ class TypeVisitor extends BaseVisitor {
   }
 
   visitTypeField(context: Context): void {
-    const def: SchemaObject | ReferenceObject = {};
+    const def: Mutable<SchemaObject | ReferenceObject> = {};
     if (context.field.description) {
       def.description = context.field.description;
     }
@@ -165,14 +168,10 @@ class UnionVisitor extends BaseVisitor {
       }
     );
 
-    const unionObject: SchemaObject | ReferenceObject = {
-      oneOf: arr,
-    };
-
     const schema: SchemaObject = {
       description: union.description,
       type: JsonSchemaType.Object,
-      properties: unionObject,
+      oneOf: arr,
     };
     this.def = schema;
   }
@@ -188,7 +187,6 @@ class AliasVisitor extends BaseVisitor {
   visitAlias(context: Context): void {
     const schema: SchemaObject = {
       description: context.alias.description,
-      name: context.alias.name,
     };
 
     decorateType(schema, context.alias.type);
@@ -220,13 +218,14 @@ enum JsonSchemaTypeFormat {
 }
 
 function decorateType(
-  def: JsonSchemaDef,
+  def: Mutable<JsonSchemaDef>,
   typ: AnyType
 ): [SchemaObject, boolean] {
   let required = true;
   switch (typ.kind) {
     case Kind.List: {
       const t = typ as List;
+      def = def as Mutable<ArraySchemaObject>;
       def.type = JsonSchemaType.Array;
       const [listType, _isRequired] = decorateType({}, t.type);
       def.items = listType;
@@ -265,6 +264,7 @@ function decorateType(
           break;
         case PrimitiveName.Bytes:
           def.type = JsonSchemaType.Array;
+          def = def as Mutable<ArraySchemaObject>;
           def.items = { type: "number" };
           break;
         case PrimitiveName.DateTime:

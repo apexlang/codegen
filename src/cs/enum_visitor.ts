@@ -14,8 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, Context } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
-import { formatComment, pascalCase } from "../utils";
+import {
+  BaseVisitor,
+  Context,
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+import { formatComment, pascalCase } from "../utils/index.ts";
 
 export class EnumVisitor extends BaseVisitor {
   visitEnumBefore(context: Context) {

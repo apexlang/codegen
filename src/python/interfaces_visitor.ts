@@ -24,7 +24,7 @@ import {
   Alias,
   Visitor,
   AnyType,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
 import { ClassVisitor } from "./class_visitor.ts";
 import { InterfaceVisitor } from "./interface_visitor.ts";
 import { isHandler, isProvider, visitNamed } from "../utils/index.ts";

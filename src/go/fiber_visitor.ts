@@ -26,7 +26,7 @@ import {
   Primitive,
   PrimitiveName,
   Type,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
 import {
   capitalize,
   convertOperationToType,

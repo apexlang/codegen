@@ -1,6 +1,9 @@
-import { formatComment, isOneOfType, pascalCase } from "../utils";
-import { BaseVisitor, Context } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
-import { expandType, parseNamespaceName } from "./helpers";
+import { formatComment, isOneOfType, pascalCase } from "../utils/index.ts";
+import {
+  BaseVisitor,
+  Context,
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+import { expandType, parseNamespaceName } from "./helpers.ts";
 
 export class ScaffoldVisitor extends BaseVisitor {
   // visitNamespaceBefore(context: Context) {

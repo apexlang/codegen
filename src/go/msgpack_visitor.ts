@@ -14,19 +14,24 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, Context, Kind, Writer } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
+import {
+  BaseVisitor,
+  Context,
+  Kind,
+  Writer,
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
 import {
   convertOperationToType,
   convertUnionToType,
   uncapitalize,
-} from "../utils";
-import { Import } from "./alias_visitor";
-import { MsgPackDecoderVisitor } from "./msgpack_decoder_visitor";
+} from "../utils/index.ts";
+import { Import } from "./alias_visitor.ts";
+import { MsgPackDecoderVisitor } from "./msgpack_decoder_visitor.ts";
 import {
   MsgPackEncoderUnionVisitor,
   MsgPackEncoderVisitor,
-} from "./msgpack_encoder_visitor";
-import { StructVisitor } from "./struct_visitor";
+} from "./msgpack_encoder_visitor.ts";
+import { StructVisitor } from "./struct_visitor.ts";
 
 export class MsgPackVisitor extends BaseVisitor {
   constructor(writer: Writer) {

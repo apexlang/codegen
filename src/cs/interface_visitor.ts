@@ -1,6 +1,9 @@
-import { BaseVisitor, Context } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
-import { formatComment, pascalCase } from "../utils";
-import { expandType } from "./helpers";
+import {
+  BaseVisitor,
+  Context,
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+import { formatComment, pascalCase } from "../utils/index.ts";
+import { expandType } from "./helpers.ts";
 
 export class InterfaceVisitor extends BaseVisitor {
   visitInterfaceBefore(context: Context) {

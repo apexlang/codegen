@@ -30,7 +30,7 @@ import {
   Alias,
   Annotated,
   Named,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
 import { capitalize, renamed } from "../utils/index.ts";
 import { defaultForAlias } from "./alias_visitor.ts";
 import { translations } from "./constant.ts";

@@ -1,12 +1,12 @@
-export * from "./api_visitor";
-export * from "./types_visitor";
-export * from "./scaffold_visitor";
-export * from "./interface_visitor";
-export * from "./interfaces_visitor";
-export * from "./main_visitor";
-export * from "./index_visitor";
-export * from "./enum_visitor";
-export * from "./union_visitor";
-export * from "./alias_visitor";
+export * from "./api_visitor.ts";
+export * from "./types_visitor.ts";
+export * from "./scaffold_visitor.ts";
+export * from "./interface_visitor.ts";
+export * from "./interfaces_visitor.ts";
+export * from "./main_visitor.ts";
+export * from "./index_visitor.ts";
+export * from "./enum_visitor.ts";
+export * from "./union_visitor.ts";
+export * from "./alias_visitor.ts";
 
-export { InterfacesVisitor as default } from "./interfaces_visitor";
+export { InterfacesVisitor as default } from "./interfaces_visitor.ts";

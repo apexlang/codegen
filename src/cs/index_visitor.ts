@@ -1,12 +1,18 @@
 // This Visitor generates how final output should look like by combining all the visitors together
 
-import { BaseVisitor, Context } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
-import { Visitor, Writer } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/dist/model";
-import { InterfacesVisitor } from "./interfaces_visitor";
-import { MinimalAPIVisitor } from "./api_visitor";
-import { ScaffoldVisitor } from "./scaffold_visitor";
-import { MainVisitor } from "./main_visitor";
-import { TypeVisitor } from "./types_visitor";
+import {
+  BaseVisitor,
+  Context,
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+import {
+  Visitor,
+  Writer,
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+import { InterfacesVisitor } from "./interfaces_visitor.ts";
+import { MinimalAPIVisitor } from "./api_visitor.ts";
+import { ScaffoldVisitor } from "./scaffold_visitor.ts";
+import { MainVisitor } from "./main_visitor.ts";
+import { TypeVisitor } from "./types_visitor.ts";
 
 export class IndexVisitor extends BaseVisitor {
   apiVisitor = (writer: Writer): Visitor => new MinimalAPIVisitor(writer);

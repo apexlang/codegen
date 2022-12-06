@@ -20,7 +20,7 @@ import {
   Writer,
   Kind,
   Named,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
 import { expandType, fieldName } from "./helpers.ts";
 import { translateAlias } from "./alias_visitor.ts";
 import { formatComment } from "../utils/index.ts";

@@ -5,9 +5,9 @@ import {
   Map,
   Named,
   Optional,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
-import { pascalCase } from "../utils";
-import { translations } from "./constant";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+import { pascalCase } from "../utils/index.ts";
+import { translations } from "./constant.ts";
 
 export const expandType = (type: AnyType): string => {
   switch (type.kind) {

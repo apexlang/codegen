@@ -1,8 +1,11 @@
-import { BaseVisitor, Context } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
-import { isService, pascalCase } from "../utils";
-import { translations } from "./constant";
-import { PathDirective } from "../rest";
-import { expandType, parseNamespaceName } from "./helpers";
+import {
+  BaseVisitor,
+  Context,
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+import { isService, pascalCase } from "../utils/index.ts";
+import { translations } from "./constant.ts";
+import { PathDirective } from "../rest/index.ts";
+import { expandType, parseNamespaceName } from "./helpers.ts";
 
 export class MinimalAPIVisitor extends BaseVisitor {
   visitNamespaceBefore(context: Context) {

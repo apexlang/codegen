@@ -1,10 +1,15 @@
-import { BaseVisitor, Context, Visitor, Writer } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
-import { TypeVisitor } from "./types_visitor";
-import { InterfaceVisitor } from "./interface_visitor";
-import { parseNamespaceName } from "./helpers";
-import { EnumVisitor } from "./enum_visitor";
-import { UnionVisitor } from "./union_visitor";
-import { AliasVisitor } from "./alias_visitor";
+import {
+  BaseVisitor,
+  Context,
+  Visitor,
+  Writer,
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+import { TypeVisitor } from "./types_visitor.ts";
+import { InterfaceVisitor } from "./interface_visitor.ts";
+import { parseNamespaceName } from "./helpers.ts";
+import { EnumVisitor } from "./enum_visitor.ts";
+import { UnionVisitor } from "./union_visitor.ts";
+import { AliasVisitor } from "./alias_visitor.ts";
 
 export class InterfacesVisitor extends BaseVisitor {
   typeVisitor = (writer: Writer): Visitor => new TypeVisitor(writer);

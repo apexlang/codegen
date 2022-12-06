@@ -30,7 +30,7 @@ import {
   Writer,
   Enum,
   Alias,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
 import {
   snakeCase,
   pascalCase,

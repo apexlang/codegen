@@ -25,7 +25,7 @@ import {
   Alias,
   List,
   Map,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
 import { defaultValueForType, expandType, mapArg, mapArgs } from "./helpers.ts";
 import {
   isHandler,

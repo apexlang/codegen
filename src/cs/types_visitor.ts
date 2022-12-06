@@ -14,9 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Argument, BaseVisitor, Context } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
-import { camelCase, formatComment, pascalCase } from "../utils";
-import { expandType } from "./helpers";
+import {
+  Argument,
+  BaseVisitor,
+  Context,
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+import { camelCase, formatComment, pascalCase } from "../utils/index.ts";
+import { expandType } from "./helpers.ts";
 
 export class TypeVisitor extends BaseVisitor {
   visitTypeBefore(context: Context): void {

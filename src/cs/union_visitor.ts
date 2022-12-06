@@ -14,9 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, Context } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
-import { formatComment, pascalCase } from "../utils";
-import { expandType } from "../go";
+import {
+  BaseVisitor,
+  Context,
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+import { formatComment, pascalCase } from "../utils/index.ts";
+import { expandType } from "../go/index.ts";
 
 export class UnionVisitor extends BaseVisitor {
   visitUnion(context: Context): void {

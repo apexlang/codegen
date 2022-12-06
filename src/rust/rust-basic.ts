@@ -1,4 +1,7 @@
-import { Context, Writer } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+import {
+  Context,
+  Writer,
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
 import { ContextWriter } from "./visitors/base.ts";
 import { StructVisitor } from "./visitors/struct_visitor.ts";
 import {
@@ -19,7 +22,7 @@ import {
 import { visibility } from "./utils/index.ts";
 import * as utils from "../utils/index.ts";
 
-export default class RustBasic extends ContextWriter {
+export class RustBasic extends ContextWriter {
   constructor(writer: Writer) {
     super(writer);
   }
