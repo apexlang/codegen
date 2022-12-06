@@ -25,6 +25,10 @@ import { expandType, fieldName } from "./helpers.js";
 import { translateAlias } from "./alias_visitor.js";
 import { formatComment } from "../utils/index.js";
 
+interface Serialize {
+  value: string;
+}
+
 export class StructVisitor extends BaseVisitor {
   private writeTypeInfo: boolean;
 
@@ -56,15 +60,23 @@ export class StructVisitor extends BaseVisitor {
         ? "*"
         : "";
 
+    let fieldNameTag = field.name;
+    field.annotation("serialize", (a) => {
+      fieldNameTag = a.convert<Serialize>().value;
+    });
+
+    const mapstructure =
+      context.config.mapstructureTag == true
+        ? ` mapstructure:"${fieldNameTag}"`
+        : ``;
+
     this.write(
       `\t${fieldName(field, field.name)} ${ptr}${expandType(
         field.type!,
         packageName,
         true,
         translateAlias(context)
-      )} \`json:"${field.name}${omitempty}" yaml:"${
-        field.name
-      }${omitempty}" msgpack:"${field.name}${omitempty}"`
+      )} \`json:"${fieldNameTag}${omitempty}" yaml:"${fieldNameTag}${omitempty}" msgpack:"${fieldNameTag}${omitempty}"${mapstructure}`
     );
     this.triggerCallbacks(context, "StructTags");
     this.write(`\`\n`);

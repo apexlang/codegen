@@ -265,6 +265,12 @@ export const expandType = (
       )}`;
     case Kind.Optional:
       const nestedType = (type as Optional).type;
+      if (nestedType.kind == Kind.Primitive) {
+        const p = nestedType as Primitive;
+        if (p.name == PrimitiveName.Any) {
+          return "interface{}";
+        }
+      }
       let expanded = expandType(nestedType, packageName, true, translate);
       if (
         useOptional &&
@@ -274,6 +280,9 @@ export const expandType = (
           expanded == "[]byte"
         )
       ) {
+        if (expanded.startsWith("*")) {
+          expanded = expanded.substring(1);
+        }
         return `*${expanded}`;
       }
       return expanded;

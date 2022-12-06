@@ -14,10 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Context, BaseVisitor } from "@apexlang/core/model";
+import { Context, BaseVisitor, Writer } from "@apexlang/core/model";
 import { formatComment, pascalCase } from "../utils/index.js";
 
 export class EnumVisitor extends BaseVisitor {
+  private writeTypeInfo: boolean;
+
+  constructor(writer: Writer, writeTypeInfo: boolean = false) {
+    super(writer);
+    this.writeTypeInfo = writeTypeInfo;
+  }
+
   visitEnumBefore(context: Context): void {
     super.triggerEnumsBefore(context);
     this.write(formatComment("// ", context.enum.description));
@@ -46,11 +53,13 @@ export class EnumVisitor extends BaseVisitor {
     const toIDVisitor = new EnumVisitorToIDMap(this.writer);
     context.enum.accept(context, toIDVisitor);
 
-    this.write(`func (e ${context.enum.name}) Type() string {
-      return "${context.enum.name}"
+    if (this.writeTypeInfo) {
+      this.write(`func (e ${context.enum.name}) Type() string {
+        return "${context.enum.name}"
+      }\n\n`);
     }
 
-    func (e ${context.enum.name}) String() string {
+    this.write(`func (e ${context.enum.name}) String() string {
       str, ok := toString${context.enum.name}[e]
       if !ok {
         return "unknown"
@@ -58,9 +67,13 @@ export class EnumVisitor extends BaseVisitor {
       return str
     }
 
-    func (e *${context.enum.name}) FromString(str string) (ok bool) {
+    func (e *${context.enum.name}) FromString(str string) error {
+      var ok bool
       *e, ok = toID${context.enum.name}[str]
-      return ok
+      if !ok {
+        return fmt.Errorf("unknown value %q for ${context.enum.name}", str)
+      }
+      return nil
     }\n\n`);
 
     const jsonSupport = context.config.noEnumJSON
@@ -79,10 +92,7 @@ func (e *${context.enum.name}) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
-  if !e.FromString(str) {
-		return fmt.Errorf("unknown value %q for ${context.enum.name}", str)
-	}
-	return nil
+  return e.FromString(str)
 }
 \n\n`);
     }
