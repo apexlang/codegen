@@ -44,7 +44,7 @@ import {
 } from "https://deno.land/x/openapi@0.1.0/mod.ts";
 
 import { SummaryDirective } from "./directives.ts";
-import { dump } from "https://deno.land/x/js_yaml_port@3.14.0/js-yaml.js";
+import * as yaml from "https://deno.land/std@0.167.0/encoding/yaml.ts";
 import {
   convertArrayToObject,
   ExposedTypesVisitor,
@@ -106,16 +106,17 @@ const removeEmpty = (obj: any): any => {
 export class OpenAPIV3Visitor extends BaseVisitor {
   private root: Mutable<Document> = {
     openapi: "3.0.3",
+    info: { title: "", version: "" },
+    servers: undefined,
+    paths: {},
     tags: [],
     components: {},
-    info: { title: "", version: "" },
-    paths: {},
   };
   private paths: { [path: string]: Mutable<PathItemObject> } = {};
   private schemas: { [name: string]: SchemaObject | ReferenceObject } = {};
 
-  protected path: string = "";
-  protected method: string = "";
+  protected path = "";
+  protected method = "";
   protected operation?: Mutable<OperationObject>;
   protected parameter?: Mutable<ParameterObject>;
 
@@ -140,7 +141,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
     if (filename.toLowerCase().endsWith(".json")) {
       this.write(JSON.stringify(contents, null, 2));
     } else {
-      this.write(dump(contents));
+      this.write(yaml.stringify(contents, { sortKeys: false }));
     }
   }
 

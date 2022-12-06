@@ -46,8 +46,8 @@ type JsonSchemaDef = SchemaObject & ReferenceType & PatternProperties;
 type Mutable<T> = { -readonly [P in keyof T]: T[P] };
 
 export class JsonSchemaVisitor extends BaseVisitor {
-  protected path: string = "";
-  protected method: string = "";
+  protected path = "";
+  protected method = "";
   protected schema: Mutable<JsonSchemaRoot> = {};
 
   constructor(writer: Writer) {
@@ -59,7 +59,7 @@ export class JsonSchemaVisitor extends BaseVisitor {
     this.schema.title = context.namespace.name;
   }
 
-  visitNamespaceAfter(context: Context): void {
+  visitNamespaceAfter(_context: Context): void {
     this.write(JSON.stringify(this.schema.valueOf(), null, 2));
   }
 
@@ -113,7 +113,7 @@ class TypeVisitor extends BaseVisitor {
     if (context.field.description) {
       def.description = context.field.description;
     }
-    let [_def, isRequired] = decorateType(def, context.field.type);
+    const [_def, isRequired] = decorateType(def, context.field.type);
     if (isRequired) {
       this.def.required!.push(context.field.name!);
     }
@@ -148,7 +148,7 @@ class UnionVisitor extends BaseVisitor {
 
   visitUnion(context: Context): void {
     const { union } = context;
-    let arr: SchemaObject[] = [];
+    const arr: SchemaObject[] = [];
     convertArrayToObject(
       union.types,
       (t: AnyType) => {

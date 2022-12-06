@@ -3,20 +3,22 @@ info:
   title: Test Output API
   description: Apex spec used to test the output of code generators.
   version: 1.0.0
-  termsOfService: https://api.goodcorp.com/terms/
+  termsOfService: 'https://api.goodcorp.com/terms/'
   contact:
     name: API Support
-    url: https://api.goodcorp.com/support
+    url: 'https://api.goodcorp.com/support'
     email: api@goodcorp.com
   license:
     name: Apache 2.0
-    url: https://www.apache.org/licenses/LICENSE-2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0'
+servers:
+  - url: 'https://api.goodcorp.com'
 paths:
   /v1:
     get:
       operationId: emptyVoid
       responses:
-        "204":
+        '204':
           description: No Content
       tags:
         - MyService
@@ -29,14 +31,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/MyType"
+                $ref: '#/components/schemas/MyType'
       tags:
         - MyService
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/MyType"
+              $ref: '#/components/schemas/MyType'
         required: true
   /v1/unaryEnum:
     post:
@@ -47,14 +49,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/MyEnum"
+                $ref: '#/components/schemas/MyEnum'
       tags:
         - MyService
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/MyEnum"
+              $ref: '#/components/schemas/MyEnum'
         required: true
   /v1/unaryAlias:
     post:
@@ -72,7 +74,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UUID"
+              $ref: '#/components/schemas/UUID'
         required: true
   /v1/unaryString:
     post:
@@ -335,7 +337,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/MyType"
+                $ref: '#/components/schemas/MyType'
       tags:
         - MyService
       requestBody:
@@ -344,9 +346,9 @@ paths:
             schema:
               properties:
                 value:
-                  $ref: "#/components/schemas/MyType"
+                  $ref: '#/components/schemas/MyType'
                 optional:
-                  $ref: "#/components/schemas/MyType"
+                  $ref: '#/components/schemas/MyType'
         required: true
   /v1/funcEnum:
     post:
@@ -366,9 +368,9 @@ paths:
             schema:
               properties:
                 value:
-                  $ref: "#/components/schemas/UUID"
+                  $ref: '#/components/schemas/UUID'
                 optional:
-                  $ref: "#/components/schemas/UUID"
+                  $ref: '#/components/schemas/UUID'
         required: true
   /v1/funcString:
     post:
@@ -712,6 +714,8 @@ paths:
               required:
                 - value
         required: true
+tags:
+  - name: MyService
 components:
   schemas:
     UUID:
@@ -722,10 +726,10 @@ components:
       properties:
         sameValue:
           description: same type value
-          $ref: "#/components/schemas/MyType"
+          $ref: '#/components/schemas/MyType'
         typeValue:
           description: type value
-          $ref: "#/components/schemas/MyOtherType"
+          $ref: '#/components/schemas/MyOtherType'
         stringValue:
           description: string value
           type: string
@@ -852,7 +856,7 @@ components:
           description: map of types
           type: object
           additionalProperties:
-            $ref: "#/components/schemas/MyType"
+            $ref: '#/components/schemas/MyType'
         arrayValue:
           description: array value
           type: array
@@ -862,19 +866,19 @@ components:
           description: array of types
           type: array
           items:
-            $ref: "#/components/schemas/MyType"
+            $ref: '#/components/schemas/MyType'
         unionValue:
           description: union value
-          $ref: "#/components/schemas/MyUnion"
+          $ref: '#/components/schemas/MyUnion'
         unionOption:
           description: union option
-          $ref: "#/components/schemas/MyUnion"
+          $ref: '#/components/schemas/MyUnion'
         enumValue:
           description: enum value
-          $ref: "#/components/schemas/MyEnum"
+          $ref: '#/components/schemas/MyEnum'
         enumOption:
           description: enum option
-          $ref: "#/components/schemas/MyEnum"
+          $ref: '#/components/schemas/MyEnum'
         aliasValue:
           description: enum value
           type: string
@@ -917,9 +921,9 @@ components:
       type: object
       properties:
         MyType:
-          $ref: "#/components/schemas/MyType"
+          $ref: '#/components/schemas/MyType'
         MyEnum:
-          $ref: "#/components/schemas/MyEnum"
+          $ref: '#/components/schemas/MyEnum'
         string:
           type: string
     MyEnum:
@@ -929,7 +933,3 @@ components:
         - one
         - TWO
         - three
-tags:
-  - name: MyService
-servers:
-  - url: https://api.goodcorp.com
