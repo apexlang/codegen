@@ -1,12 +1,12 @@
-import { Context, Enum, ObjectMap, Type } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+import { Context, Enum, ObjectMap, Type } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import { IndexTypeDirective } from "../directives.ts";
 import {
   customAttributes,
   rustDoc,
   rustifyCaps,
   trimLines,
-} from "../utils/index.ts";
-import { deriveDirective, visibility } from "../utils/index.ts";
+} from "../utils/mod.ts";
+import { deriveDirective, visibility } from "../utils/mod.ts";
 import { SourceGenerator } from "./base.ts";
 
 export class EnumVisitor extends SourceGenerator<Enum> {

@@ -17,9 +17,9 @@ limitations under the License.
 import {
   Context,
   BaseVisitor,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import { expandType, mapArg, mapArgs } from "./helpers.ts";
-import { camelCase, formatComment, noCode } from "../utils/index.ts";
+import { camelCase, formatComment, noCode } from "../utils/mod.ts";
 
 export class HandlerVisitor extends BaseVisitor {
   visitInterfaceBefore(context: Context): void {

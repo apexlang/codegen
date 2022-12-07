@@ -5,8 +5,8 @@ import {
   Named,
   ObjectMap,
   Union,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
-import { codegenType, isNamed, isRecursiveType } from "../../utils/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+import { codegenType, isNamed, isRecursiveType } from "../../utils/mod.ts";
 import {
   rustDoc,
   rustifyCaps,
@@ -15,7 +15,7 @@ import {
   visibility,
   types,
   customAttributes,
-} from "../utils/index.ts";
+} from "../utils/mod.ts";
 
 import { SourceGenerator } from "./base.ts";
 

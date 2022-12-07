@@ -26,7 +26,7 @@ import {
   Alias,
   PrimitiveName,
   Type,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import {
   defaultValueForType,
   expandType,
@@ -42,7 +42,7 @@ import {
   isOneOfType,
   isVoid,
   noCode,
-} from "../utils/index.ts";
+} from "../utils/mod.ts";
 import { Import, translateAlias } from "./alias_visitor.ts";
 
 interface Logger {

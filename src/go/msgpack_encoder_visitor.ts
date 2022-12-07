@@ -17,7 +17,7 @@ limitations under the License.
 import {
   Context,
   BaseVisitor,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import { fieldName } from "./helpers.ts";
 import { msgpackEncode } from "./msgpack_helpers.ts";
 

@@ -17,8 +17,8 @@ limitations under the License.
 import {
   BaseVisitor,
   Context,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
-import { convertOperationToType, noCode } from "../utils/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+import { convertOperationToType, noCode } from "../utils/mod.ts";
 import { ClassVisitor } from "./class_visitor.ts";
 
 export class ArgsVisitor extends BaseVisitor {

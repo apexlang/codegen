@@ -17,9 +17,9 @@ limitations under the License.
 import {
   BaseVisitor,
   Context,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
-import { formatComment, pascalCase } from "../utils/index.ts";
-import { expandType, Import } from "../go/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+import { formatComment, pascalCase } from "../utils/mod.ts";
+import { expandType, Import } from "../go/mod.ts";
 
 export class AliasVisitor extends BaseVisitor {
   visitAlias(context: Context): void {

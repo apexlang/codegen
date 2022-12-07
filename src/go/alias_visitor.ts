@@ -17,9 +17,9 @@ limitations under the License.
 import {
   BaseVisitor,
   Context,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import { expandType } from "./helpers.ts";
-import { formatComment } from "../utils/index.ts";
+import { formatComment } from "../utils/mod.ts";
 
 export interface Import {
   type: string;

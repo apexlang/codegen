@@ -1,4 +1,4 @@
-import { Named } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/ast/index.ts";
+import { Named } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/ast/mod.ts";
 import {
   BaseVisitor,
   Context,
@@ -11,13 +11,13 @@ import {
   List,
   Map,
   Optional,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import {
   SchemaObject,
   ReferenceObject,
   ArraySchemaObject,
 } from "https://deno.land/x/openapi@0.1.0/mod.ts";
-import { convertArrayToObject } from "../utils/index.ts";
+import { convertArrayToObject } from "../utils/mod.ts";
 
 interface Definitions {
   $defs?: DefinitionMap;

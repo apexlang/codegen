@@ -28,7 +28,7 @@ import {
   AnyType,
   Primitive,
   Alias,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import {
   Document,
   ExternalDocumentationObject,
@@ -49,8 +49,8 @@ import {
   convertArrayToObject,
   ExposedTypesVisitor,
   isService,
-} from "../utils/index.ts";
-import { getPath, ResponseDirective } from "../rest/index.ts";
+} from "../utils/mod.ts";
+import { getPath, ResponseDirective } from "../rest/mod.ts";
 
 type Method = "get" | "post" | "options" | "put" | "delete" | "patch";
 

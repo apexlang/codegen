@@ -3,11 +3,11 @@
 import {
   BaseVisitor,
   Context,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import {
   Visitor,
   Writer,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import { InterfacesVisitor } from "./interfaces_visitor.ts";
 import { MinimalAPIVisitor } from "./api_visitor.ts";
 import { ScaffoldVisitor } from "./scaffold_visitor.ts";

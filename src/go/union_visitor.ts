@@ -18,8 +18,8 @@ import {
   Context,
   BaseVisitor,
   Annotated,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
-import { formatComment, pascalCase, typeName } from "../utils/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+import { formatComment, pascalCase, typeName } from "../utils/mod.ts";
 import { expandType, fieldName } from "./helpers.ts";
 
 interface UnionKey {

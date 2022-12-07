@@ -19,12 +19,12 @@ import {
   Context,
   Kind,
   Writer,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import {
   convertOperationToType,
   convertUnionToType,
   uncapitalize,
-} from "../utils/index.ts";
+} from "../utils/mod.ts";
 import { Import } from "./alias_visitor.ts";
 import { MsgPackDecoderVisitor } from "./msgpack_decoder_visitor.ts";
 import {

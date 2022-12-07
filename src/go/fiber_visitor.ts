@@ -26,7 +26,7 @@ import {
   Primitive,
   PrimitiveName,
   Type,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import {
   capitalize,
   convertOperationToType,
@@ -34,8 +34,8 @@ import {
   isObject,
   isService,
   unwrapKinds,
-} from "../utils/index.ts";
-import { getMethods, getPath, hasBody } from "../rest/index.ts";
+} from "../utils/mod.ts";
+import { getMethods, getPath, hasBody } from "../rest/mod.ts";
 import { StructVisitor } from "./struct_visitor.ts";
 import { expandType, fieldName, methodName } from "./helpers.ts";
 import { Import, translateAlias } from "./alias_visitor.ts";

@@ -18,9 +18,9 @@ import {
   Context,
   BaseVisitor,
   Writer,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import { expandType, mapArg, mapArgs } from "./helpers.ts";
-import { camelCase, formatComment } from "../utils/index.ts";
+import { camelCase, formatComment } from "../utils/mod.ts";
 
 export class InterfaceVisitor extends BaseVisitor {
   private stateful: boolean;

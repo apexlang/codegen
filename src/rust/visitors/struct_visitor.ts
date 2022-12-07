@@ -1,5 +1,5 @@
-import { Context, Kind, ObjectMap, Type } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
-import { isPrimitive, isRecursiveType } from "../../utils/index.ts";
+import { Context, Kind, ObjectMap, Type } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+import { isPrimitive, isRecursiveType } from "../../utils/mod.ts";
 import {
   rustDoc,
   rustify,
@@ -10,7 +10,7 @@ import {
   visibility,
   types,
   customAttributes,
-} from "../utils/index.ts";
+} from "../utils/mod.ts";
 
 import { SourceGenerator } from "./base.ts";
 

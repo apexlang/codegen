@@ -18,9 +18,9 @@ import {
   Context,
   BaseVisitor,
   Kind,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import { expandType, defValue } from "./helpers.ts";
-import { formatComment, snakeCase } from "../utils/index.ts";
+import { formatComment, snakeCase } from "../utils/mod.ts";
 
 export class ClassVisitor extends BaseVisitor {
   visitTypeBefore(context: Context): void {

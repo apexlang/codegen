@@ -1,4 +1,4 @@
-import { Context, Interface, ObjectMap, Operation } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+import { Context, Interface, ObjectMap, Operation } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import {
   customAttributes,
   rustDoc,
@@ -6,7 +6,7 @@ import {
   rustifyCaps,
   trimLines,
   visibility,
-} from "../utils/index.ts";
+} from "../utils/mod.ts";
 
 import { apexToRustType } from "../utils/types.ts";
 import { SourceGenerator } from "./base.ts";

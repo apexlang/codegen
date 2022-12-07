@@ -18,12 +18,12 @@ import {
   BaseVisitor,
   Context,
   Writer,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import {
   camelCase,
   InterfaceUsesVisitor,
   UsesVisitor,
-} from "../utils/index.ts";
+} from "../utils/mod.ts";
 
 interface Config {
   http: Listener;

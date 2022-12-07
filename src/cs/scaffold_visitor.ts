@@ -1,8 +1,8 @@
-import { formatComment, isOneOfType, pascalCase } from "../utils/index.ts";
+import { formatComment, isOneOfType, pascalCase } from "../utils/mod.ts";
 import {
   BaseVisitor,
   Context,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import { expandType, parseNamespaceName } from "./helpers.ts";
 
 export class ScaffoldVisitor extends BaseVisitor {

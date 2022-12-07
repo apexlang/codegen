@@ -29,8 +29,8 @@ import {
   Alias,
   Primitive,
   PrimitiveName,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
-import { capitalize, snakeCase } from "../utils/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+import { capitalize, snakeCase } from "../utils/mod.ts";
 import { translations } from "./constant.ts";
 
 /**

@@ -1,4 +1,4 @@
-import { pascalCase, snakeCase } from "../../utils/index.ts";
+import { pascalCase, snakeCase } from "../../utils/mod.ts";
 
 export * as types from "./types.ts";
 
@@ -29,7 +29,7 @@ export function rustifyCaps(name: string): string {
   return base;
 }
 
-import { ObjectMap } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+import { ObjectMap } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 
 export type visibility = "pub" | "pub(crate)" | "";
 

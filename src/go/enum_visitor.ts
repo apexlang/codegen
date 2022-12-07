@@ -17,8 +17,8 @@ limitations under the License.
 import {
   Context,
   BaseVisitor,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
-import { formatComment, pascalCase } from "../utils/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+import { formatComment, pascalCase } from "../utils/mod.ts";
 
 export class EnumVisitor extends BaseVisitor {
   private writeTypeInfo: boolean;

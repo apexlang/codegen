@@ -18,8 +18,8 @@ import {
   Argument,
   BaseVisitor,
   Context,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
-import { camelCase, formatComment, pascalCase } from "../utils/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+import { camelCase, formatComment, pascalCase } from "../utils/mod.ts";
 import { expandType } from "./helpers.ts";
 
 export class TypeVisitor extends BaseVisitor {

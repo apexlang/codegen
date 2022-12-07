@@ -1,7 +1,7 @@
 import {
   Context,
   Writer,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import { ContextWriter } from "./visitors/base.ts";
 import { StructVisitor } from "./visitors/struct_visitor.ts";
 import {
@@ -18,9 +18,9 @@ import {
   rustifyCaps,
   trimLines,
   types,
-} from "./utils/index.ts";
-import { visibility } from "./utils/index.ts";
-import * as utils from "../utils/index.ts";
+} from "./utils/mod.ts";
+import { visibility } from "./utils/mod.ts";
+import * as utils from "../utils/mod.ts";
 
 export class RustBasic extends ContextWriter {
   constructor(writer: Writer) {

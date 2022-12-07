@@ -27,7 +27,7 @@ import {
   Primitive,
   PrimitiveName,
   Enum,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import { Import, translateAlias } from "./alias_visitor.ts";
 import { translations } from "./constant.ts";
 import { expandType, fieldName, returnShare } from "./helpers.ts";

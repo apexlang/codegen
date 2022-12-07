@@ -25,7 +25,7 @@ import {
   Alias,
   List,
   Map,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import { defaultValueForType, expandType, mapArg, mapArgs } from "./helpers.ts";
 import {
   isHandler,
@@ -33,7 +33,7 @@ import {
   noCode,
   isVoid,
   snakeCase,
-} from "../utils/index.ts";
+} from "../utils/mod.ts";
 
 export class ScaffoldVisitor extends BaseVisitor {
   visitNamespaceBefore(context: Context): void {

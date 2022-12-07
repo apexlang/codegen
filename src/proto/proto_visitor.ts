@@ -30,7 +30,7 @@ import {
   Writer,
   Enum,
   Alias,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import {
   snakeCase,
   pascalCase,
@@ -39,7 +39,7 @@ import {
   ExposedTypesVisitor,
   isService,
   unwrapKinds,
-} from "../utils/index.ts";
+} from "../utils/mod.ts";
 
 interface FieldNumDirective {
   value: number;

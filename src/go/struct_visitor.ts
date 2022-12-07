@@ -20,10 +20,10 @@ import {
   Writer,
   Kind,
   Named,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import { expandType, fieldName } from "./helpers.ts";
 import { translateAlias } from "./alias_visitor.ts";
-import { formatComment } from "../utils/index.ts";
+import { formatComment } from "../utils/mod.ts";
 
 interface Serialize {
   value: string;

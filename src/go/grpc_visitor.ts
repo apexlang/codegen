@@ -31,7 +31,7 @@ import {
   List,
   Field,
   Writer,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import {
   capitalize,
   convertOperationToType,
@@ -43,7 +43,7 @@ import {
   operationArgsType,
   pascalCase,
   unwrapKinds,
-} from "../utils/index.ts";
+} from "../utils/mod.ts";
 import { Import } from "./alias_visitor.ts";
 import { expandType, fieldName, methodName, returnShare } from "./helpers.ts";
 import { StructVisitor } from "./struct_visitor.ts";

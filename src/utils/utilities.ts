@@ -33,7 +33,7 @@ import {
   Primitive,
   Named,
   Interface,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import {
   FieldDefinition,
   Name,
@@ -45,7 +45,7 @@ import {
   MapType,
   Stream as StreamType,
   StringValue,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/ast/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/ast/mod.ts";
 
 export function isOneOfType(context: Context, types: string[]): boolean {
   if (context.interface) {
@@ -92,7 +92,7 @@ export function isService(context: Context): boolean {
 }
 
 export function hasServiceCode(context: Context): boolean {
-  for (let name in context.namespace.interfaces) {
+  for (const name in context.namespace.interfaces) {
     const role = context.namespace.interfaces[name];
     if (role.annotation("service") == undefined) {
       continue;
@@ -271,7 +271,7 @@ export const primitives = new Set([
 export function formatComment(
   prefix: string,
   text: string | undefined,
-  wrapLength: number = 80
+  wrapLength = 80
 ): string {
   if (text == undefined) {
     return "";
@@ -284,7 +284,7 @@ export function formatComment(
   // Replace single newline characters with space so that the logic below
   // handles line wrapping. Multiple newlines are preserved. It was simpler
   // to do this than regex.
-  for (i = 1; i < textValue.length - 1; i++) {
+  for (let i = 1; i < textValue.length - 1; i++) {
     if (
       textValue[i] == "\n" &&
       textValue[i - 1] != "\n" &&
@@ -297,8 +297,8 @@ export function formatComment(
   let comment = "";
   let line = "";
   let word = "";
-  for (var i = 0; i < textValue.length; i++) {
-    let c = textValue[i];
+  for (let i = 0; i < textValue.length; i++) {
+    const c = textValue[i];
     if (c == " " || c == "\n") {
       if (line.length + word.length > wrapLength) {
         if (comment.length > 0) {
@@ -421,7 +421,7 @@ export function noCase(input: string, options: Options = {}) {
     delimiter = " ",
   } = options;
 
-  let result = replace(
+  const result = replace(
     replace(input, splitRegexp, "$1\0$2"),
     stripRegexp,
     "\0"
@@ -573,7 +573,7 @@ export function convertOperationToType(
   const parameters = operation.parameters.filter(
     (p) => p.type.kind != Kind.Stream
   );
-  var fields = parameters.map((param) => {
+  const fields = parameters.map((param) => {
     return new FieldDefinition(
       param.node.loc,
       param.node.name,
@@ -600,7 +600,7 @@ export function convertOperationToType(
 }
 
 export function convertUnionToType(tr: TypeResolver, union: Union): Type {
-  var fields = union.types.map((param) => {
+  const fields = union.types.map((param) => {
     const n = typeName(param);
     const t = modelToAST(param);
     return new FieldDefinition(
@@ -811,6 +811,7 @@ export function generatedHeader(
 
 const OMIT_KEYS = ["node", "source"];
 
+// deno-lint-ignore no-explicit-any
 export function inspect(o: any, omit = OMIT_KEYS) {
   console.log(
     JSON.stringify(o, (k, v) => (OMIT_KEYS.indexOf(k) === -1 ? v : undefined))

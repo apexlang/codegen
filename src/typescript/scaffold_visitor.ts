@@ -24,7 +24,7 @@ import {
   Map,
   Writer,
   AnyType,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import {
   camelCase,
   isHandler,
@@ -32,7 +32,7 @@ import {
   isVoid,
   pascalCase,
   noCode,
-} from "../utils/index.ts";
+} from "../utils/mod.ts";
 import { defaultValueForType, expandType, mapArg, mapArgs } from "./helpers.ts";
 
 export class ScaffoldVisitor extends BaseVisitor {

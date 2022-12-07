@@ -19,12 +19,12 @@ import {
   Context,
   Visitor,
   Writer,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/index.ts";
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import { EnumVisitor } from "./enum_visitor.ts";
 import { StructVisitor } from "./struct_visitor.ts";
 import { ImportsVisitor } from "./imports_visitor.ts";
 import { AliasVisitor } from "./alias_visitor.ts";
-import { isHandler, isProvider } from "../utils/index.ts";
+import { isHandler, isProvider } from "../utils/mod.ts";
 import { UnionVisitor } from "./union_visitor.ts";
 import { InterfaceVisitor } from "./interface_visitor.ts";
 
