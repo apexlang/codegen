@@ -35,7 +35,7 @@ export interface MyService {
   funcF32(value: number, optional: number | undefined): Promise<number>;
   funcBytes(
     value: ArrayBuffer,
-    optional: ArrayBuffer | undefined,
+    optional: ArrayBuffer | undefined
   ): Promise<ArrayBuffer>;
 }
 
@@ -46,119 +46,81 @@ export interface Repository {
 // MyType is a class
 export class MyType {
   // same type value
-  @Expose()
-  sameValue: MyType | undefined;
+  @Expose() sameValue: MyType | undefined;
   // type value
-  @Expose()
-  typeValue: MyOtherType;
+  @Expose() typeValue: MyOtherType;
   // string value
-  @Expose()
-  stringValue: string;
+  @Expose() stringValue: string;
   // string option
-  @Expose()
-  stringOption: string | undefined;
+  @Expose() stringOption: string | undefined;
   // i64 value
-  @Expose()
-  i64Value: number;
+  @Expose() i64Value: number;
   // i64 option
-  @Expose()
-  i64Option: number | undefined;
+  @Expose() i64Option: number | undefined;
   // i32 value
-  @Expose()
-  i32Value: number;
+  @Expose() i32Value: number;
   // i32 option
-  @Expose()
-  i32Option: number | undefined;
+  @Expose() i32Option: number | undefined;
   // i16 value
-  @Expose()
-  i16Value: number;
+  @Expose() i16Value: number;
   // i16 option
-  @Expose()
-  i16Option: number | undefined;
+  @Expose() i16Option: number | undefined;
   // i8 value
-  @Expose()
-  i8Value: number;
+  @Expose() i8Value: number;
   // i8 option
-  @Expose()
-  i8Option: number | undefined;
+  @Expose() i8Option: number | undefined;
   // u64 value
-  @Expose()
-  u64Value: number;
+  @Expose() u64Value: number;
   // u64 option
-  @Expose()
-  u64Option: number | undefined;
+  @Expose() u64Option: number | undefined;
   // u32 value
-  @Expose()
-  u32Value: number;
+  @Expose() u32Value: number;
   // u32 option
-  @Expose()
-  u32Option: number | undefined;
+  @Expose() u32Option: number | undefined;
   // u16 value
-  @Expose()
-  u16Value: number;
+  @Expose() u16Value: number;
   // u16 option
-  @Expose()
-  u16Option: number | undefined;
+  @Expose() u16Option: number | undefined;
   // u8 value
-  @Expose()
-  u8Value: number;
+  @Expose() u8Value: number;
   // u8 option
-  @Expose()
-  u8Option: number | undefined;
+  @Expose() u8Option: number | undefined;
   // f64 value
-  @Expose()
-  f64Value: number;
+  @Expose() f64Value: number;
   // f64 option
-  @Expose()
-  f64Option: number | undefined;
+  @Expose() f64Option: number | undefined;
   // f32 value
-  @Expose()
-  f32Value: number;
+  @Expose() f32Value: number;
   // f32 option
-  @Expose()
-  f32Option: number | undefined;
+  @Expose() f32Option: number | undefined;
   // datetime value
-  @Type(() => Date) @Expose()
-  datetimeValue: Date;
+  @Type(() => Date) @Expose() datetimeValue: Date;
   // datetime option
-  @Type(() => Date) @Expose()
-  datetimeOption: Date | undefined;
+  @Type(() => Date) @Expose() datetimeOption: Date | undefined;
   // bytes value
-  @Expose()
-  bytesValue: ArrayBuffer;
+  @Expose() bytesValue: ArrayBuffer;
   // bytes option
-  @Expose()
-  bytesOption: ArrayBuffer | undefined;
+  @Expose() bytesOption: ArrayBuffer | undefined;
   // map value
-  @Expose()
-  mapValue: Map<string, number>;
+  @Expose() mapValue: Map<string, number>;
   // map of types
-  @Expose()
-  mapOfTypes: Map<string, MyType>;
+  @Expose() mapOfTypes: Map<string, MyType>;
   // array value
-  @Expose()
-  arrayValue: Array<string>;
+  @Expose() arrayValue: Array<string>;
   // array of types
-  @Expose()
-  arrayOfTypes: Array<MyType>;
+  @Expose() arrayOfTypes: Array<MyType>;
   // union value
-  @Expose()
-  unionValue: MyUnion;
+  @Expose() unionValue: MyUnion;
   // union option
-  @Expose()
-  unionOption: MyUnion | undefined;
+  @Expose() unionOption: MyUnion | undefined;
   // enum value
-  @Expose()
-  enumValue: MyEnum;
+  @Expose() enumValue: MyEnum;
   // enum option
-  @Expose()
-  enumOption: MyEnum | undefined;
+  @Expose() enumOption: MyEnum | undefined;
   // enum value
-  @Expose()
-  aliasValue: UUID;
+  @Expose() aliasValue: UUID;
   // enum option
-  @Expose()
-  aliasOption: UUID | undefined;
+  @Expose() aliasOption: UUID | undefined;
 
   constructor({
     sameValue = null,
@@ -198,7 +160,7 @@ export class MyType {
     enumValue = new MyEnum(),
     enumOption = null,
     aliasValue = new UUID(),
-    aliasOption = null,
+    aliasOption = null
   }: {
     sameValue?: MyType | undefined;
     typeValue?: MyOtherType;
@@ -281,10 +243,8 @@ export class MyType {
 }
 
 export class MyOtherType {
-  @Expose()
-  foo: string;
-  @Expose()
-  bar: string;
+  @Expose() foo: string;
+  @Expose() bar: string;
 
   constructor({ foo = "", bar = "" }: { foo?: string; bar?: string } = {}) {
     this.foo = foo;

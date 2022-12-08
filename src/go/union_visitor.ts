@@ -34,17 +34,18 @@ export class UnionVisitor extends BaseVisitor {
     this.write(`type ${union.name} struct {\n`);
     union.types.forEach((t) => {
       let tname = typeName(t);
-      (t as Annotated).annotation("unionKey", (a) => {
-        tname = a.convert<UnionKey>().value;
-      });
+      const annotated = t as Annotated;
+      if (annotated.annotation) {
+        annotated.annotation("unionKey", (a) => {
+          tname = a.convert<UnionKey>().value;
+        });
+      }
       const expandedName = expandType(t);
       this.write(
-        `${
-          fieldName(
-            undefined as unknown as Annotated,
-            tname,
-          )
-        } *${expandedName} ${tick}json:"${tname},omitempty" yaml:"${tname},omitempty" msgpack:"${tname},omitempty`,
+        `${fieldName(
+          undefined as unknown as Annotated,
+          tname
+        )} *${expandedName} ${tick}json:"${tname},omitempty" yaml:"${tname},omitempty" msgpack:"${tname},omitempty`
       );
       this.triggerCallbacks(context, "UnionStructTags");
       this.write(`"${tick}\n`);
