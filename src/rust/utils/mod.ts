@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-explicit-any
 import { pascalCase, snakeCase } from "../../utils/mod.ts";
 
 export * as types from "./types.ts";

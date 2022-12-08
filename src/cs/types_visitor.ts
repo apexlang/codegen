@@ -45,7 +45,7 @@ export class TypeVisitor extends BaseVisitor {
 
     if (range || email || notEmpty) {
       const name = camelCase(field.name);
-      let propName = pascalCase(field.name);
+      const propName = pascalCase(field.name);
 
       this.write(`    private ${type} ${name};`);
 
@@ -104,10 +104,11 @@ export class TypeVisitor extends BaseVisitor {
   }
 }
 
+// deno-lint-ignore no-explicit-any
 function getRangeArguments(args: Argument[]): { min: any; max: any } {
-  let obj = { min: undefined, max: undefined };
+  const obj = { min: undefined, max: undefined };
   for (const arg of args) {
-    // @ts-ignore
+    // @ts-ignore: this is ok
     obj[arg.name] = arg.value.getValue();
   }
 

@@ -129,7 +129,7 @@ class FiberServiceVisitor extends BaseVisitor {
         }
 
         switch (paramType.kind) {
-          case Kind.Type:
+          case Kind.Type: {
             const t = paramType as Type;
             t.fields.forEach((f) => {
               if (path.indexOf(`{${f.name}}`) != -1) {
@@ -145,6 +145,7 @@ class FiberServiceVisitor extends BaseVisitor {
             });
 
             break;
+          }
         }
 
         if (operation.type.kind != Kind.Void) {
@@ -181,7 +182,7 @@ class FiberServiceVisitor extends BaseVisitor {
     });
   }
 
-  visitInterfaceAfter(context: Context): void {
+  visitInterfaceAfter(_context: Context): void {
     this.write(`  }
 }\n`);
   }
@@ -191,7 +192,7 @@ class ImportsVisitor extends BaseVisitor {
   private imports: { [key: string]: Import } = {};
   private externalImports: { [key: string]: Import } = {};
 
-  visitNamespaceAfter(context: Context): void {
+  visitNamespaceAfter(_context: Context): void {
     const stdLib = [];
     for (const key in this.imports) {
       const i = this.imports[key];
@@ -246,7 +247,7 @@ class ImportsVisitor extends BaseVisitor {
         break;
       }
 
-      case Kind.Primitive:
+      case Kind.Primitive: {
         const prim = type as Primitive;
         switch (prim.name) {
           case PrimitiveName.DateTime:
@@ -257,7 +258,8 @@ class ImportsVisitor extends BaseVisitor {
             break;
         }
         break;
-      case Kind.Type:
+      }
+      case Kind.Type: {
         const named = type as Type;
         const i = aliases[named.name];
         if (named.name === "datetime" && i == undefined) {
@@ -269,21 +271,26 @@ class ImportsVisitor extends BaseVisitor {
         }
         this.addType(named.name, i);
         break;
-      case Kind.List:
+      }
+      case Kind.List: {
         const list = type as List;
         this.checkType(context, list.type);
         break;
-      case Kind.Map:
+      }
+      case Kind.Map: {
         const map = type as Map;
         this.checkType(context, map.keyType);
         this.checkType(context, map.valueType);
         break;
-      case Kind.Optional:
+      }
+      case Kind.Optional: {
         const optional = type as Optional;
         this.checkType(context, optional.type);
         break;
-      case Kind.Enum:
+      }
+      case Kind.Enum: {
         break;
+      }
     }
   }
 

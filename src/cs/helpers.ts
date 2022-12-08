@@ -31,9 +31,10 @@ export const expandType = (type: AnyType): string => {
     case Kind.Alias:
     case Kind.Enum:
     case Kind.Type:
-    case Kind.Union:
+    case Kind.Union: {
       const namedValue = (type as Named).name;
       return translations.get(namedValue) ?? pascalCase(namedValue);
+    }
     case Kind.Map:
       return `Dictionary<${expandType((type as Map).keyType)}, ${
         expandType(

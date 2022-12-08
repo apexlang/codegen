@@ -84,7 +84,7 @@ export class ApiServiceVisitor extends BaseVisitor {
       }
 
       this.write(`("${path}${subPath}", (`);
-      let params = [];
+      const params = [];
       if (method.parameters.length > 0) {
         for (let i = 0; i < method.parameters.length; ++i) {
           const param = method.parameters[i];

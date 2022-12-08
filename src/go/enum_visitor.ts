@@ -49,7 +49,6 @@ export class EnumVisitor extends BaseVisitor {
   }
 
   visitEnumAfter(context: Context): void {
-    const tick = "`";
     this.write(`)\n\n`);
 
     const toStringVisitor = new EnumVisitorToStringMap(this.writer);
