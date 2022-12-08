@@ -42,10 +42,12 @@ export class UnionVisitor extends BaseVisitor {
       }
       const expandedName = expandType(t);
       this.write(
-        `${fieldName(
-          undefined as unknown as Annotated,
-          tname
-        )} *${expandedName} ${tick}json:"${tname},omitempty" yaml:"${tname},omitempty" msgpack:"${tname},omitempty`
+        `${
+          fieldName(
+            undefined as unknown as Annotated,
+            tname,
+          )
+        } *${expandedName} ${tick}json:"${tname},omitempty" yaml:"${tname},omitempty" msgpack:"${tname},omitempty`,
       );
       this.triggerCallbacks(context, "UnionStructTags");
       this.write(`"${tick}\n`);
