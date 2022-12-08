@@ -50,7 +50,7 @@ jobs:
         run: npm install -g @apidevtools/swagger-cli
       
       - name: Run the difference test
-        run: ./testcheck.sh
+        run: ./diffcheck.sh
         working-directory: ./testdata
 
       - name: Validate generated OpenAPI
