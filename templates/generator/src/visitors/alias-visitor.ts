@@ -1,4 +1,7 @@
-import { Alias, Context } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
+import {
+  Alias,
+  Context,
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
 import { convertDescription } from "../utils/conversions.js";
 import { convertType } from "../utils/types.js";
 
@@ -14,7 +17,6 @@ import { SourceGenerator } from "./base.js";
  * ```
  *
  * View the model here: https://apexlang.github.io/ast-viewer/#CmFsaWFzIE15VHlwZSA9IHN0cmluZwo=
- *
  */
 export class AliasVisitor extends SourceGenerator<Alias> {
   constructor(context: Context) {

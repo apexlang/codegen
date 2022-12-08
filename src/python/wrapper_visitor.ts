@@ -15,8 +15,8 @@ limitations under the License.
 */
 
 import {
-  Context,
   BaseVisitor,
+  Context,
 } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import { expandType } from "./helpers.ts";
 import { capitalize, isVoid, noCode, snakeCase } from "../utils/mod.ts";
@@ -42,17 +42,19 @@ export class WrapperVisitor extends BaseVisitor {
     } else if (operation.isUnary()) {
       const unaryType = expandType(operation.unaryOp().type, true);
       this.write(
-        `\t\t\tpayload: ${unaryType} = handlers.codec.decode(input, ${unaryType})\n`
+        `\t\t\tpayload: ${unaryType} = handlers.codec.decode(input, ${unaryType})\n`,
       );
       this.write(
-        `\t\t\t${resultStr}await h.${snakeCase(operation.name)}(payload)\n`
+        `\t\t\t${resultStr}await h.${snakeCase(operation.name)}(payload)\n`,
       );
     } else {
-      const argsClass = `_${capitalize(iface.name)}${capitalize(
-        operation.name
-      )}Args`;
+      const argsClass = `_${capitalize(iface.name)}${
+        capitalize(
+          operation.name,
+        )
+      }Args`;
       this.write(
-        `\t\t\tinput_args: ${argsClass} = handlers.codec.decode(input, ${argsClass})\n`
+        `\t\t\tinput_args: ${argsClass} = handlers.codec.decode(input, ${argsClass})\n`,
       );
       this.write(`\t\t\t${resultStr}await h.${snakeCase(operation.name)}(`);
       operation.parameters.map((param, i) => {
@@ -70,7 +72,7 @@ export class WrapperVisitor extends BaseVisitor {
       this.write(`\t\t\treturn bytes(0)\n`);
     }
     this.write(
-      `\t\thandlers.register_handler('${context.namespace.name}.${iface.name}', '${operation.name}', handler)\n\n`
+      `\t\thandlers.register_handler('${context.namespace.name}.${iface.name}', '${operation.name}', handler)\n\n`,
     );
     super.triggerOperation(context);
   }
@@ -90,7 +92,7 @@ export class WrapperStatefulVisitor extends BaseVisitor {
       `def register_${snakeCase(iface.name)}(h: ${iface.name}):
 \thandlers.register_stateful_handler(
 \t\t'${fullns}', 'deactivate',
-\t\tstate_manager.deactivate_handler('${fullns}', h))\n\n`
+\t\tstate_manager.deactivate_handler('${fullns}', h))\n\n`,
     );
   }
 
@@ -104,29 +106,33 @@ export class WrapperStatefulVisitor extends BaseVisitor {
     this.write(`\tif not h.${snakeCase(operation.name)} is None:\n`);
     this.write(`\t\tasync def handler(id: str, input: bytes) -> bytes:\n`);
     this.write(
-      `\t\t\tsctx = await state_manager.to_context("${fullns}", id, h)\n`
+      `\t\t\tsctx = await state_manager.to_context("${fullns}", id, h)\n`,
     );
     const resultStr = isVoid(operation.type) ? "" : "result = ";
     if (operation.parameters.length == 0) {
       this.write(
-        `\t\t\t${resultStr}await h.${snakeCase(operation.name)}(sctx)\n`
+        `\t\t\t${resultStr}await h.${snakeCase(operation.name)}(sctx)\n`,
       );
     } else if (operation.isUnary()) {
       const unaryType = expandType(operation.unaryOp().type, true);
       this.write(
-        `\t\t\tpayload: ${unaryType} = handlers.codec.decode(input, ${unaryType})\n`
+        `\t\t\tpayload: ${unaryType} = handlers.codec.decode(input, ${unaryType})\n`,
       );
       this.write(
-        `\t\t\t${resultStr}await h.${snakeCase(
-          operation.name
-        )}(sctx, payload)\n`
+        `\t\t\t${resultStr}await h.${
+          snakeCase(
+            operation.name,
+          )
+        }(sctx, payload)\n`,
       );
     } else {
-      const argsClass = `_${capitalize(iface.name)}${capitalize(
-        operation.name
-      )}Args`;
+      const argsClass = `_${capitalize(iface.name)}${
+        capitalize(
+          operation.name,
+        )
+      }Args`;
       this.write(
-        `\t\t\tinput_args: ${argsClass} = handlers.codec.decode(input, ${argsClass})\n`
+        `\t\t\tinput_args: ${argsClass} = handlers.codec.decode(input, ${argsClass})\n`,
       );
       this.write(`\t\t\t${resultStr}await h.${snakeCase(operation.name)}(sctx`);
       operation.parameters.map((param, i) => {
@@ -144,7 +150,7 @@ export class WrapperStatefulVisitor extends BaseVisitor {
       this.write(`\t\t\treturn handlers.codec.encode(response)\n`);
     }
     this.write(
-      `\t\thandlers.register_stateful_handler('${context.namespace.name}.${iface.name}', '${operation.name}', handler)\n\n`
+      `\t\thandlers.register_stateful_handler('${context.namespace.name}.${iface.name}', '${operation.name}', handler)\n\n`,
     );
     super.triggerOperation(context);
   }

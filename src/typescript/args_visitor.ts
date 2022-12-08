@@ -33,7 +33,7 @@ export class ArgsVisitor extends BaseVisitor {
     const argObject = convertOperationToType(
       context.getType.bind(context),
       iface,
-      operation
+      operation,
     );
     const args = new ClassVisitor(this.writer);
     argObject.accept(context.clone({ type: argObject }), args);

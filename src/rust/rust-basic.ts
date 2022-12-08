@@ -34,8 +34,8 @@ export class RustBasic extends ContextWriter {
           "THIS FILE IS GENERATED, DO NOT EDIT",
           "",
           `See https://apexlang.io for more information`,
-        ]
-      )
+        ],
+      ),
     );
     if (context.config.header) {
       if (Array.isArray(context.config.header)) {
@@ -82,17 +82,21 @@ export class RustBasic extends ContextWriter {
       customAttributes(alias.name, context.config),
         this.append(`
         ${prefix}
-        ${vis} struct ${rustifyCaps(alias.name)}(${vis} ${types.apexToRustType(
-          alias.type,
-          context.config
-        )});\n`);
+        ${vis} struct ${rustifyCaps(alias.name)}(${vis} ${
+          types.apexToRustType(
+            alias.type,
+            context.config,
+          )
+        });\n`);
     } else {
       this.append(`
         ${prefix}
-        ${vis} type ${rustifyCaps(alias.name)} = ${types.apexToRustType(
-        alias.type,
-        context.config
-      )};\n`);
+        ${vis} type ${rustifyCaps(alias.name)} = ${
+        types.apexToRustType(
+          alias.type,
+          context.config,
+        )
+      };\n`);
     }
   }
 }

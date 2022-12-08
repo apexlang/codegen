@@ -15,29 +15,29 @@ limitations under the License.
 */
 
 import {
-  Context,
+  Alias,
+  AnyType,
   BaseVisitor,
+  Context,
+  Enum,
   Kind,
-  Named,
-  Optional,
-  Type,
   List as ListType,
   Map as MapType,
-  AnyType,
+  Named,
+  Optional,
   Primitive,
   PrimitiveName,
   Stream,
+  Type,
   Writer,
-  Enum,
-  Alias,
 } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import {
-  snakeCase,
-  pascalCase,
-  formatComment,
   convertOperationToType,
   ExposedTypesVisitor,
+  formatComment,
   isService,
+  pascalCase,
+  snakeCase,
   unwrapKinds,
 } from "../utils/mod.ts";
 
@@ -94,7 +94,7 @@ package ${ns.name};\n\n`);
     const visitor = new RoleVisitor(
       this.writer,
       this.requestTypes,
-      this.exposedTypes
+      this.exposedTypes,
     );
     context.interface.accept(context, visitor);
   }
@@ -120,9 +120,9 @@ package ${ns.name};\n\n`);
     const fieldnum = fieldnumAnnotation.convert<FieldNumDirective>();
     this.write(formatComment("  // ", field.description));
     this.write(
-      `  ${typeSignature(field.type)} ${snakeCase(field.name)} = ${
-        fieldnum.value
-      };\n`
+      `  ${typeSignature(field.type)} ${
+        snakeCase(field.name)
+      } = ${fieldnum.value};\n`,
     );
   }
 
@@ -167,7 +167,7 @@ package ${ns.name};\n\n`);
       const n = t as Named;
       i++;
       this.write(
-        `    ${typeSignature(t)} ${snakeCase(n.name)}_value = ${i};\n`
+        `    ${typeSignature(t)} ${snakeCase(n.name)}_value = ${i};\n`,
       );
     }
     this.write(`  }\n`);
@@ -182,7 +182,7 @@ class RoleVisitor extends BaseVisitor {
   constructor(
     writer: Writer,
     requestTypes: Array<Type>,
-    exposedTypes: Set<string>
+    exposedTypes: Set<string>,
   ) {
     super(writer);
     this.requestTypes = requestTypes;
@@ -226,7 +226,7 @@ class RoleVisitor extends BaseVisitor {
       const argsType = convertOperationToType(
         context.getType.bind(context),
         iface,
-        operation
+        operation,
       );
       this.requestTypes.push(argsType);
       this.exposedTypes.add(argsType.name);
@@ -310,9 +310,11 @@ function typeSignature(type: AnyType): string {
       const map = type as MapType;
       // TODO: Map keys cannot be float/double, bytes or message types
       // TODO: Map values cannot be repeated
-      return `map<${typeSignature(map.keyType)}, ${typeSignature(
-        map.valueType
-      )}>`;
+      return `map<${typeSignature(map.keyType)}, ${
+        typeSignature(
+          map.valueType,
+        )
+      }>`;
 
     case Kind.Optional:
       return `optional ${typeSignature((type as Optional).type)}`;

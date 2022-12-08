@@ -38,8 +38,8 @@ class ConsoleLogger {
             return item.message;
           }
           return item;
-        })
-      )
+        }),
+      ),
     );
   };
 

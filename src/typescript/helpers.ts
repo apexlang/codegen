@@ -15,21 +15,21 @@ limitations under the License.
 */
 
 import {
-  Map,
-  List,
-  Optional,
-  Field,
-  Type,
-  Valued,
-  Operation,
-  Parameter,
-  Kind,
-  Context,
-  AnyType,
-  Primitive,
   Alias,
   Annotated,
+  AnyType,
+  Context,
+  Field,
+  Kind,
+  List,
+  Map,
   Named,
+  Operation,
+  Optional,
+  Parameter,
+  Primitive,
+  Type,
+  Valued,
 } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import { capitalize, renamed } from "../utils/mod.ts";
 import { defaultForAlias } from "./alias_visitor.ts";
@@ -183,10 +183,12 @@ export const expandType = (type: AnyType, useOptional: boolean): string => {
       }
       return namedValue;
     case Kind.Map:
-      return `Map<${expandType((type as Map).keyType, true)},${expandType(
-        (type as Map).valueType,
-        true
-      )}>`;
+      return `Map<${expandType((type as Map).keyType, true)},${
+        expandType(
+          (type as Map).valueType,
+          true,
+        )
+      }>`;
     case Kind.List:
       return `Array<${expandType((type as List).type, true)}>`;
     case Kind.Optional:
@@ -219,10 +221,12 @@ export function methodName(annotated: Annotated, name: string): string {
 export function opsAsFns(ops: Operation[]): string {
   return ops
     .map((op) => {
-      return `function ${op.name}(${mapArgs(op.parameters)}): ${expandType(
-        op.type,
-        true
-      )} {\n}`;
+      return `function ${op.name}(${mapArgs(op.parameters)}): ${
+        expandType(
+          op.type,
+          true,
+        )
+      } {\n}`;
     })
     .join("\n");
 }

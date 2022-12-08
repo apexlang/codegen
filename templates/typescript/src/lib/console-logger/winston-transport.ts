@@ -16,8 +16,8 @@ export default class ConsoleLogTransport extends Transport {
 
   log(info: any, callback: { (): void }) {
     const style = levelStyleMap[info.level as string] || STYLES.DEBUG;
-    const label =
-      info.consoleLoggerOptions?.label! || (info.level as string).toUpperCase();
+    const label = info.consoleLoggerOptions?.label! ||
+      (info.level as string).toUpperCase();
     const messages = [info.message];
     if (info.error) {
       messages.push(info.error);

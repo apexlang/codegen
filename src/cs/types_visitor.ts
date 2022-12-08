@@ -57,10 +57,10 @@ export class TypeVisitor extends BaseVisitor {
 
       if (email && type === "string") {
         this.write(
-          '        if (!System.Text.RegularExpressions.Regex.IsMatch(value, @"^([\\w-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([\\w-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$")) {\n'
+          '        if (!System.Text.RegularExpressions.Regex.IsMatch(value, @"^([\\w-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([\\w-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$")) {\n',
         );
         this.write(
-          `          throw new ArgumentException("value must be an email address", "${propName}");\n`
+          `          throw new ArgumentException("value must be an email address", "${propName}");\n`,
         );
         this.write("        }\n");
       }
@@ -82,7 +82,7 @@ export class TypeVisitor extends BaseVisitor {
         }
         this.write("  ) {\n");
         this.write(
-          `          throw new ArgumentException("value must be in range", "${propName}");\n`
+          `          throw new ArgumentException("value must be in range", "${propName}");\n`,
         );
         this.write("        }\n");
       }

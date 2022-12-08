@@ -1,4 +1,8 @@
-import { ObjectMap, Operation, Parameter } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
+import {
+  ObjectMap,
+  Operation,
+  Parameter,
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
 import * as utils from "@apexlang/codegen/utils";
 import { convertType } from "./types";
 
@@ -27,12 +31,11 @@ export function convertDescription(description?: string): string {
  * @param global - Whether this is a global operation (`func`) or a method in an interface.
  * @param config - The context's configuration.
  * @returns The new generated output for the Operation
- *
  */
 export function convertOperation(
   op: Operation,
   global: boolean,
-  config: ObjectMap
+  config: ObjectMap,
 ): string {
   // The name of the Operation.
   const name = op.name;
@@ -62,7 +65,6 @@ export function convertOperation(
  * @param param - A Parameter node to convert
  * @param config - The context's configuration.
  * @returns The new generated output for the Parameter
- *
  */
 export function convertParameter(param: Parameter, config: ObjectMap): string {
   // The name of the Parameter

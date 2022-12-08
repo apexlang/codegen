@@ -136,7 +136,7 @@ class Namespace extends Annotated {
     enums;
     unions;
     allTypes;
-    constructor(tr, node){
+    constructor(_tr, node){
         super(Kind.Namespace, node.annotations);
         this.node = node;
         this.name = node.name.value;
@@ -157,7 +157,7 @@ class Namespace extends Annotated {
         visitor.visitNamespaceBefore(context);
         visitor.visitNamespace(context);
         visitor.visitDirectivesBefore(context);
-        for(let name in this.directives){
+        for(const name in this.directives){
             const item = this.directives[name];
             item.accept(context.clone({
                 directive: item
@@ -165,7 +165,7 @@ class Namespace extends Annotated {
         }
         visitor.visitDirectivesAfter(context);
         visitor.visitAliasesBefore(context);
-        for(let name1 in this.aliases){
+        for(const name1 in this.aliases){
             const item1 = this.aliases[name1];
             if (!item1.annotation("novisit")) {
                 item1.accept(context.clone({
@@ -176,7 +176,7 @@ class Namespace extends Annotated {
         visitor.visitAliasesAfter(context);
         visitor.visitAllOperationsBefore(context);
         visitor.visitFunctionsBefore(context);
-        for(let name2 in this.functions){
+        for(const name2 in this.functions){
             const item2 = this.functions[name2];
             item2.accept(context.clone({
                 operation: item2
@@ -184,7 +184,7 @@ class Namespace extends Annotated {
         }
         visitor.visitFunctionsAfter(context);
         visitor.visitInterfacesBefore(context);
-        for(let name3 in this.interfaces){
+        for(const name3 in this.interfaces){
             const item3 = this.interfaces[name3];
             item3.accept(context.clone({
                 interface: item3
@@ -193,7 +193,7 @@ class Namespace extends Annotated {
         visitor.visitInterfacesAfter(context);
         visitor.visitAllOperationsAfter(context);
         visitor.visitTypesBefore(context);
-        for(let name4 in this.types){
+        for(const name4 in this.types){
             const item4 = this.types[name4];
             if (!item4.annotation("novisit")) {
                 item4.accept(context.clone({
@@ -203,7 +203,7 @@ class Namespace extends Annotated {
         }
         visitor.visitTypesAfter(context);
         visitor.visitUnionsBefore(context);
-        for(let name5 in this.unions){
+        for(const name5 in this.unions){
             const item5 = this.unions[name5];
             if (!item5.annotation("novisit")) {
                 item5.accept(context.clone({
@@ -213,7 +213,7 @@ class Namespace extends Annotated {
         }
         visitor.visitUnionsAfter(context);
         visitor.visitEnumsBefore(context);
-        for(let name6 in this.enums){
+        for(const name6 in this.enums){
             const item6 = this.enums[name6];
             if (!item6.annotation("novisit")) {
                 item6.accept(context.clone({
@@ -450,7 +450,7 @@ class EnumValue extends Annotated {
     description;
     index;
     display;
-    constructor(tr, node){
+    constructor(_tr, node){
         super(Kind.EnumValue, node.annotations);
         this.node = node;
         this.name = node.name.value;
@@ -482,7 +482,7 @@ class Directive extends Base {
         this.requires = node.requires.map((v)=>new Require(tr, v));
     }
     hasLocation(location) {
-        for (let l of this.locations){
+        for (const l of this.locations){
             if (l == location) {
                 return true;
             }
@@ -510,14 +510,14 @@ class Require extends Base {
     node;
     directive;
     locations;
-    constructor(tr, node){
+    constructor(_tr, node){
         super(Kind.Require);
         this.node = node;
         this.directive = node.directive.value;
         this.locations = node.locations.map((v)=>v.value);
     }
     hasLocation(location) {
-        for (let l of this.locations){
+        for (const l of this.locations){
             if (l == location) {
                 return true;
             }
@@ -536,7 +536,7 @@ class Annotation extends Base {
         this.arguments = node.arguments.map((v)=>new Argument(v));
     }
     convert() {
-        let obj = {};
+        const obj = {};
         this.arguments.map((arg)=>{
             obj[arg.name] = arg.value.getValue();
         });
@@ -561,7 +561,7 @@ function getAnnotation(name, annotations, callback) {
     if (annotations == undefined) {
         return undefined;
     }
-    for (let a of annotations){
+    for (const a of annotations){
         if (a.name === name) {
             if (callback != undefined) {
                 callback(a);
@@ -808,7 +808,7 @@ function isPrototype(value) {
 class AbstractVisitor {
     callbacks = new Map();
     setCallback(phase, purpose, callback) {
-        var purposes = this.callbacks.get(phase);
+        let purposes = this.callbacks.get(phase);
         if (purposes == undefined) {
             purposes = new Map();
             this.callbacks.set(phase, purposes);
@@ -816,7 +816,7 @@ class AbstractVisitor {
         purposes.set(purpose, callback);
     }
     triggerCallbacks(context, phase) {
-        var purposes = this.callbacks.get(phase);
+        const purposes = this.callbacks.get(phase);
         if (purposes == undefined) {
             return;
         }
@@ -1292,7 +1292,7 @@ class ErrorHolder {
         this.errors.push(error);
     }
 }
-function dummyValue(fieldName) {
+function dummyValue(_fieldName) {
     return undefined;
 }
 class Context {
@@ -1344,7 +1344,7 @@ class Context {
         autobind(this);
     }
     clone({ namespace , directive , alias , interface: iface , type , operations , operation , parameters , parameter , parameterIndex , fields , field , fieldIndex , enumDef , enumValues , enumValue , union , annotation  }) {
-        var context = new Context(this.config, undefined, this);
+        const context = new Context(this.config, undefined, this);
         context.namespace = namespace || this.namespace;
         context.namespacePos = this.namespacePos;
         context.directive = directive || this.directive;
@@ -1568,7 +1568,7 @@ class Context {
 class AbstractVisitor1 {
     callbacks = {};
     setCallback(phase, purpose, callback) {
-        var purposes = this.callbacks[phase];
+        let purposes = this.callbacks[phase];
         if (purposes == undefined) {
             purposes = {};
             this.callbacks[phase] = purposes;
@@ -1576,11 +1576,11 @@ class AbstractVisitor1 {
         purposes[purpose] = callback;
     }
     triggerCallbacks(context, phase) {
-        var purposes = this.callbacks[phase];
+        const purposes = this.callbacks[phase];
         if (purposes == undefined) {
             return;
         }
-        for (let name of Object.keys(purposes)){
+        for (const name of Object.keys(purposes)){
             const callback = purposes[name];
             callback(context);
         }
@@ -2042,7 +2042,7 @@ function isService(context) {
     return false;
 }
 function hasServiceCode(context) {
-    for(let name in context.namespace.interfaces){
+    for(const name in context.namespace.interfaces){
         const role = context.namespace.interfaces[name];
         if (role.annotation("service") == undefined) {
             continue;
@@ -2187,7 +2187,7 @@ function formatComment(prefix, text, wrapLength = 80) {
     if (!text || typeof text === "string") {
         textValue = text;
     }
-    for(i = 1; i < textValue.length - 1; i++){
+    for(let i = 1; i < textValue.length - 1; i++){
         if (textValue[i] == "\n" && textValue[i - 1] != "\n" && textValue[i + 1] != "\n") {
             textValue = textValue.substring(0, i) + " " + textValue.substring(i + 1);
         }
@@ -2195,8 +2195,8 @@ function formatComment(prefix, text, wrapLength = 80) {
     let comment = "";
     let line = "";
     let word = "";
-    for(var i = 0; i < textValue.length; i++){
-        let c = textValue[i];
+    for(let i1 = 0; i1 < textValue.length; i1++){
+        const c = textValue[i1];
         if (c == " " || c == "\n") {
             if (line.length + word.length > wrapLength) {
                 if (comment.length > 0) {
@@ -2292,7 +2292,7 @@ const DEFAULT_SPLIT_REGEXP = [
 const DEFAULT_STRIP_REGEXP = /[^A-Z0-9]+/gi;
 function noCase(input, options = {}) {
     const { splitRegexp =DEFAULT_SPLIT_REGEXP , stripRegexp =DEFAULT_STRIP_REGEXP , transform =lowerCase , delimiter =" "  } = options;
-    let result = replace(replace(input, splitRegexp, "$1\0$2"), stripRegexp, "\0");
+    const result = replace(replace(input, splitRegexp, "$1\0$2"), stripRegexp, "\0");
     let start = 0;
     let end = result.length;
     while(result.charAt(start) === "\0")start++;
@@ -2376,13 +2376,13 @@ function operationArgsType(iface, operation, prefix) {
 }
 function convertOperationToType(tr, iface, operation, prefix) {
     const parameters = operation.parameters.filter((p)=>p.type.kind != Kind.Stream);
-    var fields = parameters.map((param)=>{
+    const fields = parameters.map((param)=>{
         return new FieldDefinition(param.node.loc, param.node.name, param.node.description, param.node.type, param.node.default, param.node.annotations);
     });
     return new Type(tr, new TypeDefinition(operation.node.loc, new Name(operation.node.name.loc, operationArgsType(iface, operation, prefix)), undefined, [], operation.node.annotations, fields));
 }
 function convertUnionToType(tr, union) {
-    var fields = union.types.map((param)=>{
+    const fields = union.types.map((param)=>{
         const n = typeName(param);
         const t = modelToAST(param);
         return new FieldDefinition(undefined, new Name(undefined, n), undefined, new Optional1(undefined, t), undefined, []);
@@ -2953,80 +2953,6 @@ function getRangeArguments(args) {
     }
     return obj;
 }
-class ScaffoldVisitor extends BaseVisitor {
-    visitNamespace(context) {
-        this.write(`namespace ${parseNamespaceName(context.namespace.name)} {\n`);
-        const service = new ServiceVisitor(this.writer);
-        context.namespace.accept(context, service);
-        super.visitNamespace(context);
-    }
-    visitNamespaceAfter(context) {
-        this.write(`}\n`);
-        super.visitNamespaceAfter(context);
-    }
-}
-class ServiceVisitor extends BaseVisitor {
-    visitInterfaceBefore(context) {
-        if (!isValid(context)) {
-            return;
-        }
-        const { interface: iface  } = context;
-        let dependencies = [];
-        iface.annotation("uses", (a)=>{
-            if (a.arguments.length > 0) {
-                dependencies = a.arguments[0].value.getValue();
-            }
-        });
-        this.write(`  public class ${iface.name}Impl : ${iface.name} {\n`);
-        dependencies.map((value, index)=>{
-            this.write(`    private ${value} ${value.toLowerCase()};\n`);
-            if (index == dependencies.length - 1) this.write(`\n`);
-        });
-        dependencies.map((value, index)=>{
-            this.write(`    public ${iface.name}Impl (${value}Impl ${value.toLowerCase()}) {\n`);
-            this.write(`      this.${value.toLowerCase()} = ${value.toLowerCase()};\n`);
-            this.write(`\t }\n`);
-            if (index == dependencies.length - 1) this.write(`\n`);
-        });
-        super.visitInterfaceBefore(context);
-    }
-    visitInterface(context) {
-        if (!isValid(context)) {
-            return;
-        }
-        const operations = context.interface.operations;
-        for(let i = 0; i < operations.length; ++i){
-            if (i > 0) {
-                this.write(`\n`);
-            }
-            const operation = operations[i];
-            const type = expandType(operation.type);
-            this.write(formatComment("    // ", operation.description));
-            this.write(`    public ${type} ${pascalCase(operation.name)}(`);
-            const parameters = operation.parameters;
-            for(let j = 0; j < parameters.length; ++j){
-                const parameter = parameters[j];
-                this.write(`${expandType(parameter.type)} ${parameter.name}`);
-                if (j < parameters.length - 1) this.write(`, `);
-            }
-            this.write(`)\n    {\n`);
-            if (type == "void") {
-                this.write(`      return; // TODO: Provide implementation.\n`);
-            } else {
-                this.write(`      return new ${type}(); // TODO: Provide implementation.\n`);
-            }
-            this.write(`    }\n`);
-        }
-        this.write(`  }\n\n`);
-        super.visitInterface(context);
-    }
-}
-function isValid(context) {
-    const roleNames = context.config.names || [];
-    const roleTypes = context.config.types || [];
-    const { interface: iface  } = context;
-    return isOneOfType(context, roleTypes) || roleNames.indexOf(iface.name) != -1;
-}
 class InterfaceVisitor extends BaseVisitor {
     visitInterfaceBefore(context) {
         this.write(formatComment("  // ", context.interface.description));
@@ -3304,8 +3230,17 @@ const expandType1 = (type, packageName, useOptional = false, translate)=>{
             return `[]${expandType1(type.type, packageName, true, translate)}`;
         case Kind.Optional:
             const nestedType = type.type;
+            if (nestedType.kind == Kind.Primitive) {
+                const p1 = nestedType;
+                if (p1.name == PrimitiveName.Any) {
+                    return "interface{}";
+                }
+            }
             let expanded = expandType1(nestedType, packageName, true, translate);
             if (useOptional && !(nestedType.kind === Kind.Map || nestedType.kind === Kind.List || expanded == "[]byte")) {
+                if (expanded.startsWith("*")) {
+                    expanded = expanded.substring(1);
+                }
                 return `*${expanded}`;
             }
             return expanded;
@@ -3396,6 +3331,11 @@ class AliasVisitor extends BaseVisitor {
     }
 }
 class EnumVisitor1 extends BaseVisitor {
+    writeTypeInfo;
+    constructor(writer, writeTypeInfo = false){
+        super(writer);
+        this.writeTypeInfo = writeTypeInfo;
+    }
     visitEnumBefore(context) {
         super.triggerEnumsBefore(context);
         this.write(formatComment("// ", context.enum.description));
@@ -3415,11 +3355,12 @@ class EnumVisitor1 extends BaseVisitor {
         context.enum.accept(context, toStringVisitor);
         const toIDVisitor = new EnumVisitorToIDMap(this.writer);
         context.enum.accept(context, toIDVisitor);
-        this.write(`func (e ${context.enum.name}) Type() string {
-      return "${context.enum.name}"
-    }
-
-    func (e ${context.enum.name}) String() string {
+        if (this.writeTypeInfo) {
+            this.write(`func (e ${context.enum.name}) Type() string {
+        return "${context.enum.name}"
+      }\n\n`);
+        }
+        this.write(`func (e ${context.enum.name}) String() string {
       str, ok := toString${context.enum.name}[e]
       if !ok {
         return "unknown"
@@ -3427,9 +3368,13 @@ class EnumVisitor1 extends BaseVisitor {
       return str
     }
 
-    func (e *${context.enum.name}) FromString(str string) (ok bool) {
+    func (e *${context.enum.name}) FromString(str string) error {
+      var ok bool
       *e, ok = toID${context.enum.name}[str]
-      return ok
+      if !ok {
+        return fmt.Errorf("unknown value %q for ${context.enum.name}", str)
+      }
+      return nil
     }\n\n`);
         const jsonSupport = context.config.noEnumJSON ? !context.config.noEnumJSON : true;
         if (jsonSupport) {
@@ -3445,10 +3390,7 @@ func (e *${context.enum.name}) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
-  if !e.FromString(str) {
-		return fmt.Errorf("unknown value %q for ${context.enum.name}", str)
-	}
-	return nil
+  return e.FromString(str)
 }
 \n\n`);
         }
@@ -3556,7 +3498,12 @@ class StructVisitor extends BaseVisitor {
         const omitempty = field.type.kind === Kind.Optional ? ",omitempty" : "";
         this.write(formatComment("// ", field.description));
         const ptr = field.type.kind === Kind.Type && field.type.name == type.name ? "*" : "";
-        this.write(`\t${fieldName(field, field.name)} ${ptr}${expandType1(field.type, packageName, true, translateAlias(context))} \`json:"${field.name}${omitempty}" yaml:"${field.name}${omitempty}" msgpack:"${field.name}${omitempty}"`);
+        let fieldNameTag = field.name;
+        field.annotation("serialize", (a)=>{
+            fieldNameTag = a.convert().value;
+        });
+        const mapstructure = context.config.mapstructureTag == true ? ` mapstructure:"${fieldNameTag}"` : ``;
+        this.write(`\t${fieldName(field, field.name)} ${ptr}${expandType1(field.type, packageName, true, translateAlias(context))} \`json:"${fieldNameTag}${omitempty}" yaml:"${fieldNameTag}${omitempty}" msgpack:"${fieldNameTag}${omitempty}"${mapstructure}`);
         this.triggerCallbacks(context, "StructTags");
         this.write(`\`\n`);
         super.triggerTypeField(context);
@@ -3796,8 +3743,8 @@ class GRPCVisitor extends BaseVisitor {
         this.input = visitor.input;
         this.output = visitor.output;
         const packageName = context.config.package || "module";
-        const module1 = context.config.module;
-        const protoPackage = context.config.protoPackage || module1 + "/proto";
+        const module = context.config.module;
+        const protoPackage = context.config.protoPackage || module + "/proto";
         this.write(`// Code generated by @apexlang/codegen. DO NOT EDIT.
 
 package ${packageName}
@@ -4708,8 +4655,11 @@ class UnionVisitor extends BaseVisitor {
         this.write(formatComment("// ", union.description));
         this.write(`type ${union.name} struct {\n`);
         union.types.forEach((t)=>{
-            const tname = typeName(t);
-            const expandedName = expandType1(t);
+            let tname = typeName(t);
+            t.annotation("unionKey", (a)=>{
+                tname = a.convert().value;
+            });
+            let expandedName = expandType1(t);
             this.write(`${fieldName(undefined, tname)} *${expandedName} ${tick}json:"${tname},omitempty" yaml:"${tname},omitempty" msgpack:"${tname},omitempty`);
             this.triggerCallbacks(context, "UnionStructTags");
             this.write(`"${tick}\n`);
@@ -4718,14 +4668,19 @@ class UnionVisitor extends BaseVisitor {
     }
 }
 class InterfacesVisitor extends BaseVisitor {
+    writeTypeInfo = true;
     importsVisitor = (writer)=>new ImportsVisitor1(writer);
     serviceVisitor = (writer)=>new InterfaceVisitor1(writer);
     dependencyVisitor = (writer)=>new InterfaceVisitor1(writer);
-    structVisitor = (writer)=>new StructVisitor(writer, true);
-    enumVisitor = (writer)=>new EnumVisitor1(writer);
+    structVisitor = (writer)=>new StructVisitor(writer, this.writeTypeInfo);
+    enumVisitor = (writer)=>new EnumVisitor1(writer, this.writeTypeInfo);
     unionVisitor = (writer)=>new UnionVisitor(writer);
     aliasVisitor = (writer)=>new AliasVisitor(writer);
     visitNamespaceBefore(context) {
+        this.writeTypeInfo = context.config.writeTypeInfo;
+        if (this.writeTypeInfo == undefined) {
+            this.writeTypeInfo = true;
+        }
         const packageName = context.config.package || "module";
         this.write(`// Code generated by @apexlang/codegen. DO NOT EDIT.
 
@@ -4734,17 +4689,19 @@ class InterfacesVisitor extends BaseVisitor {
         const visitor = this.importsVisitor(this.writer);
         const ns = context.namespace;
         ns.accept(context, visitor);
-        this.write(`\n\n
-      type ns struct{}
+        if (this.writeTypeInfo) {
+            this.write(`\n\n
+        type ns struct{}
 
-      func (n *ns) Namespace() string {
-        return "${ns.name}"
-      }\n\n`);
-        ns.annotation("version", (a)=>{
-            this.write(`func (n *ns) Version() string {
-          return "${a.arguments[0].value.getValue()}"
+        func (n *ns) Namespace() string {
+          return "${ns.name}"
         }\n\n`);
-        });
+            ns.annotation("version", (a)=>{
+                this.write(`func (n *ns) Version() string {
+            return "${a.arguments[0].value.getValue()}"
+          }\n\n`);
+            });
+        }
         super.triggerNamespaceBefore(context);
     }
     visitFunctionBefore(context) {
@@ -4830,7 +4787,7 @@ import (
             this.write(`\t"github.com/apexlang/api-go/transport/tgrpc"\n`);
         }
         this.write(`\n`);
-        config.imports.forEach((module1)=>this.write(`\t"${module1}"\n`));
+        config.imports.forEach((module)=>this.write(`\t"${module}"\n`));
         this.write(`\n)
 
 func main() {
@@ -4922,7 +4879,7 @@ func getEnv(key string, defaultVal string) string {
 function getLogger(context) {
     return context.config.logger;
 }
-class ScaffoldVisitor1 extends BaseVisitor {
+class ScaffoldVisitor extends BaseVisitor {
     visitNamespaceBefore(context) {
         const packageName = context.config.package || "myapp";
         super.visitNamespaceBefore(context);
@@ -4948,11 +4905,11 @@ class ScaffoldVisitor1 extends BaseVisitor {
             }
             this.write(`)\n\n`);
         }
-        const service = new ServiceVisitor1(this.writer);
+        const service = new ServiceVisitor(this.writer);
         context.namespace.accept(context, service);
     }
 }
-class ServiceVisitor1 extends BaseVisitor {
+class ServiceVisitor extends BaseVisitor {
     visitInterfaceBefore(context) {
         const roleNames = context.config.names || [];
         const roleTypes = context.config.types || [];
@@ -4992,7 +4949,7 @@ class ServiceVisitor1 extends BaseVisitor {
     }\n\n`);
     }
     visitOperation(context) {
-        if (!isValid1(context)) {
+        if (!isValid(context)) {
             return;
         }
         const { operation , interface: iface  } = context;
@@ -5114,19 +5071,19 @@ class ImportsVisitor2 extends BaseVisitor {
         }
     }
     visitParameter(context) {
-        if (!isValid1(context)) {
+        if (!isValid(context)) {
             return;
         }
         this.checkType(context, context.parameter.type);
     }
     visitOperation(context) {
-        if (!isValid1(context)) {
+        if (!isValid(context)) {
             return;
         }
         this.checkType(context, context.operation.type);
     }
 }
-function isValid1(context) {
+function isValid(context) {
     const roleNames = context.config.names || [];
     const roleTypes = context.config.types || [];
     const { interface: iface  } = context;
@@ -6010,7 +5967,7 @@ const mod2 = {
     InterfacesVisitor,
     UnionVisitor,
     MainVisitor,
-    ScaffoldVisitor: ScaffoldVisitor1,
+    ScaffoldVisitor,
     MsgPackVisitor,
     MsgPackDecoderVisitor,
     msgpackRead,
@@ -6121,9 +6078,21 @@ class MainVisitor1 extends BaseVisitor {
         super.visitNamespaceAfter(context);
     }
 }
+class ScaffoldVisitor1 extends BaseVisitor {
+    visitNamespace(context) {
+        this.write(`namespace ${parseNamespaceName(context.namespace.name)} {\n`);
+        const service = new ServiceVisitor1(this.writer);
+        context.namespace.accept(context, service);
+        super.visitNamespace(context);
+    }
+    visitNamespaceAfter(context) {
+        this.write(`}\n`);
+        super.visitNamespaceAfter(context);
+    }
+}
 class IndexVisitor extends BaseVisitor {
     apiVisitor = (writer)=>new MinimalAPIVisitor(writer);
-    scaffoldVisitor = (writer)=>new ScaffoldVisitor(writer);
+    scaffoldVisitor = (writer)=>new ScaffoldVisitor1(writer);
     interfacesVisitor = (writer)=>new InterfacesVisitor1(writer);
     main_visitor = (writer)=>new MainVisitor1(writer);
     typeVisitor = (writer)=>new TypeVisitor(writer);
@@ -6157,20 +6126,92 @@ class IndexVisitor extends BaseVisitor {
         super.visitType(context);
     }
 }
+class ServiceVisitor1 extends BaseVisitor {
+    visitInterfaceBefore(context) {
+        if (!isValid1(context)) {
+            return;
+        }
+        const { interface: iface  } = context;
+        let dependencies = [];
+        iface.annotation("uses", (a)=>{
+            if (a.arguments.length > 0) {
+                dependencies = a.arguments[0].value.getValue();
+            }
+        });
+        this.write(`  public class ${iface.name}Impl : ${iface.name} {\n`);
+        dependencies.map((value, index)=>{
+            this.write(`    private ${value} ${value.toLowerCase()};\n`);
+            if (index == dependencies.length - 1) this.write(`\n`);
+        });
+        dependencies.map((value, index)=>{
+            this.write(`    public ${iface.name}Impl (${value}Impl ${value.toLowerCase()}) {\n`);
+            this.write(`      this.${value.toLowerCase()} = ${value.toLowerCase()};\n`);
+            this.write(`\t }\n`);
+            if (index == dependencies.length - 1) this.write(`\n`);
+        });
+        super.visitInterfaceBefore(context);
+    }
+    visitInterface(context) {
+        if (!isValid1(context)) {
+            return;
+        }
+        const operations = context.interface.operations;
+        for(let i = 0; i < operations.length; ++i){
+            if (i > 0) {
+                this.write(`\n`);
+            }
+            const operation = operations[i];
+            const type = expandType(operation.type);
+            this.write(formatComment("    // ", operation.description));
+            this.write(`    public ${type} ${pascalCase(operation.name)}(`);
+            const parameters = operation.parameters;
+            for(let j = 0; j < parameters.length; ++j){
+                const parameter = parameters[j];
+                this.write(`${expandType(parameter.type)} ${parameter.name}`);
+                if (j < parameters.length - 1) this.write(`, `);
+            }
+            this.write(`)\n    {\n`);
+            if (type == "void") {
+                this.write(`      return; // TODO: Provide implementation.\n`);
+            } else {
+                this.write(`      return new ${type}(); // TODO: Provide implementation.\n`);
+            }
+            this.write(`    }\n`);
+        }
+        this.write(`  }\n\n`);
+        super.visitInterface(context);
+    }
+}
+function isValid1(context) {
+    const roleNames = context.config.names || [];
+    const roleTypes = context.config.types || [];
+    const { interface: iface  } = context;
+    return isOneOfType(context, roleTypes) || roleNames.indexOf(iface.name) != -1;
+}
 const mod3 = {
     default: InterfacesVisitor1,
     MinimalAPIVisitor,
     ApiServiceVisitor,
     TypeVisitor,
-    ScaffoldVisitor,
-    ServiceVisitor,
+    ScaffoldVisitor: ScaffoldVisitor1,
+    ServiceVisitor: ServiceVisitor1,
     InterfaceVisitor,
     InterfacesVisitor: InterfacesVisitor1,
     EnumVisitor,
     UnionVisitor: UnionVisitor1,
     AliasVisitor: AliasVisitor1,
     MainVisitor: MainVisitor1,
-    IndexVisitor
+    IndexVisitor,
+    EnumVisitor,
+    InterfaceVisitor,
+    InterfacesVisitor: InterfacesVisitor1,
+    IndexVisitor,
+    MainVisitor: MainVisitor1,
+    TypeVisitor,
+    MinimalAPIVisitor,
+    ApiServiceVisitor,
+    UnionVisitor: UnionVisitor1,
+    AliasVisitor: AliasVisitor1
 };
 class JsonSchemaVisitor extends BaseVisitor {
     path = "";
@@ -6183,7 +6224,7 @@ class JsonSchemaVisitor extends BaseVisitor {
         context.config;
         this.schema.title = context.namespace.name;
     }
-    visitNamespaceAfter(context) {
+    visitNamespaceAfter(_context) {
         this.write(JSON.stringify(this.schema.valueOf(), null, 2));
     }
     visitType(context) {
@@ -6232,7 +6273,7 @@ class TypeVisitor1 extends BaseVisitor {
         if (context.field.description) {
             def.description = context.field.description;
         }
-        let [_def, isRequired] = decorateType(def, context.field.type);
+        const [_def, isRequired] = decorateType(def, context.field.type);
         if (isRequired) {
             this.def.required.push(context.field.name);
         }
@@ -6264,7 +6305,7 @@ class UnionVisitor2 extends BaseVisitor {
     }
     visitUnion(context) {
         const { union  } = context;
-        let arr = [];
+        const arr = [];
         convertArrayToObject(union.types, (t)=>{
             switch(t.kind){
                 case Kind.Union:
@@ -6338,7 +6379,9 @@ function decorateType(def, typ) {
             {
                 const t1 = typ;
                 def.type = JsonSchemaType.Object;
-                if (!isApexStringType(t1.keyType)) throw new Error("Can not represent maps with non-string key types in JSON Schema");
+                if (!isApexStringType(t1.keyType)) {
+                    throw new Error("Can not represent maps with non-string key types in JSON Schema");
+                }
                 const [valueType, _isRequired1] = decorateType({}, t1.valueType);
                 def.patternProperties = {
                     ".*": valueType
@@ -6422,1407 +6465,1488 @@ const mod4 = {
     JsonSchemaVisitor: JsonSchemaVisitor,
     default: JsonSchemaVisitor
 };
-!function(e) {
-    "object" == typeof exports && "undefined" != typeof module ? module.exports = e() : "function" == typeof define && define.amd ? define([], e) : ("undefined" != typeof window ? window : "undefined" != typeof global ? global : "undefined" != typeof self ? self : this).jsyaml = e();
-}(function() {
-    return (function o(a, s, c) {
-        function u(t, e) {
-            if (!s[t]) {
-                if (!a[t]) {
-                    var n = "function" == typeof require && require;
-                    if (!e && n) return n(t, !0);
-                    if (l) return l(t, !0);
-                    var i = new Error("Cannot find module '" + t + "'");
-                    throw i.code = "MODULE_NOT_FOUND", i;
-                }
-                var r = s[t] = {
-                    exports: {}
-                };
-                a[t][0].call(r.exports, function(e) {
-                    return u(a[t][1][e] || e);
-                }, r, r.exports, o, a, s, c);
+class YAMLError extends Error {
+    constructor(message = "(unknown reason)", mark = ""){
+        super(`${message} ${mark}`);
+        this.mark = mark;
+        this.name = this.constructor.name;
+    }
+    toString(_compact) {
+        return `${this.name}: ${this.message} ${this.mark}`;
+    }
+    mark;
+}
+function isBoolean(value) {
+    return typeof value === "boolean" || value instanceof Boolean;
+}
+function repeat(str, count) {
+    let result = "";
+    for(let cycle = 0; cycle < count; cycle++){
+        result += str;
+    }
+    return result;
+}
+function isNegativeZero(i) {
+    return i === 0 && Number.NEGATIVE_INFINITY === 1 / i;
+}
+function compileList(schema, name, result) {
+    const exclude = [];
+    for (const includedSchema of schema.include){
+        result = compileList(includedSchema, name, result);
+    }
+    for (const currentType of schema[name]){
+        for(let previousIndex = 0; previousIndex < result.length; previousIndex++){
+            const previousType = result[previousIndex];
+            if (previousType.tag === currentType.tag && previousType.kind === currentType.kind) {
+                exclude.push(previousIndex);
             }
-            return s[t].exports;
         }
-        for(var l = "function" == typeof require && require, e = 0; e < c.length; e++)u(c[e]);
-        return u;
-    })({
-        1: [
-            function(e, t, n) {
-                "use strict";
-                var i = e("./js-yaml/loader"), r = e("./js-yaml/dumper");
-                function o(e) {
-                    return function() {
-                        throw new Error("Function " + e + " is deprecated and cannot be used.");
-                    };
-                }
-                t.exports.Type = e("./js-yaml/type"), t.exports.Schema = e("./js-yaml/schema"), t.exports.FAILSAFE_SCHEMA = e("./js-yaml/schema/failsafe"), t.exports.JSON_SCHEMA = e("./js-yaml/schema/json"), t.exports.CORE_SCHEMA = e("./js-yaml/schema/core"), t.exports.DEFAULT_SAFE_SCHEMA = e("./js-yaml/schema/default_safe"), t.exports.DEFAULT_FULL_SCHEMA = e("./js-yaml/schema/default_full"), t.exports.load = i.load, t.exports.loadAll = i.loadAll, t.exports.safeLoad = i.safeLoad, t.exports.safeLoadAll = i.safeLoadAll, t.exports.dump = r.dump, t.exports.safeDump = r.safeDump, t.exports.YAMLException = e("./js-yaml/exception"), t.exports.MINIMAL_SCHEMA = e("./js-yaml/schema/failsafe"), t.exports.SAFE_SCHEMA = e("./js-yaml/schema/default_safe"), t.exports.DEFAULT_SCHEMA = e("./js-yaml/schema/default_full"), t.exports.scan = o("scan"), t.exports.parse = o("parse"), t.exports.compose = o("compose"), t.exports.addConstructor = o("addConstructor");
-            },
-            {
-                "./js-yaml/dumper": 3,
-                "./js-yaml/exception": 4,
-                "./js-yaml/loader": 5,
-                "./js-yaml/schema": 7,
-                "./js-yaml/schema/core": 8,
-                "./js-yaml/schema/default_full": 9,
-                "./js-yaml/schema/default_safe": 10,
-                "./js-yaml/schema/failsafe": 11,
-                "./js-yaml/schema/json": 12,
-                "./js-yaml/type": 13
+        result.push(currentType);
+    }
+    return result.filter((_type, index)=>!exclude.includes(index));
+}
+function compileMap(...typesList) {
+    const result = {
+        fallback: {},
+        mapping: {},
+        scalar: {},
+        sequence: {}
+    };
+    for (const types of typesList){
+        for (const type of types){
+            if (type.kind !== null) {
+                result[type.kind][type.tag] = result["fallback"][type.tag] = type;
             }
-        ],
-        2: [
-            function(e, t, n) {
-                "use strict";
-                function i(e) {
-                    return null == e;
-                }
-                t.exports.isNothing = i, t.exports.isObject = function(e) {
-                    return "object" == typeof e && null !== e;
-                }, t.exports.toArray = function(e) {
-                    return Array.isArray(e) ? e : i(e) ? [] : [
-                        e
-                    ];
-                }, t.exports.repeat = function(e, t) {
-                    for(var n = "", i = 0; i < t; i += 1)n += e;
-                    return n;
-                }, t.exports.isNegativeZero = function(e) {
-                    return 0 === e && Number.NEGATIVE_INFINITY === 1 / e;
-                }, t.exports.extend = function(e, t) {
-                    var n, i, r, o;
-                    if (t) for(n = 0, i = (o = Object.keys(t)).length; n < i; n += 1)e[r = o[n]] = t[r];
-                    return e;
-                };
-            },
-            {}
-        ],
-        3: [
-            function(e, t, n) {
-                "use strict";
-                var c = e("./common"), d = e("./exception"), i = e("./schema/default_full"), r = e("./schema/default_safe"), p = Object.prototype.toString, u = Object.prototype.hasOwnProperty, o = 9, h = 10, a = 13, s = 32, m = 33, g = 34, y = 35, x = 37, v = 38, A = 39, b = 42, w = 44, C = 45, k = 58, j = 61, S = 62, I = 63, O = 64, E = 91, F = 93, _ = 96, N = 123, M = 124, T = 125, l = {
-                    0: "\\0",
-                    7: "\\a",
-                    8: "\\b",
-                    9: "\\t",
-                    10: "\\n",
-                    11: "\\v",
-                    12: "\\f",
-                    13: "\\r",
-                    27: "\\e",
-                    34: '\\"',
-                    92: "\\\\",
-                    133: "\\N",
-                    160: "\\_",
-                    8232: "\\L",
-                    8233: "\\P"
-                }, f = [
-                    "y",
-                    "Y",
-                    "yes",
-                    "Yes",
-                    "YES",
-                    "on",
-                    "On",
-                    "ON",
-                    "n",
-                    "N",
-                    "no",
-                    "No",
-                    "NO",
-                    "off",
-                    "Off",
-                    "OFF"
-                ];
-                function L(e) {
-                    var t, n, i = e.toString(16).toUpperCase();
-                    if (e <= 255) t = "x", n = 2;
-                    else if (e <= 65535) t = "u", n = 4;
-                    else {
-                        if (!(e <= 4294967295)) throw new d("code point within a string may not be greater than 0xFFFFFFFF");
-                        t = "U", n = 8;
-                    }
-                    return "\\" + t + c.repeat("0", n - i.length) + i;
-                }
-                function D(e) {
-                    this.schema = e.schema || i, this.indent = Math.max(1, e.indent || 2), this.noArrayIndent = e.noArrayIndent || !1, this.skipInvalid = e.skipInvalid || !1, this.flowLevel = c.isNothing(e.flowLevel) ? -1 : e.flowLevel, this.styleMap = function(e, t) {
-                        var n, i, r, o, a, s, c;
-                        if (null === t) return {};
-                        for(n = {}, r = 0, o = (i = Object.keys(t)).length; r < o; r += 1)a = i[r], s = String(t[a]), "!!" === a.slice(0, 2) && (a = "tag:yaml.org,2002:" + a.slice(2)), (c = e.compiledTypeMap.fallback[a]) && u.call(c.styleAliases, s) && (s = c.styleAliases[s]), n[a] = s;
-                        return n;
-                    }(this.schema, e.styles || null), this.sortKeys = e.sortKeys || !1, this.lineWidth = e.lineWidth || 80, this.noRefs = e.noRefs || !1, this.noCompatMode = e.noCompatMode || !1, this.condenseFlow = e.condenseFlow || !1, this.implicitTypes = this.schema.compiledImplicit, this.explicitTypes = this.schema.compiledExplicit, this.tag = null, this.result = "", this.duplicates = [], this.usedDuplicates = null;
-                }
-                function U(e, t) {
-                    for(var n, i = c.repeat(" ", t), r = 0, o = -1, a = "", s = e.length; r < s;)r = -1 === (o = e.indexOf("\n", r)) ? (n = e.slice(r), s) : (n = e.slice(r, o + 1), o + 1), n.length && "\n" !== n && (a += i), a += n;
-                    return a;
-                }
-                function q(e, t) {
-                    return "\n" + c.repeat(" ", e.indent * t);
-                }
-                function Y(e) {
-                    return e === s || e === o;
-                }
-                function R(e) {
-                    return 32 <= e && e <= 126 || 161 <= e && e <= 55295 && 8232 !== e && 8233 !== e || 57344 <= e && e <= 65533 && 65279 !== e || 65536 <= e && e <= 1114111;
-                }
-                function B(e, t) {
-                    return R(e) && 65279 !== e && e !== w && e !== E && e !== F && e !== N && e !== T && e !== k && (e !== y || t && R(n = t) && !Y(n) && 65279 !== n && n !== a && n !== h);
-                    var n;
-                }
-                function P(e) {
-                    return /^\n* /.test(e);
-                }
-                var W = 1, K = 2, $ = 3, H = 4, G = 5;
-                function V(e, t, n, i, r) {
-                    var o, a, s, c, u = !1, l = !1, p = -1 !== i, f = -1, d = R(c = e.charCodeAt(0)) && 65279 !== c && !Y(c) && c !== C && c !== I && c !== k && c !== w && c !== E && c !== F && c !== N && c !== T && c !== y && c !== v && c !== b && c !== m && c !== M && c !== j && c !== S && c !== A && c !== g && c !== x && c !== O && c !== _ && !Y(e.charCodeAt(e.length - 1));
-                    if (t) for(o = 0; o < e.length; o++){
-                        if (!R(a = e.charCodeAt(o))) return G;
-                        s = 0 < o ? e.charCodeAt(o - 1) : null, d = d && B(a, s);
-                    }
-                    else {
-                        for(o = 0; o < e.length; o++){
-                            if ((a = e.charCodeAt(o)) === h) u = !0, p && (l = l || i < o - f - 1 && " " !== e[f + 1], f = o);
-                            else if (!R(a)) return G;
-                            s = 0 < o ? e.charCodeAt(o - 1) : null, d = d && B(a, s);
-                        }
-                        l = l || p && i < o - f - 1 && " " !== e[f + 1];
-                    }
-                    return u || l ? 9 < n && P(e) ? G : l ? H : $ : d && !r(e) ? W : K;
-                }
-                function Z(i, r, o, a) {
-                    i.dump = function() {
-                        if (0 === r.length) return "''";
-                        if (!i.noCompatMode && -1 !== f.indexOf(r)) return "'" + r + "'";
-                        var e = i.indent * Math.max(1, o), t = -1 === i.lineWidth ? -1 : Math.max(Math.min(i.lineWidth, 40), i.lineWidth - e), n = a || -1 < i.flowLevel && o >= i.flowLevel;
-                        switch(V(r, n, i.indent, t, function(e) {
-                            return function(e, t) {
-                                for(var n = 0, i = e.implicitTypes.length; n < i; n += 1)if (e.implicitTypes[n].resolve(t)) return !0;
-                                return !1;
-                            }(i, e);
-                        })){
-                            case W:
-                                return r;
-                            case K:
-                                return "'" + r.replace(/'/g, "''") + "'";
-                            case $:
-                                return "|" + z(r, i.indent) + J(U(r, e));
-                            case H:
-                                return ">" + z(r, i.indent) + J(U(function(t, n) {
-                                    var e, i, r = /(\n+)([^\n]*)/g, o = function() {
-                                        var e = -1 !== (e = t.indexOf("\n")) ? e : t.length;
-                                        return r.lastIndex = e, Q(t.slice(0, e), n);
-                                    }(), a = "\n" === t[0] || " " === t[0];
-                                    for(; i = r.exec(t);){
-                                        var s = i[1], c = i[2];
-                                        e = " " === c[0], o += s + (a || e || "" === c ? "" : "\n") + Q(c, n), a = e;
-                                    }
-                                    return o;
-                                }(r, t), e));
-                            case G:
-                                return '"' + function(e) {
-                                    for(var t, n, i, r = "", o = 0; o < e.length; o++)55296 <= (t = e.charCodeAt(o)) && t <= 56319 && 56320 <= (n = e.charCodeAt(o + 1)) && n <= 57343 ? (r += L(1024 * (t - 55296) + n - 56320 + 65536), o++) : (i = l[t], r += !i && R(t) ? e[o] : i || L(t));
-                                    return r;
-                                }(r) + '"';
-                            default:
-                                throw new d("impossible error: invalid scalar style");
-                        }
-                    }();
-                }
-                function z(e, t) {
-                    var n = P(e) ? String(t) : "", i = "\n" === e[e.length - 1];
-                    return n + (i && ("\n" === e[e.length - 2] || "\n" === e) ? "+" : i ? "" : "-") + "\n";
-                }
-                function J(e) {
-                    return "\n" === e[e.length - 1] ? e.slice(0, -1) : e;
-                }
-                function Q(e, t) {
-                    if ("" === e || " " === e[0]) return e;
-                    for(var n, i, r = / [^ ]/g, o = 0, a = 0, s = 0, c = ""; n = r.exec(e);)t < (s = n.index) - o && (i = o < a ? a : s, c += "\n" + e.slice(o, i), o = i + 1), a = s;
-                    return c += "\n", e.length - o > t && o < a ? c += e.slice(o, a) + "\n" + e.slice(a + 1) : c += e.slice(o), c.slice(1);
-                }
-                function X(e, t, n) {
-                    for(var i, r, o, a = n ? e.explicitTypes : e.implicitTypes, s = 0, c = a.length; s < c; s += 1)if (((r = a[s]).instanceOf || r.predicate) && (!r.instanceOf || "object" == typeof t && t instanceof r.instanceOf) && (!r.predicate || r.predicate(t))) {
-                        if (e.tag = n ? r.tag : "?", r.represent) {
-                            if (o = e.styleMap[r.tag] || r.defaultStyle, "[object Function]" === p.call(r.represent)) i = r.represent(t, o);
-                            else {
-                                if (!u.call(r.represent, o)) throw new d("!<" + r.tag + '> tag resolver accepts not "' + o + '" style');
-                                i = r.represent[o](t, o);
-                            }
-                            e.dump = i;
-                        }
-                        return 1;
-                    }
-                }
-                function ee(e, t, n, i, r, o) {
-                    e.tag = null, e.dump = n, X(e, n, !1) || X(e, n, !0);
-                    var a = p.call(e.dump);
-                    i = i && (e.flowLevel < 0 || e.flowLevel > t);
-                    var s, c, u = "[object Object]" === a || "[object Array]" === a;
-                    if (u && (c = -1 !== (s = e.duplicates.indexOf(n))), (null !== e.tag && "?" !== e.tag || c || 2 !== e.indent && 0 < t) && (r = !1), c && e.usedDuplicates[s]) e.dump = "*ref_" + s;
-                    else {
-                        if (u && c && !e.usedDuplicates[s] && (e.usedDuplicates[s] = !0), "[object Object]" === a) i && 0 !== Object.keys(e.dump).length ? (function(e, t, n, i) {
-                            var r, o, a, s, c, u, l = "", p = e.tag, f = Object.keys(n);
-                            if (!0 === e.sortKeys) f.sort();
-                            else if ("function" == typeof e.sortKeys) f.sort(e.sortKeys);
-                            else if (e.sortKeys) throw new d("sortKeys must be a boolean or a function");
-                            for(r = 0, o = f.length; r < o; r += 1)u = "", i && 0 === r || (u += q(e, t)), s = n[a = f[r]], ee(e, t + 1, a, !0, !0, !0) && ((c = null !== e.tag && "?" !== e.tag || e.dump && 1024 < e.dump.length) && (e.dump && h === e.dump.charCodeAt(0) ? u += "?" : u += "? "), u += e.dump, c && (u += q(e, t)), ee(e, t + 1, s, !0, c) && (e.dump && h === e.dump.charCodeAt(0) ? u += ":" : u += ": ", l += u += e.dump));
-                            e.tag = p, e.dump = l || "{}";
-                        }(e, t, e.dump, r), c && (e.dump = "&ref_" + s + e.dump)) : (function(e, t, n) {
-                            for(var i, r, o, a = "", s = e.tag, c = Object.keys(n), u = 0, l = c.length; u < l; u += 1)o = "", 0 !== u && (o += ", "), e.condenseFlow && (o += '"'), r = n[i = c[u]], ee(e, t, i, !1, !1) && (1024 < e.dump.length && (o += "? "), o += e.dump + (e.condenseFlow ? '"' : "") + ":" + (e.condenseFlow ? "" : " "), ee(e, t, r, !1, !1) && (a += o += e.dump));
-                            e.tag = s, e.dump = "{" + a + "}";
-                        }(e, t, e.dump), c && (e.dump = "&ref_" + s + " " + e.dump));
-                        else if ("[object Array]" === a) {
-                            var l = e.noArrayIndent && 0 < t ? t - 1 : t;
-                            i && 0 !== e.dump.length ? (function(e, t, n, i) {
-                                for(var r = "", o = e.tag, a = 0, s = n.length; a < s; a += 1)ee(e, t + 1, n[a], !0, !0) && (i && 0 === a || (r += q(e, t)), e.dump && h === e.dump.charCodeAt(0) ? r += "-" : r += "- ", r += e.dump);
-                                e.tag = o, e.dump = r || "[]";
-                            }(e, l, e.dump, r), c && (e.dump = "&ref_" + s + e.dump)) : (function(e, t, n) {
-                                for(var i = "", r = e.tag, o = 0, a = n.length; o < a; o += 1)ee(e, t, n[o], !1, !1) && (0 !== o && (i += "," + (e.condenseFlow ? "" : " ")), i += e.dump);
-                                e.tag = r, e.dump = "[" + i + "]";
-                            }(e, l, e.dump), c && (e.dump = "&ref_" + s + " " + e.dump));
-                        } else {
-                            if ("[object String]" !== a) {
-                                if (e.skipInvalid) return;
-                                throw new d("unacceptable kind of an object to dump " + a);
-                            }
-                            "?" !== e.tag && Z(e, e.dump, t, o);
-                        }
-                        null !== e.tag && "?" !== e.tag && (e.dump = "!<" + e.tag + "> " + e.dump);
-                    }
-                    return 1;
-                }
-                function te(e, t) {
-                    var n, i, r = [], o = [];
-                    for(!function e(t, n, i) {
-                        var r, o, a;
-                        if (null !== t && "object" == typeof t) if (-1 !== (o = n.indexOf(t))) -1 === i.indexOf(o) && i.push(o);
-                        else if (n.push(t), Array.isArray(t)) for(o = 0, a = t.length; o < a; o += 1)e(t[o], n, i);
-                        else for(r = Object.keys(t), o = 0, a = r.length; o < a; o += 1)e(t[r[o]], n, i);
-                    }(e, r, o), n = 0, i = o.length; n < i; n += 1)t.duplicates.push(r[o[n]]);
-                    t.usedDuplicates = new Array(i);
-                }
-                function ne(e, t) {
-                    var n = new D(t = t || {});
-                    return n.noRefs || te(e, n), ee(n, 0, e, !0, !0) ? n.dump + "\n" : "";
-                }
-                t.exports.dump = ne, t.exports.safeDump = function(e, t) {
-                    return ne(e, c.extend({
-                        schema: r
-                    }, t));
-                };
-            },
-            {
-                "./common": 2,
-                "./exception": 4,
-                "./schema/default_full": 9,
-                "./schema/default_safe": 10
+        }
+    }
+    return result;
+}
+class Schema {
+    static SCHEMA_DEFAULT;
+    implicit;
+    explicit;
+    include;
+    compiledImplicit;
+    compiledExplicit;
+    compiledTypeMap;
+    constructor(definition){
+        this.explicit = definition.explicit || [];
+        this.implicit = definition.implicit || [];
+        this.include = definition.include || [];
+        for (const type of this.implicit){
+            if (type.loadKind && type.loadKind !== "scalar") {
+                throw new YAMLError("There is a non-scalar type in the implicit list of a schema. Implicit resolving of such types is not supported.");
             }
-        ],
-        4: [
-            function(e, t, n) {
-                "use strict";
-                function i(e, t) {
-                    Error.call(this), this.name = "YAMLException", this.reason = e, this.mark = t, this.message = (this.reason || "(unknown reason)") + (this.mark ? " " + this.mark.toString() : ""), Error.captureStackTrace ? Error.captureStackTrace(this, this.constructor) : this.stack = (new Error).stack || "";
-                }
-                ((i.prototype = Object.create(Error.prototype)).constructor = i).prototype.toString = function(e) {
-                    var t = this.name + ": ";
-                    return t += this.reason || "(unknown reason)", !e && this.mark && (t += " " + this.mark.toString()), t;
-                }, t.exports = i;
-            },
-            {}
-        ],
-        5: [
-            function(e, t, n) {
-                "use strict";
-                var g = e("./common"), i = e("./exception"), r = e("./mark"), o = e("./schema/default_safe"), a = e("./schema/default_full"), y = Object.prototype.hasOwnProperty, x = 1, v = 2, A = 3, b = 4, w = 1, C = 2, k = 3, c = /[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x84\x86-\x9F\uFFFE\uFFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF]/, s = /[\x85\u2028\u2029]/, j = /[,\[\]\{\}]/, S = /^(?:!|!!|![a-z\-]+!)$/i, I = /^(?:!|[^,\[\]\{\}])(?:%[0-9a-f]{2}|[0-9a-z\-#;\/\?:@&=\+\$,_\.!~\*'\(\)\[\]])*$/i;
-                function l(e) {
-                    return Object.prototype.toString.call(e);
-                }
-                function O(e) {
-                    return 10 === e || 13 === e;
-                }
-                function E(e) {
-                    return 9 === e || 32 === e;
-                }
-                function F(e) {
-                    return 9 === e || 32 === e || 10 === e || 13 === e;
-                }
-                function _(e) {
-                    return 44 === e || 91 === e || 93 === e || 123 === e || 125 === e;
-                }
-                function u(e) {
-                    return 48 === e ? "\0" : 97 === e ? "" : 98 === e ? "\b" : 116 === e || 9 === e ? "\t" : 110 === e ? "\n" : 118 === e ? "\v" : 102 === e ? "\f" : 114 === e ? "\r" : 101 === e ? "" : 32 === e ? " " : 34 === e ? '"' : 47 === e ? "/" : 92 === e ? "\\" : 78 === e ? "" : 95 === e ? " " : 76 === e ? "\u2028" : 80 === e ? "\u2029" : "";
-                }
-                for(var f = new Array(256), d = new Array(256), p = 0; p < 256; p++)f[p] = u(p) ? 1 : 0, d[p] = u(p);
-                function h(e, t) {
-                    this.input = e, this.filename = t.filename || null, this.schema = t.schema || a, this.onWarning = t.onWarning || null, this.legacy = t.legacy || !1, this.json = t.json || !1, this.listener = t.listener || null, this.implicitTypes = this.schema.compiledImplicit, this.typeMap = this.schema.compiledTypeMap, this.length = e.length, this.position = 0, this.line = 0, this.lineStart = 0, this.lineIndent = 0, this.documents = [];
-                }
-                function m(e, t) {
-                    return new i(t, new r(e.filename, e.input, e.position, e.line, e.position - e.lineStart));
-                }
-                function N(e, t) {
-                    throw m(e, t);
-                }
-                function M(e, t) {
-                    e.onWarning && e.onWarning.call(null, m(e, t));
-                }
-                var T = {
-                    YAML: function(e, t, n) {
-                        var i, r, o;
-                        null !== e.version && N(e, "duplication of %YAML directive"), 1 !== n.length && N(e, "YAML directive accepts exactly one argument"), null === (i = /^([0-9]+)\.([0-9]+)$/.exec(n[0])) && N(e, "ill-formed argument of the YAML directive"), r = parseInt(i[1], 10), o = parseInt(i[2], 10), 1 !== r && N(e, "unacceptable YAML version of the document"), e.version = n[0], e.checkLineBreaks = o < 2, 1 !== o && 2 !== o && M(e, "unsupported YAML version of the document");
-                    },
-                    TAG: function(e, t, n) {
-                        var i, r;
-                        2 !== n.length && N(e, "TAG directive accepts exactly two arguments"), i = n[0], r = n[1], S.test(i) || N(e, "ill-formed tag handle (first argument) of the TAG directive"), y.call(e.tagMap, i) && N(e, 'there is a previously declared suffix for "' + i + '" tag handle'), I.test(r) || N(e, "ill-formed tag prefix (second argument) of the TAG directive"), e.tagMap[i] = r;
-                    }
-                };
-                function L(e, t, n, i) {
-                    var r, o, a, s;
-                    if (t < n) {
-                        if (s = e.input.slice(t, n), i) for(r = 0, o = s.length; r < o; r += 1)9 === (a = s.charCodeAt(r)) || 32 <= a && a <= 1114111 || N(e, "expected valid JSON character");
-                        else c.test(s) && N(e, "the stream contains non-printable characters");
-                        e.result += s;
-                    }
-                }
-                function D(e, t, n, i) {
-                    var r, o, a, s;
-                    for(g.isObject(n) || N(e, "cannot merge mappings; the provided source object is unacceptable"), a = 0, s = (r = Object.keys(n)).length; a < s; a += 1)o = r[a], y.call(t, o) || (t[o] = n[o], i[o] = !0);
-                }
-                function U(e, t, n, i, r, o, a, s) {
-                    var c, u;
-                    if (Array.isArray(r)) for(c = 0, u = (r = Array.prototype.slice.call(r)).length; c < u; c += 1)Array.isArray(r[c]) && N(e, "nested arrays are not supported inside keys"), "object" == typeof r && "[object Object]" === l(r[c]) && (r[c] = "[object Object]");
-                    if ("object" == typeof r && "[object Object]" === l(r) && (r = "[object Object]"), r = String(r), null === t && (t = {}), "tag:yaml.org,2002:merge" === i) if (Array.isArray(o)) for(c = 0, u = o.length; c < u; c += 1)D(e, t, o[c], n);
-                    else D(e, t, o, n);
-                    else e.json || y.call(n, r) || !y.call(t, r) || (e.line = a || e.line, e.position = s || e.position, N(e, "duplicated mapping key")), t[r] = o, delete n[r];
-                    return t;
-                }
-                function q(e) {
-                    var t = e.input.charCodeAt(e.position);
-                    10 === t ? e.position++ : 13 === t ? (e.position++, 10 === e.input.charCodeAt(e.position) && e.position++) : N(e, "a line break is expected"), e.line += 1, e.lineStart = e.position;
-                }
-                function Y(e, t, n) {
-                    for(var i = 0, r = e.input.charCodeAt(e.position); 0 !== r;){
-                        for(; E(r);)r = e.input.charCodeAt(++e.position);
-                        if (t && 35 === r) for(; 10 !== (r = e.input.charCodeAt(++e.position)) && 13 !== r && 0 !== r;);
-                        if (!O(r)) break;
-                        for(q(e), r = e.input.charCodeAt(e.position), i++, e.lineIndent = 0; 32 === r;)e.lineIndent++, r = e.input.charCodeAt(++e.position);
-                    }
-                    return -1 !== n && 0 !== i && e.lineIndent < n && M(e, "deficient indentation"), i;
-                }
-                function R(e) {
-                    var t = e.position, n = e.input.charCodeAt(t);
-                    return 45 !== n && 46 !== n || n !== e.input.charCodeAt(t + 1) || n !== e.input.charCodeAt(t + 2) || (t += 3, 0 !== (n = e.input.charCodeAt(t)) && !F(n)) ? void 0 : 1;
-                }
-                function B(e, t) {
-                    1 === t ? e.result += " " : 1 < t && (e.result += g.repeat("\n", t - 1));
-                }
-                function P(e, t) {
-                    var n, i, r, o, a, s, c, u, l, p = e.input.charCodeAt(e.position);
-                    if (34 === p) {
-                        for(e.kind = "scalar", e.result = "", e.position++, n = i = e.position; 0 !== (p = e.input.charCodeAt(e.position));){
-                            if (34 === p) return L(e, n, e.position, !0), e.position++, 1;
-                            if (92 === p) {
-                                if (L(e, n, e.position, !0), O(p = e.input.charCodeAt(++e.position))) Y(e, !1, t);
-                                else if (p < 256 && f[p]) e.result += d[p], e.position++;
-                                else if (0 < (a = 120 === (l = p) ? 2 : 117 === l ? 4 : 85 === l ? 8 : 0)) {
-                                    for(r = a, o = 0; 0 < r; r--)p = e.input.charCodeAt(++e.position), u = void 0, 0 <= (a = 48 <= (c = p) && c <= 57 ? c - 48 : 97 <= (u = 32 | c) && u <= 102 ? u - 97 + 10 : -1) ? o = (o << 4) + a : N(e, "expected hexadecimal character");
-                                    e.result += (s = o) <= 65535 ? String.fromCharCode(s) : String.fromCharCode(55296 + (s - 65536 >> 10), 56320 + (s - 65536 & 1023)), e.position++;
-                                } else N(e, "unknown escape sequence");
-                                n = i = e.position;
-                            } else O(p) ? (L(e, n, i, !0), B(e, Y(e, !1, t)), n = i = e.position) : e.position === e.lineStart && R(e) ? N(e, "unexpected end of the document within a double quoted scalar") : (e.position++, i = e.position);
-                        }
-                        N(e, "unexpected end of the stream within a double quoted scalar");
-                    }
-                }
-                function W(e, t) {
-                    var n, i, r = e.tag, o = e.anchor, a = [], s = !1;
-                    for(null !== e.anchor && (e.anchorMap[e.anchor] = a), i = e.input.charCodeAt(e.position); 0 !== i && 45 === i && F(e.input.charCodeAt(e.position + 1));)if (s = !0, e.position++, Y(e, !0, -1) && e.lineIndent <= t) a.push(null), i = e.input.charCodeAt(e.position);
-                    else if (n = e.line, K(e, t, A, !1, !0), a.push(e.result), Y(e, !0, -1), i = e.input.charCodeAt(e.position), (e.line === n || e.lineIndent > t) && 0 !== i) N(e, "bad indentation of a sequence entry");
-                    else if (e.lineIndent < t) break;
-                    return !!s && (e.tag = r, e.anchor = o, e.kind = "sequence", e.result = a, !0);
-                }
-                function K(e, t, n, i, r) {
-                    var o, a, s, c, u, l, p, f, d = 1, h = !1, m = !1;
-                    if (null !== e.listener && e.listener("open", e), e.tag = null, e.anchor = null, e.kind = null, e.result = null, o = a = s = b === n || A === n, i && Y(e, !0, -1) && (h = !0, e.lineIndent > t ? d = 1 : e.lineIndent === t ? d = 0 : e.lineIndent < t && (d = -1)), 1 === d) for(; function(e) {
-                        var t, n, i, r = !1, o = !1, a = e.input.charCodeAt(e.position);
-                        if (33 === a) {
-                            if (null !== e.tag && N(e, "duplication of a tag property"), 60 === (a = e.input.charCodeAt(++e.position)) ? (r = !0, a = e.input.charCodeAt(++e.position)) : 33 === a ? (o = !0, n = "!!", a = e.input.charCodeAt(++e.position)) : n = "!", t = e.position, r) {
-                                for(; 0 !== (a = e.input.charCodeAt(++e.position)) && 62 !== a;);
-                                e.position < e.length ? (i = e.input.slice(t, e.position), a = e.input.charCodeAt(++e.position)) : N(e, "unexpected end of the stream within a verbatim tag");
-                            } else {
-                                for(; 0 !== a && !F(a);)33 === a && (o ? N(e, "tag suffix cannot contain exclamation marks") : (n = e.input.slice(t - 1, e.position + 1), S.test(n) || N(e, "named tag handle cannot contain such characters"), o = !0, t = e.position + 1)), a = e.input.charCodeAt(++e.position);
-                                i = e.input.slice(t, e.position), j.test(i) && N(e, "tag suffix cannot contain flow indicator characters");
-                            }
-                            return i && !I.test(i) && N(e, "tag name cannot contain such characters: " + i), r ? e.tag = i : y.call(e.tagMap, n) ? e.tag = e.tagMap[n] + i : "!" === n ? e.tag = "!" + i : "!!" === n ? e.tag = "tag:yaml.org,2002:" + i : N(e, 'undeclared tag handle "' + n + '"'), 1;
-                        }
-                    }(e) || function(e) {
-                        var t, n = e.input.charCodeAt(e.position);
-                        if (38 === n) {
-                            for(null !== e.anchor && N(e, "duplication of an anchor property"), n = e.input.charCodeAt(++e.position), t = e.position; 0 !== n && !F(n) && !_(n);)n = e.input.charCodeAt(++e.position);
-                            return e.position === t && N(e, "name of an anchor node must contain at least one character"), e.anchor = e.input.slice(t, e.position), 1;
-                        }
-                    }(e);)Y(e, !0, -1) ? (h = !0, s = o, e.lineIndent > t ? d = 1 : e.lineIndent === t ? d = 0 : e.lineIndent < t && (d = -1)) : s = !1;
-                    if (s = s && (h || r), 1 !== d && b !== n || (p = x === n || v === n ? t : t + 1, f = e.position - e.lineStart, 1 === d ? s && (W(e, f) || function(e, t, n) {
-                        var i, r, o, a, s, c = e.tag, u = e.anchor, l = {}, p = {}, f = null, d = null, h = null, m = !1, g = !1;
-                        for(null !== e.anchor && (e.anchorMap[e.anchor] = l), s = e.input.charCodeAt(e.position); 0 !== s;){
-                            if (i = e.input.charCodeAt(e.position + 1), o = e.line, a = e.position, 63 !== s && 58 !== s || !F(i)) {
-                                if (!K(e, n, v, !1, !0)) break;
-                                if (e.line === o) {
-                                    for(s = e.input.charCodeAt(e.position); E(s);)s = e.input.charCodeAt(++e.position);
-                                    if (58 === s) F(s = e.input.charCodeAt(++e.position)) || N(e, "a whitespace character is expected after the key-value separator within a block mapping"), m && (U(e, l, p, f, d, null), f = d = h = null), r = m = !(g = !0), f = e.tag, d = e.result;
-                                    else {
-                                        if (!g) return e.tag = c, e.anchor = u, 1;
-                                        N(e, "can not read an implicit mapping pair; a colon is missed");
-                                    }
-                                } else {
-                                    if (!g) return e.tag = c, e.anchor = u, 1;
-                                    N(e, "can not read a block mapping entry; a multiline key may not be an implicit key");
-                                }
-                            } else 63 === s ? (m && (U(e, l, p, f, d, null), f = d = h = null), r = m = g = !0) : m ? r = !(m = !1) : N(e, "incomplete explicit mapping pair; a key node is missed; or followed by a non-tabulated empty line"), e.position += 1, s = i;
-                            if ((e.line === o || e.lineIndent > t) && (K(e, t, b, !0, r) && (m ? d = e.result : h = e.result), m || (U(e, l, p, f, d, h, o, a), f = d = h = null), Y(e, !0, -1), s = e.input.charCodeAt(e.position)), e.lineIndent > t && 0 !== s) N(e, "bad indentation of a mapping entry");
-                            else if (e.lineIndent < t) break;
-                        }
-                        return m && U(e, l, p, f, d, null), g && (e.tag = c, e.anchor = u, e.kind = "mapping", e.result = l), g;
-                    }(e, f, p)) || function(e, t) {
-                        var n, i, r, o, a, s, c, u, l, p = !0, f = e.tag, d = e.anchor, h = {}, m = e.input.charCodeAt(e.position);
-                        if (91 === m) s = !(r = 93), i = [];
-                        else {
-                            if (123 !== m) return;
-                            r = 125, s = !0, i = {};
-                        }
-                        for(null !== e.anchor && (e.anchorMap[e.anchor] = i), m = e.input.charCodeAt(++e.position); 0 !== m;){
-                            if (Y(e, !0, t), (m = e.input.charCodeAt(e.position)) === r) return e.position++, e.tag = f, e.anchor = d, e.kind = s ? "mapping" : "sequence", e.result = i, 1;
-                            p || N(e, "missed comma between flow collection entries"), l = null, o = a = !1, 63 === m && F(e.input.charCodeAt(e.position + 1)) && (o = a = !0, e.position++, Y(e, !0, t)), n = e.line, K(e, t, x, !1, !0), u = e.tag, c = e.result, Y(e, !0, t), m = e.input.charCodeAt(e.position), !a && e.line !== n || 58 !== m || (o = !0, m = e.input.charCodeAt(++e.position), Y(e, !0, t), K(e, t, x, !1, !0), l = e.result), s ? U(e, i, h, u, c, l) : o ? i.push(U(e, null, h, u, c, l)) : i.push(c), Y(e, !0, t), 44 === (m = e.input.charCodeAt(e.position)) ? (p = !0, m = e.input.charCodeAt(++e.position)) : p = !1;
-                        }
-                        N(e, "unexpected end of the stream within a flow collection");
-                    }(e, p) ? m = !0 : (a && function(e, t) {
-                        var n, i, r, o, a = w, s = !1, c = !1, u = t, l = 0, p = !1, f = e.input.charCodeAt(e.position);
-                        if (124 === f) i = !1;
-                        else {
-                            if (62 !== f) return;
-                            i = !0;
-                        }
-                        for(e.kind = "scalar", e.result = ""; 0 !== f;)if (43 === (f = e.input.charCodeAt(++e.position)) || 45 === f) w === a ? a = 43 === f ? k : C : N(e, "repeat of a chomping mode identifier");
-                        else {
-                            if (!(0 <= (r = 48 <= (o = f) && o <= 57 ? o - 48 : -1))) break;
-                            0 == r ? N(e, "bad explicit indentation width of a block scalar; it cannot be less than one") : c ? N(e, "repeat of an indentation width identifier") : (u = t + r - 1, c = !0);
-                        }
-                        if (E(f)) {
-                            for(; E(f = e.input.charCodeAt(++e.position)););
-                            if (35 === f) for(; !O(f = e.input.charCodeAt(++e.position)) && 0 !== f;);
-                        }
-                        for(; 0 !== f;){
-                            for(q(e), e.lineIndent = 0, f = e.input.charCodeAt(e.position); (!c || e.lineIndent < u) && 32 === f;)e.lineIndent++, f = e.input.charCodeAt(++e.position);
-                            if (!c && e.lineIndent > u && (u = e.lineIndent), O(f)) l++;
-                            else {
-                                if (e.lineIndent < u) {
-                                    a === k ? e.result += g.repeat("\n", s ? 1 + l : l) : a === w && s && (e.result += "\n");
-                                    break;
-                                }
-                                for(i ? E(f) ? (p = !0, e.result += g.repeat("\n", s ? 1 + l : l)) : p ? (p = !1, e.result += g.repeat("\n", l + 1)) : 0 === l ? s && (e.result += " ") : e.result += g.repeat("\n", l) : e.result += g.repeat("\n", s ? 1 + l : l), c = s = !0, l = 0, n = e.position; !O(f) && 0 !== f;)f = e.input.charCodeAt(++e.position);
-                                L(e, n, e.position, !1);
-                            }
-                        }
-                        return 1;
-                    }(e, p) || function(e, t) {
-                        var n, i, r = e.input.charCodeAt(e.position);
-                        if (39 === r) {
-                            for(e.kind = "scalar", e.result = "", e.position++, n = i = e.position; 0 !== (r = e.input.charCodeAt(e.position));)if (39 === r) {
-                                if (L(e, n, e.position, !0), 39 !== (r = e.input.charCodeAt(++e.position))) return 1;
-                                n = e.position, e.position++, i = e.position;
-                            } else O(r) ? (L(e, n, i, !0), B(e, Y(e, !1, t)), n = i = e.position) : e.position === e.lineStart && R(e) ? N(e, "unexpected end of the document within a single quoted scalar") : (e.position++, i = e.position);
-                            N(e, "unexpected end of the stream within a single quoted scalar");
-                        }
-                    }(e, p) || P(e, p) ? m = !0 : !function(e) {
-                        var t, n, i = e.input.charCodeAt(e.position);
-                        if (42 === i) {
-                            for(i = e.input.charCodeAt(++e.position), t = e.position; 0 !== i && !F(i) && !_(i);)i = e.input.charCodeAt(++e.position);
-                            return e.position === t && N(e, "name of an alias node must contain at least one character"), n = e.input.slice(t, e.position), e.anchorMap.hasOwnProperty(n) || N(e, 'unidentified alias "' + n + '"'), e.result = e.anchorMap[n], Y(e, !0, -1), 1;
-                        }
-                    }(e) ? function(e, t, n) {
-                        var i, r, o, a, s, c, u, l = e.kind, p = e.result, f = e.input.charCodeAt(e.position);
-                        if (!F(f) && !_(f) && 35 !== f && 38 !== f && 42 !== f && 33 !== f && 124 !== f && 62 !== f && 39 !== f && 34 !== f && 37 !== f && 64 !== f && 96 !== f && (63 !== f && 45 !== f || !(F(i = e.input.charCodeAt(e.position + 1)) || n && _(i)))) {
-                            for(e.kind = "scalar", e.result = "", r = o = e.position, a = !1; 0 !== f;){
-                                if (58 === f) {
-                                    if (F(i = e.input.charCodeAt(e.position + 1)) || n && _(i)) break;
-                                } else if (35 === f) {
-                                    if (F(e.input.charCodeAt(e.position - 1))) break;
-                                } else {
-                                    if (e.position === e.lineStart && R(e) || n && _(f)) break;
-                                    if (O(f)) {
-                                        if (s = e.line, c = e.lineStart, u = e.lineIndent, Y(e, !1, -1), e.lineIndent >= t) {
-                                            a = !0, f = e.input.charCodeAt(e.position);
-                                            continue;
-                                        }
-                                        e.position = o, e.line = s, e.lineStart = c, e.lineIndent = u;
-                                        break;
-                                    }
-                                }
-                                a && (L(e, r, o, !1), B(e, e.line - s), r = o = e.position, a = !1), E(f) || (o = e.position + 1), f = e.input.charCodeAt(++e.position);
-                            }
-                            if (L(e, r, o, !1), e.result) return 1;
-                            e.kind = l, e.result = p;
-                        }
-                    }(e, p, x === n) && (m = !0, null === e.tag && (e.tag = "?")) : (m = !0, null === e.tag && null === e.anchor || N(e, "alias node should not have any properties")), null !== e.anchor && (e.anchorMap[e.anchor] = e.result)) : 0 === d && (m = s && W(e, f))), null !== e.tag && "!" !== e.tag) if ("?" === e.tag) {
-                        for(null !== e.result && "scalar" !== e.kind && N(e, 'unacceptable node kind for !<?> tag; it should be "scalar", not "' + e.kind + '"'), c = 0, u = e.implicitTypes.length; c < u; c += 1)if ((l = e.implicitTypes[c]).resolve(e.result)) {
-                            e.result = l.construct(e.result), e.tag = l.tag, null !== e.anchor && (e.anchorMap[e.anchor] = e.result);
-                            break;
-                        }
-                    } else y.call(e.typeMap[e.kind || "fallback"], e.tag) ? (l = e.typeMap[e.kind || "fallback"][e.tag], null !== e.result && l.kind !== e.kind && N(e, "unacceptable node kind for !<" + e.tag + '> tag; it should be "' + l.kind + '", not "' + e.kind + '"'), l.resolve(e.result) ? (e.result = l.construct(e.result), null !== e.anchor && (e.anchorMap[e.anchor] = e.result)) : N(e, "cannot resolve a node with !<" + e.tag + "> explicit tag")) : N(e, "unknown tag !<" + e.tag + ">");
-                    return null !== e.listener && e.listener("close", e), null !== e.tag || null !== e.anchor || m;
-                }
-                function $(e, t) {
-                    t = t || {}, 0 !== (e = String(e)).length && (10 !== e.charCodeAt(e.length - 1) && 13 !== e.charCodeAt(e.length - 1) && (e += "\n"), 65279 === e.charCodeAt(0) && (e = e.slice(1)));
-                    var n = new h(e, t), i = e.indexOf("\0");
-                    for(-1 !== i && (n.position = i, N(n, "null byte is not allowed in input")), n.input += "\0"; 32 === n.input.charCodeAt(n.position);)n.lineIndent += 1, n.position += 1;
-                    for(; n.position < n.length - 1;)!function(e) {
-                        var t, n, i, r, o = e.position, a = !1;
-                        for(e.version = null, e.checkLineBreaks = e.legacy, e.tagMap = {}, e.anchorMap = {}; 0 !== (r = e.input.charCodeAt(e.position)) && (Y(e, !0, -1), r = e.input.charCodeAt(e.position), !(0 < e.lineIndent || 37 !== r));){
-                            for(a = !0, r = e.input.charCodeAt(++e.position), t = e.position; 0 !== r && !F(r);)r = e.input.charCodeAt(++e.position);
-                            for(i = [], (n = e.input.slice(t, e.position)).length < 1 && N(e, "directive name must not be less than one character in length"); 0 !== r;){
-                                for(; E(r);)r = e.input.charCodeAt(++e.position);
-                                if (35 === r) {
-                                    for(; 0 !== (r = e.input.charCodeAt(++e.position)) && !O(r););
-                                    break;
-                                }
-                                if (O(r)) break;
-                                for(t = e.position; 0 !== r && !F(r);)r = e.input.charCodeAt(++e.position);
-                                i.push(e.input.slice(t, e.position));
-                            }
-                            0 !== r && q(e), y.call(T, n) ? T[n](e, n, i) : M(e, 'unknown document directive "' + n + '"');
-                        }
-                        Y(e, !0, -1), 0 === e.lineIndent && 45 === e.input.charCodeAt(e.position) && 45 === e.input.charCodeAt(e.position + 1) && 45 === e.input.charCodeAt(e.position + 2) ? (e.position += 3, Y(e, !0, -1)) : a && N(e, "directives end mark is expected"), K(e, e.lineIndent - 1, b, !1, !0), Y(e, !0, -1), e.checkLineBreaks && s.test(e.input.slice(o, e.position)) && M(e, "non-ASCII line breaks are interpreted as content"), e.documents.push(e.result), e.position === e.lineStart && R(e) ? 46 === e.input.charCodeAt(e.position) && (e.position += 3, Y(e, !0, -1)) : e.position < e.length - 1 && N(e, "end of the stream or a document separator is expected");
-                    }(n);
-                    return n.documents;
-                }
-                function H(e, t, n) {
-                    null !== t && "object" == typeof t && void 0 === n && (n = t, t = null);
-                    var i = $(e, n);
-                    if ("function" != typeof t) return i;
-                    for(var r = 0, o = i.length; r < o; r += 1)t(i[r]);
-                }
-                function G(e, t) {
-                    var n = $(e, t);
-                    if (0 !== n.length) {
-                        if (1 === n.length) return n[0];
-                        throw new i("expected a single document in the stream, but found more");
-                    }
-                }
-                t.exports.loadAll = H, t.exports.load = G, t.exports.safeLoadAll = function(e, t, n) {
-                    return "object" == typeof t && null !== t && void 0 === n && (n = t, t = null), H(e, t, g.extend({
-                        schema: o
-                    }, n));
-                }, t.exports.safeLoad = function(e, t) {
-                    return G(e, g.extend({
-                        schema: o
-                    }, t));
-                };
-            },
-            {
-                "./common": 2,
-                "./exception": 4,
-                "./mark": 6,
-                "./schema/default_full": 9,
-                "./schema/default_safe": 10
+        }
+        this.compiledImplicit = compileList(this, "implicit", []);
+        this.compiledExplicit = compileList(this, "explicit", []);
+        this.compiledTypeMap = compileMap(this.compiledImplicit, this.compiledExplicit);
+    }
+    extend(definition) {
+        return new Schema({
+            implicit: [
+                ...new Set([
+                    ...this.implicit,
+                    ...definition?.implicit ?? []
+                ])
+            ],
+            explicit: [
+                ...new Set([
+                    ...this.explicit,
+                    ...definition?.explicit ?? []
+                ])
+            ],
+            include: [
+                ...new Set([
+                    ...this.include,
+                    ...definition?.include ?? []
+                ])
+            ]
+        });
+    }
+    static create() {}
+}
+const DEFAULT_RESOLVE = ()=>true;
+const DEFAULT_CONSTRUCT = (data)=>data;
+function checkTagFormat(tag) {
+    return tag;
+}
+class Type1 {
+    tag;
+    kind = null;
+    instanceOf;
+    predicate;
+    represent;
+    defaultStyle;
+    styleAliases;
+    loadKind;
+    constructor(tag, options){
+        this.tag = checkTagFormat(tag);
+        if (options) {
+            this.kind = options.kind;
+            this.resolve = options.resolve || DEFAULT_RESOLVE;
+            this.construct = options.construct || DEFAULT_CONSTRUCT;
+            this.instanceOf = options.instanceOf;
+            this.predicate = options.predicate;
+            this.represent = options.represent;
+            this.defaultStyle = options.defaultStyle;
+            this.styleAliases = options.styleAliases;
+        }
+    }
+    resolve = ()=>true;
+    construct = (data)=>data;
+}
+class DenoStdInternalError extends Error {
+    constructor(message){
+        super(message);
+        this.name = "DenoStdInternalError";
+    }
+}
+function assert(expr, msg = "") {
+    if (!expr) {
+        throw new DenoStdInternalError(msg);
+    }
+}
+function copy(src, dst, off = 0) {
+    off = Math.max(0, Math.min(off, dst.byteLength));
+    const dstBytesAvailable = dst.byteLength - off;
+    if (src.byteLength > dstBytesAvailable) {
+        src = src.subarray(0, dstBytesAvailable);
+    }
+    dst.set(src, off);
+    return src.byteLength;
+}
+const MIN_READ = 32 * 1024;
+const MAX_SIZE = 2 ** 32 - 2;
+class Buffer {
+    #buf;
+    #off = 0;
+    constructor(ab){
+        this.#buf = ab === undefined ? new Uint8Array(0) : new Uint8Array(ab);
+    }
+    bytes(options = {
+        copy: true
+    }) {
+        if (options.copy === false) return this.#buf.subarray(this.#off);
+        return this.#buf.slice(this.#off);
+    }
+    empty() {
+        return this.#buf.byteLength <= this.#off;
+    }
+    get length() {
+        return this.#buf.byteLength - this.#off;
+    }
+    get capacity() {
+        return this.#buf.buffer.byteLength;
+    }
+    truncate(n) {
+        if (n === 0) {
+            this.reset();
+            return;
+        }
+        if (n < 0 || n > this.length) {
+            throw Error("bytes.Buffer: truncation out of range");
+        }
+        this.#reslice(this.#off + n);
+    }
+    reset() {
+        this.#reslice(0);
+        this.#off = 0;
+    }
+    #tryGrowByReslice(n) {
+        const l = this.#buf.byteLength;
+        if (n <= this.capacity - l) {
+            this.#reslice(l + n);
+            return l;
+        }
+        return -1;
+    }
+    #reslice(len) {
+        assert(len <= this.#buf.buffer.byteLength);
+        this.#buf = new Uint8Array(this.#buf.buffer, 0, len);
+    }
+    readSync(p) {
+        if (this.empty()) {
+            this.reset();
+            if (p.byteLength === 0) {
+                return 0;
             }
-        ],
-        6: [
-            function(e, t, n) {
-                "use strict";
-                var s = e("./common");
-                function i(e, t, n, i, r) {
-                    this.name = e, this.buffer = t, this.position = n, this.line = i, this.column = r;
-                }
-                i.prototype.getSnippet = function(e, t) {
-                    var n, i, r, o, a;
-                    if (!this.buffer) return null;
-                    for(e = e || 4, t = t || 75, n = "", i = this.position; 0 < i && -1 === "\0\r\n\u2028\u2029".indexOf(this.buffer.charAt(i - 1));)if (--i, this.position - i > t / 2 - 1) {
-                        n = " ... ", i += 5;
-                        break;
-                    }
-                    for(r = "", o = this.position; o < this.buffer.length && -1 === "\0\r\n\u2028\u2029".indexOf(this.buffer.charAt(o));)if ((o += 1) - this.position > t / 2 - 1) {
-                        r = " ... ", o -= 5;
-                        break;
-                    }
-                    return a = this.buffer.slice(i, o), s.repeat(" ", e) + n + a + r + "\n" + s.repeat(" ", e + this.position - i + n.length) + "^";
-                }, i.prototype.toString = function(e) {
-                    var t, n = "";
-                    return this.name && (n += 'in "' + this.name + '" '), n += "at line " + (this.line + 1) + ", column " + (this.column + 1), e || (t = this.getSnippet()) && (n += ":\n" + t), n;
-                }, t.exports = i;
-            },
-            {
-                "./common": 2
+            return null;
+        }
+        const nread = copy(this.#buf.subarray(this.#off), p);
+        this.#off += nread;
+        return nread;
+    }
+    read(p) {
+        const rr = this.readSync(p);
+        return Promise.resolve(rr);
+    }
+    writeSync(p) {
+        const m = this.#grow(p.byteLength);
+        return copy(p, this.#buf, m);
+    }
+    write(p) {
+        const n = this.writeSync(p);
+        return Promise.resolve(n);
+    }
+    #grow(n1) {
+        const m = this.length;
+        if (m === 0 && this.#off !== 0) {
+            this.reset();
+        }
+        const i = this.#tryGrowByReslice(n1);
+        if (i >= 0) {
+            return i;
+        }
+        const c = this.capacity;
+        if (n1 <= Math.floor(c / 2) - m) {
+            copy(this.#buf.subarray(this.#off), this.#buf);
+        } else if (c + n1 > MAX_SIZE) {
+            throw new Error("The buffer cannot be grown beyond the maximum size.");
+        } else {
+            const buf = new Uint8Array(Math.min(2 * c + n1, MAX_SIZE));
+            copy(this.#buf.subarray(this.#off), buf);
+            this.#buf = buf;
+        }
+        this.#off = 0;
+        this.#reslice(Math.min(m + n1, MAX_SIZE));
+        return m;
+    }
+    grow(n) {
+        if (n < 0) {
+            throw Error("Buffer.grow: negative count");
+        }
+        const m = this.#grow(n);
+        this.#reslice(m);
+    }
+    async readFrom(r) {
+        let n = 0;
+        const tmp = new Uint8Array(MIN_READ);
+        while(true){
+            const shouldGrow = this.capacity - this.length < MIN_READ;
+            const buf = shouldGrow ? tmp : new Uint8Array(this.#buf.buffer, this.length);
+            const nread = await r.read(buf);
+            if (nread === null) {
+                return n;
             }
-        ],
-        7: [
-            function(e, t, n) {
-                "use strict";
-                var r = e("./common"), o = e("./exception"), a = e("./type");
-                function s(e, t, i) {
-                    var r = [];
-                    return e.include.forEach(function(e) {
-                        i = s(e, t, i);
-                    }), e[t].forEach(function(n) {
-                        i.forEach(function(e, t) {
-                            e.tag === n.tag && e.kind === n.kind && r.push(t);
-                        }), i.push(n);
-                    }), i.filter(function(e, t) {
-                        return -1 === r.indexOf(t);
-                    });
-                }
-                function c(e) {
-                    this.include = e.include || [], this.implicit = e.implicit || [], this.explicit = e.explicit || [], this.implicit.forEach(function(e) {
-                        if (e.loadKind && "scalar" !== e.loadKind) throw new o("There is a non-scalar type in the implicit list of a schema. Implicit resolving of such types is not supported.");
-                    }), this.compiledImplicit = s(this, "implicit", []), this.compiledExplicit = s(this, "explicit", []), this.compiledTypeMap = function() {
-                        var e, t, n = {
-                            scalar: {},
-                            sequence: {},
-                            mapping: {},
-                            fallback: {}
-                        };
-                        function i(e) {
-                            n[e.kind][e.tag] = n.fallback[e.tag] = e;
-                        }
-                        for(e = 0, t = arguments.length; e < t; e += 1)arguments[e].forEach(i);
-                        return n;
-                    }(this.compiledImplicit, this.compiledExplicit);
-                }
-                c.DEFAULT = null, c.create = function(e, t) {
-                    var n, i;
-                    switch(arguments.length){
-                        case 1:
-                            n = c.DEFAULT, i = e;
-                            break;
-                        case 2:
-                            n = e, i = t;
-                            break;
-                        default:
-                            throw new o("Wrong number of arguments for Schema.create function");
-                    }
-                    if (n = r.toArray(n), i = r.toArray(i), !n.every(function(e) {
-                        return e instanceof c;
-                    })) throw new o("Specified list of super schemas (or a single Schema object) contains a non-Schema object.");
-                    if (!i.every(function(e) {
-                        return e instanceof a;
-                    })) throw new o("Specified list of YAML types (or a single Type object) contains a non-Type object.");
-                    return new c({
-                        include: n,
-                        explicit: i
-                    });
-                }, t.exports = c;
-            },
-            {
-                "./common": 2,
-                "./exception": 4,
-                "./type": 13
+            if (shouldGrow) this.writeSync(buf.subarray(0, nread));
+            else this.#reslice(this.length + nread);
+            n += nread;
+        }
+    }
+    readFromSync(r) {
+        let n = 0;
+        const tmp = new Uint8Array(MIN_READ);
+        while(true){
+            const shouldGrow = this.capacity - this.length < MIN_READ;
+            const buf = shouldGrow ? tmp : new Uint8Array(this.#buf.buffer, this.length);
+            const nread = r.readSync(buf);
+            if (nread === null) {
+                return n;
             }
-        ],
-        8: [
-            function(e, t, n) {
-                "use strict";
-                var i = e("../schema");
-                t.exports = new i({
-                    include: [
-                        e("./json")
-                    ]
-                });
-            },
-            {
-                "../schema": 7,
-                "./json": 12
-            }
-        ],
-        9: [
-            function(e, t, n) {
-                "use strict";
-                var i = e("../schema");
-                t.exports = i.DEFAULT = new i({
-                    include: [
-                        e("./default_safe")
-                    ],
-                    explicit: [
-                        e("../type/js/undefined"),
-                        e("../type/js/regexp"),
-                        e("../type/js/function")
-                    ]
-                });
-            },
-            {
-                "../schema": 7,
-                "../type/js/function": 18,
-                "../type/js/regexp": 19,
-                "../type/js/undefined": 20,
-                "./default_safe": 10
-            }
-        ],
-        10: [
-            function(e, t, n) {
-                "use strict";
-                var i = e("../schema");
-                t.exports = new i({
-                    include: [
-                        e("./core")
-                    ],
-                    implicit: [
-                        e("../type/timestamp"),
-                        e("../type/merge")
-                    ],
-                    explicit: [
-                        e("../type/binary"),
-                        e("../type/omap"),
-                        e("../type/pairs"),
-                        e("../type/set")
-                    ]
-                });
-            },
-            {
-                "../schema": 7,
-                "../type/binary": 14,
-                "../type/merge": 22,
-                "../type/omap": 24,
-                "../type/pairs": 25,
-                "../type/set": 27,
-                "../type/timestamp": 29,
-                "./core": 8
-            }
-        ],
-        11: [
-            function(e, t, n) {
-                "use strict";
-                var i = e("../schema");
-                t.exports = new i({
-                    explicit: [
-                        e("../type/str"),
-                        e("../type/seq"),
-                        e("../type/map")
-                    ]
-                });
-            },
-            {
-                "../schema": 7,
-                "../type/map": 21,
-                "../type/seq": 26,
-                "../type/str": 28
-            }
-        ],
-        12: [
-            function(e, t, n) {
-                "use strict";
-                var i = e("../schema");
-                t.exports = new i({
-                    include: [
-                        e("./failsafe")
-                    ],
-                    implicit: [
-                        e("../type/null"),
-                        e("../type/bool"),
-                        e("../type/int"),
-                        e("../type/float")
-                    ]
-                });
-            },
-            {
-                "../schema": 7,
-                "../type/bool": 15,
-                "../type/float": 16,
-                "../type/int": 17,
-                "../type/null": 23,
-                "./failsafe": 11
-            }
-        ],
-        13: [
-            function(e, t, n) {
-                "use strict";
-                var r = e("./exception"), o = [
-                    "kind",
-                    "resolve",
-                    "construct",
-                    "instanceOf",
-                    "predicate",
-                    "represent",
-                    "defaultStyle",
-                    "styleAliases"
-                ], a = [
-                    "scalar",
-                    "sequence",
-                    "mapping"
-                ];
-                t.exports = function(t, e) {
-                    var n, i;
-                    if (e = e || {}, Object.keys(e).forEach(function(e) {
-                        if (-1 === o.indexOf(e)) throw new r('Unknown option "' + e + '" is met in definition of "' + t + '" YAML type.');
-                    }), this.tag = t, this.kind = e.kind || null, this.resolve = e.resolve || function() {
-                        return !0;
-                    }, this.construct = e.construct || function(e) {
-                        return e;
-                    }, this.instanceOf = e.instanceOf || null, this.predicate = e.predicate || null, this.represent = e.represent || null, this.defaultStyle = e.defaultStyle || null, this.styleAliases = (n = e.styleAliases || null, i = {}, null !== n && Object.keys(n).forEach(function(t) {
-                        n[t].forEach(function(e) {
-                            i[String(e)] = t;
-                        });
-                    }), i), -1 === a.indexOf(this.kind)) throw new r('Unknown kind "' + this.kind + '" is specified for "' + t + '" YAML type.');
-                };
-            },
-            {
-                "./exception": 4
-            }
-        ],
-        14: [
-            function(e, t, n) {
-                "use strict";
-                try {
-                    var c = e("buffer").Buffer;
-                } catch (e1) {}
-                var i = e("../type"), u = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=\n\r";
-                t.exports = new i("tag:yaml.org,2002:binary", {
-                    kind: "scalar",
-                    resolve: function(e) {
-                        if (null === e) return !1;
-                        for(var t, n = 0, i = e.length, r = u, o = 0; o < i; o++)if (!(64 < (t = r.indexOf(e.charAt(o))))) {
-                            if (t < 0) return !1;
-                            n += 6;
-                        }
-                        return n % 8 == 0;
-                    },
-                    construct: function(e) {
-                        for(var t, n = e.replace(/[\r\n=]/g, ""), i = n.length, r = u, o = 0, a = [], s = 0; s < i; s++)s % 4 == 0 && s && (a.push(o >> 16 & 255), a.push(o >> 8 & 255), a.push(255 & o)), o = o << 6 | r.indexOf(n.charAt(s));
-                        return 0 == (t = i % 4 * 6) ? (a.push(o >> 16 & 255), a.push(o >> 8 & 255), a.push(255 & o)) : 18 == t ? (a.push(o >> 10 & 255), a.push(o >> 2 & 255)) : 12 == t && a.push(o >> 4 & 255), c ? c.from ? c.from(a) : new c(a) : a;
-                    },
-                    predicate: function(e) {
-                        return c && c.isBuffer(e);
-                    },
-                    represent: function(e) {
-                        for(var t, n = "", i = 0, r = e.length, o = u, a = 0; a < r; a++)a % 3 == 0 && a && (n += o[i >> 18 & 63], n += o[i >> 12 & 63], n += o[i >> 6 & 63], n += o[63 & i]), i = (i << 8) + e[a];
-                        return 0 == (t = r % 3) ? (n += o[i >> 18 & 63], n += o[i >> 12 & 63], n += o[i >> 6 & 63], n += o[63 & i]) : 2 == t ? (n += o[i >> 10 & 63], n += o[i >> 4 & 63], n += o[i << 2 & 63], n += o[64]) : 1 == t && (n += o[i >> 2 & 63], n += o[i << 4 & 63], n += o[64], n += o[64]), n;
-                    }
-                });
-            },
-            {
-                "../type": 13
-            }
-        ],
-        15: [
-            function(e, t, n) {
-                "use strict";
-                var i = e("../type");
-                t.exports = new i("tag:yaml.org,2002:bool", {
-                    kind: "scalar",
-                    resolve: function(e) {
-                        if (null === e) return !1;
-                        var t = e.length;
-                        return 4 === t && ("true" === e || "True" === e || "TRUE" === e) || 5 === t && ("false" === e || "False" === e || "FALSE" === e);
-                    },
-                    construct: function(e) {
-                        return "true" === e || "True" === e || "TRUE" === e;
-                    },
-                    predicate: function(e) {
-                        return "[object Boolean]" === Object.prototype.toString.call(e);
-                    },
-                    represent: {
-                        lowercase: function(e) {
-                            return e ? "true" : "false";
-                        },
-                        uppercase: function(e) {
-                            return e ? "TRUE" : "FALSE";
-                        },
-                        camelcase: function(e) {
-                            return e ? "True" : "False";
-                        }
-                    },
-                    defaultStyle: "lowercase"
-                });
-            },
-            {
-                "../type": 13
-            }
-        ],
-        16: [
-            function(e, t, n) {
-                "use strict";
-                var i = e("../common"), r = e("../type"), o = new RegExp("^(?:[-+]?(?:0|[1-9][0-9_]*)(?:\\.[0-9_]*)?(?:[eE][-+]?[0-9]+)?|\\.[0-9_]+(?:[eE][-+]?[0-9]+)?|[-+]?[0-9][0-9_]*(?::[0-5]?[0-9])+\\.[0-9_]*|[-+]?\\.(?:inf|Inf|INF)|\\.(?:nan|NaN|NAN))$");
-                var a = /^[-+]?[0-9]+e/;
-                t.exports = new r("tag:yaml.org,2002:float", {
-                    kind: "scalar",
-                    resolve: function(e) {
-                        return null !== e && !(!o.test(e) || "_" === e[e.length - 1]);
-                    },
-                    construct: function(e) {
-                        var t, n = e.replace(/_/g, "").toLowerCase(), i = "-" === n[0] ? -1 : 1, r = [];
-                        return 0 <= "+-".indexOf(n[0]) && (n = n.slice(1)), ".inf" === n ? 1 == i ? Number.POSITIVE_INFINITY : Number.NEGATIVE_INFINITY : ".nan" === n ? NaN : 0 <= n.indexOf(":") ? (n.split(":").forEach(function(e) {
-                            r.unshift(parseFloat(e, 10));
-                        }), n = 0, t = 1, r.forEach(function(e) {
-                            n += e * t, t *= 60;
-                        }), i * n) : i * parseFloat(n, 10);
-                    },
-                    predicate: function(e) {
-                        return "[object Number]" === Object.prototype.toString.call(e) && (e % 1 != 0 || i.isNegativeZero(e));
-                    },
-                    represent: function(e, t) {
-                        var n;
-                        if (isNaN(e)) switch(t){
-                            case "lowercase":
-                                return ".nan";
-                            case "uppercase":
-                                return ".NAN";
-                            case "camelcase":
-                                return ".NaN";
-                        }
-                        else if (Number.POSITIVE_INFINITY === e) switch(t){
-                            case "lowercase":
-                                return ".inf";
-                            case "uppercase":
-                                return ".INF";
-                            case "camelcase":
-                                return ".Inf";
-                        }
-                        else if (Number.NEGATIVE_INFINITY === e) switch(t){
-                            case "lowercase":
-                                return "-.inf";
-                            case "uppercase":
-                                return "-.INF";
-                            case "camelcase":
-                                return "-.Inf";
-                        }
-                        else if (i.isNegativeZero(e)) return "-0.0";
-                        return n = e.toString(10), a.test(n) ? n.replace("e", ".e") : n;
-                    },
-                    defaultStyle: "lowercase"
-                });
-            },
-            {
-                "../common": 2,
-                "../type": 13
-            }
-        ],
-        17: [
-            function(e, t, n) {
-                "use strict";
-                var i = e("../common"), r = e("../type");
-                t.exports = new r("tag:yaml.org,2002:int", {
-                    kind: "scalar",
-                    resolve: function(e) {
-                        if (null === e) return !1;
-                        var t, n, i, r, o = e.length, a = 0, s = !1;
-                        if (!o) return !1;
-                        if ("-" !== (t = e[a]) && "+" !== t || (t = e[++a]), "0" === t) {
-                            if (a + 1 === o) return !0;
-                            if ("b" === (t = e[++a])) {
-                                for(a++; a < o; a++)if ("_" !== (t = e[a])) {
-                                    if ("0" !== t && "1" !== t) return !1;
-                                    s = !0;
-                                }
-                                return s && "_" !== t;
-                            }
-                            if ("x" === t) {
-                                for(a++; a < o; a++)if ("_" !== (t = e[a])) {
-                                    if (!(48 <= (i = e.charCodeAt(a)) && i <= 57 || 65 <= i && i <= 70 || 97 <= i && i <= 102)) return !1;
-                                    s = !0;
-                                }
-                                return s && "_" !== t;
-                            }
-                            for(; a < o; a++)if ("_" !== (t = e[a])) {
-                                if (!(48 <= (n = e.charCodeAt(a)) && n <= 55)) return !1;
-                                s = !0;
-                            }
-                            return s && "_" !== t;
-                        }
-                        if ("_" === t) return !1;
-                        for(; a < o; a++)if ("_" !== (t = e[a])) {
-                            if (":" === t) break;
-                            if (!(48 <= (r = e.charCodeAt(a)) && r <= 57)) return !1;
-                            s = !0;
-                        }
-                        return !(!s || "_" === t) && (":" !== t || /^(:[0-5]?[0-9])+$/.test(e.slice(a)));
-                    },
-                    construct: function(e) {
-                        var t, n, i = e, r = 1, o = [];
-                        return -1 !== i.indexOf("_") && (i = i.replace(/_/g, "")), "-" !== (t = i[0]) && "+" !== t || ("-" === t && (r = -1), t = (i = i.slice(1))[0]), "0" === i ? 0 : "0" === t ? "b" === i[1] ? r * parseInt(i.slice(2), 2) : "x" === i[1] ? r * parseInt(i, 16) : r * parseInt(i, 8) : -1 !== i.indexOf(":") ? (i.split(":").forEach(function(e) {
-                            o.unshift(parseInt(e, 10));
-                        }), i = 0, n = 1, o.forEach(function(e) {
-                            i += e * n, n *= 60;
-                        }), r * i) : r * parseInt(i, 10);
-                    },
-                    predicate: function(e) {
-                        return "[object Number]" === Object.prototype.toString.call(e) && e % 1 == 0 && !i.isNegativeZero(e);
-                    },
-                    represent: {
-                        binary: function(e) {
-                            return 0 <= e ? "0b" + e.toString(2) : "-0b" + e.toString(2).slice(1);
-                        },
-                        octal: function(e) {
-                            return 0 <= e ? "0" + e.toString(8) : "-0" + e.toString(8).slice(1);
-                        },
-                        decimal: function(e) {
-                            return e.toString(10);
-                        },
-                        hexadecimal: function(e) {
-                            return 0 <= e ? "0x" + e.toString(16).toUpperCase() : "-0x" + e.toString(16).toUpperCase().slice(1);
-                        }
-                    },
-                    defaultStyle: "decimal",
-                    styleAliases: {
-                        binary: [
-                            2,
-                            "bin"
-                        ],
-                        octal: [
-                            8,
-                            "oct"
-                        ],
-                        decimal: [
-                            10,
-                            "dec"
-                        ],
-                        hexadecimal: [
-                            16,
-                            "hex"
-                        ]
-                    }
-                });
-            },
-            {
-                "../common": 2,
-                "../type": 13
-            }
-        ],
-        18: [
-            function(e, t, n) {
-                "use strict";
-                try {
-                    var o = e("esprima");
-                } catch (e1) {
-                    "undefined" != typeof window && (o = window.esprima);
-                }
-                var i = e("../../type");
-                t.exports = new i("tag:yaml.org,2002:js/function", {
-                    kind: "scalar",
-                    resolve: function(e) {
-                        if (null === e) return !1;
-                        try {
-                            var t = "(" + e + ")", n = o.parse(t, {
-                                range: !0
-                            });
-                            return "Program" !== n.type || 1 !== n.body.length || "ExpressionStatement" !== n.body[0].type || "ArrowFunctionExpression" !== n.body[0].expression.type && "FunctionExpression" !== n.body[0].expression.type ? !1 : !0;
-                        } catch (e1) {
-                            return !1;
-                        }
-                    },
-                    construct: function(e) {
-                        var t, n = "(" + e + ")", i = o.parse(n, {
-                            range: !0
-                        }), r = [];
-                        if ("Program" !== i.type || 1 !== i.body.length || "ExpressionStatement" !== i.body[0].type || "ArrowFunctionExpression" !== i.body[0].expression.type && "FunctionExpression" !== i.body[0].expression.type) throw new Error("Failed to resolve function");
-                        return i.body[0].expression.params.forEach(function(e) {
-                            r.push(e.name);
-                        }), t = i.body[0].expression.body.range, "BlockStatement" === i.body[0].expression.body.type ? new Function(r, n.slice(t[0] + 1, t[1] - 1)) : new Function(r, "return " + n.slice(t[0], t[1]));
-                    },
-                    predicate: function(e) {
-                        return "[object Function]" === Object.prototype.toString.call(e);
-                    },
-                    represent: function(e) {
-                        return e.toString();
-                    }
-                });
-            },
-            {
-                "../../type": 13
-            }
-        ],
-        19: [
-            function(e, t, n) {
-                "use strict";
-                var i = e("../../type");
-                t.exports = new i("tag:yaml.org,2002:js/regexp", {
-                    kind: "scalar",
-                    resolve: function(e) {
-                        if (null === e) return !1;
-                        if (0 === e.length) return !1;
-                        var t = e, n = /\/([gim]*)$/.exec(e), i = "";
-                        if ("/" === t[0]) {
-                            if (n && (i = n[1]), 3 < i.length) return !1;
-                            if ("/" !== t[t.length - i.length - 1]) return !1;
-                        }
-                        return !0;
-                    },
-                    construct: function(e) {
-                        var t = e, n = /\/([gim]*)$/.exec(e), i = "";
-                        return "/" === t[0] && (n && (i = n[1]), t = t.slice(1, t.length - i.length - 1)), new RegExp(t, i);
-                    },
-                    predicate: function(e) {
-                        return "[object RegExp]" === Object.prototype.toString.call(e);
-                    },
-                    represent: function(e) {
-                        var t = "/" + e.source + "/";
-                        return e.global && (t += "g"), e.multiline && (t += "m"), e.ignoreCase && (t += "i"), t;
-                    }
-                });
-            },
-            {
-                "../../type": 13
-            }
-        ],
-        20: [
-            function(e, t, n) {
-                "use strict";
-                var i = e("../../type");
-                t.exports = new i("tag:yaml.org,2002:js/undefined", {
-                    kind: "scalar",
-                    resolve: function() {
-                        return !0;
-                    },
-                    construct: function() {},
-                    predicate: function(e) {
-                        return void 0 === e;
-                    },
-                    represent: function() {
-                        return "";
-                    }
-                });
-            },
-            {
-                "../../type": 13
-            }
-        ],
-        21: [
-            function(e, t, n) {
-                "use strict";
-                var i = e("../type");
-                t.exports = new i("tag:yaml.org,2002:map", {
-                    kind: "mapping",
-                    construct: function(e) {
-                        return null !== e ? e : {};
-                    }
-                });
-            },
-            {
-                "../type": 13
-            }
-        ],
-        22: [
-            function(e, t, n) {
-                "use strict";
-                var i = e("../type");
-                t.exports = new i("tag:yaml.org,2002:merge", {
-                    kind: "scalar",
-                    resolve: function(e) {
-                        return "<<" === e || null === e;
-                    }
-                });
-            },
-            {
-                "../type": 13
-            }
-        ],
-        23: [
-            function(e, t, n) {
-                "use strict";
-                var i = e("../type");
-                t.exports = new i("tag:yaml.org,2002:null", {
-                    kind: "scalar",
-                    resolve: function(e) {
-                        if (null === e) return !0;
-                        var t = e.length;
-                        return 1 === t && "~" === e || 4 === t && ("null" === e || "Null" === e || "NULL" === e);
-                    },
-                    construct: function() {
-                        return null;
-                    },
-                    predicate: function(e) {
-                        return null === e;
-                    },
-                    represent: {
-                        canonical: function() {
-                            return "~";
-                        },
-                        lowercase: function() {
-                            return "null";
-                        },
-                        uppercase: function() {
-                            return "NULL";
-                        },
-                        camelcase: function() {
-                            return "Null";
-                        }
-                    },
-                    defaultStyle: "lowercase"
-                });
-            },
-            {
-                "../type": 13
-            }
-        ],
-        24: [
-            function(e, t, n) {
-                "use strict";
-                var i = e("../type"), c = Object.prototype.hasOwnProperty, u = Object.prototype.toString;
-                t.exports = new i("tag:yaml.org,2002:omap", {
-                    kind: "sequence",
-                    resolve: function(e) {
-                        if (null === e) return !0;
-                        for(var t, n, i, r = [], o = e, a = 0, s = o.length; a < s; a += 1){
-                            if (t = o[a], i = !1, "[object Object]" !== u.call(t)) return !1;
-                            for(n in t)if (c.call(t, n)) {
-                                if (i) return !1;
-                                i = !0;
-                            }
-                            if (!i) return !1;
-                            if (-1 !== r.indexOf(n)) return !1;
-                            r.push(n);
-                        }
-                        return !0;
-                    },
-                    construct: function(e) {
-                        return null !== e ? e : [];
-                    }
-                });
-            },
-            {
-                "../type": 13
-            }
-        ],
-        25: [
-            function(e, t, n) {
-                "use strict";
-                var i = e("../type"), s = Object.prototype.toString;
-                t.exports = new i("tag:yaml.org,2002:pairs", {
-                    kind: "sequence",
-                    resolve: function(e) {
-                        if (null === e) return !0;
-                        for(var t, n, i = e, r = new Array(i.length), o = 0, a = i.length; o < a; o += 1){
-                            if (t = i[o], "[object Object]" !== s.call(t)) return !1;
-                            if (1 !== (n = Object.keys(t)).length) return !1;
-                            r[o] = [
-                                n[0],
-                                t[n[0]]
-                            ];
-                        }
-                        return !0;
-                    },
-                    construct: function(e) {
-                        if (null === e) return [];
-                        for(var t, n, i = e, r = new Array(i.length), o = 0, a = i.length; o < a; o += 1)t = i[o], n = Object.keys(t), r[o] = [
-                            n[0],
-                            t[n[0]]
-                        ];
-                        return r;
-                    }
-                });
-            },
-            {
-                "../type": 13
-            }
-        ],
-        26: [
-            function(e, t, n) {
-                "use strict";
-                var i = e("../type");
-                t.exports = new i("tag:yaml.org,2002:seq", {
-                    kind: "sequence",
-                    construct: function(e) {
-                        return null !== e ? e : [];
-                    }
-                });
-            },
-            {
-                "../type": 13
-            }
-        ],
-        27: [
-            function(e, t, n) {
-                "use strict";
-                var i = e("../type"), r = Object.prototype.hasOwnProperty;
-                t.exports = new i("tag:yaml.org,2002:set", {
-                    kind: "mapping",
-                    resolve: function(e) {
-                        if (null === e) return !0;
-                        var t, n = e;
-                        for(t in n)if (r.call(n, t) && null !== n[t]) return !1;
-                        return !0;
-                    },
-                    construct: function(e) {
-                        return null !== e ? e : {};
-                    }
-                });
-            },
-            {
-                "../type": 13
-            }
-        ],
-        28: [
-            function(e, t, n) {
-                "use strict";
-                var i = e("../type");
-                t.exports = new i("tag:yaml.org,2002:str", {
-                    kind: "scalar",
-                    construct: function(e) {
-                        return null !== e ? e : "";
-                    }
-                });
-            },
-            {
-                "../type": 13
-            }
-        ],
-        29: [
-            function(e, t, n) {
-                "use strict";
-                var i = e("../type"), p = new RegExp("^([0-9][0-9][0-9][0-9])-([0-9][0-9])-([0-9][0-9])$"), f = new RegExp("^([0-9][0-9][0-9][0-9])-([0-9][0-9]?)-([0-9][0-9]?)(?:[Tt]|[ \\t]+)([0-9][0-9]?):([0-9][0-9]):([0-9][0-9])(?:\\.([0-9]*))?(?:[ \\t]*(Z|([-+])([0-9][0-9]?)(?::([0-9][0-9]))?))?$");
-                t.exports = new i("tag:yaml.org,2002:timestamp", {
-                    kind: "scalar",
-                    resolve: function(e) {
-                        return null !== e && (null !== p.exec(e) || null !== f.exec(e));
-                    },
-                    construct: function(e) {
-                        var t, n, i, r, o, a, s, c = 0, u = null, l = p.exec(e);
-                        if (null === l && (l = f.exec(e)), null === l) throw new Error("Date resolve error");
-                        if (t = +l[1], n = l[2] - 1, i = +l[3], !l[4]) return new Date(Date.UTC(t, n, i));
-                        if (r = +l[4], o = +l[5], a = +l[6], l[7]) {
-                            for(c = l[7].slice(0, 3); c.length < 3;)c += "0";
-                            c = +c;
-                        }
-                        return l[9] && (u = 6e4 * (60 * +l[10] + +(l[11] || 0)), "-" === l[9] && (u = -u)), s = new Date(Date.UTC(t, n, i, r, o, a, c)), u && s.setTime(s.getTime() - u), s;
-                    },
-                    instanceOf: Date,
-                    represent: function(e) {
-                        return e.toISOString();
-                    }
-                });
-            },
-            {
-                "../type": 13
-            }
-        ],
-        "/": [
-            function(e, t, n) {
-                "use strict";
-                var i = e("./lib/js-yaml.js");
-                t.exports = i;
-            },
-            {
-                "./lib/js-yaml.js": 1
-            }
-        ]
-    }, {}, [])("/");
+            if (shouldGrow) this.writeSync(buf.subarray(0, nread));
+            else this.#reslice(this.length + nread);
+            n += nread;
+        }
+    }
+}
+const BASE64_MAP = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=\n\r";
+function resolveYamlBinary(data) {
+    if (data === null) return false;
+    let code;
+    let bitlen = 0;
+    const max = data.length;
+    const map = BASE64_MAP;
+    for(let idx = 0; idx < max; idx++){
+        code = map.indexOf(data.charAt(idx));
+        if (code > 64) continue;
+        if (code < 0) return false;
+        bitlen += 6;
+    }
+    return bitlen % 8 === 0;
+}
+function constructYamlBinary(data) {
+    const input = data.replace(/[\r\n=]/g, "");
+    const max = input.length;
+    const map = BASE64_MAP;
+    const result = [];
+    let bits = 0;
+    for(let idx = 0; idx < max; idx++){
+        if (idx % 4 === 0 && idx) {
+            result.push(bits >> 16 & 0xff);
+            result.push(bits >> 8 & 0xff);
+            result.push(bits & 0xff);
+        }
+        bits = bits << 6 | map.indexOf(input.charAt(idx));
+    }
+    const tailbits = max % 4 * 6;
+    if (tailbits === 0) {
+        result.push(bits >> 16 & 0xff);
+        result.push(bits >> 8 & 0xff);
+        result.push(bits & 0xff);
+    } else if (tailbits === 18) {
+        result.push(bits >> 10 & 0xff);
+        result.push(bits >> 2 & 0xff);
+    } else if (tailbits === 12) {
+        result.push(bits >> 4 & 0xff);
+    }
+    return new Buffer(new Uint8Array(result));
+}
+function representYamlBinary(object) {
+    const max = object.length;
+    const map = BASE64_MAP;
+    let result = "";
+    let bits = 0;
+    for(let idx = 0; idx < max; idx++){
+        if (idx % 3 === 0 && idx) {
+            result += map[bits >> 18 & 0x3f];
+            result += map[bits >> 12 & 0x3f];
+            result += map[bits >> 6 & 0x3f];
+            result += map[bits & 0x3f];
+        }
+        bits = (bits << 8) + object[idx];
+    }
+    const tail = max % 3;
+    if (tail === 0) {
+        result += map[bits >> 18 & 0x3f];
+        result += map[bits >> 12 & 0x3f];
+        result += map[bits >> 6 & 0x3f];
+        result += map[bits & 0x3f];
+    } else if (tail === 2) {
+        result += map[bits >> 10 & 0x3f];
+        result += map[bits >> 4 & 0x3f];
+        result += map[bits << 2 & 0x3f];
+        result += map[64];
+    } else if (tail === 1) {
+        result += map[bits >> 2 & 0x3f];
+        result += map[bits << 4 & 0x3f];
+        result += map[64];
+        result += map[64];
+    }
+    return result;
+}
+function isBinary(obj) {
+    const buf = new Buffer();
+    try {
+        if (0 > buf.readFromSync(obj)) return true;
+        return false;
+    } catch  {
+        return false;
+    } finally{
+        buf.reset();
+    }
+}
+const binary = new Type1("tag:yaml.org,2002:binary", {
+    construct: constructYamlBinary,
+    kind: "scalar",
+    predicate: isBinary,
+    represent: representYamlBinary,
+    resolve: resolveYamlBinary
 });
-window.jsyaml.Type;
-window.jsyaml.Schema;
-window.jsyaml.FAILSAFE_SCHEMA;
-window.jsyaml.JSON_SCHEMA;
-window.jsyaml.CORE_SCHEMA;
-window.jsyaml.DEFAULT_SAFE_SCHEMA;
-window.jsyaml.DEFAULT_FULL_SCHEMA;
-window.jsyaml.load;
-window.jsyaml.loadAll;
-window.jsyaml.safeLoad;
-window.jsyaml.safeLoadAll;
-let dump = window.jsyaml.dump;
-window.jsyaml.safeDump;
-window.jsyaml.YAMLException;
-window.jsyaml.MINIMAL_SCHEMA;
-window.jsyaml.SAFE_SCHEMA;
-window.jsyaml.DEFAULT_SCHEMA;
-window.jsyaml.scan;
-window.jsyaml.parse;
-window.jsyaml.compose;
-window.jsyaml.addConstructor;
+function resolveYamlBoolean(data) {
+    const max = data.length;
+    return max === 4 && (data === "true" || data === "True" || data === "TRUE") || max === 5 && (data === "false" || data === "False" || data === "FALSE");
+}
+function constructYamlBoolean(data) {
+    return data === "true" || data === "True" || data === "TRUE";
+}
+const bool = new Type1("tag:yaml.org,2002:bool", {
+    construct: constructYamlBoolean,
+    defaultStyle: "lowercase",
+    kind: "scalar",
+    predicate: isBoolean,
+    represent: {
+        lowercase (object) {
+            return object ? "true" : "false";
+        },
+        uppercase (object) {
+            return object ? "TRUE" : "FALSE";
+        },
+        camelcase (object) {
+            return object ? "True" : "False";
+        }
+    },
+    resolve: resolveYamlBoolean
+});
+const YAML_FLOAT_PATTERN = new RegExp("^(?:[-+]?(?:0|[1-9][0-9_]*)(?:\\.[0-9_]*)?(?:[eE][-+]?[0-9]+)?" + "|\\.[0-9_]+(?:[eE][-+]?[0-9]+)?" + "|[-+]?[0-9][0-9_]*(?::[0-5]?[0-9])+\\.[0-9_]*" + "|[-+]?\\.(?:inf|Inf|INF)" + "|\\.(?:nan|NaN|NAN))$");
+function resolveYamlFloat(data) {
+    if (!YAML_FLOAT_PATTERN.test(data) || data[data.length - 1] === "_") {
+        return false;
+    }
+    return true;
+}
+function constructYamlFloat(data) {
+    let value = data.replace(/_/g, "").toLowerCase();
+    const sign = value[0] === "-" ? -1 : 1;
+    const digits = [];
+    if ("+-".indexOf(value[0]) >= 0) {
+        value = value.slice(1);
+    }
+    if (value === ".inf") {
+        return sign === 1 ? Number.POSITIVE_INFINITY : Number.NEGATIVE_INFINITY;
+    }
+    if (value === ".nan") {
+        return NaN;
+    }
+    if (value.indexOf(":") >= 0) {
+        value.split(":").forEach((v)=>{
+            digits.unshift(parseFloat(v));
+        });
+        let valueNb = 0.0;
+        let base = 1;
+        digits.forEach((d)=>{
+            valueNb += d * base;
+            base *= 60;
+        });
+        return sign * valueNb;
+    }
+    return sign * parseFloat(value);
+}
+const SCIENTIFIC_WITHOUT_DOT = /^[-+]?[0-9]+e/;
+function representYamlFloat(object, style) {
+    if (isNaN(object)) {
+        switch(style){
+            case "lowercase":
+                return ".nan";
+            case "uppercase":
+                return ".NAN";
+            case "camelcase":
+                return ".NaN";
+        }
+    } else if (Number.POSITIVE_INFINITY === object) {
+        switch(style){
+            case "lowercase":
+                return ".inf";
+            case "uppercase":
+                return ".INF";
+            case "camelcase":
+                return ".Inf";
+        }
+    } else if (Number.NEGATIVE_INFINITY === object) {
+        switch(style){
+            case "lowercase":
+                return "-.inf";
+            case "uppercase":
+                return "-.INF";
+            case "camelcase":
+                return "-.Inf";
+        }
+    } else if (isNegativeZero(object)) {
+        return "-0.0";
+    }
+    const res = object.toString(10);
+    return SCIENTIFIC_WITHOUT_DOT.test(res) ? res.replace("e", ".e") : res;
+}
+function isFloat(object) {
+    return Object.prototype.toString.call(object) === "[object Number]" && (object % 1 !== 0 || isNegativeZero(object));
+}
+const __float = new Type1("tag:yaml.org,2002:float", {
+    construct: constructYamlFloat,
+    defaultStyle: "lowercase",
+    kind: "scalar",
+    predicate: isFloat,
+    represent: representYamlFloat,
+    resolve: resolveYamlFloat
+});
+function reconstructFunction(code) {
+    const func = new Function(`return ${code}`)();
+    if (!(func instanceof Function)) {
+        throw new TypeError(`Expected function but got ${typeof func}: ${code}`);
+    }
+    return func;
+}
+new Type1("tag:yaml.org,2002:js/function", {
+    kind: "scalar",
+    resolve (data) {
+        if (data === null) {
+            return false;
+        }
+        try {
+            reconstructFunction(`${data}`);
+            return true;
+        } catch (_err) {
+            return false;
+        }
+    },
+    construct (data) {
+        return reconstructFunction(data);
+    },
+    predicate (object) {
+        return object instanceof Function;
+    },
+    represent (object) {
+        return object.toString();
+    }
+});
+function isHexCode(c) {
+    return 0x30 <= c && c <= 0x39 || 0x41 <= c && c <= 0x46 || 0x61 <= c && c <= 0x66;
+}
+function isOctCode(c) {
+    return 0x30 <= c && c <= 0x37;
+}
+function isDecCode(c) {
+    return 0x30 <= c && c <= 0x39;
+}
+function resolveYamlInteger(data) {
+    const max = data.length;
+    let index = 0;
+    let hasDigits = false;
+    if (!max) return false;
+    let ch = data[index];
+    if (ch === "-" || ch === "+") {
+        ch = data[++index];
+    }
+    if (ch === "0") {
+        if (index + 1 === max) return true;
+        ch = data[++index];
+        if (ch === "b") {
+            index++;
+            for(; index < max; index++){
+                ch = data[index];
+                if (ch === "_") continue;
+                if (ch !== "0" && ch !== "1") return false;
+                hasDigits = true;
+            }
+            return hasDigits && ch !== "_";
+        }
+        if (ch === "x") {
+            index++;
+            for(; index < max; index++){
+                ch = data[index];
+                if (ch === "_") continue;
+                if (!isHexCode(data.charCodeAt(index))) return false;
+                hasDigits = true;
+            }
+            return hasDigits && ch !== "_";
+        }
+        for(; index < max; index++){
+            ch = data[index];
+            if (ch === "_") continue;
+            if (!isOctCode(data.charCodeAt(index))) return false;
+            hasDigits = true;
+        }
+        return hasDigits && ch !== "_";
+    }
+    if (ch === "_") return false;
+    for(; index < max; index++){
+        ch = data[index];
+        if (ch === "_") continue;
+        if (ch === ":") break;
+        if (!isDecCode(data.charCodeAt(index))) {
+            return false;
+        }
+        hasDigits = true;
+    }
+    if (!hasDigits || ch === "_") return false;
+    if (ch !== ":") return true;
+    return /^(:[0-5]?[0-9])+$/.test(data.slice(index));
+}
+function constructYamlInteger(data) {
+    let value = data;
+    const digits = [];
+    if (value.indexOf("_") !== -1) {
+        value = value.replace(/_/g, "");
+    }
+    let sign = 1;
+    let ch = value[0];
+    if (ch === "-" || ch === "+") {
+        if (ch === "-") sign = -1;
+        value = value.slice(1);
+        ch = value[0];
+    }
+    if (value === "0") return 0;
+    if (ch === "0") {
+        if (value[1] === "b") return sign * parseInt(value.slice(2), 2);
+        if (value[1] === "x") return sign * parseInt(value, 16);
+        return sign * parseInt(value, 8);
+    }
+    if (value.indexOf(":") !== -1) {
+        value.split(":").forEach((v)=>{
+            digits.unshift(parseInt(v, 10));
+        });
+        let valueInt = 0;
+        let base = 1;
+        digits.forEach((d)=>{
+            valueInt += d * base;
+            base *= 60;
+        });
+        return sign * valueInt;
+    }
+    return sign * parseInt(value, 10);
+}
+function isInteger(object) {
+    return Object.prototype.toString.call(object) === "[object Number]" && object % 1 === 0 && !isNegativeZero(object);
+}
+const __int = new Type1("tag:yaml.org,2002:int", {
+    construct: constructYamlInteger,
+    defaultStyle: "decimal",
+    kind: "scalar",
+    predicate: isInteger,
+    represent: {
+        binary (obj) {
+            return obj >= 0 ? `0b${obj.toString(2)}` : `-0b${obj.toString(2).slice(1)}`;
+        },
+        octal (obj) {
+            return obj >= 0 ? `0${obj.toString(8)}` : `-0${obj.toString(8).slice(1)}`;
+        },
+        decimal (obj) {
+            return obj.toString(10);
+        },
+        hexadecimal (obj) {
+            return obj >= 0 ? `0x${obj.toString(16).toUpperCase()}` : `-0x${obj.toString(16).toUpperCase().slice(1)}`;
+        }
+    },
+    resolve: resolveYamlInteger,
+    styleAliases: {
+        binary: [
+            2,
+            "bin"
+        ],
+        decimal: [
+            10,
+            "dec"
+        ],
+        hexadecimal: [
+            16,
+            "hex"
+        ],
+        octal: [
+            8,
+            "oct"
+        ]
+    }
+});
+const map = new Type1("tag:yaml.org,2002:map", {
+    construct (data) {
+        return data !== null ? data : {};
+    },
+    kind: "mapping"
+});
+function resolveYamlMerge(data) {
+    return data === "<<" || data === null;
+}
+const merge = new Type1("tag:yaml.org,2002:merge", {
+    kind: "scalar",
+    resolve: resolveYamlMerge
+});
+function resolveYamlNull(data) {
+    const max = data.length;
+    return max === 1 && data === "~" || max === 4 && (data === "null" || data === "Null" || data === "NULL");
+}
+function constructYamlNull() {
+    return null;
+}
+function isNull(object) {
+    return object === null;
+}
+const nil = new Type1("tag:yaml.org,2002:null", {
+    construct: constructYamlNull,
+    defaultStyle: "lowercase",
+    kind: "scalar",
+    predicate: isNull,
+    represent: {
+        canonical () {
+            return "~";
+        },
+        lowercase () {
+            return "null";
+        },
+        uppercase () {
+            return "NULL";
+        },
+        camelcase () {
+            return "Null";
+        }
+    },
+    resolve: resolveYamlNull
+});
+const { hasOwn  } = Object;
+const _toString = Object.prototype.toString;
+function resolveYamlOmap(data) {
+    const objectKeys = [];
+    let pairKey = "";
+    let pairHasKey = false;
+    for (const pair of data){
+        pairHasKey = false;
+        if (_toString.call(pair) !== "[object Object]") return false;
+        for(pairKey in pair){
+            if (hasOwn(pair, pairKey)) {
+                if (!pairHasKey) pairHasKey = true;
+                else return false;
+            }
+        }
+        if (!pairHasKey) return false;
+        if (objectKeys.indexOf(pairKey) === -1) objectKeys.push(pairKey);
+        else return false;
+    }
+    return true;
+}
+function constructYamlOmap(data) {
+    return data !== null ? data : [];
+}
+const omap = new Type1("tag:yaml.org,2002:omap", {
+    construct: constructYamlOmap,
+    kind: "sequence",
+    resolve: resolveYamlOmap
+});
+const _toString1 = Object.prototype.toString;
+function resolveYamlPairs(data) {
+    const result = Array.from({
+        length: data.length
+    });
+    for(let index = 0; index < data.length; index++){
+        const pair = data[index];
+        if (_toString1.call(pair) !== "[object Object]") return false;
+        const keys = Object.keys(pair);
+        if (keys.length !== 1) return false;
+        result[index] = [
+            keys[0],
+            pair[keys[0]]
+        ];
+    }
+    return true;
+}
+function constructYamlPairs(data) {
+    if (data === null) return [];
+    const result = Array.from({
+        length: data.length
+    });
+    for(let index = 0; index < data.length; index += 1){
+        const pair = data[index];
+        const keys = Object.keys(pair);
+        result[index] = [
+            keys[0],
+            pair[keys[0]]
+        ];
+    }
+    return result;
+}
+const pairs = new Type1("tag:yaml.org,2002:pairs", {
+    construct: constructYamlPairs,
+    kind: "sequence",
+    resolve: resolveYamlPairs
+});
+const REGEXP = /^\/(?<regexp>[\s\S]+)\/(?<modifiers>[gismuy]*)$/;
+const regexp = new Type1("tag:yaml.org,2002:js/regexp", {
+    kind: "scalar",
+    resolve (data) {
+        if (data === null || !data.length) {
+            return false;
+        }
+        const regexp = `${data}`;
+        if (regexp.charAt(0) === "/") {
+            if (!REGEXP.test(data)) {
+                return false;
+            }
+            const modifiers = [
+                ...regexp.match(REGEXP)?.groups?.modifiers ?? ""
+            ];
+            if (new Set(modifiers).size < modifiers.length) {
+                return false;
+            }
+        }
+        return true;
+    },
+    construct (data) {
+        const { regexp =`${data}` , modifiers =""  } = `${data}`.match(REGEXP)?.groups ?? {};
+        return new RegExp(regexp, modifiers);
+    },
+    predicate (object) {
+        return object instanceof RegExp;
+    },
+    represent (object) {
+        return object.toString();
+    }
+});
+const seq = new Type1("tag:yaml.org,2002:seq", {
+    construct (data) {
+        return data !== null ? data : [];
+    },
+    kind: "sequence"
+});
+const { hasOwn: hasOwn1  } = Object;
+function resolveYamlSet(data) {
+    if (data === null) return true;
+    for(const key in data){
+        if (hasOwn1(data, key)) {
+            if (data[key] !== null) return false;
+        }
+    }
+    return true;
+}
+function constructYamlSet(data) {
+    return data !== null ? data : {};
+}
+const set = new Type1("tag:yaml.org,2002:set", {
+    construct: constructYamlSet,
+    kind: "mapping",
+    resolve: resolveYamlSet
+});
+const str = new Type1("tag:yaml.org,2002:str", {
+    construct (data) {
+        return data !== null ? data : "";
+    },
+    kind: "scalar"
+});
+const YAML_DATE_REGEXP = new RegExp("^([0-9][0-9][0-9][0-9])" + "-([0-9][0-9])" + "-([0-9][0-9])$");
+const YAML_TIMESTAMP_REGEXP = new RegExp("^([0-9][0-9][0-9][0-9])" + "-([0-9][0-9]?)" + "-([0-9][0-9]?)" + "(?:[Tt]|[ \\t]+)" + "([0-9][0-9]?)" + ":([0-9][0-9])" + ":([0-9][0-9])" + "(?:\\.([0-9]*))?" + "(?:[ \\t]*(Z|([-+])([0-9][0-9]?)" + "(?::([0-9][0-9]))?))?$");
+function resolveYamlTimestamp(data) {
+    if (data === null) return false;
+    if (YAML_DATE_REGEXP.exec(data) !== null) return true;
+    if (YAML_TIMESTAMP_REGEXP.exec(data) !== null) return true;
+    return false;
+}
+function constructYamlTimestamp(data) {
+    let match = YAML_DATE_REGEXP.exec(data);
+    if (match === null) match = YAML_TIMESTAMP_REGEXP.exec(data);
+    if (match === null) throw new Error("Date resolve error");
+    const year = +match[1];
+    const month = +match[2] - 1;
+    const day = +match[3];
+    if (!match[4]) {
+        return new Date(Date.UTC(year, month, day));
+    }
+    const hour = +match[4];
+    const minute = +match[5];
+    const second = +match[6];
+    let fraction = 0;
+    if (match[7]) {
+        let partFraction = match[7].slice(0, 3);
+        while(partFraction.length < 3){
+            partFraction += "0";
+        }
+        fraction = +partFraction;
+    }
+    let delta = null;
+    if (match[9]) {
+        const tzHour = +match[10];
+        const tzMinute = +(match[11] || 0);
+        delta = (tzHour * 60 + tzMinute) * 60000;
+        if (match[9] === "-") delta = -delta;
+    }
+    const date = new Date(Date.UTC(year, month, day, hour, minute, second, fraction));
+    if (delta) date.setTime(date.getTime() - delta);
+    return date;
+}
+function representYamlTimestamp(date) {
+    return date.toISOString();
+}
+const timestamp = new Type1("tag:yaml.org,2002:timestamp", {
+    construct: constructYamlTimestamp,
+    instanceOf: Date,
+    kind: "scalar",
+    represent: representYamlTimestamp,
+    resolve: resolveYamlTimestamp
+});
+const undefinedType = new Type1("tag:yaml.org,2002:js/undefined", {
+    kind: "scalar",
+    resolve () {
+        return true;
+    },
+    construct () {
+        return undefined;
+    },
+    predicate (object) {
+        return typeof object === "undefined";
+    },
+    represent () {
+        return "";
+    }
+});
+const failsafe = new Schema({
+    explicit: [
+        str,
+        seq,
+        map
+    ]
+});
+const json = new Schema({
+    implicit: [
+        nil,
+        bool,
+        __int,
+        __float
+    ],
+    include: [
+        failsafe
+    ]
+});
+const core = new Schema({
+    include: [
+        json
+    ]
+});
+const def = new Schema({
+    explicit: [
+        binary,
+        omap,
+        pairs,
+        set
+    ],
+    implicit: [
+        timestamp,
+        merge
+    ],
+    include: [
+        core
+    ]
+});
+new Schema({
+    explicit: [
+        regexp,
+        undefinedType
+    ],
+    include: [
+        def
+    ]
+});
+class State {
+    constructor(schema = def){
+        this.schema = schema;
+    }
+    schema;
+}
+const { hasOwn: hasOwn2  } = Object;
+function simpleEscapeSequence(c) {
+    return c === 0x30 ? "\x00" : c === 0x61 ? "\x07" : c === 0x62 ? "\x08" : c === 0x74 ? "\x09" : c === 0x09 ? "\x09" : c === 0x6e ? "\x0A" : c === 0x76 ? "\x0B" : c === 0x66 ? "\x0C" : c === 0x72 ? "\x0D" : c === 0x65 ? "\x1B" : c === 0x20 ? " " : c === 0x22 ? "\x22" : c === 0x2f ? "/" : c === 0x5c ? "\x5C" : c === 0x4e ? "\x85" : c === 0x5f ? "\xA0" : c === 0x4c ? "\u2028" : c === 0x50 ? "\u2029" : "";
+}
+const simpleEscapeCheck = Array.from({
+    length: 256
+});
+const simpleEscapeMap = Array.from({
+    length: 256
+});
+for(let i1 = 0; i1 < 256; i1++){
+    simpleEscapeCheck[i1] = simpleEscapeSequence(i1) ? 1 : 0;
+    simpleEscapeMap[i1] = simpleEscapeSequence(i1);
+}
+const { hasOwn: hasOwn3  } = Object;
+function compileStyleMap(schema, map) {
+    if (typeof map === "undefined" || map === null) return {};
+    let type;
+    const result = {};
+    const keys = Object.keys(map);
+    let tag, style;
+    for(let index = 0, length = keys.length; index < length; index += 1){
+        tag = keys[index];
+        style = String(map[tag]);
+        if (tag.slice(0, 2) === "!!") {
+            tag = `tag:yaml.org,2002:${tag.slice(2)}`;
+        }
+        type = schema.compiledTypeMap.fallback[tag];
+        if (type && typeof type.styleAliases !== "undefined" && hasOwn3(type.styleAliases, style)) {
+            style = type.styleAliases[style];
+        }
+        result[tag] = style;
+    }
+    return result;
+}
+class DumperState extends State {
+    indent;
+    noArrayIndent;
+    skipInvalid;
+    flowLevel;
+    sortKeys;
+    lineWidth;
+    noRefs;
+    noCompatMode;
+    condenseFlow;
+    implicitTypes;
+    explicitTypes;
+    tag = null;
+    result = "";
+    duplicates = [];
+    usedDuplicates = [];
+    styleMap;
+    dump;
+    constructor({ schema , indent =2 , noArrayIndent =false , skipInvalid =false , flowLevel =-1 , styles =null , sortKeys =false , lineWidth =80 , noRefs =false , noCompatMode =false , condenseFlow =false  }){
+        super(schema);
+        this.indent = Math.max(1, indent);
+        this.noArrayIndent = noArrayIndent;
+        this.skipInvalid = skipInvalid;
+        this.flowLevel = flowLevel;
+        this.styleMap = compileStyleMap(this.schema, styles);
+        this.sortKeys = sortKeys;
+        this.lineWidth = lineWidth;
+        this.noRefs = noRefs;
+        this.noCompatMode = noCompatMode;
+        this.condenseFlow = condenseFlow;
+        this.implicitTypes = this.schema.compiledImplicit;
+        this.explicitTypes = this.schema.compiledExplicit;
+    }
+}
+const _toString2 = Object.prototype.toString;
+const { hasOwn: hasOwn4  } = Object;
+const ESCAPE_SEQUENCES = {};
+ESCAPE_SEQUENCES[0x00] = "\\0";
+ESCAPE_SEQUENCES[0x07] = "\\a";
+ESCAPE_SEQUENCES[0x08] = "\\b";
+ESCAPE_SEQUENCES[0x09] = "\\t";
+ESCAPE_SEQUENCES[0x0a] = "\\n";
+ESCAPE_SEQUENCES[0x0b] = "\\v";
+ESCAPE_SEQUENCES[0x0c] = "\\f";
+ESCAPE_SEQUENCES[0x0d] = "\\r";
+ESCAPE_SEQUENCES[0x1b] = "\\e";
+ESCAPE_SEQUENCES[0x22] = '\\"';
+ESCAPE_SEQUENCES[0x5c] = "\\\\";
+ESCAPE_SEQUENCES[0x85] = "\\N";
+ESCAPE_SEQUENCES[0xa0] = "\\_";
+ESCAPE_SEQUENCES[0x2028] = "\\L";
+ESCAPE_SEQUENCES[0x2029] = "\\P";
+const DEPRECATED_BOOLEANS_SYNTAX = [
+    "y",
+    "Y",
+    "yes",
+    "Yes",
+    "YES",
+    "on",
+    "On",
+    "ON",
+    "n",
+    "N",
+    "no",
+    "No",
+    "NO",
+    "off",
+    "Off",
+    "OFF"
+];
+function encodeHex(character) {
+    const string = character.toString(16).toUpperCase();
+    let handle;
+    let length;
+    if (character <= 0xff) {
+        handle = "x";
+        length = 2;
+    } else if (character <= 0xffff) {
+        handle = "u";
+        length = 4;
+    } else if (character <= 0xffffffff) {
+        handle = "U";
+        length = 8;
+    } else {
+        throw new YAMLError("code point within a string may not be greater than 0xFFFFFFFF");
+    }
+    return `\\${handle}${repeat("0", length - string.length)}${string}`;
+}
+function indentString(string, spaces) {
+    const ind = repeat(" ", spaces), length = string.length;
+    let position = 0, next = -1, result = "", line;
+    while(position < length){
+        next = string.indexOf("\n", position);
+        if (next === -1) {
+            line = string.slice(position);
+            position = length;
+        } else {
+            line = string.slice(position, next + 1);
+            position = next + 1;
+        }
+        if (line.length && line !== "\n") result += ind;
+        result += line;
+    }
+    return result;
+}
+function generateNextLine(state, level) {
+    return `\n${repeat(" ", state.indent * level)}`;
+}
+function testImplicitResolving(state, str) {
+    let type;
+    for(let index = 0, length = state.implicitTypes.length; index < length; index += 1){
+        type = state.implicitTypes[index];
+        if (type.resolve(str)) {
+            return true;
+        }
+    }
+    return false;
+}
+function isWhitespace(c) {
+    return c === 0x20 || c === 0x09;
+}
+function isPrintable(c) {
+    return 0x00020 <= c && c <= 0x00007e || 0x000a1 <= c && c <= 0x00d7ff && c !== 0x2028 && c !== 0x2029 || 0x0e000 <= c && c <= 0x00fffd && c !== 0xfeff || 0x10000 <= c && c <= 0x10ffff;
+}
+function isPlainSafe(c) {
+    return isPrintable(c) && c !== 0xfeff && c !== 0x2c && c !== 0x5b && c !== 0x5d && c !== 0x7b && c !== 0x7d && c !== 0x3a && c !== 0x23;
+}
+function isPlainSafeFirst(c) {
+    return isPrintable(c) && c !== 0xfeff && !isWhitespace(c) && c !== 0x2d && c !== 0x3f && c !== 0x3a && c !== 0x2c && c !== 0x5b && c !== 0x5d && c !== 0x7b && c !== 0x7d && c !== 0x23 && c !== 0x26 && c !== 0x2a && c !== 0x21 && c !== 0x7c && c !== 0x3e && c !== 0x27 && c !== 0x22 && c !== 0x25 && c !== 0x40 && c !== 0x60;
+}
+function needIndentIndicator(string) {
+    const leadingSpaceRe = /^\n* /;
+    return leadingSpaceRe.test(string);
+}
+const STYLE_PLAIN = 1, STYLE_SINGLE = 2, STYLE_LITERAL = 3, STYLE_FOLDED = 4, STYLE_DOUBLE = 5;
+function chooseScalarStyle(string, singleLineOnly, indentPerLevel, lineWidth, testAmbiguousType) {
+    const shouldTrackWidth = lineWidth !== -1;
+    let hasLineBreak = false, hasFoldableLine = false, previousLineBreak = -1, plain = isPlainSafeFirst(string.charCodeAt(0)) && !isWhitespace(string.charCodeAt(string.length - 1));
+    let __char, i;
+    if (singleLineOnly) {
+        for(i = 0; i < string.length; i++){
+            __char = string.charCodeAt(i);
+            if (!isPrintable(__char)) {
+                return 5;
+            }
+            plain = plain && isPlainSafe(__char);
+        }
+    } else {
+        for(i = 0; i < string.length; i++){
+            __char = string.charCodeAt(i);
+            if (__char === 0x0a) {
+                hasLineBreak = true;
+                if (shouldTrackWidth) {
+                    hasFoldableLine = hasFoldableLine || i - previousLineBreak - 1 > lineWidth && string[previousLineBreak + 1] !== " ";
+                    previousLineBreak = i;
+                }
+            } else if (!isPrintable(__char)) {
+                return 5;
+            }
+            plain = plain && isPlainSafe(__char);
+        }
+        hasFoldableLine = hasFoldableLine || shouldTrackWidth && i - previousLineBreak - 1 > lineWidth && string[previousLineBreak + 1] !== " ";
+    }
+    if (!hasLineBreak && !hasFoldableLine) {
+        return plain && !testAmbiguousType(string) ? 1 : 2;
+    }
+    if (indentPerLevel > 9 && needIndentIndicator(string)) {
+        return 5;
+    }
+    return hasFoldableLine ? 4 : 3;
+}
+function foldLine(line, width) {
+    if (line === "" || line[0] === " ") return line;
+    const breakRe = / [^ ]/g;
+    let match;
+    let start = 0, end, curr = 0, next = 0;
+    let result = "";
+    while(match = breakRe.exec(line)){
+        next = match.index;
+        if (next - start > width) {
+            end = curr > start ? curr : next;
+            result += `\n${line.slice(start, end)}`;
+            start = end + 1;
+        }
+        curr = next;
+    }
+    result += "\n";
+    if (line.length - start > width && curr > start) {
+        result += `${line.slice(start, curr)}\n${line.slice(curr + 1)}`;
+    } else {
+        result += line.slice(start);
+    }
+    return result.slice(1);
+}
+function dropEndingNewline(string) {
+    return string[string.length - 1] === "\n" ? string.slice(0, -1) : string;
+}
+function foldString(string, width) {
+    const lineRe = /(\n+)([^\n]*)/g;
+    let result = (()=>{
+        let nextLF = string.indexOf("\n");
+        nextLF = nextLF !== -1 ? nextLF : string.length;
+        lineRe.lastIndex = nextLF;
+        return foldLine(string.slice(0, nextLF), width);
+    })();
+    let prevMoreIndented = string[0] === "\n" || string[0] === " ";
+    let moreIndented;
+    let match;
+    while(match = lineRe.exec(string)){
+        const prefix = match[1], line = match[2];
+        moreIndented = line[0] === " ";
+        result += prefix + (!prevMoreIndented && !moreIndented && line !== "" ? "\n" : "") + foldLine(line, width);
+        prevMoreIndented = moreIndented;
+    }
+    return result;
+}
+function escapeString(string) {
+    let result = "";
+    let __char, nextChar;
+    let escapeSeq;
+    for(let i = 0; i < string.length; i++){
+        __char = string.charCodeAt(i);
+        if (__char >= 0xd800 && __char <= 0xdbff) {
+            nextChar = string.charCodeAt(i + 1);
+            if (nextChar >= 0xdc00 && nextChar <= 0xdfff) {
+                result += encodeHex((__char - 0xd800) * 0x400 + nextChar - 0xdc00 + 0x10000);
+                i++;
+                continue;
+            }
+        }
+        escapeSeq = ESCAPE_SEQUENCES[__char];
+        result += !escapeSeq && isPrintable(__char) ? string[i] : escapeSeq || encodeHex(__char);
+    }
+    return result;
+}
+function blockHeader(string, indentPerLevel) {
+    const indentIndicator = needIndentIndicator(string) ? String(indentPerLevel) : "";
+    const clip = string[string.length - 1] === "\n";
+    const keep = clip && (string[string.length - 2] === "\n" || string === "\n");
+    const chomp = keep ? "+" : clip ? "" : "-";
+    return `${indentIndicator}${chomp}\n`;
+}
+function writeScalar(state, string, level, iskey) {
+    state.dump = (()=>{
+        if (string.length === 0) {
+            return "''";
+        }
+        if (!state.noCompatMode && DEPRECATED_BOOLEANS_SYNTAX.indexOf(string) !== -1) {
+            return `'${string}'`;
+        }
+        const indent = state.indent * Math.max(1, level);
+        const lineWidth = state.lineWidth === -1 ? -1 : Math.max(Math.min(state.lineWidth, 40), state.lineWidth - indent);
+        const singleLineOnly = iskey || state.flowLevel > -1 && level >= state.flowLevel;
+        function testAmbiguity(str) {
+            return testImplicitResolving(state, str);
+        }
+        switch(chooseScalarStyle(string, singleLineOnly, state.indent, lineWidth, testAmbiguity)){
+            case STYLE_PLAIN:
+                return string;
+            case STYLE_SINGLE:
+                return `'${string.replace(/'/g, "''")}'`;
+            case STYLE_LITERAL:
+                return `|${blockHeader(string, state.indent)}${dropEndingNewline(indentString(string, indent))}`;
+            case STYLE_FOLDED:
+                return `>${blockHeader(string, state.indent)}${dropEndingNewline(indentString(foldString(string, lineWidth), indent))}`;
+            case STYLE_DOUBLE:
+                return `"${escapeString(string)}"`;
+            default:
+                throw new YAMLError("impossible error: invalid scalar style");
+        }
+    })();
+}
+function writeFlowSequence(state, level, object) {
+    let _result = "";
+    const _tag = state.tag;
+    for(let index = 0, length = object.length; index < length; index += 1){
+        if (writeNode(state, level, object[index], false, false)) {
+            if (index !== 0) _result += `,${!state.condenseFlow ? " " : ""}`;
+            _result += state.dump;
+        }
+    }
+    state.tag = _tag;
+    state.dump = `[${_result}]`;
+}
+function writeBlockSequence(state, level, object, compact = false) {
+    let _result = "";
+    const _tag = state.tag;
+    for(let index = 0, length = object.length; index < length; index += 1){
+        if (writeNode(state, level + 1, object[index], true, true)) {
+            if (!compact || index !== 0) {
+                _result += generateNextLine(state, level);
+            }
+            if (state.dump && 0x0a === state.dump.charCodeAt(0)) {
+                _result += "-";
+            } else {
+                _result += "- ";
+            }
+            _result += state.dump;
+        }
+    }
+    state.tag = _tag;
+    state.dump = _result || "[]";
+}
+function writeFlowMapping(state, level, object) {
+    let _result = "";
+    const _tag = state.tag, objectKeyList = Object.keys(object);
+    let pairBuffer, objectKey, objectValue;
+    for(let index = 0, length = objectKeyList.length; index < length; index += 1){
+        pairBuffer = state.condenseFlow ? '"' : "";
+        if (index !== 0) pairBuffer += ", ";
+        objectKey = objectKeyList[index];
+        objectValue = object[objectKey];
+        if (!writeNode(state, level, objectKey, false, false)) {
+            continue;
+        }
+        if (state.dump.length > 1024) pairBuffer += "? ";
+        pairBuffer += `${state.dump}${state.condenseFlow ? '"' : ""}:${state.condenseFlow ? "" : " "}`;
+        if (!writeNode(state, level, objectValue, false, false)) {
+            continue;
+        }
+        pairBuffer += state.dump;
+        _result += pairBuffer;
+    }
+    state.tag = _tag;
+    state.dump = `{${_result}}`;
+}
+function writeBlockMapping(state, level, object, compact = false) {
+    const _tag = state.tag, objectKeyList = Object.keys(object);
+    let _result = "";
+    if (state.sortKeys === true) {
+        objectKeyList.sort();
+    } else if (typeof state.sortKeys === "function") {
+        objectKeyList.sort(state.sortKeys);
+    } else if (state.sortKeys) {
+        throw new YAMLError("sortKeys must be a boolean or a function");
+    }
+    let pairBuffer = "", objectKey, objectValue, explicitPair;
+    for(let index = 0, length = objectKeyList.length; index < length; index += 1){
+        pairBuffer = "";
+        if (!compact || index !== 0) {
+            pairBuffer += generateNextLine(state, level);
+        }
+        objectKey = objectKeyList[index];
+        objectValue = object[objectKey];
+        if (!writeNode(state, level + 1, objectKey, true, true, true)) {
+            continue;
+        }
+        explicitPair = state.tag !== null && state.tag !== "?" || state.dump && state.dump.length > 1024;
+        if (explicitPair) {
+            if (state.dump && 0x0a === state.dump.charCodeAt(0)) {
+                pairBuffer += "?";
+            } else {
+                pairBuffer += "? ";
+            }
+        }
+        pairBuffer += state.dump;
+        if (explicitPair) {
+            pairBuffer += generateNextLine(state, level);
+        }
+        if (!writeNode(state, level + 1, objectValue, true, explicitPair)) {
+            continue;
+        }
+        if (state.dump && 0x0a === state.dump.charCodeAt(0)) {
+            pairBuffer += ":";
+        } else {
+            pairBuffer += ": ";
+        }
+        pairBuffer += state.dump;
+        _result += pairBuffer;
+    }
+    state.tag = _tag;
+    state.dump = _result || "{}";
+}
+function detectType(state, object, explicit = false) {
+    const typeList = explicit ? state.explicitTypes : state.implicitTypes;
+    let type;
+    let style;
+    let _result;
+    for(let index = 0, length = typeList.length; index < length; index += 1){
+        type = typeList[index];
+        if ((type.instanceOf || type.predicate) && (!type.instanceOf || typeof object === "object" && object instanceof type.instanceOf) && (!type.predicate || type.predicate(object))) {
+            state.tag = explicit ? type.tag : "?";
+            if (type.represent) {
+                style = state.styleMap[type.tag] || type.defaultStyle;
+                if (_toString2.call(type.represent) === "[object Function]") {
+                    _result = type.represent(object, style);
+                } else if (hasOwn4(type.represent, style)) {
+                    _result = type.represent[style](object, style);
+                } else {
+                    throw new YAMLError(`!<${type.tag}> tag resolver accepts not "${style}" style`);
+                }
+                state.dump = _result;
+            }
+            return true;
+        }
+    }
+    return false;
+}
+function writeNode(state, level, object, block, compact, iskey = false) {
+    state.tag = null;
+    state.dump = object;
+    if (!detectType(state, object, false)) {
+        detectType(state, object, true);
+    }
+    const type = _toString2.call(state.dump);
+    if (block) {
+        block = state.flowLevel < 0 || state.flowLevel > level;
+    }
+    const objectOrArray = type === "[object Object]" || type === "[object Array]";
+    let duplicateIndex = -1;
+    let duplicate = false;
+    if (objectOrArray) {
+        duplicateIndex = state.duplicates.indexOf(object);
+        duplicate = duplicateIndex !== -1;
+    }
+    if (state.tag !== null && state.tag !== "?" || duplicate || state.indent !== 2 && level > 0) {
+        compact = false;
+    }
+    if (duplicate && state.usedDuplicates[duplicateIndex]) {
+        state.dump = `*ref_${duplicateIndex}`;
+    } else {
+        if (objectOrArray && duplicate && !state.usedDuplicates[duplicateIndex]) {
+            state.usedDuplicates[duplicateIndex] = true;
+        }
+        if (type === "[object Object]") {
+            if (block && Object.keys(state.dump).length !== 0) {
+                writeBlockMapping(state, level, state.dump, compact);
+                if (duplicate) {
+                    state.dump = `&ref_${duplicateIndex}${state.dump}`;
+                }
+            } else {
+                writeFlowMapping(state, level, state.dump);
+                if (duplicate) {
+                    state.dump = `&ref_${duplicateIndex} ${state.dump}`;
+                }
+            }
+        } else if (type === "[object Array]") {
+            const arrayLevel = state.noArrayIndent && level > 0 ? level - 1 : level;
+            if (block && state.dump.length !== 0) {
+                writeBlockSequence(state, arrayLevel, state.dump, compact);
+                if (duplicate) {
+                    state.dump = `&ref_${duplicateIndex}${state.dump}`;
+                }
+            } else {
+                writeFlowSequence(state, arrayLevel, state.dump);
+                if (duplicate) {
+                    state.dump = `&ref_${duplicateIndex} ${state.dump}`;
+                }
+            }
+        } else if (type === "[object String]") {
+            if (state.tag !== "?") {
+                writeScalar(state, state.dump, level, iskey);
+            }
+        } else {
+            if (state.skipInvalid) return false;
+            throw new YAMLError(`unacceptable kind of an object to dump ${type}`);
+        }
+        if (state.tag !== null && state.tag !== "?") {
+            state.dump = `!<${state.tag}> ${state.dump}`;
+        }
+    }
+    return true;
+}
+function inspectNode(object, objects, duplicatesIndexes) {
+    if (object !== null && typeof object === "object") {
+        const index = objects.indexOf(object);
+        if (index !== -1) {
+            if (duplicatesIndexes.indexOf(index) === -1) {
+                duplicatesIndexes.push(index);
+            }
+        } else {
+            objects.push(object);
+            if (Array.isArray(object)) {
+                for(let idx = 0, length = object.length; idx < length; idx += 1){
+                    inspectNode(object[idx], objects, duplicatesIndexes);
+                }
+            } else {
+                const objectKeyList = Object.keys(object);
+                for(let idx1 = 0, length1 = objectKeyList.length; idx1 < length1; idx1 += 1){
+                    inspectNode(object[objectKeyList[idx1]], objects, duplicatesIndexes);
+                }
+            }
+        }
+    }
+}
+function getDuplicateReferences(object, state) {
+    const objects = [], duplicatesIndexes = [];
+    inspectNode(object, objects, duplicatesIndexes);
+    const length = duplicatesIndexes.length;
+    for(let index = 0; index < length; index += 1){
+        state.duplicates.push(objects[duplicatesIndexes[index]]);
+    }
+    state.usedDuplicates = Array.from({
+        length
+    });
+}
+function dump(input, options) {
+    options = options || {};
+    const state = new DumperState(options);
+    if (!state.noRefs) getDuplicateReferences(input, state);
+    if (writeNode(state, 0, input, true, true)) return `${state.dump}\n`;
+    return "";
+}
+function stringify(obj, options) {
+    return dump(obj, options);
+}
 const statusCodes = new Map([
     [
         "OK",
@@ -7882,13 +8006,14 @@ const removeEmpty = (obj)=>{
 class OpenAPIV3Visitor extends BaseVisitor {
     root = {
         openapi: "3.0.3",
-        tags: [],
-        components: {},
         info: {
             title: "",
             version: ""
         },
-        paths: {}
+        servers: undefined,
+        paths: {},
+        tags: [],
+        components: {}
     };
     paths = {};
     schemas = {};
@@ -7916,7 +8041,9 @@ class OpenAPIV3Visitor extends BaseVisitor {
         if (filename.toLowerCase().endsWith(".json")) {
             this.write(JSON.stringify(contents, null, 2));
         } else {
-            this.write(dump(contents));
+            this.write(stringify(contents, {
+                sortKeys: false
+            }));
         }
     }
     visitNamespace(context) {
@@ -9938,7 +10065,9 @@ function defaultValue(type, config) {
     throw new Error(`Can not generate default value code for type ${type.kind}`);
 }
 function defaultValueForPrimitive(type, config) {
-    if (type.kind !== Kind.Primitive) throw new Error(`Can not expand non-primitive type ${type.kind}`);
+    if (type.kind !== Kind.Primitive) {
+        throw new Error(`Can not expand non-primitive type ${type.kind}`);
+    }
     const t = type;
     switch(t.name){
         case PrimitiveName.Any:
@@ -9992,7 +10121,9 @@ function customAttributes(name, config) {
     const attributes = [];
     if (config.attributes) {
         if (config.attributes._all) {
-            if (Array.isArray(config.attributes._except) && !config.attributes._except.some((n)=>n == name)) attributes.push(...config.attributes._all);
+            if (Array.isArray(config.attributes._except) && !config.attributes._except.some((n)=>n == name)) {
+                attributes.push(...config.attributes._all);
+            }
         }
         if (config.attributes[name]) {
             attributes.push(...config.attributes[name]);
@@ -10355,8 +10486,7 @@ const mod10 = {
     UnionVisitor: UnionVisitor3
 };
 const mod11 = {
-    default: RustBasic,
-    RustBasic: RustBasic,
+    RustBasic,
     utils: mod9,
     visitors: mod10
 };
@@ -10717,10 +10847,10 @@ class ImportsVisitor3 extends BaseVisitor {
                 imports.push(i.import);
             }
         }
-        for(const module1 in modules){
-            const imports1 = modules[module1];
+        for(const module in modules){
+            const imports1 = modules[module];
             imports1.sort();
-            this.write(`import { ${imports1.join(", ")} } from "${module1}";\n`);
+            this.write(`import { ${imports1.join(", ")} } from "${module}";\n`);
         }
     }
     addType(name, i) {
@@ -11149,4 +11279,3 @@ export { mod1 as rest };
 export { mod11 as rust };
 export { mod12 as typescript };
 export { mod as utils };
-

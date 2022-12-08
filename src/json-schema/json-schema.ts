@@ -1,21 +1,37 @@
+/*
+Copyright 2022 The Apex Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 import { Named } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/ast/mod.ts";
 import {
+  AnyType,
   BaseVisitor,
   Context,
-  Type,
-  Writer,
   Kind,
-  AnyType,
-  Primitive,
-  PrimitiveName,
   List,
   Map,
   Optional,
+  Primitive,
+  PrimitiveName,
+  Type,
+  Writer,
 } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import {
-  SchemaObject,
-  ReferenceObject,
   ArraySchemaObject,
+  ReferenceObject,
+  SchemaObject,
 } from "https://deno.land/x/openapi@0.1.0/mod.ts";
 import { convertArrayToObject } from "../utils/mod.ts";
 
@@ -38,10 +54,11 @@ interface PatternProperties {
 }
 
 // Augmented JsonSchema type with parts not included in the library we have available.
-type JsonSchemaRoot = SchemaObject &
-  ReferenceType &
-  PatternProperties &
-  Definitions;
+type JsonSchemaRoot =
+  & SchemaObject
+  & ReferenceType
+  & PatternProperties
+  & Definitions;
 type JsonSchemaDef = SchemaObject & ReferenceType & PatternProperties;
 type Mutable<T> = { -readonly [P in keyof T]: T[P] };
 
@@ -165,7 +182,7 @@ class UnionVisitor extends BaseVisitor {
       (t: AnyType) => {
         const [def] = decorateType({}, t);
         arr.push(def);
-      }
+      },
     );
 
     const schema: SchemaObject = {
@@ -219,7 +236,7 @@ enum JsonSchemaTypeFormat {
 
 function decorateType(
   def: Mutable<JsonSchemaDef>,
-  typ: AnyType
+  typ: AnyType,
 ): [SchemaObject, boolean] {
   let required = true;
   switch (typ.kind) {
@@ -234,10 +251,11 @@ function decorateType(
     case Kind.Map: {
       const t = typ as Map;
       def.type = JsonSchemaType.Object;
-      if (!isApexStringType(t.keyType))
+      if (!isApexStringType(t.keyType)) {
         throw new Error(
-          "Can not represent maps with non-string key types in JSON Schema"
+          "Can not represent maps with non-string key types in JSON Schema",
         );
+      }
       const [valueType, _isRequired] = decorateType({}, t.valueType);
       def.patternProperties = { ".*": valueType };
       break;
@@ -290,7 +308,7 @@ function decorateType(
           break;
         default:
           throw new Error(
-            `Unhandled primitive type conversion for type: ${t.name}`
+            `Unhandled primitive type conversion for type: ${t.name}`,
           );
       }
       break;

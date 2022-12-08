@@ -1,15 +1,20 @@
-import { Context, Kind, ObjectMap, Type } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+import {
+  Context,
+  Kind,
+  ObjectMap,
+  Type,
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import { isPrimitive, isRecursiveType } from "../../utils/mod.ts";
 import {
+  customAttributes,
+  deriveDirective,
   rustDoc,
   rustify,
   rustifyCaps,
   trimLines,
-  deriveDirective,
+  types,
   useSerde,
   visibility,
-  types,
-  customAttributes,
 } from "../utils/mod.ts";
 
 import { SourceGenerator } from "./base.ts";
@@ -41,11 +46,12 @@ export class StructVisitor extends SourceGenerator<Type> {
   visitTypeField(context: Context): void {
     const { field } = context;
     let isRecursive = isRecursiveType(field.type);
-    let isHeapAllocated =
-      field.type.kind === Kind.Map || field.type.kind === Kind.List;
+    let isHeapAllocated = field.type.kind === Kind.Map ||
+      field.type.kind === Kind.List;
     let baseType = types.apexToRustType(field.type, context.config);
-    let typeString =
-      isRecursive && !isHeapAllocated ? `Box<${baseType}>` : baseType;
+    let typeString = isRecursive && !isHeapAllocated
+      ? `Box<${baseType}>`
+      : baseType;
 
     let serdeAnnotation = "";
     if (useSerde(context.config)) {
@@ -65,7 +71,7 @@ export class StructVisitor extends SourceGenerator<Type> {
     this.append(
       `${trimLines([rustDoc(field.description), serdeAnnotation])}
       ${this.visibility} ${rustify(field.name)}: ${typeString},
-      `.trim()
+      `.trim(),
     );
   }
 }

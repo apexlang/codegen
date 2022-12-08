@@ -15,8 +15,8 @@ limitations under the License.
 */
 
 import {
-  Context,
   BaseVisitor,
+  Context,
 } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import { ClassVisitor } from "./class_visitor.ts";
 import { InterfaceVisitor } from "./interface_visitor.ts";

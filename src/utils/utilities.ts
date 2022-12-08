@@ -15,36 +15,36 @@ limitations under the License.
 */
 
 import {
+  Alias,
+  Annotated,
+  Annotation,
   AnyType,
   Context,
+  Enum,
+  Interface,
   Kind,
   List,
   Map,
-  Optional,
-  Type,
-  Annotated,
-  Alias,
-  Enum,
-  Annotation,
-  TypeResolver,
-  Operation,
-  Stream,
-  Union,
-  Primitive,
   Named,
-  Interface,
+  Operation,
+  Optional,
+  Primitive,
+  Stream,
+  Type,
+  TypeResolver,
+  Union,
 } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import {
   FieldDefinition,
-  Name,
-  Named as ASTNamed,
-  TypeDefinition,
-  Optional as OptionalAST,
-  Type as ASTType,
   ListType,
   MapType,
+  Name,
+  Named as ASTNamed,
+  Optional as OptionalAST,
   Stream as StreamType,
   StringValue,
+  Type as ASTType,
+  TypeDefinition,
 } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/ast/mod.ts";
 
 export function isOneOfType(context: Context, types: string[]): boolean {
@@ -271,7 +271,7 @@ export const primitives = new Set([
 export function formatComment(
   prefix: string,
   text: string | undefined,
-  wrapLength = 80
+  wrapLength = 80,
 ): string {
   if (text == undefined) {
     return "";
@@ -424,7 +424,7 @@ export function noCase(input: string, options: Options = {}) {
   const result = replace(
     replace(input, splitRegexp, "$1\0$2"),
     stripRegexp,
-    "\0"
+    "\0",
   );
   let start = 0;
   let end = result.length;
@@ -533,7 +533,7 @@ interface RenameDirective {
 
 export function renamed(
   annotated: Annotated,
-  defaultVal?: string
+  defaultVal?: string,
 ): string | undefined {
   let ret: string | undefined = defaultVal;
   annotated.annotation("rename", (a: Annotation) => {
@@ -554,7 +554,7 @@ export function operationTypeName(operation: Operation): string {
 export function operationArgsType(
   iface: Interface | undefined,
   operation: Operation,
-  prefix?: string
+  prefix?: string,
 ): string {
   return (
     (prefix || "") +
@@ -568,10 +568,10 @@ export function convertOperationToType(
   tr: TypeResolver,
   iface: Interface | undefined,
   operation: Operation,
-  prefix?: string
+  prefix?: string,
 ): Type {
   const parameters = operation.parameters.filter(
-    (p) => p.type.kind != Kind.Stream
+    (p) => p.type.kind != Kind.Stream,
   );
   const fields = parameters.map((param) => {
     return new FieldDefinition(
@@ -580,7 +580,7 @@ export function convertOperationToType(
       param.node.description,
       param.node.type,
       param.node.default,
-      param.node.annotations
+      param.node.annotations,
     );
   });
   return new Type(
@@ -589,13 +589,13 @@ export function convertOperationToType(
       operation.node.loc,
       new Name(
         operation.node.name.loc,
-        operationArgsType(iface, operation, prefix)
+        operationArgsType(iface, operation, prefix),
       ),
       undefined,
       [],
       operation.node.annotations,
-      fields
-    )
+      fields,
+    ),
   );
 }
 
@@ -609,7 +609,7 @@ export function convertUnionToType(tr: TypeResolver, union: Union): Type {
       undefined,
       new OptionalAST(undefined, t),
       undefined,
-      []
+      [],
     );
   });
   return new Type(
@@ -622,8 +622,8 @@ export function convertUnionToType(tr: TypeResolver, union: Union): Type {
         : undefined,
       [],
       union.node.annotations,
-      fields
-    )
+      fields,
+    ),
   );
 }
 
@@ -657,7 +657,7 @@ export function modelToAST(t: AnyType): ASTType {
       return new MapType(
         undefined,
         modelToAST(l.keyType),
-        modelToAST(l.keyType)
+        modelToAST(l.keyType),
       );
     }
   }
@@ -700,7 +700,7 @@ export function typeName(t: AnyType): string {
 export function convertArrayToObject<T, D>(
   array: T[],
   keyFunc: (value: T) => string,
-  convert: (value: T) => D = (value: T) => value as unknown as D
+  convert: (value: T) => D = (value: T) => value as unknown as D,
 ): { [key: string]: D } {
   const obj: { [key: string]: D } = {};
   array.forEach((value) => {
@@ -781,18 +781,20 @@ function fillToLengthWith(base: string, len: number, filler: string): string {
 function nineBoxRow(
   rowDef: NineBoxRow,
   content: string,
-  rowLength: number
+  rowLength: number,
 ): string {
-  return `${rowDef[0]}${fillToLengthWith(
-    content,
-    rowLength - rowDef[0].length - rowDef[2].length,
-    rowDef[1]
-  )}${rowDef[2]}`;
+  return `${rowDef[0]}${
+    fillToLengthWith(
+      content,
+      rowLength - rowDef[0].length - rowDef[2].length,
+      rowDef[1],
+    )
+  }${rowDef[2]}`;
 }
 
 export function generatedHeader(
   lines: string[],
-  nineBox = defaultNineBox
+  nineBox = defaultNineBox,
 ): string {
   const maxLength =
     lines.reduce((acc, next) => (next.length > acc ? next.length : acc), 0) +
@@ -814,7 +816,7 @@ const OMIT_KEYS = ["node", "source"];
 // deno-lint-ignore no-explicit-any
 export function inspect(o: any, omit = OMIT_KEYS) {
   console.log(
-    JSON.stringify(o, (k, v) => (OMIT_KEYS.indexOf(k) === -1 ? v : undefined))
+    JSON.stringify(o, (k, v) => (OMIT_KEYS.indexOf(k) === -1 ? v : undefined)),
   );
 }
 

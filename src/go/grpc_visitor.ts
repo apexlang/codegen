@@ -20,16 +20,16 @@ import {
   BaseVisitor,
   Context,
   Enum,
+  Field,
   Kind,
+  List,
+  Map,
   Named,
   Optional,
   Primitive,
   PrimitiveName,
   Type,
   Union,
-  Map,
-  List,
-  Field,
   Writer,
 } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import {
@@ -123,7 +123,7 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
     const returnType = operation.type;
     const operName = capitalize(operation.name);
     this.write(
-      `func (s *${iface.name}GRPCWrapper) ${operName}(ctx context.Context, `
+      `func (s *${iface.name}GRPCWrapper) ${operName}(ctx context.Context, `,
     );
     if (operation.isUnary()) {
       const param = operation.parameters[0];
@@ -219,17 +219,19 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
             `input, err := convertInput${(param.type as Named).name}(request)
             if err != nil {
               return nil, tgrpc.Error(err)
-            }\n`
+            }\n`,
           );
           break;
       }
       if (!isVoid(operation.type)) {
         this.write(`result, `);
       }
-      this.write(`err := s.service.${methodName(
-        operation,
-        operation.name
-      )}(ctx, ${isObject(pt) ? "" : ""}input)
+      this.write(`err := s.service.${
+        methodName(
+          operation,
+          operation.name,
+        )
+      }(ctx, ${isObject(pt) ? "" : ""}input)
       if err != nil {
       	return nil, tgrpc.Error(err)
       }\n`);
@@ -239,7 +241,7 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
         const argsType = convertOperationToType(
           context.getType.bind(context),
           iface,
-          operation
+          operation,
         );
         const structVisitor = new StructVisitor(this.writer);
         argsType.accept(context.clone({ type: argsType }), structVisitor);
@@ -247,7 +249,7 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
       input := ${argsType.name}{\n`);
         argsType.fields.forEach((f) => {
           this.write(
-            `${fieldName(f, f.name)}: ${this.writeInput(f, "args", false)},\n`
+            `${fieldName(f, f.name)}: ${this.writeInput(f, "args", false)},\n`,
           );
         });
         this.write(`}
@@ -261,10 +263,12 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
       if (!isVoid(operation.type)) {
         this.write(`result, `);
       }
-      this.write(`err := s.service.${methodName(
-        operation,
-        operation.name
-      )}(ctx${params})
+      this.write(`err := s.service.${
+        methodName(
+          operation,
+          operation.name,
+        )
+      }(ctx${params})
       if err != nil {
       	return nil, tgrpc.Error(err)
       }\n`);
@@ -283,15 +287,15 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
       case Kind.Enum:
         const e = rt2 as Enum;
         this.write(
-          `return &pb.${e.name}Value{Value: pb.${e.name}(result)}, nil\n`
+          `return &pb.${e.name}Value{Value: pb.${e.name}(result)}, nil\n`,
         );
         break;
       case Kind.Alias:
         const a = rt2 as Alias;
         const imp = this.aliases[a.name];
         if (imp) {
-          format =
-            "." + (imp.format || `${pascalCase(expandType(a.type))}`) + `()`;
+          format = "." + (imp.format || `${pascalCase(expandType(a.type))}`) +
+            `()`;
         }
         rt2 = a.type;
       case Kind.Primitive:
@@ -299,59 +303,59 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
         switch (p.name) {
           case PrimitiveName.String:
             this.write(
-              `return &wrapperspb.StringValue{Value: result${format}}, nil\n`
+              `return &wrapperspb.StringValue{Value: result${format}}, nil\n`,
             );
             break;
           case PrimitiveName.I64:
             this.write(
-              `return &wrapperspb.Int64Value{Value: result${format}}, nil\n`
+              `return &wrapperspb.Int64Value{Value: result${format}}, nil\n`,
             );
             break;
           case PrimitiveName.I32:
             this.write(
-              `return &wrapperspb.Int32Value{Value: result${format}}, nil\n`
+              `return &wrapperspb.Int32Value{Value: result${format}}, nil\n`,
             );
             break;
           case PrimitiveName.I16:
           case PrimitiveName.I8:
             this.write(
-              `return &wrapperspb.Int32Value{Value: int32(result${format})}, nil\n`
+              `return &wrapperspb.Int32Value{Value: int32(result${format})}, nil\n`,
             );
             break;
           case PrimitiveName.U64:
             this.write(
-              `return &wrapperspb.UInt64Value{Value: result${format}}, nil\n`
+              `return &wrapperspb.UInt64Value{Value: result${format}}, nil\n`,
             );
             break;
           case PrimitiveName.U32:
             this.write(
-              `return &wrapperspb.UInt32Value{Value: result${format}}, nil\n`
+              `return &wrapperspb.UInt32Value{Value: result${format}}, nil\n`,
             );
             break;
           case PrimitiveName.U16:
           case PrimitiveName.U8:
             this.write(
-              `return &wrapperspb.UInt32Value{Value: uint32(result${format})}, nil\n`
+              `return &wrapperspb.UInt32Value{Value: uint32(result${format})}, nil\n`,
             );
             break;
           case PrimitiveName.F64:
             this.write(
-              `return &wrapperspb.DoubleValue{Value: result${format}}, nil\n`
+              `return &wrapperspb.DoubleValue{Value: result${format}}, nil\n`,
             );
             break;
           case PrimitiveName.F32:
             this.write(
-              `return &wrapperspb.FloatValue{Value: result${format}}, nil\n`
+              `return &wrapperspb.FloatValue{Value: result${format}}, nil\n`,
             );
             break;
           case PrimitiveName.Bool:
             this.write(
-              `return &wrapperspb.BoolValue{Value: result${format}}, nil\n`
+              `return &wrapperspb.BoolValue{Value: result${format}}, nil\n`,
             );
             break;
           case PrimitiveName.Bytes:
             this.write(
-              `return &wrapperspb.BytesValue{Value: result${format}}, nil\n`
+              `return &wrapperspb.BytesValue{Value: result${format}}, nil\n`,
             );
             break;
         }
@@ -430,10 +434,12 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
                   break;
               }
               this.write(
-                `${capitalize(f.name)}: ${wrapperStart}from.${fieldName(
-                  f,
-                  f.name
-                )}${wrapperEnd},\n`
+                `${capitalize(f.name)}: ${wrapperStart}from.${
+                  fieldName(
+                    f,
+                    f.name,
+                  )
+                }${wrapperEnd},\n`,
               );
               break;
 
@@ -441,11 +447,13 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
               const a = optType as Alias;
               const imp = this.aliases[a.name];
               if (imp) {
-                this.write(`${capitalize(
-                  f.name
-                )}: convert.Nillable(from.${fieldName(f, f.name)}, func(value ${
-                  imp.type
-                }) ${expandType(a.type)} {
+                this.write(`${
+                  capitalize(
+                    f.name,
+                  )
+                }: convert.Nillable(from.${
+                  fieldName(f, f.name)
+                }, func(value ${imp.type}) ${expandType(a.type)} {
                   return value.${imp.format || "String"}()
                 }),\n`);
               } else {
@@ -455,10 +463,12 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
             case Kind.Enum:
               const e = optType as Enum;
               this.write(
-                `${capitalize(f.name)}: (*pb.${e.name})(from.${fieldName(
-                  f,
-                  f.name
-                )}),\n`
+                `${capitalize(f.name)}: (*pb.${e.name})(from.${
+                  fieldName(
+                    f,
+                    f.name,
+                  )
+                }),\n`,
               );
               break;
 
@@ -466,9 +476,9 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
             case Kind.Type:
               const ft = optType as Named;
               this.write(
-                `${capitalize(f.name)}: convertOutput${
-                  ft.name
-                }(from.${fieldName(f, f.name)}),\n`
+                `${capitalize(f.name)}: convertOutput${ft.name}(from.${
+                  fieldName(f, f.name)
+                }),\n`,
               );
               break;
           }
@@ -481,7 +491,7 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
             this.write(
               `${capitalize(f.name)}: from.${capitalize(f.name)}.${
                 imp.format || "String"
-              }(),\n`
+              }(),\n`,
             );
             break;
           }
@@ -508,20 +518,24 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
               break;
           }
           this.write(
-            `${capitalize(f.name)}: ${wrapperStart}from.${fieldName(
-              f,
-              f.name
-            )}${wrapperEnd},\n`
+            `${capitalize(f.name)}: ${wrapperStart}from.${
+              fieldName(
+                f,
+                f.name,
+              )
+            }${wrapperEnd},\n`,
           );
           break;
 
         case Kind.Enum:
           const e = ft as Enum;
           this.write(
-            `${capitalize(f.name)}: pb.${e.name}(from.${fieldName(
-              f,
-              f.name
-            )}),\n`
+            `${capitalize(f.name)}: pb.${e.name}(from.${
+              fieldName(
+                f,
+                f.name,
+              )
+            }),\n`,
           );
           break;
 
@@ -530,9 +544,9 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
           const named = ft as Named;
           const ref = named.name == t.name ? "" : "&";
           this.write(
-            `${capitalize(f.name)}: convertOutput${
-              named.name
-            }(${ref}from.${fieldName(f, f.name)}),\n`
+            `${capitalize(f.name)}: convertOutput${named.name}(${ref}from.${
+              fieldName(f, f.name)
+            }),\n`,
           );
           break;
 
@@ -546,14 +560,16 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
             ) as Named;
             const ptr = m.valueType.kind == Kind.Optional ? "" : "Ptr";
             this.write(
-              `${capitalize(f.name)}: convert.Map${ptr}(from.${fieldName(
-                f,
-                f.name
-              )}, convertOutput${n.name}),\n`
+              `${capitalize(f.name)}: convert.Map${ptr}(from.${
+                fieldName(
+                  f,
+                  f.name,
+                )
+              }, convertOutput${n.name}),\n`,
             );
           } else {
             this.write(
-              `${capitalize(f.name)}: from.${fieldName(f, f.name)},\n`
+              `${capitalize(f.name)}: from.${fieldName(f, f.name)},\n`,
             );
           }
           break;
@@ -563,14 +579,16 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
             const n = unwrapKinds(l.type, Kind.Optional) as Named;
             const ptr = l.type.kind == Kind.Optional ? "" : "Ptr";
             this.write(
-              `${capitalize(f.name)}: convert.Slice${ptr}(from.${fieldName(
-                f,
-                f.name
-              )}, convertOutput${n.name}),\n`
+              `${capitalize(f.name)}: convert.Slice${ptr}(from.${
+                fieldName(
+                  f,
+                  f.name,
+                )
+              }, convertOutput${n.name}),\n`,
             );
           } else {
             this.write(
-              `${capitalize(f.name)}: from.${fieldName(f, f.name)},\n`
+              `${capitalize(f.name)}: from.${fieldName(f, f.name)},\n`,
             );
           }
           break;
@@ -582,11 +600,13 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
 
   writeOutputUnion(union: Union) {
     this
-      .write(`func convertOutput${union.name}(from *${union.name}) *pb.${union.name} {
+      .write(
+        `func convertOutput${union.name}(from *${union.name}) *pb.${union.name} {
       if from == nil {
         return nil
       }
-      switch {\n`);
+      switch {\n`,
+      );
     union.types.forEach((ut) => {
       this.write(`case from.${pascalCase(expandType(ut))} != nil:
             return &pb.${union.name}{\n`);
@@ -596,7 +616,7 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
           const t = ut as Named;
           this.write(`Value: &pb.${union.name}_${t.name}Value{\n`);
           this.write(
-            `${t.name}Value: convertOutput${t.name}(from.${t.name}),\n`
+            `${t.name}Value: convertOutput${t.name}(from.${t.name}),\n`,
           );
           this.write(`},\n`);
           break;
@@ -610,7 +630,7 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
           const p = ut as Primitive;
           this.write(`Value: &pb.${union.name}_${pascalCase(p.name)}Value{\n`);
           this.write(
-            `${pascalCase(p.name)}Value: *from.${pascalCase(p.name)},\n`
+            `${pascalCase(p.name)}Value: *from.${pascalCase(p.name)},\n`,
           );
           this.write(`},\n`);
           break;
@@ -624,14 +644,17 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
 
   writeInputType(t: Type) {
     this
-      .write(`func convertInput${t.name}(from *pb.${t.name}) (*${t.name}, error) {
+      .write(
+        `func convertInput${t.name}(from *pb.${t.name}) (*${t.name}, error) {
       if from == nil {
         return nil, nil
       }
       var et errorz.Tracker
 
-      result := ${t.name}{\n`);
-    t: t.fields.forEach((f) => `${this.writeInputField(f)}`);
+      result := ${t.name}{\n`,
+      );
+    t:
+    t.fields.forEach((f) => `${this.writeInputField(f)}`);
     this.write(`\t}
     if errz := et.Errors(); errz != nil {
       return nil, errz
@@ -692,9 +715,9 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
           case Kind.Union:
           case Kind.Type:
             const ft = optType as Named;
-            return `errorz.Track(&et, convertInput${
-              ft.name
-            }, ${from}.${capitalize(f.name)})`;
+            return `errorz.Track(&et, convertInput${ft.name}, ${from}.${
+              capitalize(f.name)
+            })`;
         }
         throw new Error(`unhandled type ${optType.kind} inside optional`);
 
@@ -702,9 +725,9 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
         const a = t as Alias;
         const imp = this.aliases[a.name];
         if (imp) {
-          return `errorz.Track(&et, ${
-            imp.parse || "Parse"
-          }, ${from}.${capitalize(f.name)})`;
+          return `errorz.Track(&et, ${imp.parse || "Parse"}, ${from}.${
+            capitalize(f.name)
+          })`;
         }
         t = a.type;
 
@@ -747,17 +770,19 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
       case Kind.Type:
         const ft = t as Named;
         const ptr = allowPtr ? "" : "*";
-        return `${ptr}errorz.Track(&et, convertInput${
-          ft.name
-        }, ${from}.${fieldName(f, f.name)})`;
+        return `${ptr}errorz.Track(&et, convertInput${ft.name}, ${from}.${
+          fieldName(f, f.name)
+        })`;
 
       case Kind.Map:
         const m = t as Map;
         if (isObject(m.valueType)) {
           const n = m.valueType as Named;
-          return `convert.MapRefEt(&et, ${from}.${capitalize(
-            f.name
-          )}, convertInput${n.name})`;
+          return `convert.MapRefEt(&et, ${from}.${
+            capitalize(
+              f.name,
+            )
+          }, convertInput${n.name})`;
         } else {
           return `${from}.${capitalize(f.name)}`;
         }
@@ -766,9 +791,11 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
         const l = t as List;
         if (isObject(l.type)) {
           const n = l.type as Named;
-          return `convert.SliceRefEt(&et, ${from}.${capitalize(
-            f.name
-          )}, convertInput${n.name})`;
+          return `convert.SliceRefEt(&et, ${from}.${
+            capitalize(
+              f.name,
+            )
+          }, convertInput${n.name})`;
         } else {
           return `${from}.${capitalize(f.name)}`;
         }
@@ -779,17 +806,19 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
 
   writeInputField(f: Field) {
     this.write(
-      `${fieldName(f, f.name)}: ${this.writeInput(f, "from", false)},\n`
+      `${fieldName(f, f.name)}: ${this.writeInput(f, "from", false)},\n`,
     );
   }
 
   writeInputUnion(union: Union) {
     this
-      .write(`func convertInput${union.name}(from *pb.${union.name}) (*${union.name}, error) {
+      .write(
+        `func convertInput${union.name}(from *pb.${union.name}) (*${union.name}, error) {
       if from == nil {
         return nil, nil
       }
-      switch v := from.Value.(type) {\n`);
+      switch v := from.Value.(type) {\n`,
+      );
     union.types.forEach((ut) => {
       if (ut.kind == Kind.Type) {
         const t = ut as Named;
@@ -809,13 +838,13 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
           case Kind.Enum:
             const e = ut as Enum;
             this.write(
-              `${e.name}: convert.Ptr(${e.name}(v.${e.name}Value)),\n`
+              `${e.name}: convert.Ptr(${e.name}(v.${e.name}Value)),\n`,
             );
             break;
           case Kind.Primitive:
             const p = ut as Primitive;
             this.write(
-              `${pascalCase(p.name)}: &v.${pascalCase(p.name)}Value,\n`
+              `${pascalCase(p.name)}: &v.${pascalCase(p.name)}Value,\n`,
             );
             break;
         }
@@ -877,7 +906,7 @@ export class InputOutputVisitor extends BaseVisitor {
     context: Context,
     a: AnyType,
     m: { [name: string]: AnyType },
-    types: Set<string> = new Set()
+    types: Set<string> = new Set(),
   ) {
     // Prevent stack overflow
     if (isNamed(a)) {
@@ -893,7 +922,7 @@ export class InputOutputVisitor extends BaseVisitor {
         const p = a as Primitive;
         if (p.name == PrimitiveName.DateTime) {
           this.imports.add(
-            "google.golang.org/protobuf/types/known/timestamppb"
+            "google.golang.org/protobuf/types/known/timestamppb",
           );
         }
         break;

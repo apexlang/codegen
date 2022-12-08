@@ -15,15 +15,15 @@ limitations under the License.
 */
 
 import {
-  Context,
-  BaseVisitor,
+  Alias,
   AnyType,
+  BaseVisitor,
+  Context,
   Kind,
   List,
   Map,
   Optional,
   Primitive,
-  Alias,
   PrimitiveName,
   Type,
 } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
@@ -113,9 +113,11 @@ class ServiceVisitor extends BaseVisitor {
     if (logger) {
       this.write(`log ${logger.interface}\n`);
     }
-    this.write(`${dependencies
-      .map((e) => camelCase(e) + " " + e)
-      .join("\n\t\t")}
+    this.write(`${
+      dependencies
+        .map((e) => camelCase(e) + " " + e)
+        .join("\n\t\t")
+    }
     }
 
     func New${iface.name}(`);
@@ -125,16 +127,20 @@ class ServiceVisitor extends BaseVisitor {
         this.write(`, `);
       }
     }
-    this.write(`${dependencies
-      .map((e) => camelCase(e) + " " + e)
-      .join(", ")}) *${iface.name}Impl {
+    this.write(`${
+      dependencies
+        .map((e) => camelCase(e) + " " + e)
+        .join(", ")
+    }) *${iface.name}Impl {
       return &${iface.name}Impl{\n`);
     if (logger) {
       this.write("log: log,\n");
     }
-    this.write(`${dependencies
-      .map((e) => camelCase(e) + ": " + camelCase(e) + ",")
-      .join(",\n\t\t")}
+    this.write(`${
+      dependencies
+        .map((e) => camelCase(e) + ": " + camelCase(e) + ",")
+        .join(",\n\t\t")
+    }
       }
     }\n\n`);
   }
@@ -150,23 +156,27 @@ class ServiceVisitor extends BaseVisitor {
     }
     this.write(`\n`);
     this.write(
-      `func (${receiver(iface)} *${iface.name}Impl) ${methodName(
-        operation,
-        operation.name
-      )}(`
+      `func (${receiver(iface)} *${iface.name}Impl) ${
+        methodName(
+          operation,
+          operation.name,
+        )
+      }(`,
     );
     const translate = translateAlias(context);
     this.write(
-      `${mapParams(context, operation.parameters, undefined, translate)})`
+      `${mapParams(context, operation.parameters, undefined, translate)})`,
     );
     if (!isVoid(operation.type)) {
       this.write(
-        ` (${returnPointer(operation.type)}${expandType(
-          operation.type,
-          undefined,
-          true,
-          translate
-        )}, error)`
+        ` (${returnPointer(operation.type)}${
+          expandType(
+            operation.type,
+            undefined,
+            true,
+            translate,
+          )
+        }, error)`,
       );
     } else {
       this.write(` error`);

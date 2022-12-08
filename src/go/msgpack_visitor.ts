@@ -39,7 +39,7 @@ export class MsgPackVisitor extends BaseVisitor {
     const operArgs = (context: Context): void => {
       const { interface: iface, operation } = context;
       const parameters = operation.parameters.filter(
-        (p) => p.type.kind != Kind.Stream
+        (p) => p.type.kind != Kind.Stream,
       );
       if (parameters.length == 0 || operation.isUnary()) {
         return;

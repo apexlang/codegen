@@ -4,10 +4,10 @@ import {
   BaseVisitor,
   Context,
   Enum,
+  Interface,
   Type,
   Union,
   Writer,
-  Interface,
 } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 
 export type VisitorTypes = Alias | Type | Union | Enum | Interface;

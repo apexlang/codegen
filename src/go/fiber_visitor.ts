@@ -99,7 +99,7 @@ class FiberServiceVisitor extends BaseVisitor {
       this.write(
         `router.${method}("${fiberPath}", func(c *fiber.Ctx) error {
           resp := httpresponse.New()
-			    ctx := httpresponse.NewContext(c.Context(), resp)\n`
+			    ctx := httpresponse.NewContext(c.Context(), resp)\n`,
       );
       if (operation.isUnary()) {
         // TODO: check type
@@ -108,7 +108,7 @@ class FiberServiceVisitor extends BaseVisitor {
         const argsType = convertOperationToType(
           context.getType.bind(context),
           iface,
-          operation
+          operation,
         );
         paramType = argsType;
         const structVisitor = new StructVisitor(this.writer);
@@ -120,7 +120,7 @@ class FiberServiceVisitor extends BaseVisitor {
       if (paramType) {
         // TODO
         this.write(
-          `var args ${expandType(paramType, undefined, false, translate)}\n`
+          `var args ${expandType(paramType, undefined, false, translate)}\n`,
         );
         if (hasBody(method)) {
           this.write(`if err := c.BodyParser(&args); err != nil {
@@ -135,11 +135,11 @@ class FiberServiceVisitor extends BaseVisitor {
               if (path.indexOf(`{${f.name}}`) != -1) {
                 // Set path argument
                 this.write(
-                  `args.${fieldName(f, f.name)} = c.Params("${f.name}")\n`
+                  `args.${fieldName(f, f.name)} = c.Params("${f.name}")\n`,
                 );
               } else if (f.annotation("query") != undefined) {
                 this.write(
-                  `args.${fieldName(f, f.name)} = c.Query("${f.name}")\n`
+                  `args.${fieldName(f, f.name)} = c.Query("${f.name}")\n`,
                 );
               }
             });
@@ -158,10 +158,12 @@ class FiberServiceVisitor extends BaseVisitor {
           const args = (paramType as Type).fields
             .map(
               (f) =>
-                `, ${isObject(f.type, false) ? "&" : ""}args.${fieldName(
-                  f,
-                  f.name
-                )}`
+                `, ${isObject(f.type, false) ? "&" : ""}args.${
+                  fieldName(
+                    f,
+                    f.name,
+                  )
+                }`,
             )
             .join("");
           this.write(`err := service.${operMethod}(ctx${args})\n`);

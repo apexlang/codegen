@@ -15,23 +15,23 @@ limitations under the License.
 */
 
 import {
-  Context,
-  BaseVisitor,
-  Kind,
-  Type,
-  Optional,
-  Writer,
-  AnyType,
   Alias,
+  AnyType,
+  BaseVisitor,
+  Context,
+  Kind,
   List,
   Map,
+  Optional,
+  Type,
+  Writer,
 } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import { defaultValueForType, expandType, mapArg, mapArgs } from "./helpers.ts";
 import {
   isHandler,
   isProvider,
-  noCode,
   isVoid,
+  noCode,
   snakeCase,
 } from "../utils/mod.ts";
 

@@ -15,18 +15,18 @@ limitations under the License.
 */
 
 import {
+  Alias,
+  AnyType,
   BaseVisitor,
   Context,
-  AnyType,
   Kind,
   List,
   Map,
-  Type,
   Optional,
   Primitive,
   PrimitiveName,
-  Alias,
   Stream,
+  Type,
 } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import { Import } from "./alias_visitor.ts";
 

@@ -29,7 +29,7 @@ export interface Import {
 }
 
 export function defaultForAlias(
-  context: Context
+  context: Context,
 ): (named: string) => string | undefined {
   const aliases = context.config.aliases as { [key: string]: Import };
   if (aliases == undefined) {
@@ -57,7 +57,7 @@ export class AliasVisitor extends BaseVisitor {
 
     this.write(formatComment("// ", alias.description));
     this.write(
-      `export type ${alias.name} = ${expandType(alias.type!, false)}\n\n`
+      `export type ${alias.name} = ${expandType(alias.type!, false)}\n\n`,
     );
     super.triggerTypeField(context);
   }

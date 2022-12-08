@@ -15,11 +15,11 @@ limitations under the License.
 */
 
 import {
-  Context,
   BaseVisitor,
-  Writer,
+  Context,
   Kind,
   Named,
+  Writer,
 } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import { expandType, fieldName } from "./helpers.ts";
 import { translateAlias } from "./alias_visitor.ts";
@@ -65,18 +65,19 @@ export class StructVisitor extends BaseVisitor {
       fieldNameTag = a.convert<Serialize>().value;
     });
 
-    const mapstructure =
-      context.config.mapstructureTag == true
-        ? ` mapstructure:"${fieldNameTag}"`
-        : ``;
+    const mapstructure = context.config.mapstructureTag == true
+      ? ` mapstructure:"${fieldNameTag}"`
+      : ``;
 
     this.write(
-      `\t${fieldName(field, field.name)} ${ptr}${expandType(
-        field.type!,
-        packageName,
-        true,
-        translateAlias(context)
-      )} \`json:"${fieldNameTag}${omitempty}" yaml:"${fieldNameTag}${omitempty}" msgpack:"${fieldNameTag}${omitempty}"${mapstructure}`
+      `\t${fieldName(field, field.name)} ${ptr}${
+        expandType(
+          field.type!,
+          packageName,
+          true,
+          translateAlias(context),
+        )
+      } \`json:"${fieldNameTag}${omitempty}" yaml:"${fieldNameTag}${omitempty}" msgpack:"${fieldNameTag}${omitempty}"${mapstructure}`,
     );
     this.triggerCallbacks(context, "StructTags");
     this.write(`\`\n`);

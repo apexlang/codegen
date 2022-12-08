@@ -36,7 +36,9 @@ export class InterfaceVisitor extends BaseVisitor {
     }
     this.write(formatComment("// ", operation.description));
     this.write(
-      `type ${methodName(operation, operation.name)}Fn func(ctx context.Context`
+      `type ${
+        methodName(operation, operation.name)
+      }Fn func(ctx context.Context`,
     );
     operation.parameters.forEach((p) =>
       this.visitParam(context.clone({ parameter: p }))
@@ -72,12 +74,14 @@ export class InterfaceVisitor extends BaseVisitor {
     const translate = translateAlias(context);
     if (!isVoid(operation.type)) {
       this.write(
-        ` (${returnPointer(operation.type)}${expandType(
-          operation.type,
-          undefined,
-          true,
-          translate
-        )}, error)`
+        ` (${returnPointer(operation.type)}${
+          expandType(
+            operation.type,
+            undefined,
+            true,
+            translate,
+          )
+        }, error)`,
       );
     } else {
       this.write(` error`);

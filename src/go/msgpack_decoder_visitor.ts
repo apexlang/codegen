@@ -15,8 +15,8 @@ limitations under the License.
 */
 
 import {
-  Context,
   BaseVisitor,
+  Context,
 } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import { fieldName } from "./helpers.ts";
 import { msgpackRead } from "./msgpack_helpers.ts";
@@ -37,7 +37,7 @@ export class MsgPackDecoderVisitor extends BaseVisitor {
       ${context.fields.length > 0 ? "field" : "_"}, err := decoder.ReadString()
       if err != nil {
         return err
-      }\n`
+      }\n`,
     );
     if (context.fields.length > 0) {
       this.write(`switch field {\n`);
@@ -55,8 +55,8 @@ export class MsgPackDecoderVisitor extends BaseVisitor {
         true,
         "",
         field.type,
-        false
-      )
+        false,
+      ),
     );
     super.triggerTypeField(context);
   }

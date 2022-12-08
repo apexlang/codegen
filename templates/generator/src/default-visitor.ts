@@ -1,4 +1,8 @@
-import { BaseVisitor, Context, Writer } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
+import {
+  BaseVisitor,
+  Context,
+  Writer,
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
 import { TypeVisitor } from "./visitors/type-visitor.js";
 import { InterfaceVisitor } from "./visitors/interface-visitor.js";
 import { EnumVisitor } from "./visitors/enum-visitor.js";

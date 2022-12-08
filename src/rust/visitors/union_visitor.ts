@@ -8,13 +8,13 @@ import {
 } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import { codegenType, isNamed, isRecursiveType } from "../../utils/mod.ts";
 import {
+  customAttributes,
+  deriveDirective,
   rustDoc,
   rustifyCaps,
   trimLines,
-  deriveDirective,
-  visibility,
   types,
-  customAttributes,
+  visibility,
 } from "../utils/mod.ts";
 
 import { SourceGenerator } from "./base.ts";
@@ -26,7 +26,7 @@ function getTypeName(t: AnyType): string {
     const apexType = codegenType(t);
     throw new Error(
       `Can't represent an Apex union with primitive or non-named types as a Rust enum.` +
-        ` Try turning "${apexType}" into an alias, e.g. "alias MyType = ${apexType}".`
+        ` Try turning "${apexType}" into an alias, e.g. "alias MyType = ${apexType}".`,
     );
   }
 }
@@ -46,8 +46,9 @@ export class UnionVisitor extends SourceGenerator<Union> {
       let isRecursive = isRecursiveType(t);
       let isHeapAllocated = t.kind === Kind.Map || t.kind === Kind.List;
       let baseType = types.apexToRustType(t, this.config);
-      let typeString =
-        isRecursive && !isHeapAllocated ? `Box<${baseType}>` : baseType;
+      let typeString = isRecursive && !isHeapAllocated
+        ? `Box<${baseType}>`
+        : baseType;
       return `${getTypeName(t)}(${typeString})`;
     });
 

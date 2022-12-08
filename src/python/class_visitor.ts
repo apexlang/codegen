@@ -15,11 +15,11 @@ limitations under the License.
 */
 
 import {
-  Context,
   BaseVisitor,
+  Context,
   Kind,
 } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
-import { expandType, defValue } from "./helpers.ts";
+import { defValue, expandType } from "./helpers.ts";
 import { formatComment, snakeCase } from "../utils/mod.ts";
 
 export class ClassVisitor extends BaseVisitor {
@@ -53,12 +53,12 @@ export class ClassVisitor extends BaseVisitor {
         break;
     }
     this.write(
-      `\t${snakeCase(field.name)}: ${expandType(
-        field.type!,
-        true
-      )} = field(default${defaultSuffix}=${defaultValue}, metadata={'serde_rename': '${
-        field.name
-      }'})\n`
+      `\t${snakeCase(field.name)}: ${
+        expandType(
+          field.type!,
+          true,
+        )
+      } = field(default${defaultSuffix}=${defaultValue}, metadata={'serde_rename': '${field.name}'})\n`,
     );
     super.triggerTypeField(context);
   }

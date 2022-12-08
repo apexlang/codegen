@@ -19,11 +19,7 @@ import {
   Context,
   Writer,
 } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
-import {
-  camelCase,
-  InterfaceUsesVisitor,
-  UsesVisitor,
-} from "../utils/mod.ts";
+import { camelCase, InterfaceUsesVisitor, UsesVisitor } from "../utils/mod.ts";
 
 interface Config {
   http: Listener;
@@ -121,21 +117,20 @@ func main() {
   // Create dependencies\n`);
     usesVisitor.dependencies.forEach((dependency) => {
       this.write(
-        `${camelCase(dependency)}Dep := ${
-          config.package
-        }.New${dependency}(log)\n`
+        `${
+          camelCase(dependency)
+        }Dep := ${config.package}.New${dependency}(log)\n`,
       );
     });
 
     this.write(`\n\n// Create service components\n`);
     usesVisitor.services.forEach((dependencies, service) => {
-      const deps =
-        (dependencies.length > 0 ? ", " : "") +
+      const deps = (dependencies.length > 0 ? ", " : "") +
         dependencies.map((d) => camelCase(d) + "Dep").join(", ");
       this.write(
-        `${camelCase(service)}Service := ${
-          config.package
-        }.New${service}(log${deps})\n`
+        `${
+          camelCase(service)
+        }Service := ${config.package}.New${service}(log${deps})\n`,
       );
     });
 
@@ -152,21 +147,25 @@ func main() {
 
       usesVisitor.services.forEach((_, service) => {
         this.write(
-          `tfiber.Register(app, ${config.package}.${service}Fiber(${camelCase(
-            service
-          )}Service))\n`
+          `tfiber.Register(app, ${config.package}.${service}Fiber(${
+            camelCase(
+              service,
+            )
+          }Service))\n`,
         );
       });
 
       this
-        .write(`listenAddr := getEnv("${http.environmentKey}", "${http.defaultAddress}")
+        .write(
+          `listenAddr := getEnv("${http.environmentKey}", "${http.defaultAddress}")
       log.Info("HTTP server", "address", listenAddr)
       g.Add(func() error {
         return app.Listen(listenAddr)
       }, func(err error) {
         app.Shutdown()
       })
-    }\n`);
+    }\n`,
+        );
     }
     if (grpc.enabled) {
       this.write(`// gRPC
@@ -175,14 +174,17 @@ func main() {
 
       usesVisitor.services.forEach((_, service) => {
         this.write(
-          `tgrpc.Register(server, ${config.package}.${service}GRPC(${camelCase(
-            service
-          )}Service))\n`
+          `tgrpc.Register(server, ${config.package}.${service}GRPC(${
+            camelCase(
+              service,
+            )
+          }Service))\n`,
         );
       });
 
       this
-        .write(`listenAddr := getEnv("${grpc.environmentKey}", "${grpc.defaultAddress}")
+        .write(
+          `listenAddr := getEnv("${grpc.environmentKey}", "${grpc.defaultAddress}")
     log.Info("gRPC server", "address", listenAddr)
 		g.Add(func() error {
 			ln, err := net.Listen("tcp", listenAddr)
@@ -193,7 +195,8 @@ func main() {
 		}, func(err error) {
 			server.GracefulStop()
 		})
-	}\n`);
+	}\n`,
+        );
     }
     this.write(`// Termination signals
 	{

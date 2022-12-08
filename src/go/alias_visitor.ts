@@ -56,12 +56,14 @@ export class AliasVisitor extends BaseVisitor {
 
     this.write(formatComment("// ", alias.description));
     this.write(
-      `type ${alias.name} ${expandType(
-        alias.type,
-        undefined,
-        true,
-        translateAlias(context)
-      )}\n\n`
+      `type ${alias.name} ${
+        expandType(
+          alias.type,
+          undefined,
+          true,
+          translateAlias(context),
+        )
+      }\n\n`,
     );
     super.triggerTypeField(context);
   }

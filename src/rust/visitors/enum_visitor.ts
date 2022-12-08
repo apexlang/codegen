@@ -1,4 +1,9 @@
-import { Context, Enum, ObjectMap, Type } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+import {
+  Context,
+  Enum,
+  ObjectMap,
+  Type,
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import { IndexTypeDirective } from "../directives.ts";
 import {
   customAttributes,
@@ -44,11 +49,13 @@ export class EnumVisitor extends SourceGenerator<Enum> {
     ${this.visibility} enum ${rustifyCaps(this.root.name)}{
       ${this.source}
     }
-    ${trimLines([
-      optionalDisplayImpl,
-      optionalIndexConversion,
-      optionalIntoIndexConversion,
-    ])}
+    ${
+      trimLines([
+        optionalDisplayImpl,
+        optionalIndexConversion,
+        optionalIntoIndexConversion,
+      ])
+    }
 
     `;
   }
@@ -61,7 +68,7 @@ export class EnumVisitor extends SourceGenerator<Enum> {
     this.append(
       `
       ${trimLines([rustDoc(enumValue.description)])}
-      ${rustifyCaps(enumValue.name)},`.trim()
+      ${rustifyCaps(enumValue.name)},`.trim(),
     );
   }
 }
@@ -74,7 +81,7 @@ function displayImpl(node: Enum): string {
           v.display
             ? `"${v.display}"`
             : 'unimplemented!("No display value provided in schema")'
-        }`
+        }`,
     )
     .join(",");
   return `
@@ -105,9 +112,11 @@ function fromIndexImpl(node: Enum): string {
     fn try_from(index: ${type}) -> Result<Self, Self::Error> {
       match index {
         ${patterns},
-        _ => Err(format!("{} is not a valid index for ${rustifyCaps(
-          node.name
-        )}",index))
+        _ => Err(format!("{} is not a valid index for ${
+    rustifyCaps(
+      node.name,
+    )
+  }",index))
       }
     }
   }
@@ -119,7 +128,7 @@ function intoIndexImpl(node: Enum): string {
 
   let patterns = node.values
     .map(
-      (v) => `Self::${rustifyCaps(v.name)} => ${v.index || "unreachable!()"}`
+      (v) => `Self::${rustifyCaps(v.name)} => ${v.index || "unreachable!()"}`,
     )
     .join(",");
 

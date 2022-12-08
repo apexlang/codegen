@@ -15,10 +15,10 @@ limitations under the License.
 */
 
 import {
-  Context,
   BaseVisitor,
+  Context,
 } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
-import { expandType, defValue } from "./helpers.ts";
+import { defValue, expandType } from "./helpers.ts";
 import { formatComment } from "../utils/mod.ts";
 
 export class ClassVisitor extends BaseVisitor {
@@ -61,13 +61,13 @@ class ConstructorVisitor extends BaseVisitor {
     this.write(
       t.fields
         .map((field) => `${field.name} = ${defValue(context, field)}`)
-        .join(`,\n`)
+        .join(`,\n`),
     );
     this.write(`}: {`);
     this.write(
       t.fields
         .map((field) => `${field.name}?: ${expandType(field.type!, true)}`)
-        .join(`,\n`)
+        .join(`,\n`),
     );
     this.write(`} = {}) {\n`);
   }

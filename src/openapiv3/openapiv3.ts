@@ -15,19 +15,19 @@ limitations under the License.
 */
 
 import {
-  Context,
-  Writer,
+  Alias,
+  AnyType,
   BaseVisitor,
-  Kind,
-  Named,
-  Type,
+  Context,
   Field,
-  Optional,
+  Kind,
   List as ListType,
   Map as MapType,
-  AnyType,
+  Named,
+  Optional,
   Primitive,
-  Alias,
+  Type,
+  Writer,
 } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import {
   Document,
@@ -193,7 +193,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
         operation.annotation(m, () => {
           method = m.toLowerCase() as Method;
         });
-      }
+      },
     );
     if (!method) {
       return;
@@ -271,7 +271,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
           const typeFormat = primitiveTypeMap.get(named.name);
           if (!typeFormat) {
             throw Error(
-              `body parameter "${parameter.name}" must be a required type: found "${t.kind}"`
+              `body parameter "${parameter.name}" must be a required type: found "${t.kind}"`,
             );
           }
           this.operation!.requestBody = {
@@ -318,7 +318,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
           const typeFormat = primitiveTypeMap.get(named.name);
           if (!typeFormat) {
             throw Error(
-              `body parameter "${parameter.name}" must be a required type: found "${t.kind}"`
+              `body parameter "${parameter.name}" must be a required type: found "${t.kind}"`,
             );
           }
           content.properties![parameter.name] = {
@@ -356,7 +356,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
         }
         if (!typeFormat) {
           throw Error(
-            `path parameter "${parameter.name}" must be a required type: found "${t.kind}"`
+            `path parameter "${parameter.name}" must be a required type: found "${t.kind}"`,
           );
         }
         this.operation!.parameters.push({
@@ -379,7 +379,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
             }
             if (!typeFormat) {
               throw Error(
-                `query parameter "${parameter.name}" must be a built-type: found "${type.kind}"`
+                `query parameter "${parameter.name}" must be a built-type: found "${type.kind}"`,
               );
             }
             this.operation!.parameters.push({
@@ -428,7 +428,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
               return;
             }
             throw Error(
-              `query parameter "${parameter.name}" must be a built-type: found "${named.name}"`
+              `query parameter "${parameter.name}" must be a built-type: found "${named.name}"`,
             );
           }
         }
@@ -545,7 +545,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
           }
           return "unknown";
         },
-        this.typeToSchema
+        this.typeToSchema,
       ),
     };
     this.schemas[union.name] = schema;

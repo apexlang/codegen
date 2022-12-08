@@ -15,8 +15,8 @@ limitations under the License.
 */
 
 import {
-  Context,
   BaseVisitor,
+  Context,
   Writer,
 } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import { formatComment, pascalCase } from "../utils/mod.ts";
@@ -41,9 +41,9 @@ export class EnumVisitor extends BaseVisitor {
     const { enumValue } = context;
     this.write(formatComment("// ", enumValue.description));
     this.write(
-      `\t${context.enum.name}${pascalCase(enumValue.name)} ${
-        context.enum.name
-      } = ${enumValue.index}\n`
+      `\t${context.enum.name}${
+        pascalCase(enumValue.name)
+      } ${context.enum.name} = ${enumValue.index}\n`,
     );
     super.triggerTypeField(context);
   }
@@ -108,7 +108,7 @@ export class EnumVisitorToStringMap extends BaseVisitor {
   visitEnumBefore(context: Context): void {
     super.triggerEnumsBefore(context);
     this.write(
-      `var toString${context.enum.name} = map[${context.enum.name}]string{\n`
+      `var toString${context.enum.name} = map[${context.enum.name}]string{\n`,
     );
   }
 
@@ -116,7 +116,7 @@ export class EnumVisitorToStringMap extends BaseVisitor {
     const { enumValue } = context;
     const display = enumValue.display ? enumValue.display : enumValue.name;
     this.write(
-      `\t${context.enum.name}${pascalCase(enumValue.name)}:"${display}",\n`
+      `\t${context.enum.name}${pascalCase(enumValue.name)}:"${display}",\n`,
     );
     super.triggerTypeField(context);
   }
@@ -131,7 +131,7 @@ export class EnumVisitorToIDMap extends BaseVisitor {
   visitEnumBefore(context: Context): void {
     super.triggerEnumsBefore(context);
     this.write(
-      `var toID${context.enum.name} = map[string]${context.enum.name}{\n`
+      `var toID${context.enum.name} = map[string]${context.enum.name}{\n`,
     );
   }
 
@@ -139,7 +139,7 @@ export class EnumVisitorToIDMap extends BaseVisitor {
     const { enumValue } = context;
     const display = enumValue.display ? enumValue.display : enumValue.name;
     this.write(
-      `\t"${display}": ${context.enum.name}${pascalCase(enumValue.name)},\n`
+      `\t"${display}": ${context.enum.name}${pascalCase(enumValue.name)},\n`,
     );
     super.triggerTypeField(context);
   }

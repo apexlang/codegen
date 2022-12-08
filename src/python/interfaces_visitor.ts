@@ -15,15 +15,15 @@ limitations under the License.
 */
 
 import {
-  Context,
+  Alias,
+  AnyType,
   BaseVisitor,
+  Context,
+  Enum,
   Kind,
   Type,
   Union,
-  Enum,
-  Alias,
   Visitor,
-  AnyType,
 } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import { ClassVisitor } from "./class_visitor.ts";
 import { InterfaceVisitor } from "./interface_visitor.ts";

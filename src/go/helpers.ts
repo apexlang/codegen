@@ -15,23 +15,23 @@ limitations under the License.
 */
 
 import {
-  AnyType,
-  Optional,
-  Kind,
-  Context,
-  Primitive,
   Alias,
+  Annotated,
+  AnyType,
+  Context,
   Field,
+  Interface,
+  Kind,
   List,
   Map,
-  Valued,
-  Operation,
-  Parameter,
-  Annotated,
   Named,
+  Operation,
+  Optional,
+  Parameter,
+  Primitive,
   PrimitiveName,
-  Interface,
   Stream,
+  Valued,
 } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import { capitalize, renamed } from "../utils/mod.ts";
 import { Import } from "./alias_visitor.ts";
@@ -47,12 +47,12 @@ export function mapVals(
   vd: Valued[],
   sep: string,
   delimiter: string,
-  translate?: (named: string) => string | undefined
+  translate?: (named: string) => string | undefined,
 ): string {
   return vd
     .map(
       (vd) =>
-        `${vd.name}${sep} ${expandType(vd.type, undefined, true, translate)}`
+        `${vd.name}${sep} ${expandType(vd.type, undefined, true, translate)}`,
     )
     .join(delimiter);
 }
@@ -67,10 +67,9 @@ export function defValue(fieldDef: Field): string {
   if (fieldDef.default) {
     let returnVal = fieldDef.default.getValue();
     if (fieldDef.type.kind == Kind.Primitive) {
-      returnVal =
-        (fieldDef.type as Primitive).name == PrimitiveName.String
-          ? strQuote(returnVal)
-          : returnVal;
+      returnVal = (fieldDef.type as Primitive).name == PrimitiveName.String
+        ? strQuote(returnVal)
+        : returnVal;
     }
     return returnVal;
   }
@@ -138,7 +137,7 @@ export function returnShare(type: AnyType): string {
 export function defaultValueForType(
   context: Context,
   type: AnyType,
-  packageName?: string
+  packageName?: string,
 ): string {
   switch (type.kind) {
     case Kind.Optional:
@@ -149,8 +148,8 @@ export function defaultValueForType(
     case Kind.Enum:
       return (type as Named).name + "(0)";
     case Kind.Alias:
-      const aliases =
-        (context.config.aliases as { [key: string]: Import }) || {};
+      const aliases = (context.config.aliases as { [key: string]: Import }) ||
+        {};
       const a = type as Alias;
       const imp = aliases[a.name];
       if (imp) {
@@ -185,10 +184,9 @@ export function defaultValueForType(
             const otherType = (namedType as Alias).type;
             return defaultValueForType(context, otherType, packageName);
           }
-          const prefix =
-            packageName != undefined && packageName != ""
-              ? packageName + "."
-              : "";
+          const prefix = packageName != undefined && packageName != ""
+            ? packageName + "."
+            : "";
           return `${prefix}${capitalize(name)}{}`; // reference to something else
       }
   }
@@ -218,7 +216,7 @@ export const expandType = (
   type: AnyType,
   packageName?: string | undefined,
   useOptional: boolean = false,
-  translate?: (named: string) => string | undefined
+  translate?: (named: string) => string | undefined,
 ): string => {
   let translation: string | undefined = undefined;
   if (type.kind == Kind.Primitive) {
@@ -250,19 +248,23 @@ export const expandType = (
       }
       return namedValue;
     case Kind.Map:
-      return `map[${expandType(
-        (type as Map).keyType,
-        packageName,
-        true,
-        translate
-      )}]${expandType((type as Map).valueType, packageName, true, translate)}`;
+      return `map[${
+        expandType(
+          (type as Map).keyType,
+          packageName,
+          true,
+          translate,
+        )
+      }]${expandType((type as Map).valueType, packageName, true, translate)}`;
     case Kind.List:
-      return `[]${expandType(
-        (type as List).type,
-        packageName,
-        true,
-        translate
-      )}`;
+      return `[]${
+        expandType(
+          (type as List).type,
+          packageName,
+          true,
+          translate,
+        )
+      }`;
     case Kind.Optional:
       const nestedType = (type as Optional).type;
       if (nestedType.kind == Kind.Primitive) {
@@ -290,7 +292,7 @@ export const expandType = (
       const s = type as Stream;
       return expandStreamPattern.replace(
         "{{type}}",
-        expandType(s.type, packageName, true, translate)
+        expandType(s.type, packageName, true, translate),
       );
     default:
       return "unknown";
@@ -340,10 +342,12 @@ export function parameterName(annotated: Annotated, name: string): string {
 export function opsAsFns(context: Context, ops: Operation[]): string {
   return ops
     .map((op) => {
-      return `func ${op.name}(${mapParams(
-        context,
-        op.parameters
-      )}) ${expandType(op.type, undefined, true)} {\n}`;
+      return `func ${op.name}(${
+        mapParams(
+          context,
+          op.parameters,
+        )
+      }) ${expandType(op.type, undefined, true)} {\n}`;
     })
     .join("\n");
 }
@@ -356,7 +360,7 @@ export function mapParams(
   context: Context,
   args: Parameter[],
   packageName?: string,
-  translate?: (named: string) => string | undefined
+  translate?: (named: string) => string | undefined,
 ): string {
   return (
     `ctx context.Context` +
@@ -373,17 +377,19 @@ export function mapParam(
   context: Context,
   arg: Parameter,
   packageName?: string,
-  translate?: (named: string) => string | undefined
+  translate?: (named: string) => string | undefined,
 ): string {
-  return `${parameterName(arg, arg.name)} ${returnPointer(
-    arg.type
-  )}${expandType(arg.type, packageName, true, translate)}`;
+  return `${parameterName(arg, arg.name)} ${
+    returnPointer(
+      arg.type,
+    )
+  }${expandType(arg.type, packageName, true, translate)}`;
 }
 
 export function varAccessArg(
   context: Context,
   variable: string,
-  args: Parameter[]
+  args: Parameter[],
 ): string {
   return args
     .map((arg) => {

@@ -15,17 +15,17 @@ limitations under the License.
 */
 
 import {
-  Context,
-  BaseVisitor,
-  Kind,
-  Named,
-  Type,
-  AnyType,
-  Union,
   Alias,
-  Map,
+  AnyType,
+  BaseVisitor,
+  Context,
+  Kind,
   List,
+  Map,
+  Named,
   Optional,
+  Type,
+  Union,
 } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import { isNamed, isService } from "./utilities.ts";
 

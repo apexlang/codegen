@@ -1,18 +1,18 @@
 import {
-  Kind,
-  Named,
-  AnyType,
-  Map,
-  PrimitiveName,
-  List,
-  Optional,
-  Union,
-  Type,
-  Primitive,
-  ObjectMap,
-  Enum,
   Alias,
+  AnyType,
+  Enum,
+  Kind,
+  List,
+  Map,
+  Named,
+  ObjectMap,
+  Optional,
+  Primitive,
+  PrimitiveName,
   Stream,
+  Type,
+  Union,
 } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import { rustifyCaps } from "./mod.ts";
 
@@ -20,7 +20,7 @@ export function apexToRustType(
   typ: AnyType,
   config: ObjectMap<any>,
   asRef = false,
-  lifetime = ""
+  lifetime = "",
 ): string {
   const ref = asRef ? `&${lifetime} ` : "";
   switch (typ.kind) {
@@ -72,7 +72,7 @@ function primitiveToRust(
   t: Primitive,
   config: ObjectMap<any>,
   asRef = false,
-  lifetime = ""
+  lifetime = "",
 ): string {
   const ref = asRef ? `&${lifetime} ` : "";
   switch (t.name) {
@@ -116,7 +116,7 @@ function primitiveToRust(
     }
     default:
       throw new Error(
-        `Unhandled primitive type conversion for type: ${t.name}`
+        `Unhandled primitive type conversion for type: ${t.name}`,
       );
   }
 }
@@ -142,10 +142,11 @@ export function defaultValue(type: AnyType, config: ObjectMap<any>): string {
 
 export function defaultValueForPrimitive(
   type: AnyType,
-  config: ObjectMap<any>
+  config: ObjectMap<any>,
 ): string {
-  if (type.kind !== Kind.Primitive)
+  if (type.kind !== Kind.Primitive) {
     throw new Error(`Can not expand non-primitive type ${type.kind}`);
+  }
   const t = type as Primitive;
   switch (t.name) {
     case PrimitiveName.Any:

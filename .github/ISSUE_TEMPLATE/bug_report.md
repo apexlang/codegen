@@ -8,15 +8,20 @@ assignees: ''
 ---
 
 **Describe the bug**
-A quick description of the bug. Add error messages and terms you think others experiencing this issue would search for.
+
+A quick description of the bug. Add error messages and terms you think others
+experiencing this issue would search for.
 
 **Actual behavior**
+
 A clear and short description of what actually happens.
 
 **Expected behavior**
+
 A clear and short description of what you expected to happen.
 
 **To Reproduce**
+
 Steps to reproduce the behavior.
 
 **Environment (where applicable):**
@@ -25,5 +30,4 @@ Steps to reproduce the behavior.
 - Architecture
 - Build Version
 
-**Additional context**
-Add any other context about the problem here.
+**Additional context** Add any other context about the problem here.

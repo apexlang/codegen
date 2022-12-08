@@ -15,20 +15,20 @@ limitations under the License.
 */
 
 import {
-  AnyType,
-  Named,
-  Map,
-  List,
-  Optional,
-  Field,
-  Valued,
-  Operation,
-  Parameter,
-  Type,
-  Kind,
   Alias,
+  AnyType,
+  Field,
+  Kind,
+  List,
+  Map,
+  Named,
+  Operation,
+  Optional,
+  Parameter,
   Primitive,
   PrimitiveName,
+  Type,
+  Valued,
 } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import { capitalize, snakeCase } from "../utils/mod.ts";
 import { translations } from "./constant.ts";
@@ -55,10 +55,9 @@ export function defValue(fieldDef: Field): string {
   if (fieldDef.default) {
     let returnVal = fieldDef.default.getValue();
     if (fieldDef.type.kind == Kind.Primitive) {
-      returnVal =
-        (fieldDef.type as Primitive).name == PrimitiveName.String
-          ? strQuote(returnVal)
-          : returnVal;
+      returnVal = (fieldDef.type as Primitive).name == PrimitiveName.String
+        ? strQuote(returnVal)
+        : returnVal;
     }
     return returnVal;
   }
@@ -171,10 +170,12 @@ export const expandType = (type: AnyType, useOptional: boolean): string => {
       const translation = translations.get(namedValue);
       return namedValue;
     case Kind.Map:
-      return `dict[${expandType((type as Map).keyType, true)},${expandType(
-        (type as Map).valueType,
-        true
-      )}]`;
+      return `dict[${expandType((type as Map).keyType, true)},${
+        expandType(
+          (type as Map).valueType,
+          true,
+        )
+      }]`;
     case Kind.List:
       return `list[${expandType((type as List).type, true)}]`;
     case Kind.Optional:
@@ -195,10 +196,12 @@ export const expandType = (type: AnyType, useOptional: boolean): string => {
 export function opsAsFns(ops: Operation[]): string {
   return ops
     .map((op) => {
-      return `function ${op.name}(${mapArgs(op.parameters)}): ${expandType(
-        op.type,
-        true
-      )} {\n}`;
+      return `function ${op.name}(${mapArgs(op.parameters)}): ${
+        expandType(
+          op.type,
+          true,
+        )
+      } {\n}`;
     })
     .join("\n");
 }

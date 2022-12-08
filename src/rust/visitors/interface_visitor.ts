@@ -1,4 +1,9 @@
-import { Context, Interface, ObjectMap, Operation } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+import {
+  Context,
+  Interface,
+  ObjectMap,
+  Operation,
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import {
   customAttributes,
   rustDoc,
@@ -39,7 +44,7 @@ export class InterfaceVisitor extends SourceGenerator<Interface> {
 export function genOperation(
   op: Operation,
   vis: visibility,
-  config: ObjectMap<any>
+  config: ObjectMap<any>,
 ): string {
   const typeString = apexToRustType(op.type, config);
   let args = op.parameters

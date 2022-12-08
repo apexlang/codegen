@@ -15,9 +15,9 @@ limitations under the License.
 */
 
 import {
-  Context,
-  BaseVisitor,
   Annotated,
+  BaseVisitor,
+  Context,
 } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import { formatComment, pascalCase, typeName } from "../utils/mod.ts";
 import { expandType, fieldName } from "./helpers.ts";
@@ -39,10 +39,12 @@ export class UnionVisitor extends BaseVisitor {
       });
       let expandedName = expandType(t);
       this.write(
-        `${fieldName(
-          undefined as unknown as Annotated,
-          tname
-        )} *${expandedName} ${tick}json:"${tname},omitempty" yaml:"${tname},omitempty" msgpack:"${tname},omitempty`
+        `${
+          fieldName(
+            undefined as unknown as Annotated,
+            tname,
+          )
+        } *${expandedName} ${tick}json:"${tname},omitempty" yaml:"${tname},omitempty" msgpack:"${tname},omitempty`,
       );
       this.triggerCallbacks(context, "UnionStructTags");
       this.write(`"${tick}\n`);

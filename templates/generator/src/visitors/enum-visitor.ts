@@ -1,4 +1,7 @@
-import { Context, Enum } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
+import {
+  Context,
+  Enum,
+} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
 import { convertDescription } from "../utils/conversions.js";
 
 import { SourceGenerator } from "./base.js";
