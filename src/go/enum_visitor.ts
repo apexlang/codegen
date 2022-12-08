@@ -17,6 +17,7 @@ limitations under the License.
 import {
   Context,
   BaseVisitor,
+  Writer,
 } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
 import { formatComment, pascalCase } from "../utils/mod.ts";
 

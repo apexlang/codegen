@@ -29,7 +29,7 @@ import { UnionVisitor } from "./union_visitor.ts";
 import { InterfaceVisitor } from "./interface_visitor.ts";
 
 export class InterfacesVisitor extends BaseVisitor {
-  writeTypeInfo: boolean = true;
+  writeTypeInfo = true;
 
   // Overridable visitor implementations
   importsVisitor = (writer: Writer): Visitor => new ImportsVisitor(writer);
