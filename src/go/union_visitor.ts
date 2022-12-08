@@ -18,6 +18,10 @@ import { Context, BaseVisitor, Annotated } from "@apexlang/core/model";
 import { formatComment, pascalCase, typeName } from "../utils/index.js";
 import { expandType, fieldName } from "./helpers.js";
 
+interface UnionKey {
+  value: string;
+}
+
 export class UnionVisitor extends BaseVisitor {
   visitUnion(context: Context): void {
     const tick = "`";
@@ -25,8 +29,11 @@ export class UnionVisitor extends BaseVisitor {
     this.write(formatComment("// ", union.description));
     this.write(`type ${union.name} struct {\n`);
     union.types.forEach((t) => {
-      const tname = typeName(t);
-      const expandedName = expandType(t);
+      let tname = typeName(t);
+      (t as Annotated).annotation("unionKey", (a) => {
+        tname = a.convert<UnionKey>().value;
+      });
+      let expandedName = expandType(t);
       this.write(
         `${fieldName(
           undefined as unknown as Annotated,
