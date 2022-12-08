@@ -1,9 +1,10 @@
+// deno-lint-ignore-file no-explicit-any
 import {
   Context,
   Interface,
   ObjectMap,
   Operation,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import {
   customAttributes,
   rustDoc,
@@ -27,7 +28,7 @@ export class InterfaceVisitor extends SourceGenerator<Interface> {
   }
 
   getSource(): string {
-    let prefix = trimLines([
+    const prefix = trimLines([
       rustDoc(this.root.description),
       customAttributes(this.root.name, this.config),
     ]);
@@ -43,11 +44,11 @@ export class InterfaceVisitor extends SourceGenerator<Interface> {
 
 export function genOperation(
   op: Operation,
-  vis: visibility,
+  _vis: visibility,
   config: ObjectMap<any>,
 ): string {
   const typeString = apexToRustType(op.type, config);
-  let args = op.parameters
+  const args = op.parameters
     .map((arg) => {
       return `${rustify(arg.name)}: ${apexToRustType(arg.type, config)}`;
     })

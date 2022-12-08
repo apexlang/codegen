@@ -8,7 +8,7 @@ import {
   Optional,
   Primitive,
   PrimitiveName,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
+} from "https://deno.land/x/apex_core@v0.1.0/model";
 
 /**
  * Convert an Apex type to a type suitable for the destination format.

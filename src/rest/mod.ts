@@ -17,7 +17,7 @@ limitations under the License.
 import {
   Context,
   Operation,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 
 export interface PathDirective {
   value: string;

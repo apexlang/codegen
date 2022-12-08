@@ -18,7 +18,7 @@ import {
   BaseVisitor,
   Context,
   Kind,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import { defValue, expandType } from "./helpers.ts";
 import { formatComment, snakeCase } from "../utils/mod.ts";
 
@@ -40,8 +40,8 @@ export class ClassVisitor extends BaseVisitor {
   visitTypeField(context: Context): void {
     const field = context.field!;
     this.write(formatComment("\t# ", field.description));
-    var defaultSuffix = "";
-    var defaultValue = defValue(field);
+    let defaultSuffix = "";
+    let defaultValue = defValue(field);
     switch (field.type.kind) {
       case Kind.List:
         defaultSuffix = "_factory";
@@ -63,7 +63,7 @@ export class ClassVisitor extends BaseVisitor {
     super.triggerTypeField(context);
   }
 
-  visitTypeAfter(context: Context): void {
+  visitTypeAfter(_context: Context): void {
     this.write(`\n\n`);
   }
 }

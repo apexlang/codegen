@@ -2,8 +2,7 @@ import {
   Context,
   Enum,
   ObjectMap,
-  Type,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import { IndexTypeDirective } from "../directives.ts";
 import {
   customAttributes,
@@ -17,6 +16,7 @@ import { SourceGenerator } from "./base.ts";
 export class EnumVisitor extends SourceGenerator<Enum> {
   hasDisplayValues = false;
   hasIndices = false;
+  // deno-lint-ignore no-explicit-any
   config: ObjectMap<any>;
   visibility: visibility;
 
@@ -39,7 +39,7 @@ export class EnumVisitor extends SourceGenerator<Enum> {
       ? intoIndexImpl(this.root)
       : "";
 
-    let prefix = trimLines([
+    const prefix = trimLines([
       rustDoc(this.root.description),
       deriveDirective(this.root.name, this.config),
       customAttributes(this.root.name, this.config),
@@ -74,7 +74,7 @@ export class EnumVisitor extends SourceGenerator<Enum> {
 }
 
 function displayImpl(node: Enum): string {
-  let values = node.values
+  const values = node.values
     .map(
       (v) =>
         `Self::${rustifyCaps(v.name)} => ${
@@ -96,12 +96,12 @@ function displayImpl(node: Enum): string {
 }
 
 function fromIndexImpl(node: Enum): string {
-  let type: string = "u32";
+  let type = "u32";
   node.annotation("index_type", (annotation) => {
     type = (annotation.convert() as IndexTypeDirective).type;
   });
 
-  let patterns = node.values
+  const patterns = node.values
     .filter((v) => v.index !== undefined)
     .map((v) => `${v.index} => Ok(Self::${rustifyCaps(v.name)})`)
     .join(",");
@@ -124,9 +124,9 @@ function fromIndexImpl(node: Enum): string {
 }
 
 function intoIndexImpl(node: Enum): string {
-  let type = "u32";
+  const type = "u32";
 
-  let patterns = node.values
+  const patterns = node.values
     .map(
       (v) => `Self::${rustifyCaps(v.name)} => ${v.index || "unreachable!()"}`,
     )

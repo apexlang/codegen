@@ -16,8 +16,8 @@ limitations under the License.
 
 // This Visitor generates the Main method, which is the entry point for C# code.
 
-import { BaseVisitor } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
-import { Context } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+import { BaseVisitor } from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { Context } from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import { parseNamespaceName } from "./helpers.ts";
 
 export class MainVisitor extends BaseVisitor {

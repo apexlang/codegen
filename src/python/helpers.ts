@@ -29,9 +29,8 @@ import {
   PrimitiveName,
   Type,
   Valued,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import { capitalize, snakeCase } from "../utils/mod.ts";
-import { translations } from "./constant.ts";
 
 /**
  * Takes an array of ValuedDefintions and returns a string based on supplied params.
@@ -50,7 +49,6 @@ export function mapVals(vd: Valued[], sep: string, joinOn: string): string {
  * @param fieldDef FieldDefinition Node to get default value of
  */
 export function defValue(fieldDef: Field): string {
-  const name = fieldDef.name;
   const type = fieldDef.type;
   if (fieldDef.default) {
     let returnVal = fieldDef.default.getValue();
@@ -117,7 +115,7 @@ export function defaultValueForType(type: AnyType): string {
     case Kind.Alias:
     case Kind.Enum:
     case Kind.Type:
-    case Kind.Union:
+    case Kind.Union: {
       const name = (type as Named).name;
       switch (name) {
         case "ID":
@@ -141,6 +139,7 @@ export function defaultValueForType(type: AnyType): string {
         default:
           return `new ${capitalize(name)}()`; // reference to something else
       }
+    }
   }
   return "???";
 }
@@ -165,10 +164,10 @@ export const expandType = (type: AnyType, useOptional: boolean): string => {
     case Kind.Alias:
     case Kind.Enum:
     case Kind.Type:
-    case Kind.Union:
+    case Kind.Union: {
       const namedValue = (type as Named).name;
-      const translation = translations.get(namedValue);
       return namedValue;
+    }
     case Kind.Map:
       return `dict[${expandType((type as Map).keyType, true)},${
         expandType(
@@ -178,12 +177,13 @@ export const expandType = (type: AnyType, useOptional: boolean): string => {
       }]`;
     case Kind.List:
       return `list[${expandType((type as List).type, true)}]`;
-    case Kind.Optional:
-      let expanded = expandType((type as Optional).type, true);
+    case Kind.Optional: {
+      const expanded = expandType((type as Optional).type, true);
       if (useOptional) {
         return `Optional[${expanded}]`;
       }
       return expanded;
+    }
     default:
       return "unknown";
   }

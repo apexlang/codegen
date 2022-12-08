@@ -1,7 +1,7 @@
 import {
   Context,
   Writer,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import { ContextWriter } from "./visitors/base.ts";
 import { StructVisitor } from "./visitors/struct_visitor.ts";
 import {
@@ -69,7 +69,7 @@ export class RustBasic extends ContextWriter {
 
   visitAlias(context: Context): void {
     const { alias } = context;
-    let vis = visibility(alias.name, context.config);
+    const vis = visibility(alias.name, context.config);
 
     let prefix = rustDoc(alias.description);
 

@@ -31,7 +31,7 @@ import { formatComment, isOneOfType, pascalCase } from "../utils/mod.ts";
 import {
   BaseVisitor,
   Context,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import { expandType, parseNamespaceName } from "./helpers.ts";
 
 export class ScaffoldVisitor extends BaseVisitor {

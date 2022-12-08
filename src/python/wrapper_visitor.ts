@@ -17,7 +17,7 @@ limitations under the License.
 import {
   BaseVisitor,
   Context,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import { expandType } from "./helpers.ts";
 import { capitalize, isVoid, noCode, snakeCase } from "../utils/mod.ts";
 
@@ -135,7 +135,7 @@ export class WrapperStatefulVisitor extends BaseVisitor {
         `\t\t\tinput_args: ${argsClass} = handlers.codec.decode(input, ${argsClass})\n`,
       );
       this.write(`\t\t\t${resultStr}await h.${snakeCase(operation.name)}(sctx`);
-      operation.parameters.map((param, i) => {
+      operation.parameters.map((param) => {
         const paramName = snakeCase(param.name);
         this.write(`, `);
         this.write(`input_args.${paramName}`);

@@ -18,7 +18,7 @@ import {
   BaseVisitor,
   Context,
   Writer,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import { camelCase, InterfaceUsesVisitor, UsesVisitor } from "../utils/mod.ts";
 
 interface Config {

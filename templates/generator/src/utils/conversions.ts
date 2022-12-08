@@ -2,7 +2,7 @@ import {
   ObjectMap,
   Operation,
   Parameter,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
+} from "https://deno.land/x/apex_core@v0.1.0/model";
 import * as utils from "@apexlang/codegen/utils";
 import { convertType } from "./types";
 

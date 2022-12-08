@@ -23,18 +23,18 @@ import {
   Map,
   Optional,
   Type,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import { Import } from "./alias_visitor.ts";
 
 export class ImportsVisitor extends BaseVisitor {
   private imports: { [key: string]: Import } = {};
 
-  visitNamespaceAfter(context: Context): void {
+  visitNamespaceAfter(_context: Context): void {
     const modules: { [module: string]: string[] } = {};
     for (const key in this.imports) {
       const i = this.imports[key];
       if (i.from && i.import) {
-        var imports: string[] = modules[i.from];
+        let imports: string[] = modules[i.from];
         if (!imports) {
           imports = [];
           modules[i.from] = imports;
@@ -63,24 +63,28 @@ export class ImportsVisitor extends BaseVisitor {
     const aliases = (context.config.aliases as { [key: string]: Import }) || {};
 
     switch (type.kind) {
-      case Kind.Type:
+      case Kind.Type: {
         const named = type as Type;
         const i = aliases[named.name];
         this.addType(named.name, i);
         break;
-      case Kind.List:
+      }
+      case Kind.List: {
         const list = type as List;
         this.checkType(context, list.type);
         break;
-      case Kind.Map:
+      }
+      case Kind.Map: {
         const map = type as Map;
         this.checkType(context, map.keyType);
         this.checkType(context, map.valueType);
         break;
-      case Kind.Optional:
+      }
+      case Kind.Optional: {
         const optional = type as Optional;
         this.checkType(context, optional.type);
         break;
+      }
     }
   }
 

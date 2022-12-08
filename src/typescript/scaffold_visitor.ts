@@ -24,7 +24,7 @@ import {
   Optional,
   Type,
   Writer,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import {
   camelCase,
   isHandler,
@@ -51,7 +51,7 @@ export class ScaffoldVisitor extends BaseVisitor {
     }
   }
 
-  visitNamespaceAfter(context: Context): void {
+  visitNamespaceAfter(_context: Context): void {
     this.write(`\nstart();\n`);
   }
 }
@@ -110,7 +110,7 @@ class ImplVisitor extends BaseVisitor {
 }
 
 class AdapterTypesVisitor extends BaseVisitor {
-  visitNamespaceBefore(content: Context): void {
+  visitNamespaceBefore(_content: Context): void {
     this.write(`import { start`);
   }
   visitInterface(context: Context): void {
@@ -122,13 +122,13 @@ class AdapterTypesVisitor extends BaseVisitor {
       this.write(`, ${camelCase(iface.name)}`);
     }
   }
-  visitNamespaceAfter(content: Context): void {
+  visitNamespaceAfter(_content: Context): void {
     this.write(` } from "./adapter";\n`);
   }
 }
 
 class TypesVisitor extends BaseVisitor {
-  hasObjects: boolean = false;
+  hasObjects = false;
   found: Set<string> = new Set<string>();
 
   private addImport(name: string): void {
@@ -146,22 +146,26 @@ class TypesVisitor extends BaseVisitor {
 
   addType(t: AnyType): void {
     switch (t.kind) {
-      case Kind.Type:
+      case Kind.Type: {
         const v = t as Type;
         this.addImport(v.name);
         break;
-      case Kind.Optional:
+      }
+      case Kind.Optional: {
         const o = t as Optional;
         this.addType(o.type);
         break;
-      case Kind.List:
+      }
+      case Kind.List: {
         const l = t as List;
         this.addType(l.type);
         break;
-      case Kind.Map:
+      }
+      case Kind.Map: {
         const m = t as Map;
         this.addType(m.keyType);
         this.addType(m.valueType);
+      }
     }
   }
 
@@ -175,9 +179,9 @@ class TypesVisitor extends BaseVisitor {
     this.addType(parameter.type);
   }
 
-  visitNamespaceBefore(context: Context): void {}
+  visitNamespaceBefore(_context: Context): void {}
 
-  visitNamespaceAfter(context: Context): void {
+  visitNamespaceAfter(_context: Context): void {
     if (this.hasObjects) {
       this.write(` } from "./interfaces";\n\n`);
     }

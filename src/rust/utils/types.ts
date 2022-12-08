@@ -1,7 +1,6 @@
+// deno-lint-ignore-file no-explicit-any
 import {
-  Alias,
   AnyType,
-  Enum,
   Kind,
   List,
   Map,
@@ -11,9 +10,7 @@ import {
   Primitive,
   PrimitiveName,
   Stream,
-  Type,
-  Union,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import { rustifyCaps } from "./mod.ts";
 
 export function apexToRustType(
@@ -173,7 +170,7 @@ export function defaultValueForPrimitive(
     case PrimitiveName.DateTime:
       return "time::OffsetDateTime::default()";
     case PrimitiveName.Value:
-      config.anyType
+      return config.anyType
         ? `${config.anyType.toString()}::default()`
         : "serde_value::Value::Null";
     default:

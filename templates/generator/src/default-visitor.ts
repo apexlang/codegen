@@ -2,7 +2,7 @@ import {
   BaseVisitor,
   Context,
   Writer,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model";
+} from "https://deno.land/x/apex_core@v0.1.0/model";
 import { TypeVisitor } from "./visitors/type-visitor.js";
 import { InterfaceVisitor } from "./visitors/interface-visitor.js";
 import { EnumVisitor } from "./visitors/enum-visitor.js";

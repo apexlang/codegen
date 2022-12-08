@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Named } from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/ast/mod.ts";
+import { Named } from "https://deno.land/x/apex_core@v0.1.0/ast/mod.ts";
 import {
   AnyType,
   BaseVisitor,
@@ -27,7 +27,7 @@ import {
   PrimitiveName,
   Type,
   Writer,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import {
   ArraySchemaObject,
   ReferenceObject,

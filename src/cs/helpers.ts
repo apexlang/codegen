@@ -21,7 +21,7 @@ import {
   Map,
   Named,
   Optional,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import { pascalCase } from "../utils/mod.ts";
 import { translations } from "./constant.ts";
 

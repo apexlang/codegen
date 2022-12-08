@@ -19,7 +19,7 @@ import {
   BaseVisitor,
   Context,
   Visitor,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import { isProvider, isService } from "./utilities.ts";
 
 export interface UsesVisitor extends Visitor {

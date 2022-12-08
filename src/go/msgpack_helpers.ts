@@ -27,7 +27,7 @@ import {
   Parameter,
   Primitive,
   PrimitiveName,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import { Import, translateAlias } from "./alias_visitor.ts";
 import { translations } from "./constant.ts";
 import { expandType, fieldName, returnShare } from "./helpers.ts";
@@ -59,7 +59,7 @@ export function msgpackRead(
   const tr = translateAlias(context);
   const returnPrefix = defaultVal == "" ? "" : `${defaultVal}, `;
   let prefix = "return ";
-  let assign = variable == "item" ||
+  const assign = variable == "item" ||
       variable == "key" ||
       variable == "value" ||
       variable == "ret" ||
@@ -81,7 +81,6 @@ export function msgpackRead(
       }
     } else {
       if (t.kind == Kind.Type && !prevOptional) {
-        let type = t as Named;
         if (errorHandling) {
           prefix = "err = ";
         }
@@ -126,7 +125,7 @@ export function msgpackRead(
     case Kind.Union:
     case Kind.Type:
     case Kind.Primitive: {
-      let namedNode = t as Named;
+      const namedNode = t as Named;
       const amp = typeInstRef ? "&" : "";
       let decodeFn = `msgpack.Decode[${namedNode.name}](${amp}decoder)`;
       if (prevOptional) {
@@ -144,7 +143,7 @@ export function msgpackRead(
       return `${prefix}${decodeFn}\n`;
     }
     case Kind.Enum: {
-      let e = t as Enum;
+      const e = t as Enum;
       let decodeFn = `convert.Numeric[${e.name}](decoder.ReadInt32())`;
       if (prevOptional) {
         decodeFn =
@@ -152,7 +151,7 @@ export function msgpackRead(
       }
       return `${prefix}${decodeFn}\n`;
     }
-    case Kind.Map:
+    case Kind.Map: {
       let mapCode = `mapSize, err := decoder.ReadMapSize()
       if err != nil {
         return ${returnPrefix}err
@@ -205,7 +204,8 @@ export function msgpackRead(
       mapCode += `${variable}[key] = value
       }\n`;
       return mapCode;
-    case Kind.List:
+    }
+    case Kind.List: {
       let listCode = `listSize, err := decoder.ReadArraySize()
       if err != nil {
         return ${returnPrefix}err
@@ -246,7 +246,8 @@ export function msgpackRead(
       listCode += `${variable} = append(${variable}, nonNilItem)
       }\n`;
       return listCode;
-    case Kind.Optional:
+    }
+    case Kind.Optional: {
       const optNode = t as Optional;
       optNode.type;
       switch (optNode.type.kind) {
@@ -281,6 +282,7 @@ export function msgpackRead(
       // optCode += "}\n";
       // optCode += "}\n";
       return optCode;
+    }
     default:
       return "unknown\n";
   }
@@ -337,7 +339,7 @@ export function msgpackWrite(
   switch (t.kind) {
     case Kind.Union:
     case Kind.Type:
-    case Kind.Primitive:
+    case Kind.Primitive: {
       const namedNode = t as Named;
       if (prevOptional && msgpackEncodeNillableFuncs.has(namedNode.name)) {
         return `${typeInst}.${
@@ -355,13 +357,14 @@ export function msgpackWrite(
       }
       const amp = typeInstRef ? "&" : "";
       return `${variable}.${typeMeth}(${amp}${typeInst})\n`;
-    case Kind.Enum:
-      const e = t as Enum;
+    }
+    case Kind.Enum: {
       if (!prevOptional) {
         return `${typeInst}.WriteInt32(int32(${variable}))\n`;
       }
       return `${typeInst}.WriteNillableInt32((*int32)(${variable}))\n`;
-    case Kind.Map:
+    }
+    case Kind.Map: {
       const mappedNode = t as Map;
       code += typeInst +
         `.WriteMapSize(uint32(len(${variable})))
@@ -392,7 +395,8 @@ export function msgpackWrite(
         }}
       }\n`;
       return code;
-    case Kind.List:
+    }
+    case Kind.List: {
       const listNode = t as List;
       code += typeInst +
         `.WriteArraySize(uint32(len(${variable})))
@@ -410,10 +414,11 @@ export function msgpackWrite(
           )
         }}\n`;
       return code;
-    case Kind.Optional:
+    }
+    case Kind.Optional: {
       const optionalNode = t as Optional;
       switch (optionalNode.type.kind) {
-        case Kind.Alias:
+        case Kind.Alias: {
           const a = optionalNode.type as Alias;
           const aliases =
             (context.config.aliases as { [key: string]: Import }) || {};
@@ -421,6 +426,8 @@ export function msgpackWrite(
           if (imp && imp.format) {
             break;
           }
+        }
+        /* falls through */
         case Kind.List:
         case Kind.Map:
         case Kind.Enum:
@@ -440,7 +447,7 @@ export function msgpackWrite(
       code += "if " + variable + " == nil {\n";
       code += typeInst + ".WriteNil()\n";
       code += "} else {\n";
-      let vprefix = msgpackReturnDeref(context, optionalNode.type);
+      const vprefix = msgpackReturnDeref(context, optionalNode.type);
       code += msgpackWrite(
         context,
         typeInst,
@@ -453,6 +460,7 @@ export function msgpackWrite(
       );
       code += "}\n";
       return code;
+    }
     default:
       return "unknown\n";
   }

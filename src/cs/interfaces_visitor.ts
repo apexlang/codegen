@@ -19,7 +19,7 @@ import {
   Context,
   Visitor,
   Writer,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import { TypeVisitor } from "./types_visitor.ts";
 import { InterfaceVisitor } from "./interface_visitor.ts";
 import { parseNamespaceName } from "./helpers.ts";

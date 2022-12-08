@@ -30,7 +30,7 @@ import {
   Stream,
   Type,
   Writer,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import {
   convertOperationToType,
   ExposedTypesVisitor,
@@ -66,7 +66,7 @@ export class ProtoVisitor extends BaseVisitor {
   }
 
   visitNamespaceAfter(context: Context): void {
-    for (let request of this.requestTypes) {
+    for (const request of this.requestTypes) {
       request.accept(context.clone({ type: request }), this);
     }
   }
@@ -163,7 +163,7 @@ package ${ns.name};\n\n`);
     this.write(`message ${pascalCase(u.name)} {\n`);
     this.write(`  oneof value {\n`);
     let i = 0;
-    for (let t of u.types) {
+    for (const t of u.types) {
       const n = t as Named;
       i++;
       this.write(
@@ -210,17 +210,20 @@ class RoleVisitor extends BaseVisitor {
       const param = operation.parameters[0];
       const pt = unwrapKinds(param.type, Kind.Alias);
       switch (pt.kind) {
-        case Kind.Primitive:
+        case Kind.Primitive: {
           const p = pt as Primitive;
           this.write(primitiveMessageType(p.name));
           break;
-        case Kind.Enum:
+        }
+        case Kind.Enum: {
           const e = pt as Enum;
           this.write(`${e.name}Value`);
           break;
-        default:
+        }
+        default: {
           this.write(`${typeSignature(pt)}`);
           break;
+        }
       }
     } else {
       const argsType = convertOperationToType(
@@ -238,17 +241,20 @@ class RoleVisitor extends BaseVisitor {
       case Kind.Void:
         this.write(`google.protobuf.Empty`);
         break;
-      case Kind.Primitive:
+      case Kind.Primitive: {
         const p = ot as Primitive;
         this.write(primitiveMessageType(p.name));
         break;
-      case Kind.Enum:
+      }
+      case Kind.Enum: {
         const e = ot as Enum;
         this.write(`${e.name}Value`);
         break;
-      default:
+      }
+      default: {
         this.write(`${typeSignature(ot)}`);
         break;
+      }
     }
     this.write(`) {};\n`);
   }
@@ -289,24 +295,24 @@ const scalarTypeMap = new Map<string, string>([
 
 function typeSignature(type: AnyType): string {
   switch (type.kind) {
-    case Kind.Primitive:
+    case Kind.Primitive: {
       const p = type as Primitive;
       return scalarTypeMap.get(p.name) || p.name;
-
-    case Kind.Alias:
+    }
+    case Kind.Alias: {
       const a = type as Alias;
       return typeSignature(a.type);
-
+    }
     case Kind.Type:
     case Kind.Enum:
-    case Kind.Union:
+    case Kind.Union: {
       const named = type as Named;
       return named.name;
-
-    case Kind.List:
+    }
+    case Kind.List: {
       return `repeated ${typeSignature((type as ListType).type)}`;
-
-    case Kind.Map:
+    }
+    case Kind.Map: {
       const map = type as MapType;
       // TODO: Map keys cannot be float/double, bytes or message types
       // TODO: Map values cannot be repeated
@@ -315,20 +321,20 @@ function typeSignature(type: AnyType): string {
           map.valueType,
         )
       }>`;
-
-    case Kind.Optional:
+    }
+    case Kind.Optional: {
       return `optional ${typeSignature((type as Optional).type)}`;
-
-    case Kind.Stream:
+    }
+    case Kind.Stream: {
       return `stream ${typeSignature((type as Stream).type)}`;
-
+    }
     default:
       throw new Error("unexpected kind: " + type.kind);
   }
 }
 
 class ImportVisitor extends BaseVisitor {
-  hasObjects: boolean = false;
+  hasObjects = false;
   found: Set<string> = new Set<string>();
 
   private addImport(name: string): void {
@@ -343,7 +349,7 @@ class ImportVisitor extends BaseVisitor {
       case Kind.Void:
         this.addImport("google/protobuf/empty.proto");
         break;
-      case Kind.Primitive:
+      case Kind.Primitive: {
         const p = t as Primitive;
         switch (p.name) {
           case PrimitiveName.DateTime:
@@ -354,12 +360,13 @@ class ImportVisitor extends BaseVisitor {
             break;
         }
         break;
+      }
     }
   }
 
   private checkSingleType(t: AnyType) {
     switch (t.kind) {
-      case Kind.Primitive:
+      case Kind.Primitive: {
         const p = t as Primitive;
         switch (p.name) {
           case PrimitiveName.String:
@@ -367,6 +374,7 @@ class ImportVisitor extends BaseVisitor {
             break;
         }
         break;
+      }
     }
   }
 
@@ -400,7 +408,7 @@ class ImportVisitor extends BaseVisitor {
     this.checkType(field.type);
   }
 
-  visitNamespaceAfter(context: Context): void {
+  visitNamespaceAfter(_context: Context): void {
     if (this.found.size > 0) {
       this.write(`\n`);
     }

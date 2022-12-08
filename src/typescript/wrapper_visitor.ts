@@ -17,7 +17,7 @@ limitations under the License.
 import {
   BaseVisitor,
   Context,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import { expandType } from "./helpers.ts";
 import { camelCase, capitalize, isVoid, noCode } from "../utils/mod.ts";
 
@@ -133,7 +133,7 @@ export class WrapperStatefulVisitor extends BaseVisitor {
       );
       this.write(`const sctx = stateManager.toContext("${ns}", id, h);\n`);
       this.write(`return h.${camelCase(operation.name)}(sctx`);
-      operation.parameters.map((param, i) => {
+      operation.parameters.map((param) => {
         const paramName = param.name;
         this.write(`, inputArgs.${paramName}`);
       });

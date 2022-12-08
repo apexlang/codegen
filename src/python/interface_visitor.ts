@@ -17,8 +17,7 @@ limitations under the License.
 import {
   BaseVisitor,
   Context,
-  Writer,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import { expandType, mapArg, mapArgs } from "./helpers.ts";
 import { formatComment, isVoid, noCode, snakeCase } from "../utils/mod.ts";
 
@@ -56,7 +55,7 @@ export class InterfaceVisitor extends BaseVisitor {
     super.triggerOperation(context);
   }
 
-  visitInterfaceAfter(context: Context): void {
+  visitInterfaceAfter(_context: Context): void {
     this.write(`\n\n`);
   }
 }

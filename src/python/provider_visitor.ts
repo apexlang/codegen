@@ -17,7 +17,7 @@ limitations under the License.
 import {
   BaseVisitor,
   Context,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import { expandType } from "./helpers.ts";
 import {
   camelCase,
@@ -42,7 +42,7 @@ export class ProviderVisitor extends BaseVisitor {
     const operation = context.operation!;
     this.write(formatComment("\t# ", operation.description));
     this.write(`\tasync def ${snakeCase(operation.name)}(self`);
-    operation.parameters.map((param, index) => {
+    operation.parameters.map((param, _index) => {
       this.write(`, ${snakeCase(param.name)}: ${expandType(param.type, true)}`);
     });
     this.write(`)`);

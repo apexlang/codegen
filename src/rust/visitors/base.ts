@@ -8,14 +8,14 @@ import {
   Type,
   Union,
   Writer,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 
 export type VisitorTypes = Alias | Type | Union | Enum | Interface;
 
 export class SourceGenerator<T extends VisitorTypes> extends AbstractVisitor {
   root: T;
   context: Context;
-  source: string = "";
+  source = "";
 
   constructor(root: T, context: Context) {
     super();
@@ -38,7 +38,7 @@ export class SourceGenerator<T extends VisitorTypes> extends AbstractVisitor {
 }
 
 export class ContextWriter extends BaseVisitor {
-  source: string = "";
+  source = "";
 
   constructor(writer: Writer) {
     super(writer);
@@ -48,7 +48,7 @@ export class ContextWriter extends BaseVisitor {
     this.source += source;
   }
 
-  visitContextAfter(context: Context): void {
+  visitContextAfter(_context: Context): void {
     this.write(this.source);
   }
 }

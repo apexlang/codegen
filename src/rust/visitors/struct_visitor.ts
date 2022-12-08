@@ -1,9 +1,10 @@
+// deno-lint-ignore-file no-explicit-any
 import {
   Context,
   Kind,
   ObjectMap,
   Type,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import { isPrimitive, isRecursiveType } from "../../utils/mod.ts";
 import {
   customAttributes,
@@ -30,7 +31,7 @@ export class StructVisitor extends SourceGenerator<Type> {
   }
 
   getSource(): string {
-    let prefix = trimLines([
+    const prefix = trimLines([
       rustDoc(this.root.description),
       deriveDirective(this.root.name, this.config),
       customAttributes(this.root.name, this.config),
@@ -45,11 +46,11 @@ export class StructVisitor extends SourceGenerator<Type> {
 
   visitTypeField(context: Context): void {
     const { field } = context;
-    let isRecursive = isRecursiveType(field.type);
-    let isHeapAllocated = field.type.kind === Kind.Map ||
+    const isRecursive = isRecursiveType(field.type);
+    const isHeapAllocated = field.type.kind === Kind.Map ||
       field.type.kind === Kind.List;
-    let baseType = types.apexToRustType(field.type, context.config);
-    let typeString = isRecursive && !isHeapAllocated
+    const baseType = types.apexToRustType(field.type, context.config);
+    const typeString = isRecursive && !isHeapAllocated
       ? `Box<${baseType}>`
       : baseType;
 
@@ -65,8 +66,6 @@ export class StructVisitor extends SourceGenerator<Type> {
       }
       serdeAnnotation = `#[serde(rename = "${field.name}"${date_with})]`;
     }
-
-    const vis = visibility(this.root.name, this.config);
 
     this.append(
       `${trimLines([rustDoc(field.description), serdeAnnotation])}

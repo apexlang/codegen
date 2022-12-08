@@ -19,11 +19,11 @@ limitations under the License.
 import {
   BaseVisitor,
   Context,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import {
   Visitor,
   Writer,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import { InterfacesVisitor } from "./interfaces_visitor.ts";
 import { MinimalAPIVisitor } from "./api_visitor.ts";
 import { ScaffoldVisitor } from "./scaffold_visitor.ts";

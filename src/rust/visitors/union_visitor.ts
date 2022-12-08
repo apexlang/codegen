@@ -1,11 +1,11 @@
+// deno-lint-ignore-file no-explicit-any
 import {
   AnyType,
   Context,
   Kind,
-  Named,
   ObjectMap,
   Union,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import { codegenType, isNamed, isRecursiveType } from "../../utils/mod.ts";
 import {
   customAttributes,
@@ -43,16 +43,16 @@ export class UnionVisitor extends SourceGenerator<Union> {
 
   getSource(): string {
     const variants = this.root.types.map((t) => {
-      let isRecursive = isRecursiveType(t);
-      let isHeapAllocated = t.kind === Kind.Map || t.kind === Kind.List;
-      let baseType = types.apexToRustType(t, this.config);
-      let typeString = isRecursive && !isHeapAllocated
+      const isRecursive = isRecursiveType(t);
+      const isHeapAllocated = t.kind === Kind.Map || t.kind === Kind.List;
+      const baseType = types.apexToRustType(t, this.config);
+      const typeString = isRecursive && !isHeapAllocated
         ? `Box<${baseType}>`
         : baseType;
       return `${getTypeName(t)}(${typeString})`;
     });
 
-    let prefix = trimLines([
+    const prefix = trimLines([
       rustDoc(this.root.description),
       deriveDirective(this.root.name, this.config),
       customAttributes(this.root.name, this.config),

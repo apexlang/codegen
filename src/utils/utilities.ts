@@ -33,7 +33,7 @@ import {
   Type,
   TypeResolver,
   Union,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import {
   FieldDefinition,
   ListType,
@@ -45,7 +45,7 @@ import {
   StringValue,
   Type as ASTType,
   TypeDefinition,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/ast/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/ast/mod.ts";
 
 export function isOneOfType(context: Context, types: string[]): boolean {
   if (context.interface) {
@@ -205,7 +205,7 @@ export function isNamed(t: AnyType): t is NamedType {
  * Determines if Type Node is a Named node and if its type is not one of the base translation types.
  * @param t Node that is a Type node
  */
-export function isObject(t: AnyType, recurseOption: boolean = true): boolean {
+export function isObject(t: AnyType, recurseOption = true): boolean {
   while (t.kind == Kind.Alias || t.kind == Kind.Optional) {
     if (t.kind == Kind.Optional) {
       if (recurseOption) {
@@ -235,21 +235,23 @@ export function visitNamed(t: AnyType, callback: (name: string) => void): void {
   }
 
   switch (t.kind) {
-    case Kind.Type:
+    case Kind.Type: {
       const named = t as Type;
       callback(named.name);
       break;
+    }
     case Kind.Optional:
       visitNamed((t as Optional).type, callback);
       break;
     case Kind.List:
       visitNamed((t as List).type, callback);
       break;
-    case Kind.Map:
+    case Kind.Map: {
       const m = t as Map;
       visitNamed(m.keyType, callback);
       visitNamed(m.valueType, callback);
       break;
+    }
   }
 }
 
@@ -751,12 +753,14 @@ export function codegenType(t: AnyType): string {
       return (t as Named).name;
     case Kind.Primitive:
       return (t as Primitive).name;
-    case Kind.Map:
+    case Kind.Map: {
       const m = t as Map;
       return `{${codegenType(m.keyType)}: ${codegenType(m.valueType)}}`;
-    case Kind.List:
+    }
+    case Kind.List: {
       const l = t as List;
       return `[${codegenType(l.type)}]`;
+    }
     case Kind.Optional:
       return `${codegenType((t as Optional).type)}?`;
     default:
@@ -814,7 +818,7 @@ export function generatedHeader(
 const OMIT_KEYS = ["node", "source"];
 
 // deno-lint-ignore no-explicit-any
-export function inspect(o: any, omit = OMIT_KEYS) {
+export function inspect(o: any, _omit = OMIT_KEYS) {
   console.log(
     JSON.stringify(o, (k, v) => (OMIT_KEYS.indexOf(k) === -1 ? v : undefined)),
   );

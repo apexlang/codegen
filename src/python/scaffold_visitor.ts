@@ -25,7 +25,7 @@ import {
   Optional,
   Type,
   Writer,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import { defaultValueForType, expandType, mapArg, mapArgs } from "./helpers.ts";
 import {
   isHandler,
@@ -64,7 +64,7 @@ export class ScaffoldVisitor extends BaseVisitor {
 }
 
 class MainVisitor extends BaseVisitor {
-  visitNamespaceBefore(context: Context): void {
+  visitNamespaceBefore(_context: Context): void {
     this.write(`def main():\n`);
   }
 
@@ -77,7 +77,7 @@ class MainVisitor extends BaseVisitor {
     this.write(`\tregister_${snakeCase(name)}(${name}Impl())\n`);
   }
 
-  visitNamespaceAfter(context: Context): void {
+  visitNamespaceAfter(_context: Context): void {
     this.write(`\n\tstart()\n`);
   }
 }
@@ -101,7 +101,7 @@ class ImplVisitor extends BaseVisitor {
 
   visitOperation(context: Context): void {
     this.write(`\n`);
-    const { interface: iface, operation } = context;
+    const { operation } = context;
     if (noCode(operation)) {
       return;
     }
@@ -134,13 +134,13 @@ class ImplVisitor extends BaseVisitor {
     super.triggerOperation(context);
   }
 
-  visitInterfaceAfter(context: Context): void {
+  visitInterfaceAfter(_context: Context): void {
     this.write(`\n\n`);
   }
 }
 
 class AdapterTypesVisitor extends BaseVisitor {
-  visitNamespaceBefore(content: Context): void {
+  visitNamespaceBefore(_content: Context): void {
     this.write(`from adapter import start`);
   }
   visitInterface(context: Context): void {
@@ -152,16 +152,16 @@ class AdapterTypesVisitor extends BaseVisitor {
       this.write(`, ${snakeCase(iface.name)}`);
     }
   }
-  visitNamespaceAfter(content: Context): void {
+  visitNamespaceAfter(_content: Context): void {
     this.write(`\n`);
   }
 }
 
 class TypesVisitor extends BaseVisitor {
-  hasObjects: boolean = false;
+  hasObjects = false;
   found: Set<string> = new Set<string>();
 
-  visitNamespaceBefore(context: Context): void {}
+  visitNamespaceBefore(_context: Context): void {}
 
   private addImport(name: string): void {
     if (!this.found.has(name)) {
@@ -181,22 +181,26 @@ class TypesVisitor extends BaseVisitor {
       t = (t as Alias).type;
     }
     switch (t.kind) {
-      case Kind.Type:
+      case Kind.Type: {
         const v = t as Type;
         this.addImport(v.name);
         break;
-      case Kind.Optional:
+      }
+      case Kind.Optional: {
         const o = t as Optional;
         this.addType(o.type);
         break;
-      case Kind.List:
+      }
+      case Kind.List: {
         const l = t as List;
         this.addType(l.type);
         break;
-      case Kind.Map:
+      }
+      case Kind.Map: {
         const m = t as Map;
         this.addType(m.keyType);
         this.addType(m.valueType);
+      }
     }
   }
 
@@ -217,7 +221,7 @@ class TypesVisitor extends BaseVisitor {
     this.addType(parameter.type);
   }
 
-  visitNamespaceAfter(context: Context): void {
+  visitNamespaceAfter(_context: Context): void {
     if (this.hasObjects) {
       this.write(`\n\n`);
     }

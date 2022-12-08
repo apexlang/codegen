@@ -17,7 +17,7 @@ limitations under the License.
 import {
   BaseVisitor,
   Context,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import { expandType, strQuote } from "./helpers.ts";
 import {
   camelCase,
@@ -50,7 +50,7 @@ export class ProviderVisitor extends BaseVisitor {
       }
       this.write(`${param.name}: ${expandType(param.type, true)}`);
     });
-    var expandedType = expandType(operation.type, true);
+    let expandedType = expandType(operation.type, true);
     this.write(`): Promise<${expandedType}> {\n`);
 
     this.write(`  `);

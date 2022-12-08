@@ -18,7 +18,7 @@ import {
   Argument,
   BaseVisitor,
   Context,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import { camelCase, formatComment, pascalCase } from "../utils/mod.ts";
 import { expandType } from "./helpers.ts";
 

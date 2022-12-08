@@ -19,12 +19,8 @@ import {
   Context,
   Kind,
   Writer,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
-import {
-  convertOperationToType,
-  convertUnionToType,
-  uncapitalize,
-} from "../utils/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { convertOperationToType, convertUnionToType } from "../utils/mod.ts";
 import { Import } from "./alias_visitor.ts";
 import { MsgPackDecoderVisitor } from "./msgpack_decoder_visitor.ts";
 import {
@@ -69,7 +65,7 @@ export class MsgPackVisitor extends BaseVisitor {
       "github.com/wapc/tinygo-msgpack"
       "github.com/wapc/tinygo-msgpack/convert"\n`);
     const aliases = (context.config.aliases as { [key: string]: Import }) || {};
-    for (let a of Object.values(aliases)) {
+    for (const a of Object.values(aliases)) {
       if (a.import) {
         this.write(`\t"${a.import}"\n`);
       }

@@ -31,7 +31,7 @@ import {
   Type,
   Union,
   Writer,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import {
   capitalize,
   convertOperationToType,
@@ -129,22 +129,27 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
       const param = operation.parameters[0];
       const pt = unwrapKinds(param.type, Kind.Alias, Kind.Optional);
       switch (pt.kind) {
-        case Kind.Void:
+        case Kind.Void: {
           this.write(`*emptypb.Empty`);
           break;
-        case Kind.Primitive:
+        }
+        case Kind.Primitive: {
           const p = pt as Primitive;
           this.write(`${param.name} ${primitiveWrapperType(p.name)}`);
           break;
-        case Kind.Enum:
+        }
+        case Kind.Enum: {
           const e = pt as Enum;
           this.write(`${param.name} *pb.${e.name}Value`);
           break;
-        case Kind.Type:
+        }
+        case Kind.Type: {
           this.write(`request *pb.${(pt as Named).name}`);
           break;
-        default:
+        }
+        default: {
           throw new Error(`unhandled type ${pt.kind}`);
+        }
       }
     } else if (operation.parameters.length > 0) {
       this.write(`args *pb.${operationArgsType(iface, operation)}`);
@@ -154,22 +159,27 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
     this.write(`) (`);
     const rt = unwrapKinds(returnType, Kind.Alias, Kind.Optional);
     switch (rt.kind) {
-      case Kind.Void:
+      case Kind.Void: {
         this.write(`*emptypb.Empty`);
         break;
-      case Kind.Primitive:
+      }
+      case Kind.Primitive: {
         const p = rt as Primitive;
         this.write(primitiveWrapperType(p.name));
         break;
-      case Kind.Enum:
+      }
+      case Kind.Enum: {
         this.write(`*pb.${(rt as Enum).name}Value`);
         break;
+      }
       case Kind.Union:
-      case Kind.Type:
+      case Kind.Type: {
         this.write(`*pb.${(rt as Named).name}`);
         break;
-      default:
+      }
+      default: {
         throw new Error(`unhandled type ${rt.kind}`);
+      }
     }
     this.write(`, error) {\n`);
 
@@ -177,7 +187,7 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
       const param = operation.parameters[0];
       let pt = param.type;
       switch (pt.kind) {
-        case Kind.Alias:
+        case Kind.Alias: {
           const a = pt as Alias;
           const imp = this.aliases[a.name];
           if (imp && imp.parse) {
@@ -188,9 +198,9 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
             break;
           }
           pt = a.type;
-        // Fall through
-
-        case Kind.Primitive:
+        }
+        /* falls through */
+        case Kind.Primitive: {
           const p = pt as Primitive;
           switch (p.name) {
             case PrimitiveName.I8:
@@ -210,10 +220,12 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
               break;
           }
           break;
-        case Kind.Enum:
+        }
+        case Kind.Enum: {
           const e = pt as Enum;
           this.write(`input := ${e.name}(${param.name}.Value)\n`);
           break;
+        }
         default:
           this.write(
             `input, err := convertInput${(param.type as Named).name}(request)
@@ -284,13 +296,14 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
       case Kind.Type:
         this.write(`return convertOutput${(rt2 as Named).name}(result), nil\n`);
         break;
-      case Kind.Enum:
+      case Kind.Enum: {
         const e = rt2 as Enum;
         this.write(
           `return &pb.${e.name}Value{Value: pb.${e.name}(result)}, nil\n`,
         );
         break;
-      case Kind.Alias:
+      }
+      case Kind.Alias: {
         const a = rt2 as Alias;
         const imp = this.aliases[a.name];
         if (imp) {
@@ -298,7 +311,9 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
             `()`;
         }
         rt2 = a.type;
-      case Kind.Primitive:
+      }
+      /* falls through */
+      case Kind.Primitive: {
         const p = rt2 as Primitive;
         switch (p.name) {
           case PrimitiveName.String:
@@ -359,38 +374,41 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
             );
             break;
         }
+      }
     }
     this.write(`}\n\n`);
   }
 
-  visitNamespaceAfter(context: Context): void {
-    for (let name of Object.keys(this.input)) {
+  visitNamespaceAfter(_context: Context): void {
+    for (const name of Object.keys(this.input)) {
       const named = this.input[name];
       switch (named.kind) {
-        case Kind.Type:
+        case Kind.Type: {
           const t = named as Type;
           this.writeInputType(t);
           break;
-
-        case Kind.Union:
+        }
+        case Kind.Union: {
           const u = named as Union;
           this.writeInputUnion(u);
           break;
+        }
       }
     }
 
-    for (let name of Object.keys(this.output)) {
+    for (const name of Object.keys(this.output)) {
       const named = this.output[name];
       switch (named.kind) {
-        case Kind.Type:
+        case Kind.Type: {
           const t = named as Type;
           this.writeOutputType(t);
           break;
-
-        case Kind.Union:
+        }
+        case Kind.Union: {
           const u = named as Union;
           this.writeOutputUnion(u);
           break;
+        }
       }
     }
   }
@@ -404,10 +422,10 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
     t.fields.forEach((f) => {
       let ft = f.type;
       switch (ft.kind) {
-        case Kind.Optional:
-          let optType = (ft as Optional).type;
+        case Kind.Optional: {
+          const optType = (ft as Optional).type;
           switch (optType.kind) {
-            case Kind.Primitive:
+            case Kind.Primitive: {
               const prim = optType as Primitive;
               let wrapperStart = "";
               let wrapperEnd = "";
@@ -442,8 +460,8 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
                 }${wrapperEnd},\n`,
               );
               break;
-
-            case Kind.Alias:
+            }
+            case Kind.Alias: {
               const a = optType as Alias;
               const imp = this.aliases[a.name];
               if (imp) {
@@ -456,11 +474,11 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
                 }, func(value ${imp.type}) ${expandType(a.type)} {
                   return value.${imp.format || "String"}()
                 }),\n`);
-              } else {
               }
 
               break;
-            case Kind.Enum:
+            }
+            case Kind.Enum: {
               const e = optType as Enum;
               this.write(
                 `${capitalize(f.name)}: (*pb.${e.name})(from.${
@@ -471,9 +489,9 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
                 }),\n`,
               );
               break;
-
+            }
             case Kind.Union:
-            case Kind.Type:
+            case Kind.Type: {
               const ft = optType as Named;
               this.write(
                 `${capitalize(f.name)}: convertOutput${ft.name}(from.${
@@ -481,10 +499,11 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
                 }),\n`,
               );
               break;
+            }
           }
           break;
-
-        case Kind.Alias:
+        }
+        case Kind.Alias: {
           const a = ft as Alias;
           const imp = this.aliases[a.name];
           if (imp) {
@@ -496,8 +515,9 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
             break;
           }
           ft = a.type;
-
-        case Kind.Primitive:
+        }
+        /* falls through */
+        case Kind.Primitive: {
           const prim = ft as Primitive;
           let wrapperStart = "";
           let wrapperEnd = "";
@@ -526,8 +546,8 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
             }${wrapperEnd},\n`,
           );
           break;
-
-        case Kind.Enum:
+        }
+        case Kind.Enum: {
           const e = ft as Enum;
           this.write(
             `${capitalize(f.name)}: pb.${e.name}(from.${
@@ -538,9 +558,9 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
             }),\n`,
           );
           break;
-
+        }
         case Kind.Union:
-        case Kind.Type:
+        case Kind.Type: {
           const named = ft as Named;
           const ref = named.name == t.name ? "" : "&";
           this.write(
@@ -549,8 +569,8 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
             }),\n`,
           );
           break;
-
-        case Kind.Map:
+        }
+        case Kind.Map: {
           const m = ft as Map;
           if (isObject(m.valueType)) {
             const n = (
@@ -573,7 +593,8 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
             );
           }
           break;
-        case Kind.List:
+        }
+        case Kind.List: {
           const l = ft as List;
           if (isObject(l.type)) {
             const n = unwrapKinds(l.type, Kind.Optional) as Named;
@@ -592,6 +613,7 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
             );
           }
           break;
+        }
       }
     });
     this.write(`\t}
@@ -612,7 +634,7 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
             return &pb.${union.name}{\n`);
       switch (ut.kind) {
         case Kind.Union:
-        case Kind.Type:
+        case Kind.Type: {
           const t = ut as Named;
           this.write(`Value: &pb.${union.name}_${t.name}Value{\n`);
           this.write(
@@ -620,13 +642,15 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
           );
           this.write(`},\n`);
           break;
-        case Kind.Enum:
+        }
+        case Kind.Enum: {
           const e = ut as Enum;
           this.write(`Value: &pb.${union.name}_${e.name}Value{\n`);
           this.write(`${e.name}Value: pb.${e.name}(*from.${e.name}),\n`);
           this.write(`},\n`);
           break;
-        case Kind.Primitive:
+        }
+        case Kind.Primitive: {
           const p = ut as Primitive;
           this.write(`Value: &pb.${union.name}_${pascalCase(p.name)}Value{\n`);
           this.write(
@@ -634,6 +658,7 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
           );
           this.write(`},\n`);
           break;
+        }
       }
       this.write(`}\n`);
     });
@@ -653,7 +678,6 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
 
       result := ${t.name}{\n`,
       );
-    t:
     t.fields.forEach((f) => `${this.writeInputField(f)}`);
     this.write(`\t}
     if errz := et.Errors(); errz != nil {
@@ -667,10 +691,10 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
   writeInput(f: Field, from: string, allowPtr: boolean): string {
     let t = f.type;
     switch (t.kind) {
-      case Kind.Optional:
+      case Kind.Optional: {
         let optType = unwrapKinds(t, Kind.Optional);
         switch (optType.kind) {
-          case Kind.Alias:
+          case Kind.Alias: {
             const a = optType as Alias;
             const imp = this.aliases[a.name];
             if (imp) {
@@ -679,8 +703,9 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
               })`;
             }
             optType = a.type;
-
-          case Kind.Primitive:
+          }
+          /* falls through */
+          case Kind.Primitive: {
             const prim = optType as Primitive;
             let wrapperStart = "";
             let wrapperEnd = "";
@@ -707,21 +732,22 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
                 break;
             }
             return `${wrapperStart}${from}.${capitalize(f.name)}${wrapperEnd}`;
-
-          case Kind.Enum:
+          }
+          case Kind.Enum: {
             const e = optType as Enum;
             return `(*${e.name})(${from}.${capitalize(f.name)})`;
-
+          }
           case Kind.Union:
-          case Kind.Type:
+          case Kind.Type: {
             const ft = optType as Named;
             return `errorz.Track(&et, convertInput${ft.name}, ${from}.${
               capitalize(f.name)
             })`;
+          }
         }
         throw new Error(`unhandled type ${optType.kind} inside optional`);
-
-      case Kind.Alias:
+      }
+      case Kind.Alias: {
         const a = t as Alias;
         const imp = this.aliases[a.name];
         if (imp) {
@@ -730,8 +756,9 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
           })`;
         }
         t = a.type;
-
-      case Kind.Primitive:
+      }
+      /* falls through */
+      case Kind.Primitive: {
         const prim = t as Primitive;
         let wrapperStart = "";
         let wrapperEnd = "";
@@ -761,20 +788,20 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
             break;
         }
         return `${wrapperStart}${from}.${capitalize(f.name)}${wrapperEnd}`;
-
-      case Kind.Enum:
+      }
+      case Kind.Enum: {
         const e = t as Enum;
         return `${e.name}(${from}.${fieldName(f, f.name)})`;
-
+      }
       case Kind.Union:
-      case Kind.Type:
+      case Kind.Type: {
         const ft = t as Named;
         const ptr = allowPtr ? "" : "*";
         return `${ptr}errorz.Track(&et, convertInput${ft.name}, ${from}.${
           fieldName(f, f.name)
         })`;
-
-      case Kind.Map:
+      }
+      case Kind.Map: {
         const m = t as Map;
         if (isObject(m.valueType)) {
           const n = m.valueType as Named;
@@ -786,8 +813,8 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
         } else {
           return `${from}.${capitalize(f.name)}`;
         }
-
-      case Kind.List:
+      }
+      case Kind.List: {
         const l = t as List;
         if (isObject(l.type)) {
           const n = l.type as Named;
@@ -799,6 +826,7 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
         } else {
           return `${from}.${capitalize(f.name)}`;
         }
+      }
     }
 
     throw new Error(`unhandled type ${f.type.kind}`);
@@ -831,22 +859,25 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
         this.write(`case *pb.${union.name}_${pascalCase(expandType(ut))}Value:
           return &${union.name}{\n`);
         switch (ut.kind) {
-          case Kind.Union:
+          case Kind.Union: {
             const t = ut as Named;
             this.write(`${t.name}: convertInput${t.name}(v.${t.name}Value),\n`);
             break;
-          case Kind.Enum:
+          }
+          case Kind.Enum: {
             const e = ut as Enum;
             this.write(
               `${e.name}: convert.Ptr(${e.name}(v.${e.name}Value)),\n`,
             );
             break;
-          case Kind.Primitive:
+          }
+          case Kind.Primitive: {
             const p = ut as Primitive;
             this.write(
               `${pascalCase(p.name)}: &v.${pascalCase(p.name)}Value,\n`,
             );
             break;
+          }
         }
         this.write(`}, nil\n`);
       }
@@ -918,7 +949,7 @@ export class InputOutputVisitor extends BaseVisitor {
     }
 
     switch (a.kind) {
-      case Kind.Primitive:
+      case Kind.Primitive: {
         const p = a as Primitive;
         if (p.name == PrimitiveName.DateTime) {
           this.imports.add(
@@ -926,20 +957,20 @@ export class InputOutputVisitor extends BaseVisitor {
           );
         }
         break;
-
-      case Kind.Type:
+      }
+      case Kind.Type: {
         const t = a as Type;
         m[t.name] = t;
         t.fields.forEach((f) => this.checkType(context, f.type, m, types));
         break;
-
-      case Kind.Union:
+      }
+      case Kind.Union: {
         const u = a as Union;
         m[u.name] = u;
         u.types.forEach((t) => this.checkType(context, t, m, types));
         break;
-
-      case Kind.Alias:
+      }
+      case Kind.Alias: {
         const al = a as Alias;
         const imp = this.aliases[al.name];
         if (imp && imp.import) {
@@ -948,22 +979,23 @@ export class InputOutputVisitor extends BaseVisitor {
         m[al.name] = al;
         this.checkType(context, al.type, m, types);
         break;
-
-      case Kind.Map:
+      }
+      case Kind.Map: {
         const ma = a as Map;
         this.checkType(context, ma.keyType, m, types);
         this.checkType(context, ma.valueType, m, types);
         break;
-
-      case Kind.List:
+      }
+      case Kind.List: {
         const l = a as List;
         this.checkType(context, l.type, m, types);
         break;
-
-      case Kind.Optional:
+      }
+      case Kind.Optional: {
         const o = a as Optional;
         this.checkType(context, o.type, m, types);
         break;
+      }
     }
   }
 }

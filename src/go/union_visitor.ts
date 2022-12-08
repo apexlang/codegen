@@ -18,8 +18,8 @@ import {
   Annotated,
   BaseVisitor,
   Context,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
-import { formatComment, pascalCase, typeName } from "../utils/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { formatComment, typeName } from "../utils/mod.ts";
 import { expandType, fieldName } from "./helpers.ts";
 
 interface UnionKey {
@@ -37,7 +37,7 @@ export class UnionVisitor extends BaseVisitor {
       (t as Annotated).annotation("unionKey", (a) => {
         tname = a.convert<UnionKey>().value;
       });
-      let expandedName = expandType(t);
+      const expandedName = expandType(t);
       this.write(
         `${
           fieldName(

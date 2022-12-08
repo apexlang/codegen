@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-explicit-any
 /*
 Copyright 2022 The Apex Authors.
 
@@ -28,7 +29,7 @@ import {
   Primitive,
   Type,
   Writer,
-} from "https://raw.githubusercontent.com/apexlang/apex-js/deno-wip/src/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import {
   Document,
   ExternalDocumentationObject,
@@ -78,7 +79,7 @@ const removeEmpty = (obj: any): any => {
     return obj;
   }
 
-  let newObj: any = {};
+  const newObj: any = {};
   Object.keys(obj).forEach((key) => {
     if (obj[key]) {
       if (typeof obj[key] === "object" && !Array.isArray(obj[key])) {
@@ -89,7 +90,7 @@ const removeEmpty = (obj: any): any => {
       } else if (Array.isArray(obj[key])) {
         const ary = obj[key] as any[];
         if (ary.length > 0) {
-          let newAry: any[] = [];
+          const newAry: any[] = [];
           ary.forEach((v: any) => {
             newAry.push(removeEmpty(v));
           });
@@ -214,7 +215,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
       responses: {},
       tags: [iface.name],
     };
-    operation.annotation("deprecated", (a) => {
+    operation.annotation("deprecated", (_a) => {
       this.operation!.deprecated = true;
     });
     pathItem[method] = this.operation;
@@ -341,9 +342,6 @@ export class OpenAPIV3Visitor extends BaseVisitor {
       required: required,
     };
 
-    if (t.kind == Kind.List) {
-    }
-
     switch (paramIn) {
       case "path": {
         let typeFormat: TypeFormat | undefined = undefined;
@@ -464,12 +462,10 @@ export class OpenAPIV3Visitor extends BaseVisitor {
         description: "No Content",
       };
     } else if (!found2xx) {
-      const status = this.method == "post" ? "201" : "200";
       responses.default = {
         description: "Success",
         content: {
           "application/json": {
-            //example: resp.examples?["application/json"],
             schema: this.typeToSchema(operation.type),
           },
         },
