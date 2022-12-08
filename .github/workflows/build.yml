@@ -21,9 +21,12 @@ jobs:
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
-      - run: npm install
-      #- run: npm run lint
-      - run: npm run build
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+      # - run: npm install
+      # - run: npm run lint
+      # - run: npm run build
 
       - uses: actions/setup-go@v3
         with:
@@ -50,14 +53,17 @@ jobs:
         run: find . -name 'openapi.yaml' -exec swagger-cli validate {} \;
         working-directory: ./testdata
 
-      - run: npm run test
+      - name: Bundle module and dependencies
+        run: deno bundle src/mod.ts bundle.js
 
-      - name: Is Release?
-        if: startswith(github.ref, 'refs/tags/v')
-        run: echo "DEPLOY_PACKAGE=true" >> $GITHUB_ENV
+      # - run: npm run test
 
-      - name: Publish to npm
-        if: env.DEPLOY_PACKAGE == 'true'
-        run: npm pack && npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+      # - name: Is Release?
+      #   if: startswith(github.ref, 'refs/tags/v')
+      #   run: echo "DEPLOY_PACKAGE=true" >> $GITHUB_ENV
+
+      # - name: Publish to npm
+      #   if: env.DEPLOY_PACKAGE == 'true'
+      #   run: npm pack && npm publish --access public
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
