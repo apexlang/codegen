@@ -278,17 +278,24 @@ export const expandType = (
         }
       }
       let expanded = expandType(nestedType, packageName, true, translate);
+      let nonAliasType = nestedType;
+      while (nonAliasType.kind == Kind.Alias) {
+        nonAliasType = (nonAliasType as Alias).type;
+      }
       if (
         useOptional &&
         !(
-          nestedType.kind === Kind.Map ||
-          nestedType.kind === Kind.List ||
+          nonAliasType.kind === Kind.Map ||
+          nonAliasType.kind === Kind.List ||
+          (nonAliasType.kind === Kind.Primitive &&
+            (nonAliasType as Primitive).name == PrimitiveName.Bytes) ||
           expanded == "[]byte"
         )
       ) {
         if (expanded.startsWith("*")) {
           expanded = expanded.substring(1);
         }
+
         return `*${expanded}`;
       }
       return expanded;
