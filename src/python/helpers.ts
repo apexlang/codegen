@@ -15,23 +15,22 @@ limitations under the License.
 */
 
 import {
-  AnyType,
-  Named,
-  Map,
-  List,
-  Optional,
-  Field,
-  Valued,
-  Operation,
-  Parameter,
-  Type,
-  Kind,
   Alias,
+  AnyType,
+  Field,
+  Kind,
+  List,
+  Map,
+  Named,
+  Operation,
+  Optional,
+  Parameter,
   Primitive,
   PrimitiveName,
-} from "@apexlang/core/model";
-import { capitalize, snakeCase } from "../utils/index.js";
-import { translations } from "./constant.js";
+  Type,
+  Valued,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { capitalize, snakeCase } from "../utils/mod.ts";
 
 /**
  * Takes an array of ValuedDefintions and returns a string based on supplied params.
@@ -50,15 +49,13 @@ export function mapVals(vd: Valued[], sep: string, joinOn: string): string {
  * @param fieldDef FieldDefinition Node to get default value of
  */
 export function defValue(fieldDef: Field): string {
-  const name = fieldDef.name;
   const type = fieldDef.type;
   if (fieldDef.default) {
     let returnVal = fieldDef.default.getValue();
     if (fieldDef.type.kind == Kind.Primitive) {
-      returnVal =
-        (fieldDef.type as Primitive).name == PrimitiveName.String
-          ? strQuote(returnVal)
-          : returnVal;
+      returnVal = (fieldDef.type as Primitive).name == PrimitiveName.String
+        ? strQuote(returnVal)
+        : returnVal;
     }
     return returnVal;
   }
@@ -118,7 +115,7 @@ export function defaultValueForType(type: AnyType): string {
     case Kind.Alias:
     case Kind.Enum:
     case Kind.Type:
-    case Kind.Union:
+    case Kind.Union: {
       const name = (type as Named).name;
       switch (name) {
         case "ID":
@@ -142,6 +139,7 @@ export function defaultValueForType(type: AnyType): string {
         default:
           return `new ${capitalize(name)}()`; // reference to something else
       }
+    }
   }
   return "???";
 }
@@ -166,23 +164,26 @@ export const expandType = (type: AnyType, useOptional: boolean): string => {
     case Kind.Alias:
     case Kind.Enum:
     case Kind.Type:
-    case Kind.Union:
+    case Kind.Union: {
       const namedValue = (type as Named).name;
-      const translation = translations.get(namedValue);
       return namedValue;
+    }
     case Kind.Map:
-      return `dict[${expandType((type as Map).keyType, true)},${expandType(
-        (type as Map).valueType,
-        true
-      )}]`;
+      return `dict[${expandType((type as Map).keyType, true)},${
+        expandType(
+          (type as Map).valueType,
+          true,
+        )
+      }]`;
     case Kind.List:
       return `list[${expandType((type as List).type, true)}]`;
-    case Kind.Optional:
-      let expanded = expandType((type as Optional).type, true);
+    case Kind.Optional: {
+      const expanded = expandType((type as Optional).type, true);
       if (useOptional) {
         return `Optional[${expanded}]`;
       }
       return expanded;
+    }
     default:
       return "unknown";
   }
@@ -195,10 +196,12 @@ export const expandType = (type: AnyType, useOptional: boolean): string => {
 export function opsAsFns(ops: Operation[]): string {
   return ops
     .map((op) => {
-      return `function ${op.name}(${mapArgs(op.parameters)}): ${expandType(
-        op.type,
-        true
-      )} {\n}`;
+      return `function ${op.name}(${mapArgs(op.parameters)}): ${
+        expandType(
+          op.type,
+          true,
+        )
+      } {\n}`;
     })
     .join("\n");
 }

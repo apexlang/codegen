@@ -14,15 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-export * from "./args_visitor.js";
-export * from "./class_visitor.js";
-export * from "./handler_visitor.js";
-export * from "./helpers.js";
-export * from "./interface_visitor.js";
-export * from "./interfaces_visitor.js";
-export * from "./provider_visitor.js";
-export * from "./scaffold_visitor.js";
-export * from "./wrapper_visitor.js";
-export * from "./constant.js";
-
-export { InterfacesVisitor as default } from "./interfaces_visitor.js";
+export * as cs from "./cs/mod.ts";
+export * as go from "./go/mod.ts";
+export * as jsonSchema from "./json-schema/mod.ts";
+export * as openapiv3 from "./openapiv3/mod.ts";
+export * as proto from "./proto/mod.ts";
+export * as python from "./python/mod.ts";
+export * as rest from "./rest/mod.ts";
+export * as rust from "./rust/mod.ts";
+export * as typescript from "./typescript/mod.ts";
+export * as utils from "./utils/mod.ts";

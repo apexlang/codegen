@@ -1,19 +1,39 @@
-import { Named } from "@apexlang/core/dist/ast";
+/*
+Copyright 2022 The Apex Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+import { Named } from "https://deno.land/x/apex_core@v0.1.0/ast/mod.ts";
 import {
+  AnyType,
   BaseVisitor,
   Context,
-  Type,
-  Writer,
   Kind,
-  AnyType,
-  Primitive,
-  PrimitiveName,
   List,
   Map,
   Optional,
-} from "@apexlang/core/model";
-import { SchemaObject, ReferenceObject } from "openapi3-ts";
-import { convertArrayToObject } from "../utils/index.js";
+  Primitive,
+  PrimitiveName,
+  Type,
+  Writer,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import {
+  ArraySchemaObject,
+  ReferenceObject,
+  SchemaObject,
+} from "https://deno.land/x/openapi@0.1.0/mod.ts";
+import { convertArrayToObject } from "../utils/mod.ts";
 
 interface Definitions {
   $defs?: DefinitionMap;
@@ -34,18 +54,18 @@ interface PatternProperties {
 }
 
 // Augmented JsonSchema type with parts not included in the library we have available.
-type JsonSchemaRoot = SchemaObject &
-  ReferenceType &
-  PatternProperties &
-  Definitions;
+type JsonSchemaRoot =
+  & SchemaObject
+  & ReferenceType
+  & PatternProperties
+  & Definitions;
 type JsonSchemaDef = SchemaObject & ReferenceType & PatternProperties;
+type Mutable<T> = { -readonly [P in keyof T]: T[P] };
 
 export class JsonSchemaVisitor extends BaseVisitor {
-  protected path: string = "";
-  protected method: string = "";
-  protected schema: JsonSchemaRoot = {
-    $schema: "https://json-schema.org/draft/2020-12/schema",
-  };
+  protected path = "";
+  protected method = "";
+  protected schema: Mutable<JsonSchemaRoot> = {};
 
   constructor(writer: Writer) {
     super(writer);
@@ -56,7 +76,7 @@ export class JsonSchemaVisitor extends BaseVisitor {
     this.schema.title = context.namespace.name;
   }
 
-  visitNamespaceAfter(context: Context): void {
+  visitNamespaceAfter(_context: Context): void {
     this.write(JSON.stringify(this.schema.valueOf(), null, 2));
   }
 
@@ -106,11 +126,11 @@ class TypeVisitor extends BaseVisitor {
   }
 
   visitTypeField(context: Context): void {
-    const def: SchemaObject | ReferenceObject = {};
+    const def: Mutable<SchemaObject | ReferenceObject> = {};
     if (context.field.description) {
       def.description = context.field.description;
     }
-    let [_def, isRequired] = decorateType(def, context.field.type);
+    const [_def, isRequired] = decorateType(def, context.field.type);
     if (isRequired) {
       this.def.required!.push(context.field.name!);
     }
@@ -145,7 +165,7 @@ class UnionVisitor extends BaseVisitor {
 
   visitUnion(context: Context): void {
     const { union } = context;
-    let arr: SchemaObject[] = [];
+    const arr: SchemaObject[] = [];
     convertArrayToObject(
       union.types,
       (t: AnyType) => {
@@ -162,17 +182,13 @@ class UnionVisitor extends BaseVisitor {
       (t: AnyType) => {
         const [def] = decorateType({}, t);
         arr.push(def);
-      }
+      },
     );
-
-    const unionObject: SchemaObject | ReferenceObject = {
-      oneOf: arr,
-    };
 
     const schema: SchemaObject = {
       description: union.description,
       type: JsonSchemaType.Object,
-      properties: unionObject,
+      oneOf: arr,
     };
     this.def = schema;
   }
@@ -188,7 +204,6 @@ class AliasVisitor extends BaseVisitor {
   visitAlias(context: Context): void {
     const schema: SchemaObject = {
       description: context.alias.description,
-      name: context.alias.name,
     };
 
     decorateType(schema, context.alias.type);
@@ -220,13 +235,14 @@ enum JsonSchemaTypeFormat {
 }
 
 function decorateType(
-  def: JsonSchemaDef,
-  typ: AnyType
+  def: Mutable<JsonSchemaDef>,
+  typ: AnyType,
 ): [SchemaObject, boolean] {
   let required = true;
   switch (typ.kind) {
     case Kind.List: {
       const t = typ as List;
+      def = def as Mutable<ArraySchemaObject>;
       def.type = JsonSchemaType.Array;
       const [listType, _isRequired] = decorateType({}, t.type);
       def.items = listType;
@@ -235,10 +251,11 @@ function decorateType(
     case Kind.Map: {
       const t = typ as Map;
       def.type = JsonSchemaType.Object;
-      if (!isApexStringType(t.keyType))
+      if (!isApexStringType(t.keyType)) {
         throw new Error(
-          "Can not represent maps with non-string key types in JSON Schema"
+          "Can not represent maps with non-string key types in JSON Schema",
         );
+      }
       const [valueType, _isRequired] = decorateType({}, t.valueType);
       def.patternProperties = { ".*": valueType };
       break;
@@ -265,6 +282,7 @@ function decorateType(
           break;
         case PrimitiveName.Bytes:
           def.type = JsonSchemaType.Array;
+          def = def as Mutable<ArraySchemaObject>;
           def.items = { type: "number" };
           break;
         case PrimitiveName.DateTime:
@@ -290,7 +308,7 @@ function decorateType(
           break;
         default:
           throw new Error(
-            `Unhandled primitive type conversion for type: ${t.name}`
+            `Unhandled primitive type conversion for type: ${t.name}`,
           );
       }
       break;

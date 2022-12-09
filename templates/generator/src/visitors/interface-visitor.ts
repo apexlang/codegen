@@ -1,4 +1,7 @@
-import { Context, Interface } from "@apexlang/core/model";
+import {
+  Context,
+  Interface,
+} from "https://deno.land/x/apex_core@v0.1.0/model";
 import { convertDescription, convertOperation } from "../utils/conversions.js";
 
 import { SourceGenerator } from "./base.js";

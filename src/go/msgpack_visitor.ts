@@ -14,19 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, Context, Kind, Writer } from "@apexlang/core/model";
 import {
-  convertOperationToType,
-  convertUnionToType,
-  uncapitalize,
-} from "../utils";
-import { Import } from "./alias_visitor";
-import { MsgPackDecoderVisitor } from "./msgpack_decoder_visitor";
+  BaseVisitor,
+  Context,
+  Kind,
+  Writer,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { convertOperationToType, convertUnionToType } from "../utils/mod.ts";
+import { Import } from "./alias_visitor.ts";
+import { MsgPackDecoderVisitor } from "./msgpack_decoder_visitor.ts";
 import {
   MsgPackEncoderUnionVisitor,
   MsgPackEncoderVisitor,
-} from "./msgpack_encoder_visitor";
-import { StructVisitor } from "./struct_visitor";
+} from "./msgpack_encoder_visitor.ts";
+import { StructVisitor } from "./struct_visitor.ts";
 
 export class MsgPackVisitor extends BaseVisitor {
   constructor(writer: Writer) {
@@ -34,7 +35,7 @@ export class MsgPackVisitor extends BaseVisitor {
     const operArgs = (context: Context): void => {
       const { interface: iface, operation } = context;
       const parameters = operation.parameters.filter(
-        (p) => p.type.kind != Kind.Stream
+        (p) => p.type.kind != Kind.Stream,
       );
       if (parameters.length == 0 || operation.isUnary()) {
         return;
@@ -64,13 +65,13 @@ export class MsgPackVisitor extends BaseVisitor {
       "github.com/wapc/tinygo-msgpack"
       "github.com/wapc/tinygo-msgpack/convert"\n`);
     const aliases = (context.config.aliases as { [key: string]: Import }) || {};
-    for (let a of Object.values(aliases)) {
+    for (const a of Object.values(aliases)) {
       if (a.import) {
         this.write(`\t"${a.import}"\n`);
       }
     }
     this.write(`)
-    
+
     var _ = convert.Package\n\n`);
     super.triggerNamespaceBefore(context);
   }

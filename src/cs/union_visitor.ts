@@ -14,9 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, Context } from "@apexlang/core/model";
-import { formatComment, pascalCase } from "../utils";
-import { expandType } from "../go";
+import {
+  BaseVisitor,
+  Context,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { formatComment, pascalCase } from "../utils/mod.ts";
+import { expandType } from "../go/mod.ts";
 
 export class UnionVisitor extends BaseVisitor {
   visitUnion(context: Context): void {

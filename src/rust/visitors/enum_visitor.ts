@@ -1,17 +1,22 @@
-import { Context, Enum, ObjectMap, Type } from "@apexlang/core/model";
-import { IndexTypeDirective } from "../directives.js";
+import {
+  Context,
+  Enum,
+  ObjectMap,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { IndexTypeDirective } from "../directives.ts";
 import {
   customAttributes,
   rustDoc,
   rustifyCaps,
   trimLines,
-} from "../utils/index.js";
-import { deriveDirective, visibility } from "../utils/index.js";
-import { SourceGenerator } from "./base.js";
+} from "../utils/mod.ts";
+import { deriveDirective, visibility } from "../utils/mod.ts";
+import { SourceGenerator } from "./base.ts";
 
 export class EnumVisitor extends SourceGenerator<Enum> {
   hasDisplayValues = false;
   hasIndices = false;
+  // deno-lint-ignore no-explicit-any
   config: ObjectMap<any>;
   visibility: visibility;
 
@@ -34,7 +39,7 @@ export class EnumVisitor extends SourceGenerator<Enum> {
       ? intoIndexImpl(this.root)
       : "";
 
-    let prefix = trimLines([
+    const prefix = trimLines([
       rustDoc(this.root.description),
       deriveDirective(this.root.name, this.config),
       customAttributes(this.root.name, this.config),
@@ -44,11 +49,13 @@ export class EnumVisitor extends SourceGenerator<Enum> {
     ${this.visibility} enum ${rustifyCaps(this.root.name)}{
       ${this.source}
     }
-    ${trimLines([
-      optionalDisplayImpl,
-      optionalIndexConversion,
-      optionalIntoIndexConversion,
-    ])}
+    ${
+      trimLines([
+        optionalDisplayImpl,
+        optionalIndexConversion,
+        optionalIntoIndexConversion,
+      ])
+    }
 
     `;
   }
@@ -61,20 +68,20 @@ export class EnumVisitor extends SourceGenerator<Enum> {
     this.append(
       `
       ${trimLines([rustDoc(enumValue.description)])}
-      ${rustifyCaps(enumValue.name)},`.trim()
+      ${rustifyCaps(enumValue.name)},`.trim(),
     );
   }
 }
 
 function displayImpl(node: Enum): string {
-  let values = node.values
+  const values = node.values
     .map(
       (v) =>
         `Self::${rustifyCaps(v.name)} => ${
           v.display
             ? `"${v.display}"`
             : 'unimplemented!("No display value provided in schema")'
-        }`
+        }`,
     )
     .join(",");
   return `
@@ -89,12 +96,12 @@ function displayImpl(node: Enum): string {
 }
 
 function fromIndexImpl(node: Enum): string {
-  let type: string = "u32";
+  let type = "u32";
   node.annotation("index_type", (annotation) => {
     type = (annotation.convert() as IndexTypeDirective).type;
   });
 
-  let patterns = node.values
+  const patterns = node.values
     .filter((v) => v.index !== undefined)
     .map((v) => `${v.index} => Ok(Self::${rustifyCaps(v.name)})`)
     .join(",");
@@ -105,9 +112,11 @@ function fromIndexImpl(node: Enum): string {
     fn try_from(index: ${type}) -> Result<Self, Self::Error> {
       match index {
         ${patterns},
-        _ => Err(format!("{} is not a valid index for ${rustifyCaps(
-          node.name
-        )}",index))
+        _ => Err(format!("{} is not a valid index for ${
+    rustifyCaps(
+      node.name,
+    )
+  }",index))
       }
     }
   }
@@ -115,11 +124,11 @@ function fromIndexImpl(node: Enum): string {
 }
 
 function intoIndexImpl(node: Enum): string {
-  let type = "u32";
+  const type = "u32";
 
-  let patterns = node.values
+  const patterns = node.values
     .map(
-      (v) => `Self::${rustifyCaps(v.name)} => ${v.index || "unreachable!()"}`
+      (v) => `Self::${rustifyCaps(v.name)} => ${v.index || "unreachable!()"}`,
     )
     .join(",");
 

@@ -26,7 +26,7 @@ import {
   Primitive,
   PrimitiveName,
   Type,
-} from "@apexlang/core/model";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import {
   capitalize,
   convertOperationToType,
@@ -34,11 +34,11 @@ import {
   isObject,
   isService,
   unwrapKinds,
-} from "../utils/index.js";
-import { getMethods, getPath, hasBody } from "../rest/index.js";
-import { StructVisitor } from "./struct_visitor.js";
-import { expandType, fieldName, methodName } from "./helpers.js";
-import { Import, translateAlias } from "./alias_visitor.js";
+} from "../utils/mod.ts";
+import { getMethods, getPath, hasBody } from "../rest/mod.ts";
+import { StructVisitor } from "./struct_visitor.ts";
+import { expandType, fieldName, methodName } from "./helpers.ts";
+import { Import, translateAlias } from "./alias_visitor.ts";
 
 export class FiberVisitor extends BaseVisitor {
   visitNamespaceBefore(context: Context): void {
@@ -99,7 +99,7 @@ class FiberServiceVisitor extends BaseVisitor {
       this.write(
         `router.${method}("${fiberPath}", func(c *fiber.Ctx) error {
           resp := httpresponse.New()
-			    ctx := httpresponse.NewContext(c.Context(), resp)\n`
+			    ctx := httpresponse.NewContext(c.Context(), resp)\n`,
       );
       if (operation.isUnary()) {
         // TODO: check type
@@ -108,7 +108,7 @@ class FiberServiceVisitor extends BaseVisitor {
         const argsType = convertOperationToType(
           context.getType.bind(context),
           iface,
-          operation
+          operation,
         );
         paramType = argsType;
         const structVisitor = new StructVisitor(this.writer);
@@ -120,7 +120,7 @@ class FiberServiceVisitor extends BaseVisitor {
       if (paramType) {
         // TODO
         this.write(
-          `var args ${expandType(paramType, undefined, false, translate)}\n`
+          `var args ${expandType(paramType, undefined, false, translate)}\n`,
         );
         if (hasBody(method)) {
           this.write(`if err := c.BodyParser(&args); err != nil {
@@ -129,22 +129,23 @@ class FiberServiceVisitor extends BaseVisitor {
         }
 
         switch (paramType.kind) {
-          case Kind.Type:
+          case Kind.Type: {
             const t = paramType as Type;
             t.fields.forEach((f) => {
               if (path.indexOf(`{${f.name}}`) != -1) {
                 // Set path argument
                 this.write(
-                  `args.${fieldName(f, f.name)} = c.Params("${f.name}")\n`
+                  `args.${fieldName(f, f.name)} = c.Params("${f.name}")\n`,
                 );
               } else if (f.annotation("query") != undefined) {
                 this.write(
-                  `args.${fieldName(f, f.name)} = c.Query("${f.name}")\n`
+                  `args.${fieldName(f, f.name)} = c.Query("${f.name}")\n`,
                 );
               }
             });
 
             break;
+          }
         }
 
         if (operation.type.kind != Kind.Void) {
@@ -158,10 +159,12 @@ class FiberServiceVisitor extends BaseVisitor {
           const args = (paramType as Type).fields
             .map(
               (f) =>
-                `, ${isObject(f.type, false) ? "&" : ""}args.${fieldName(
-                  f,
-                  f.name
-                )}`
+                `, ${isObject(f.type, false) ? "&" : ""}args.${
+                  fieldName(
+                    f,
+                    f.name,
+                  )
+                }`,
             )
             .join("");
           this.write(`err := service.${operMethod}(ctx${args})\n`);
@@ -179,7 +182,7 @@ class FiberServiceVisitor extends BaseVisitor {
     });
   }
 
-  visitInterfaceAfter(context: Context): void {
+  visitInterfaceAfter(_context: Context): void {
     this.write(`  }
 }\n`);
   }
@@ -189,7 +192,7 @@ class ImportsVisitor extends BaseVisitor {
   private imports: { [key: string]: Import } = {};
   private externalImports: { [key: string]: Import } = {};
 
-  visitNamespaceAfter(context: Context): void {
+  visitNamespaceAfter(_context: Context): void {
     const stdLib = [];
     for (const key in this.imports) {
       const i = this.imports[key];
@@ -244,7 +247,7 @@ class ImportsVisitor extends BaseVisitor {
         break;
       }
 
-      case Kind.Primitive:
+      case Kind.Primitive: {
         const prim = type as Primitive;
         switch (prim.name) {
           case PrimitiveName.DateTime:
@@ -255,7 +258,8 @@ class ImportsVisitor extends BaseVisitor {
             break;
         }
         break;
-      case Kind.Type:
+      }
+      case Kind.Type: {
         const named = type as Type;
         const i = aliases[named.name];
         if (named.name === "datetime" && i == undefined) {
@@ -267,21 +271,26 @@ class ImportsVisitor extends BaseVisitor {
         }
         this.addType(named.name, i);
         break;
-      case Kind.List:
+      }
+      case Kind.List: {
         const list = type as List;
         this.checkType(context, list.type);
         break;
-      case Kind.Map:
+      }
+      case Kind.Map: {
         const map = type as Map;
         this.checkType(context, map.keyType);
         this.checkType(context, map.valueType);
         break;
-      case Kind.Optional:
+      }
+      case Kind.Optional: {
         const optional = type as Optional;
         this.checkType(context, optional.type);
         break;
-      case Kind.Enum:
+      }
+      case Kind.Enum: {
         break;
+      }
     }
   }
 

@@ -1,6 +1,7 @@
-import { pascalCase, snakeCase } from "../../utils/index.js";
+// deno-lint-ignore-file no-explicit-any
+import { pascalCase, snakeCase } from "../../utils/mod.ts";
 
-export * as types from "./types.js";
+export * as types from "./types.ts";
 
 export function rustDoc(doc?: string): string {
   return doc ? `/// ${doc}` : "";
@@ -29,7 +30,7 @@ export function rustifyCaps(name: string): string {
   return base;
 }
 
-import { ObjectMap } from "@apexlang/core/model";
+import { ObjectMap } from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 
 export type visibility = "pub" | "pub(crate)" | "";
 
@@ -56,8 +57,9 @@ export function customAttributes(name: string, config: ObjectMap<any>): string {
       if (
         Array.isArray(config.attributes._except) &&
         !config.attributes._except.some((n: string) => n == name)
-      )
+      ) {
         attributes.push(...config.attributes._all);
+      }
     }
     if (config.attributes[name]) {
       attributes.push(...config.attributes[name]);

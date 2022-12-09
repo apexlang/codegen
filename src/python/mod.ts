@@ -14,6 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-export * from "./openapiv3.js";
+export * from "./args_visitor.ts";
+export * from "./class_visitor.ts";
+export * from "./handler_visitor.ts";
+export * from "./helpers.ts";
+export * from "./interface_visitor.ts";
+export * from "./interfaces_visitor.ts";
+export * from "./provider_visitor.ts";
+export * from "./scaffold_visitor.ts";
+export * from "./wrapper_visitor.ts";
+export * from "./constant.ts";
 
-export { OpenAPIV3Visitor as default } from "./openapiv3.js";
+export { InterfacesVisitor as default } from "./interfaces_visitor.ts";

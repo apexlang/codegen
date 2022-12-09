@@ -14,16 +14,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Context, BaseVisitor } from "@apexlang/core/model";
-import { expandType } from "./helpers.js";
 import {
-  capitalize,
+  BaseVisitor,
+  Context,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { expandType } from "./helpers.ts";
+import {
   camelCase,
+  capitalize,
   formatComment,
   isProvider,
   isVoid,
   snakeCase,
-} from "../utils/index.js";
+} from "../utils/mod.ts";
 
 export class ProviderVisitor extends BaseVisitor {
   visitInterfaceBefore(context: Context): void {
@@ -39,7 +42,7 @@ export class ProviderVisitor extends BaseVisitor {
     const operation = context.operation!;
     this.write(formatComment("\t# ", operation.description));
     this.write(`\tasync def ${snakeCase(operation.name)}(self`);
-    operation.parameters.map((param, index) => {
+    operation.parameters.map((param, _index) => {
       this.write(`, ${snakeCase(param.name)}: ${expandType(param.type, true)}`);
     });
     this.write(`)`);
@@ -50,26 +53,26 @@ export class ProviderVisitor extends BaseVisitor {
     this.write(`:\n`);
     const retStr = retVoid ? "" : "return ";
     const withRet = retVoid ? "" : "_with_return";
-    const nsop = `'${context.namespace.name + "." + iface.name}', '${
-      operation.name
-    }'`;
+    const nsop = `'${
+      context.namespace.name + "." + iface.name
+    }', '${operation.name}'`;
     if (operation.parameters.length == 0) {
       this.write(
         `\t\t${retStr}await self.invoker.invoke${withRet}('${
           context.namespace.name + "." + iface.name
-        }', '${operation.name}', None`
+        }', '${operation.name}', None`,
       );
     } else if (operation.isUnary()) {
       this.write(
-        `\t\t${retStr}await self.invoker.invoke${withRet}(${nsop}, ${
-          operation.unaryOp().name
-        }`
+        `\t\t${retStr}await self.invoker.invoke${withRet}(${nsop}, ${operation.unaryOp().name}`,
       );
     } else {
       this.write(
-        `\t\tinput_args = _${capitalize(iface.name)}${capitalize(
-          operation.name
-        )}Args(`
+        `\t\tinput_args = _${capitalize(iface.name)}${
+          capitalize(
+            operation.name,
+          )
+        }Args(`,
       );
       operation.parameters.map((param, i) => {
         if (i > 0) {
@@ -80,7 +83,7 @@ export class ProviderVisitor extends BaseVisitor {
       });
       this.write(`\t\t)\n`);
       this.write(
-        `\t\t${retStr}await self.invoker.invoke${withRet}(${nsop}, input_args`
+        `\t\t${retStr}await self.invoker.invoke${withRet}(${nsop}, input_args`,
       );
     }
     if (!retVoid) {

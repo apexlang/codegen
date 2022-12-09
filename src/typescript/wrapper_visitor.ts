@@ -14,16 +14,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Context, BaseVisitor } from "@apexlang/core/model";
-import { expandType } from "./helpers.js";
-import { capitalize, isVoid, camelCase, noCode } from "../utils/index.js";
+import {
+  BaseVisitor,
+  Context,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { expandType } from "./helpers.ts";
+import { camelCase, capitalize, isVoid, noCode } from "../utils/mod.ts";
 
 export class WrapperVisitor extends BaseVisitor {
   visitInterfaceBefore(context: Context): void {
     super.triggerInterfaceBefore(context);
     const { interface: iface } = context;
     this.write(
-      `export function register${iface.name}(h: ${iface.name}): void {\n`
+      `export function register${iface.name}(h: ${iface.name}): void {\n`,
     );
   }
 
@@ -32,8 +35,8 @@ export class WrapperVisitor extends BaseVisitor {
     if (noCode(operation)) {
       return;
     }
-    const path =
-      "/" + context.namespace.name + "." + iface.name + "/" + operation.name;
+    const path = "/" + context.namespace.name + "." + iface.name + "/" +
+      operation.name;
     this.write(`  if (h.${camelCase(operation.name)}) {
       adapter.registerRequestResponseHandler("${path}",
             (_: Metadata, input: any): Promise<any> => {\n`);
@@ -41,17 +44,21 @@ export class WrapperVisitor extends BaseVisitor {
       this.write(`return h.${camelCase(operation.name)}()\n`);
     } else if (operation.isUnary()) {
       this.write(
-        `const payload = plainToClass(${expandType(
-          operation.unaryOp().type,
-          true
-        )}, input);\n`
+        `const payload = plainToClass(${
+          expandType(
+            operation.unaryOp().type,
+            true,
+          )
+        }, input);\n`,
       );
       this.write(`return h.${camelCase(operation.name)}(payload);\n`);
     } else {
       this.write(
-        `const inputArgs = plainToClass(${capitalize(iface.name)}${capitalize(
-          operation.name
-        )}Args, input);\n`
+        `const inputArgs = plainToClass(${capitalize(iface.name)}${
+          capitalize(
+            operation.name,
+          )
+        }Args, input);\n`,
       );
       this.write(`return h.${camelCase(operation.name)}(`);
       operation.parameters.map((param, i) => {
@@ -86,7 +93,7 @@ export class WrapperStatefulVisitor extends BaseVisitor {
           "${ns}",
           "deactivate",
           stateManager.deactivateHandler("${ns}", h)
-        );\n`
+        );\n`,
     );
   }
 
@@ -107,22 +114,26 @@ export class WrapperStatefulVisitor extends BaseVisitor {
     } else if (operation.isUnary()) {
       this.write(
         `const decoded = handlers.codec.decoder(input);
-        const payload = plainToClass(${expandType(
-          operation.unaryOp().type,
-          true
-        )}, decoded);\n`
+        const payload = plainToClass(${
+          expandType(
+            operation.unaryOp().type,
+            true,
+          )
+        }, decoded);\n`,
       );
       this.write(`const sctx = stateManager.toContext("${ns}", id, h);\n`);
       this.write(`return h.${camelCase(operation.name)}(sctx, payload)\n`);
     } else {
       this.write(
-        `const inputArgs = handlers.codec.decoder(input) as ${capitalize(
-          iface.name
-        )}${capitalize(operation.name)}Args;\n`
+        `const inputArgs = handlers.codec.decoder(input) as ${
+          capitalize(
+            iface.name,
+          )
+        }${capitalize(operation.name)}Args;\n`,
       );
       this.write(`const sctx = stateManager.toContext("${ns}", id, h);\n`);
       this.write(`return h.${camelCase(operation.name)}(sctx`);
-      operation.parameters.map((param, i) => {
+      operation.parameters.map((param) => {
         const paramName = param.name;
         this.write(`, inputArgs.${paramName}`);
       });

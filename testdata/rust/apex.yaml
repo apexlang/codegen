@@ -1,7 +1,7 @@
 spec: ../spec.apexlang
 generates:
   basics.rs:
-    module: ../../../src/rust
+    module: '../../../src/rust/mod.ts'
     visitorClass: RustBasic
     config:
       serde: true

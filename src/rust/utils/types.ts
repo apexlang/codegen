@@ -1,26 +1,23 @@
+// deno-lint-ignore-file no-explicit-any
 import {
-  Kind,
-  Named,
   AnyType,
-  Map,
-  PrimitiveName,
+  Kind,
   List,
-  Optional,
-  Union,
-  Type,
-  Primitive,
+  Map,
+  Named,
   ObjectMap,
-  Enum,
-  Alias,
+  Optional,
+  Primitive,
+  PrimitiveName,
   Stream,
-} from "@apexlang/core/model";
-import { rustifyCaps } from "./index.js";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { rustifyCaps } from "./mod.ts";
 
 export function apexToRustType(
   typ: AnyType,
   config: ObjectMap<any>,
   asRef = false,
-  lifetime = ""
+  lifetime = "",
 ): string {
   const ref = asRef ? `&${lifetime} ` : "";
   switch (typ.kind) {
@@ -72,7 +69,7 @@ function primitiveToRust(
   t: Primitive,
   config: ObjectMap<any>,
   asRef = false,
-  lifetime = ""
+  lifetime = "",
 ): string {
   const ref = asRef ? `&${lifetime} ` : "";
   switch (t.name) {
@@ -116,7 +113,7 @@ function primitiveToRust(
     }
     default:
       throw new Error(
-        `Unhandled primitive type conversion for type: ${t.name}`
+        `Unhandled primitive type conversion for type: ${t.name}`,
       );
   }
 }
@@ -142,10 +139,11 @@ export function defaultValue(type: AnyType, config: ObjectMap<any>): string {
 
 export function defaultValueForPrimitive(
   type: AnyType,
-  config: ObjectMap<any>
+  config: ObjectMap<any>,
 ): string {
-  if (type.kind !== Kind.Primitive)
+  if (type.kind !== Kind.Primitive) {
     throw new Error(`Can not expand non-primitive type ${type.kind}`);
+  }
   const t = type as Primitive;
   switch (t.name) {
     case PrimitiveName.Any:
@@ -172,7 +170,7 @@ export function defaultValueForPrimitive(
     case PrimitiveName.DateTime:
       return "time::OffsetDateTime::default()";
     case PrimitiveName.Value:
-      config.anyType
+      return config.anyType
         ? `${config.anyType.toString()}::default()`
         : "serde_value::Value::Null";
     default:

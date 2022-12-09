@@ -1,20 +1,16 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "apex.testing",
   "$defs": {
     "UUID": {
       "description": "An alias for UUID",
-      "name": "UUID",
       "type": "string"
     },
     "PrimitiveAlias": {
       "description": "An alias for string",
-      "name": "PrimitiveAlias",
       "type": "string"
     },
     "Beagle": {
       "description": "An alias for a complex type",
-      "name": "Beagle",
       "$ref": "#/$defs/Dog"
     },
     "MyType": {
@@ -181,30 +177,26 @@
     },
     "MyUnion": {
       "type": "object",
-      "properties": {
-        "oneOf": [
-          {
-            "$ref": "#/$defs/MyType"
-          },
-          {
-            "$ref": "#/$defs/MyEnum"
-          }
-        ]
-      }
+      "oneOf": [
+        {
+          "$ref": "#/$defs/MyType"
+        },
+        {
+          "$ref": "#/$defs/MyEnum"
+        }
+      ]
     },
     "Animal": {
       "description": "Example Union",
       "type": "object",
-      "properties": {
-        "oneOf": [
-          {
-            "$ref": "#/$defs/Cat"
-          },
-          {
-            "$ref": "#/$defs/Dog"
-          }
-        ]
-      }
+      "oneOf": [
+        {
+          "$ref": "#/$defs/Cat"
+        },
+        {
+          "$ref": "#/$defs/Dog"
+        }
+      ]
     },
     "MyEnum": {
       "description": "MyEnum is an emuneration",

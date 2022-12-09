@@ -1,4 +1,7 @@
-import { Alias, Context } from "@apexlang/core/model";
+import {
+  Alias,
+  Context,
+} from "https://deno.land/x/apex_core@v0.1.0/model";
 import { convertDescription } from "../utils/conversions.js";
 import { convertType } from "../utils/types.js";
 
@@ -14,7 +17,6 @@ import { SourceGenerator } from "./base.js";
  * ```
  *
  * View the model here: https://apexlang.github.io/ast-viewer/#CmFsaWFzIE15VHlwZSA9IHN0cmluZwo=
- *
  */
 export class AliasVisitor extends SourceGenerator<Alias> {
   constructor(context: Context) {

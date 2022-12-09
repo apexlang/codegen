@@ -1,4 +1,10 @@
-import { Context, Interface, ObjectMap, Operation } from "@apexlang/core/model";
+// deno-lint-ignore-file no-explicit-any
+import {
+  Context,
+  Interface,
+  ObjectMap,
+  Operation,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import {
   customAttributes,
   rustDoc,
@@ -6,10 +12,10 @@ import {
   rustifyCaps,
   trimLines,
   visibility,
-} from "../utils/index.js";
+} from "../utils/mod.ts";
 
-import { apexToRustType } from "../utils/types.js";
-import { SourceGenerator } from "./base.js";
+import { apexToRustType } from "../utils/types.ts";
+import { SourceGenerator } from "./base.ts";
 
 export class InterfaceVisitor extends SourceGenerator<Interface> {
   config: ObjectMap<any>;
@@ -22,7 +28,7 @@ export class InterfaceVisitor extends SourceGenerator<Interface> {
   }
 
   getSource(): string {
-    let prefix = trimLines([
+    const prefix = trimLines([
       rustDoc(this.root.description),
       customAttributes(this.root.name, this.config),
     ]);
@@ -38,11 +44,11 @@ export class InterfaceVisitor extends SourceGenerator<Interface> {
 
 export function genOperation(
   op: Operation,
-  vis: visibility,
-  config: ObjectMap<any>
+  _vis: visibility,
+  config: ObjectMap<any>,
 ): string {
   const typeString = apexToRustType(op.type, config);
-  let args = op.parameters
+  const args = op.parameters
     .map((arg) => {
       return `${rustify(arg.name)}: ${apexToRustType(arg.type, config)}`;
     })

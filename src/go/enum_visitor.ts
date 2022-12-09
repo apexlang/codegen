@@ -14,8 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Context, BaseVisitor, Writer } from "@apexlang/core/model";
-import { formatComment, pascalCase } from "../utils/index.js";
+import {
+  BaseVisitor,
+  Context,
+  Writer,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { formatComment, pascalCase } from "../utils/mod.ts";
 
 export class EnumVisitor extends BaseVisitor {
   private writeTypeInfo: boolean;
@@ -37,15 +41,14 @@ export class EnumVisitor extends BaseVisitor {
     const { enumValue } = context;
     this.write(formatComment("// ", enumValue.description));
     this.write(
-      `\t${context.enum.name}${pascalCase(enumValue.name)} ${
-        context.enum.name
-      } = ${enumValue.index}\n`
+      `\t${context.enum.name}${
+        pascalCase(enumValue.name)
+      } ${context.enum.name} = ${enumValue.index}\n`,
     );
     super.triggerTypeField(context);
   }
 
   visitEnumAfter(context: Context): void {
-    const tick = "`";
     this.write(`)\n\n`);
 
     const toStringVisitor = new EnumVisitorToStringMap(this.writer);
@@ -104,7 +107,7 @@ export class EnumVisitorToStringMap extends BaseVisitor {
   visitEnumBefore(context: Context): void {
     super.triggerEnumsBefore(context);
     this.write(
-      `var toString${context.enum.name} = map[${context.enum.name}]string{\n`
+      `var toString${context.enum.name} = map[${context.enum.name}]string{\n`,
     );
   }
 
@@ -112,7 +115,7 @@ export class EnumVisitorToStringMap extends BaseVisitor {
     const { enumValue } = context;
     const display = enumValue.display ? enumValue.display : enumValue.name;
     this.write(
-      `\t${context.enum.name}${pascalCase(enumValue.name)}:"${display}",\n`
+      `\t${context.enum.name}${pascalCase(enumValue.name)}:"${display}",\n`,
     );
     super.triggerTypeField(context);
   }
@@ -127,7 +130,7 @@ export class EnumVisitorToIDMap extends BaseVisitor {
   visitEnumBefore(context: Context): void {
     super.triggerEnumsBefore(context);
     this.write(
-      `var toID${context.enum.name} = map[string]${context.enum.name}{\n`
+      `var toID${context.enum.name} = map[string]${context.enum.name}{\n`,
     );
   }
 
@@ -135,7 +138,7 @@ export class EnumVisitorToIDMap extends BaseVisitor {
     const { enumValue } = context;
     const display = enumValue.display ? enumValue.display : enumValue.name;
     this.write(
-      `\t"${display}": ${context.enum.name}${pascalCase(enumValue.name)},\n`
+      `\t"${display}": ${context.enum.name}${pascalCase(enumValue.name)},\n`,
     );
     super.triggerTypeField(context);
   }

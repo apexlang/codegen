@@ -3,6 +3,7 @@
 docs
 coverage
 /testdata/*/actual/*
+bundle.js
 
 !/testdata/*/actual/go.*
 !/testdata/*/actual/package.*

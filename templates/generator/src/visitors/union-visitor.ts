@@ -1,4 +1,7 @@
-import { Context, Union } from "@apexlang/core/model";
+import {
+  Context,
+  Union,
+} from "https://deno.land/x/apex_core@v0.1.0/model";
 import { convertDescription } from "../utils/conversions.js";
 import { convertType } from "../utils/types.js";
 

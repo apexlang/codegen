@@ -1,4 +1,7 @@
-import { Context, Enum } from "@apexlang/core/model";
+import {
+  Context,
+  Enum,
+} from "https://deno.land/x/apex_core@v0.1.0/model";
 import { convertDescription } from "../utils/conversions.js";
 
 import { SourceGenerator } from "./base.js";

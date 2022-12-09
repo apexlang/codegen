@@ -15,20 +15,20 @@ limitations under the License.
 */
 
 import {
-  Context,
+  Alias,
+  AnyType,
   BaseVisitor,
+  Context,
+  Enum,
   Kind,
   Type,
   Union,
-  Enum,
-  Alias,
   Visitor,
-  AnyType,
-} from "@apexlang/core/model";
-import { ClassVisitor } from "./class_visitor.js";
-import { InterfaceVisitor } from "./interface_visitor.js";
-import { isHandler, isProvider, visitNamed } from "../utils/index.js";
-import { HandlerVisitor } from "./handler_visitor.js";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { ClassVisitor } from "./class_visitor.ts";
+import { InterfaceVisitor } from "./interface_visitor.ts";
+import { isHandler, isProvider, visitNamed } from "../utils/mod.ts";
+import { HandlerVisitor } from "./handler_visitor.ts";
 
 export class InterfacesVisitor extends BaseVisitor {
   visitNamespaceBefore(context: Context): void {
@@ -78,26 +78,30 @@ function taccept(context: Context, visitor: Visitor): void {
 
   for (const t of Object.values(namespace.allTypes)) {
     switch (t.kind) {
-      case Kind.Type:
+      case Kind.Type: {
         const td = t as Type;
         if (!td.annotation("novisit")) {
           td.accept(context.clone({ type: td }), visitor);
         }
         break;
-      case Kind.Union:
+      }
+      case Kind.Union: {
         const ud = t as Union;
         ud.accept(context.clone({ union: ud }), visitor);
         break;
-      case Kind.Alias:
+      }
+      case Kind.Alias: {
         const ad = t as Alias;
         ad.accept(context.clone({ alias: ad }), visitor);
         break;
-      case Kind.Enum:
+      }
+      case Kind.Enum: {
         const ed = t as Enum;
         if (!ed.annotation("novisit")) {
           ed.accept(context.clone({ enumDef: ed }), visitor);
         }
         break;
+      }
     }
   }
 
@@ -116,7 +120,7 @@ function taccept(context: Context, visitor: Visitor): void {
 function tsort(context: Context): void {
   const deps: { [key: string]: string[] } = {};
   for (const iface of Object.values(context.namespace.interfaces)) {
-    var d = deps[iface.name];
+    let d = deps[iface.name];
     if (!d) {
       d = [];
       deps[iface.name] = d;
@@ -137,13 +141,13 @@ function tsort(context: Context): void {
     });
   }
   for (const [name, t] of Object.entries(context.namespace.allTypes)) {
-    var d = deps[name];
+    let d = deps[name];
     if (!d) {
       d = [];
       deps[name] = d;
     }
     switch (t.kind) {
-      case Kind.Type:
+      case Kind.Type: {
         const ty = t as Type;
         ty.fields.map((f) => {
           visitNamed(f.type, (name: string) => {
@@ -153,7 +157,8 @@ function tsort(context: Context): void {
           });
         });
         break;
-      case Kind.Union:
+      }
+      case Kind.Union: {
         const un = t as Union;
         un.types.map((ty) => {
           visitNamed(ty, (name: string) => {
@@ -163,7 +168,8 @@ function tsort(context: Context): void {
           });
         });
         break;
-      case Kind.Alias:
+      }
+      case Kind.Alias: {
         const a = t as Alias;
         visitNamed(a.type, (name: string) => {
           if (d.indexOf(name) == -1) {
@@ -171,6 +177,7 @@ function tsort(context: Context): void {
           }
         });
         break;
+      }
     }
   }
 
@@ -191,7 +198,7 @@ function tsort(context: Context): void {
   const visited: { [key: string]: boolean } = {};
 
   edges.forEach((v) => {
-    let from = v[0],
+    const from = v[0],
       to = v[1];
     if (!nodes[from]) nodes[from] = new Node(from);
     if (!nodes[to]) nodes[to] = new Node(to);
@@ -200,7 +207,7 @@ function tsort(context: Context): void {
 
   const ancestors: string[] = [];
   Object.keys(nodes).forEach(function visit(idstr) {
-    let node = nodes[idstr],
+    const node = nodes[idstr],
       id = node.id;
 
     if (visited[idstr]) return;
@@ -231,7 +238,7 @@ function tsort(context: Context): void {
 }
 
 const createEdges = (deps: { [key: string]: string[] }) => {
-  let result: [string, string][] = [];
+  const result: [string, string][] = [];
   Object.keys(deps).forEach((key) => {
     deps[key].forEach((n) => {
       result.push([n, key]);

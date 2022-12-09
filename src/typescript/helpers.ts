@@ -15,25 +15,25 @@ limitations under the License.
 */
 
 import {
-  Map,
-  List,
-  Optional,
-  Field,
-  Type,
-  Valued,
-  Operation,
-  Parameter,
-  Kind,
-  Context,
-  AnyType,
-  Primitive,
   Alias,
   Annotated,
+  AnyType,
+  Context,
+  Field,
+  Kind,
+  List,
+  Map,
   Named,
-} from "@apexlang/core/model";
-import { capitalize, renamed } from "../utils/index.js";
-import { defaultForAlias } from "./alias_visitor.js";
-import { translations } from "./constant.js";
+  Operation,
+  Optional,
+  Parameter,
+  Primitive,
+  Type,
+  Valued,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { capitalize, renamed } from "../utils/mod.ts";
+import { defaultForAlias } from "./alias_visitor.ts";
+import { translations } from "./constant.ts";
 
 /**
  * Takes an array of ValuedDefintions and returns a string based on supplied params.
@@ -52,12 +52,11 @@ export function mapVals(vd: Valued[], sep: string, joinOn: string): string {
  * @param fieldDef Field Node to get default value of
  */
 export function defValue(context: Context, fieldDef: Field): string {
-  const name = fieldDef.name;
   const type = fieldDef.type;
   if (fieldDef.default) {
     let returnVal = fieldDef.default.getValue();
     if (fieldDef.type.kind == Kind.Primitive) {
-      var typeName = (fieldDef.type as Primitive).name as string;
+      let typeName = (fieldDef.type as Primitive).name as string;
       typeName = translations.get(typeName) || typeName;
       returnVal = typeName == "string" ? strQuote(returnVal) : returnVal;
     }
@@ -74,8 +73,8 @@ export function defValue(context: Context, fieldDef: Field): string {
     case Kind.Alias:
     case Kind.Enum:
     case Kind.Type:
-    case Kind.Union:
-      var typeName = (fieldDef.type as Named).name;
+    case Kind.Union: {
+      const typeName = (fieldDef.type as Named).name;
       switch (typeName) {
         case "ID":
         case "string":
@@ -97,7 +96,7 @@ export function defValue(context: Context, fieldDef: Field): string {
           return "new ArrayBuffer(0)";
         case "datetime":
           return "new Date()";
-        default:
+        default: {
           const def = defaultForAlias(context)(typeName);
           if (def) {
             return def;
@@ -107,7 +106,9 @@ export function defValue(context: Context, fieldDef: Field): string {
           //   return typeName = translation!;
           // }
           return `new ${capitalize(typeName)}()`; // reference to something else
+        }
       }
+    }
   }
   return `???${expandType(type, false)}???`;
 }
@@ -127,7 +128,7 @@ export function defaultValueForType(type: AnyType): string {
     case Kind.Alias:
     case Kind.Enum:
     case Kind.Type:
-    case Kind.Union:
+    case Kind.Union: {
       const name = (type as Named).name;
       switch (name) {
         case "ID":
@@ -151,6 +152,7 @@ export function defaultValueForType(type: AnyType): string {
         default:
           return `new ${capitalize(name)}()`; // reference to something else
       }
+    }
   }
   return "???";
 }
@@ -175,26 +177,30 @@ export const expandType = (type: AnyType, useOptional: boolean): string => {
     case Kind.Alias:
     case Kind.Enum:
     case Kind.Type:
-    case Kind.Union:
+    case Kind.Union: {
       const namedValue = (type as Named).name;
       const translation = translations.get(namedValue);
       if (translation != undefined) {
         return translation!;
       }
       return namedValue;
+    }
     case Kind.Map:
-      return `Map<${expandType((type as Map).keyType, true)},${expandType(
-        (type as Map).valueType,
-        true
-      )}>`;
+      return `Map<${expandType((type as Map).keyType, true)},${
+        expandType(
+          (type as Map).valueType,
+          true,
+        )
+      }>`;
     case Kind.List:
       return `Array<${expandType((type as List).type, true)}>`;
-    case Kind.Optional:
-      let expanded = expandType((type as Optional).type, true);
+    case Kind.Optional: {
+      const expanded = expandType((type as Optional).type, true);
       if (useOptional) {
         return `${expanded} | undefined`;
       }
       return expanded;
+    }
     default:
       return "unknown";
   }
@@ -219,10 +225,12 @@ export function methodName(annotated: Annotated, name: string): string {
 export function opsAsFns(ops: Operation[]): string {
   return ops
     .map((op) => {
-      return `function ${op.name}(${mapArgs(op.parameters)}): ${expandType(
-        op.type,
-        true
-      )} {\n}`;
+      return `function ${op.name}(${mapArgs(op.parameters)}): ${
+        expandType(
+          op.type,
+          true,
+        )
+      } {\n}`;
     })
     .join("\n");
 }

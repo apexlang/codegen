@@ -14,11 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Context, BaseVisitor } from "@apexlang/core/model";
-import { ClassVisitor } from "./class_visitor.js";
-import { InterfaceVisitor } from "./interface_visitor.js";
-import { AliasVisitor } from "./alias_visitor.js";
-import { ImportsVisitor } from "./imports_visitor.js";
+import {
+  BaseVisitor,
+  Context,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { ClassVisitor } from "./class_visitor.ts";
+import { InterfaceVisitor } from "./interface_visitor.ts";
+import { AliasVisitor } from "./alias_visitor.ts";
+import { ImportsVisitor } from "./imports_visitor.ts";
 
 export class InterfacesVisitor extends BaseVisitor {
   visitNamespaceBefore(context: Context): void {

@@ -1,12 +1,34 @@
+/*
+Copyright 2022 The Apex Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
 // This Visitor generates how final output should look like by combining all the visitors together
 
-import { BaseVisitor, Context } from "@apexlang/core/model";
-import { Visitor, Writer } from "@apexlang/core/dist/model";
-import { InterfacesVisitor } from "./interfaces_visitor";
-import { MinimalAPIVisitor } from "./api_visitor";
-import { ScaffoldVisitor } from "./scaffold_visitor";
-import { MainVisitor } from "./main_visitor";
-import { TypeVisitor } from "./types_visitor";
+import {
+  BaseVisitor,
+  Context,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import {
+  Visitor,
+  Writer,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { InterfacesVisitor } from "./interfaces_visitor.ts";
+import { MinimalAPIVisitor } from "./api_visitor.ts";
+import { ScaffoldVisitor } from "./scaffold_visitor.ts";
+import { MainVisitor } from "./main_visitor.ts";
+import { TypeVisitor } from "./types_visitor.ts";
 
 export class IndexVisitor extends BaseVisitor {
   apiVisitor = (writer: Writer): Visitor => new MinimalAPIVisitor(writer);

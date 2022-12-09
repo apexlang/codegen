@@ -14,15 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Context, BaseVisitor } from "@apexlang/core/model";
-import { expandType, strQuote } from "./helpers.js";
 import {
-  capitalize,
+  BaseVisitor,
+  Context,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { expandType, strQuote } from "./helpers.ts";
+import {
   camelCase,
+  capitalize,
   formatComment,
   isProvider,
   isVoid,
-} from "../utils/index.js";
+} from "../utils/mod.ts";
 
 export class ProviderVisitor extends BaseVisitor {
   visitInterfaceBefore(context: Context): void {
@@ -47,7 +50,7 @@ export class ProviderVisitor extends BaseVisitor {
       }
       this.write(`${param.name}: ${expandType(param.type, true)}`);
     });
-    var expandedType = expandType(operation.type, true);
+    let expandedType = expandType(operation.type, true);
     this.write(`): Promise<${expandedType}> {\n`);
 
     this.write(`  `);
@@ -56,26 +59,32 @@ export class ProviderVisitor extends BaseVisitor {
       expandedType = "undefined";
     }
 
-    const path =
-      "/" + context.namespace.name + "." + iface.name + "/" + operation.name;
+    const path = "/" + context.namespace.name + "." + iface.name + "/" +
+      operation.name;
 
     if (operation.parameters.length == 0) {
       this.write(
-        `return this.adapter.requestResponse(${expandedType}, ${strQuote(
-          path
-        )})\n`
+        `return this.adapter.requestResponse(${expandedType}, ${
+          strQuote(
+            path,
+          )
+        })\n`,
       );
     } else if (operation.isUnary()) {
       this.write(
-        `return this.adapter.requestResponse(${expandedType}, ${strQuote(
-          path
-        )}, ${operation.unaryOp().name})\n`
+        `return this.adapter.requestResponse(${expandedType}, ${
+          strQuote(
+            path,
+          )
+        }, ${operation.unaryOp().name})\n`,
       );
     } else {
       this.write(
-        `const inputArgs: ${capitalize(iface.name)}${capitalize(
-          operation.name
-        )}Args = {\n`
+        `const inputArgs: ${capitalize(iface.name)}${
+          capitalize(
+            operation.name,
+          )
+        }Args = {\n`,
       );
       operation.parameters.map((param) => {
         const paramName = param.name;
@@ -103,9 +112,9 @@ export class ProviderVisitor extends BaseVisitor {
     const { interface: iface } = context;
     this.write(`}\n\n`);
     this.write(
-      `export var ${camelCase(iface.name)} = new ${
-        iface.name
-      }Impl(adapter);\n\n`
+      `export var ${
+        camelCase(iface.name)
+      } = new ${iface.name}Impl(adapter);\n\n`,
     );
     super.triggerInterfaceAfter(context);
   }

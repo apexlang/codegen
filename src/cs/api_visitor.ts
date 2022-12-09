@@ -1,8 +1,27 @@
-import { BaseVisitor, Context } from "@apexlang/core/model";
-import { isService, pascalCase } from "../utils";
-import { translations } from "./constant";
-import { PathDirective } from "../rest";
-import { expandType, parseNamespaceName } from "./helpers";
+/*
+Copyright 2022 The Apex Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+import {
+  BaseVisitor,
+  Context,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { isService, pascalCase } from "../utils/mod.ts";
+import { translations } from "./constant.ts";
+import { PathDirective } from "../rest/mod.ts";
+import { expandType, parseNamespaceName } from "./helpers.ts";
 
 export class MinimalAPIVisitor extends BaseVisitor {
   visitNamespaceBefore(context: Context) {
@@ -40,9 +59,11 @@ export class ApiServiceVisitor extends BaseVisitor {
     });
     this.write(`  public class Setup {\n`);
     this.write(
-      `    public Setup(WebApplication app, ${pascalCase(
-        context.interface.name
-      )} service) {\n`
+      `    public Setup(WebApplication app, ${
+        pascalCase(
+          context.interface.name,
+        )
+      } service) {\n`,
     );
 
     for (const method of context.interface.operations) {
@@ -63,22 +84,22 @@ export class ApiServiceVisitor extends BaseVisitor {
       }
 
       this.write(`("${path}${subPath}", (`);
-      let params = [];
+      const params = [];
       if (method.parameters.length > 0) {
         for (let i = 0; i < method.parameters.length; ++i) {
           const param = method.parameters[i];
-          const type =
-            translations.get(expandType(param.type)) || expandType(param.type);
+          const type = translations.get(expandType(param.type)) ||
+            expandType(param.type);
           this.write(
             `${type} ${param.name}${
               i != method.parameters.length - 1 ? ", " : ""
-            }`
+            }`,
           );
           params.push(param.name);
         }
       }
       this.write(
-        `) => service.${pascalCase(method.name)}(${params.join(", ")}));\n`
+        `) => service.${pascalCase(method.name)}(${params.join(", ")}));\n`,
       );
     }
     this.write(`    }\n  }\n`);

@@ -14,7 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Context, Operation } from "@apexlang/core/model";
+import {
+  Context,
+  Operation,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 
 export interface PathDirective {
   value: string;
@@ -55,7 +58,7 @@ export function getPath(context: Context): string {
 
 export function getMethods(oper: Operation): string[] {
   return ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"].filter(
-    (m) => oper.annotation(m) != undefined
+    (m) => oper.annotation(m) != undefined,
   );
 }
 

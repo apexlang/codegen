@@ -14,9 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, Context } from "@apexlang/core/model";
-import { formatComment, pascalCase } from "../utils";
-import { expandType, Import } from "../go";
+import {
+  BaseVisitor,
+  Context,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { formatComment, pascalCase } from "../utils/mod.ts";
+import { expandType, Import } from "../go/mod.ts";
 
 export class AliasVisitor extends BaseVisitor {
   visitAlias(context: Context): void {
@@ -28,7 +31,7 @@ export class AliasVisitor extends BaseVisitor {
 
     this.write(formatComment("// ", alias.description));
     this.write(
-      `  using ${pascalCase(alias.name)} = ${expandType(alias.type)};\n\n`
+      `  using ${pascalCase(alias.name)} = ${expandType(alias.type)};\n\n`,
     );
     super.triggerTypeField(context);
   }

@@ -3,19 +3,18 @@ import {
   BaseVisitor,
   Context,
   Enum,
+  Interface,
+  ObjectMap,
   Type,
   Union,
   Writer,
-  Interface,
-  ObjectMap,
-} from "@apexlang/core/model";
+} from "https://deno.land/x/apex_core@v0.1.0/model";
 
 export type VisitorTypes = Alias | Type | Union | Enum | Interface;
 
 /**
  * A utility class to isolate a buffer and provide
  * easy access to the root node and configuration.
- *
  *
  * @param node - The root node to start from.
  * @param context - The visitor context to work in.

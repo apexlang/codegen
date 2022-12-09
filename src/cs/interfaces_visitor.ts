@@ -1,10 +1,31 @@
-import { BaseVisitor, Context, Visitor, Writer } from "@apexlang/core/model";
-import { TypeVisitor } from "./types_visitor";
-import { InterfaceVisitor } from "./interface_visitor";
-import { parseNamespaceName } from "./helpers";
-import { EnumVisitor } from "./enum_visitor";
-import { UnionVisitor } from "./union_visitor";
-import { AliasVisitor } from "./alias_visitor";
+/*
+Copyright 2022 The Apex Authors.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+import {
+  BaseVisitor,
+  Context,
+  Visitor,
+  Writer,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { TypeVisitor } from "./types_visitor.ts";
+import { InterfaceVisitor } from "./interface_visitor.ts";
+import { parseNamespaceName } from "./helpers.ts";
+import { EnumVisitor } from "./enum_visitor.ts";
+import { UnionVisitor } from "./union_visitor.ts";
+import { AliasVisitor } from "./alias_visitor.ts";
 
 export class InterfacesVisitor extends BaseVisitor {
   typeVisitor = (writer: Writer): Visitor => new TypeVisitor(writer);

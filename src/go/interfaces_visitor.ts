@@ -14,17 +14,22 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, Context, Visitor, Writer } from "@apexlang/core/model";
-import { EnumVisitor } from "./enum_visitor.js";
-import { StructVisitor } from "./struct_visitor.js";
-import { ImportsVisitor } from "./imports_visitor.js";
-import { AliasVisitor } from "./alias_visitor.js";
-import { isHandler, isProvider } from "../utils/index.js";
-import { UnionVisitor } from "./union_visitor.js";
-import { InterfaceVisitor } from "./interface_visitor.js";
+import {
+  BaseVisitor,
+  Context,
+  Visitor,
+  Writer,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { EnumVisitor } from "./enum_visitor.ts";
+import { StructVisitor } from "./struct_visitor.ts";
+import { ImportsVisitor } from "./imports_visitor.ts";
+import { AliasVisitor } from "./alias_visitor.ts";
+import { isHandler, isProvider } from "../utils/mod.ts";
+import { UnionVisitor } from "./union_visitor.ts";
+import { InterfaceVisitor } from "./interface_visitor.ts";
 
 export class InterfacesVisitor extends BaseVisitor {
-  writeTypeInfo: boolean = true;
+  writeTypeInfo = true;
 
   // Overridable visitor implementations
   importsVisitor = (writer: Writer): Visitor => new ImportsVisitor(writer);

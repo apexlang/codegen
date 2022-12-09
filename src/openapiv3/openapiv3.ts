@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-explicit-any
 /*
 Copyright 2022 The Apex Authors.
 
@@ -15,41 +16,46 @@ limitations under the License.
 */
 
 import {
-  Context,
-  Writer,
+  Alias,
+  AnyType,
   BaseVisitor,
-  Kind,
-  Named,
-  Type,
+  Context,
   Field,
-  Optional,
+  Kind,
   List as ListType,
   Map as MapType,
-  AnyType,
+  Named,
+  Optional,
   Primitive,
-  Alias,
-} from "@apexlang/core/model";
+  Type,
+  Writer,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import {
+  Document,
   ExternalDocumentationObject,
   InfoObject,
-  OpenApiBuilder,
   OperationObject,
-  ParameterLocation,
   ParameterObject,
-  PathObject,
+  PathItemObject,
+  ReferenceObject,
   RequestBodyObject,
   ResponsesObject,
   SchemaObject,
   ServerObject,
-} from "openapi3-ts";
-import { SummaryDirective } from "./directives.js";
-import * as yaml from "yaml";
+} from "https://deno.land/x/openapi@0.1.0/mod.ts";
+
+import { SummaryDirective } from "./directives.ts";
+import * as yaml from "https://deno.land/std@0.167.0/encoding/yaml.ts";
 import {
   convertArrayToObject,
   ExposedTypesVisitor,
   isService,
-} from "../utils/index.js";
-import { getPath, ResponseDirective } from "../rest/index.js";
+} from "../utils/mod.ts";
+import { getPath, ResponseDirective } from "../rest/mod.ts";
+
+type Method = "get" | "post" | "options" | "put" | "delete" | "patch";
+
+type Mutable<T> = { -readonly [P in keyof T]: T[P] };
 
 const statusCodes = new Map<string, string>([
   ["OK", "200"],
@@ -73,7 +79,7 @@ const removeEmpty = (obj: any): any => {
     return obj;
   }
 
-  let newObj: any = {};
+  const newObj: any = {};
   Object.keys(obj).forEach((key) => {
     if (obj[key]) {
       if (typeof obj[key] === "object" && !Array.isArray(obj[key])) {
@@ -84,7 +90,7 @@ const removeEmpty = (obj: any): any => {
       } else if (Array.isArray(obj[key])) {
         const ary = obj[key] as any[];
         if (ary.length > 0) {
-          let newAry: any[] = [];
+          const newAry: any[] = [];
           ary.forEach((v: any) => {
             newAry.push(removeEmpty(v));
           });
@@ -99,20 +105,26 @@ const removeEmpty = (obj: any): any => {
 };
 
 export class OpenAPIV3Visitor extends BaseVisitor {
-  private root: OpenApiBuilder = new OpenApiBuilder();
-  private paths: { [path: string]: PathObject } = {};
-  private schemas: { [name: string]: SchemaObject } = {};
+  private root: Mutable<Document> = {
+    openapi: "3.0.3",
+    info: { title: "", version: "" },
+    servers: undefined,
+    paths: {},
+    tags: [],
+    components: {},
+  };
+  private paths: { [path: string]: Mutable<PathItemObject> } = {};
+  private schemas: { [name: string]: SchemaObject | ReferenceObject } = {};
 
-  protected path: string = "";
-  protected method: string = "";
-  protected operation?: OperationObject;
-  protected parameter?: ParameterObject;
+  protected path = "";
+  protected method = "";
+  protected operation?: Mutable<OperationObject>;
+  protected parameter?: Mutable<ParameterObject>;
 
   private exposedTypes = new Set<string>();
 
   constructor(writer: Writer) {
     super(writer);
-    this.root.rootDoc.openapi = "3.0.3";
   }
 
   visitNamespaceBefore(context: Context) {
@@ -124,24 +136,27 @@ export class OpenAPIV3Visitor extends BaseVisitor {
 
   visitNamespaceAfter(context: Context): void {
     const filename = context.config["$filename"];
-    const contents = removeEmpty(this.root.rootDoc);
+    this.root.paths = this.paths;
+    this.root.components = { schemas: this.schemas };
+    const contents = removeEmpty(this.root);
     if (filename.toLowerCase().endsWith(".json")) {
       this.write(JSON.stringify(contents, null, 2));
     } else {
-      this.write(yaml.stringify(contents));
+      this.write(yaml.stringify(contents, { sortKeys: false }));
     }
   }
 
   visitNamespace(context: Context): void {
     const ns = context.namespace;
     ns.annotation("info", (a) => {
-      this.root.addInfo(a.convert<InfoObject>());
+      this.root.info = a.convert<InfoObject>();
     });
     ns.annotation("externalDocs", (a) => {
-      this.root.addExternalDocs(a.convert<ExternalDocumentationObject>());
+      this.root.externalDocs = a.convert<ExternalDocumentationObject>();
     });
     ns.annotation("server", (a) => {
-      this.root.addServer(a.convert<ServerObject>());
+      this.root.servers ||= [];
+      this.root.servers?.push(a.convert<ServerObject>());
     });
   }
 
@@ -150,7 +165,8 @@ export class OpenAPIV3Visitor extends BaseVisitor {
       return;
     }
     const { interface: iface } = context;
-    this.root.addTag({
+    this.root.tags ||= [];
+    this.root.tags.push({
       name: iface.name,
       description: iface.description,
     });
@@ -169,21 +185,21 @@ export class OpenAPIV3Visitor extends BaseVisitor {
     let pathItem = this.paths[path];
     if (!pathItem) {
       pathItem = {};
-      this.root.addPath(path, pathItem);
       this.paths[path] = pathItem;
     }
 
-    let method = "";
+    let method: Method | undefined = undefined;
     ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"].forEach(
       (m) => {
         operation.annotation(m, () => {
-          method = m.toLowerCase();
+          method = m.toLowerCase() as Method;
         });
-      }
+      },
     );
-    if (method == "") {
+    if (!method) {
       return;
     }
+    method = method as Method;
 
     let summary = operation.description;
     operation.annotation("summary", (a) => {
@@ -199,7 +215,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
       responses: {},
       tags: [iface.name],
     };
-    operation.annotation("deprecated", (a) => {
+    operation.annotation("deprecated", (_a) => {
       this.operation!.deprecated = true;
     });
     pathItem[method] = this.operation;
@@ -214,7 +230,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
     }
 
     const { operation, parameter } = context;
-    let paramIn: ParameterLocation;
+    let paramIn: string;
 
     let required = true;
     let t = parameter.type;
@@ -256,7 +272,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
           const typeFormat = primitiveTypeMap.get(named.name);
           if (!typeFormat) {
             throw Error(
-              `body parameter "${parameter.name}" must be a required type: found "${t.kind}"`
+              `body parameter "${parameter.name}" must be a required type: found "${t.kind}"`,
             );
           }
           this.operation!.requestBody = {
@@ -268,7 +284,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
               },
             },
             required: true,
-          };
+          } as RequestBodyObject;
           return;
         }
       } else {
@@ -303,12 +319,12 @@ export class OpenAPIV3Visitor extends BaseVisitor {
           const typeFormat = primitiveTypeMap.get(named.name);
           if (!typeFormat) {
             throw Error(
-              `body parameter "${parameter.name}" must be a required type: found "${t.kind}"`
+              `body parameter "${parameter.name}" must be a required type: found "${t.kind}"`,
             );
           }
           content.properties![parameter.name] = {
             ...typeFormat,
-          };
+          } as SchemaObject;
           if (required) {
             content.required?.push(parameter.name);
           }
@@ -326,11 +342,8 @@ export class OpenAPIV3Visitor extends BaseVisitor {
       required: required,
     };
 
-    if (t.kind == Kind.List) {
-    }
-
     switch (paramIn) {
-      case "path":
+      case "path": {
         let typeFormat: TypeFormat | undefined = undefined;
         if (t.kind == Kind.Alias) {
           t = (t as Alias).type;
@@ -341,7 +354,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
         }
         if (!typeFormat) {
           throw Error(
-            `path parameter "${parameter.name}" must be a required type: found "${t.kind}"`
+            `path parameter "${parameter.name}" must be a required type: found "${t.kind}"`,
           );
         }
         this.operation!.parameters.push({
@@ -349,9 +362,9 @@ export class OpenAPIV3Visitor extends BaseVisitor {
           schema: {
             ...typeFormat,
           },
-        });
+        } as ParameterObject);
         return;
-
+      }
       case "query":
         switch (t.kind) {
           case Kind.List: {
@@ -364,7 +377,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
             }
             if (!typeFormat) {
               throw Error(
-                `query parameter "${parameter.name}" must be a built-type: found "${type.kind}"`
+                `query parameter "${parameter.name}" must be a built-type: found "${type.kind}"`,
               );
             }
             this.operation!.parameters.push({
@@ -372,11 +385,11 @@ export class OpenAPIV3Visitor extends BaseVisitor {
               items: {
                 ...typeFormat,
               },
-            });
+            } as ParameterObject);
             break;
           }
 
-          case Kind.Primitive:
+          case Kind.Primitive: {
             const named = t as Primitive;
             const primitive = primitiveTypeMap.get(named.name);
 
@@ -387,7 +400,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
                 schema: {
                   ...primitive,
                 },
-              });
+              } as ParameterObject);
               return;
             }
 
@@ -407,14 +420,15 @@ export class OpenAPIV3Visitor extends BaseVisitor {
                     schema: {
                       ...primitive,
                     },
-                  });
+                  } as ParameterObject);
                 }
               });
               return;
             }
             throw Error(
-              `query parameter "${parameter.name}" must be a built-type: found "${named.name}"`
+              `query parameter "${parameter.name}" must be a built-type: found "${named.name}"`,
             );
+          }
         }
     }
 
@@ -426,7 +440,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
       return;
     }
     const { operation } = context;
-    const responses: ResponsesObject = {};
+    const responses: Mutable<ResponsesObject> = {};
 
     const responseDirectives: ResponseDirective[] = [];
     let found2xx = false;
@@ -448,12 +462,10 @@ export class OpenAPIV3Visitor extends BaseVisitor {
         description: "No Content",
       };
     } else if (!found2xx) {
-      const status = this.method == "post" ? "201" : "200";
       responses.default = {
         description: "Success",
         content: {
           "application/json": {
-            //example: resp.examples?["application/json"],
             schema: this.typeToSchema(operation.type),
           },
         },
@@ -495,7 +507,6 @@ export class OpenAPIV3Visitor extends BaseVisitor {
       ...this.typeDefinitionToSchema(type),
     };
     this.schemas[type.name] = schema;
-    this.root.addSchema(type.name, schema);
   }
 
   visitEnum(context: Context): void {
@@ -510,7 +521,6 @@ export class OpenAPIV3Visitor extends BaseVisitor {
       enum: e.values.map((ev) => ev.display || ev.name),
     };
     this.schemas[e.name] = schema;
-    this.root.addSchema(e.name, schema);
   }
 
   visitUnion(context: Context): void {
@@ -531,18 +541,16 @@ export class OpenAPIV3Visitor extends BaseVisitor {
           }
           return "unknown";
         },
-        this.typeToSchema
+        this.typeToSchema,
       ),
     };
     this.schemas[union.name] = schema;
-    this.root.addSchema(union.name, schema);
   }
 
   visitAlias(context: Context): void {
     const a = context.alias;
     const schema = this.typeToSchema(a);
     this.schemas[a.name] = schema;
-    this.root.addSchema(a.name, schema);
   }
 
   typeDefinitionToSchema(type: Type): SchemaObject {
@@ -575,34 +583,39 @@ export class OpenAPIV3Visitor extends BaseVisitor {
     return defs;
   }
 
-  typeToSchema(type: AnyType): SchemaObject {
+  typeToSchema(type: AnyType): SchemaObject | ReferenceObject {
     switch (type.kind) {
-      case Kind.Optional:
+      case Kind.Optional: {
         const optional = type as Optional;
         return this.typeToSchema(optional.type);
-      case Kind.Alias:
+      }
+      case Kind.Alias: {
         const a = type as Alias;
         return this.typeToSchema(a.type);
-      case Kind.Primitive:
+      }
+      case Kind.Primitive: {
         const prim = type as Primitive;
         const primitive = primitiveTypeMap.get(prim.name);
         return {
           ...primitive,
-        };
+        } as SchemaObject;
+      }
       case Kind.Union:
       case Kind.Enum:
-      case Kind.Type:
+      case Kind.Type: {
         const named = type as Named;
         return {
           $ref: "#/components/schemas/" + named.name,
-        };
-      case Kind.List:
+        } as ReferenceObject;
+      }
+      case Kind.List: {
         const list = type as ListType;
         return {
           type: Types.ARRAY,
           items: this.typeToSchema(list.type),
         };
-      case Kind.Map:
+      }
+      case Kind.Map: {
         const map = type as MapType;
         let valid = false;
         if (map.keyType.kind == Kind.Primitive) {
@@ -615,6 +628,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
           type: Types.OBJECT,
           additionalProperties: this.typeToSchema(map.valueType),
         };
+      }
       default:
         throw Error(`unexpected kind "${type.kind}"`);
     }

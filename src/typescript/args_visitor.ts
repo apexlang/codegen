@@ -14,9 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, Context } from "@apexlang/core/model";
-import { convertOperationToType, noCode } from "../utils/index.js";
-import { ClassVisitor } from "./class_visitor.js";
+import {
+  BaseVisitor,
+  Context,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { convertOperationToType, noCode } from "../utils/mod.ts";
+import { ClassVisitor } from "./class_visitor.ts";
 
 export class ArgsVisitor extends BaseVisitor {
   visitOperation(context: Context): void {
@@ -30,7 +33,7 @@ export class ArgsVisitor extends BaseVisitor {
     const argObject = convertOperationToType(
       context.getType.bind(context),
       iface,
-      operation
+      operation,
     );
     const args = new ClassVisitor(this.writer);
     argObject.accept(context.clone({ type: argObject }), args);

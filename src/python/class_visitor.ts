@@ -14,9 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Context, BaseVisitor, Kind } from "@apexlang/core/model";
-import { expandType, defValue } from "./helpers.js";
-import { formatComment, snakeCase } from "../utils/index.js";
+import {
+  BaseVisitor,
+  Context,
+  Kind,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { defValue, expandType } from "./helpers.ts";
+import { formatComment, snakeCase } from "../utils/mod.ts";
 
 export class ClassVisitor extends BaseVisitor {
   visitTypeBefore(context: Context): void {
@@ -36,8 +40,8 @@ export class ClassVisitor extends BaseVisitor {
   visitTypeField(context: Context): void {
     const field = context.field!;
     this.write(formatComment("\t# ", field.description));
-    var defaultSuffix = "";
-    var defaultValue = defValue(field);
+    let defaultSuffix = "";
+    let defaultValue = defValue(field);
     switch (field.type.kind) {
       case Kind.List:
         defaultSuffix = "_factory";
@@ -49,17 +53,17 @@ export class ClassVisitor extends BaseVisitor {
         break;
     }
     this.write(
-      `\t${snakeCase(field.name)}: ${expandType(
-        field.type!,
-        true
-      )} = field(default${defaultSuffix}=${defaultValue}, metadata={'serde_rename': '${
-        field.name
-      }'})\n`
+      `\t${snakeCase(field.name)}: ${
+        expandType(
+          field.type!,
+          true,
+        )
+      } = field(default${defaultSuffix}=${defaultValue}, metadata={'serde_rename': '${field.name}'})\n`,
     );
     super.triggerTypeField(context);
   }
 
-  visitTypeAfter(context: Context): void {
+  visitTypeAfter(_context: Context): void {
     this.write(`\n\n`);
   }
 }

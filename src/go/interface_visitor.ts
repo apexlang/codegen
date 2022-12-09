@@ -14,10 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, Context } from "@apexlang/core/model";
-import { expandType, mapParam, methodName, returnPointer } from "./helpers.js";
-import { translateAlias } from "./alias_visitor.js";
-import { formatComment, isVoid, noCode } from "../utils/index.js";
+import {
+  BaseVisitor,
+  Context,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { expandType, mapParam, methodName, returnPointer } from "./helpers.ts";
+import { translateAlias } from "./alias_visitor.ts";
+import { formatComment, isVoid, noCode } from "../utils/mod.ts";
 
 export class InterfaceVisitor extends BaseVisitor {
   visitInterfaceBefore(context: Context): void {
@@ -33,7 +36,9 @@ export class InterfaceVisitor extends BaseVisitor {
     }
     this.write(formatComment("// ", operation.description));
     this.write(
-      `type ${methodName(operation, operation.name)}Fn func(ctx context.Context`
+      `type ${
+        methodName(operation, operation.name)
+      }Fn func(ctx context.Context`,
     );
     operation.parameters.forEach((p) =>
       this.visitParam(context.clone({ parameter: p }))
@@ -69,19 +74,21 @@ export class InterfaceVisitor extends BaseVisitor {
     const translate = translateAlias(context);
     if (!isVoid(operation.type)) {
       this.write(
-        ` (${returnPointer(operation.type)}${expandType(
-          operation.type,
-          undefined,
-          true,
-          translate
-        )}, error)`
+        ` (${returnPointer(operation.type)}${
+          expandType(
+            operation.type,
+            undefined,
+            true,
+            translate,
+          )
+        }, error)`,
       );
     } else {
       this.write(` error`);
     }
   }
 
-  visitInterfaceAfter(context: Context): void {
+  visitInterfaceAfter(_context: Context): void {
     this.write(`}\n\n`);
   }
 }

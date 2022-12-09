@@ -14,9 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Context, BaseVisitor, Writer } from "@apexlang/core/model";
-import { expandType, mapArg, mapArgs } from "./helpers.js";
-import { formatComment, noCode, isVoid, snakeCase } from "../utils/index.js";
+import {
+  BaseVisitor,
+  Context,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { expandType, mapArg, mapArgs } from "./helpers.ts";
+import { formatComment, isVoid, noCode, snakeCase } from "../utils/mod.ts";
 
 export class InterfaceVisitor extends BaseVisitor {
   visitInterfaceBefore(context: Context): void {
@@ -52,7 +55,7 @@ export class InterfaceVisitor extends BaseVisitor {
     super.triggerOperation(context);
   }
 
-  visitInterfaceAfter(context: Context): void {
+  visitInterfaceAfter(_context: Context): void {
     this.write(`\n\n`);
   }
 }

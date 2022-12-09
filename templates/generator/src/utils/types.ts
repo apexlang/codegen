@@ -1,14 +1,14 @@
 import {
-  Kind,
-  Named,
   AnyType,
-  Map,
-  PrimitiveName,
+  Kind,
   List,
+  Map,
+  Named,
+  ObjectMap,
   Optional,
   Primitive,
-  ObjectMap,
-} from "@apexlang/core/model";
+  PrimitiveName,
+} from "https://deno.land/x/apex_core@v0.1.0/model";
 
 /**
  * Convert an Apex type to a type suitable for the destination format.
@@ -32,7 +32,7 @@ export function convertType(typ: AnyType, config: ObjectMap): string {
        *
        * @example
        * return `${itemType}[]`
-       * */
+       */
       const t = typ as List;
 
       // The list element's type
@@ -49,7 +49,7 @@ export function convertType(typ: AnyType, config: ObjectMap): string {
        *
        * @example
        * return `Record<${keyType}, ${valueType}>`;
-       * */
+       */
       const t = typ as Map;
 
       // The type of the keys in the Map.
@@ -68,7 +68,7 @@ export function convertType(typ: AnyType, config: ObjectMap): string {
        *
        * @example
        * return `${innerType} | undefined`;
-       * */
+       */
       const t = typ as Optional;
 
       // The inner type of the Optional node.
@@ -166,7 +166,7 @@ function convertPrimitive(typ: Primitive, config: ObjectMap): string {
       return "any";
     default:
       throw new Error(
-        `Unhandled primitive type conversion for type: ${typ.name}`
+        `Unhandled primitive type conversion for type: ${typ.name}`,
       );
   }
 }

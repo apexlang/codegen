@@ -192,9 +192,13 @@ func (e MyEnum) String() string {
 	return str
 }
 
-func (e *MyEnum) FromString(str string) (ok bool) {
+func (e *MyEnum) FromString(str string) error {
+	var ok bool
 	*e, ok = toIDMyEnum[str]
-	return ok
+	if !ok {
+		return fmt.Errorf("unknown value %q for MyEnum", str)
+	}
+	return nil
 }
 
 // MarshalJSON marshals the enum as a quoted json string
@@ -209,8 +213,5 @@ func (e *MyEnum) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
-	if !e.FromString(str) {
-		return fmt.Errorf("unknown value %q for MyEnum", str)
-	}
-	return nil
+	return e.FromString(str)
 }

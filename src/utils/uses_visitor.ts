@@ -19,8 +19,8 @@ import {
   BaseVisitor,
   Context,
   Visitor,
-} from "@apexlang/core/model";
-import { isProvider, isService } from "./utilities.js";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { isProvider, isService } from "./utilities.ts";
 
 export interface UsesVisitor extends Visitor {
   services: Map<string, string[]>;

@@ -1,12 +1,15 @@
-import { Context, Writer } from "@apexlang/core/model";
-import { ContextWriter } from "./visitors/base.js";
-import { StructVisitor } from "./visitors/struct_visitor.js";
+import {
+  Context,
+  Writer,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { ContextWriter } from "./visitors/base.ts";
+import { StructVisitor } from "./visitors/struct_visitor.ts";
 import {
   genOperation,
   InterfaceVisitor,
-} from "./visitors/interface_visitor.js";
-import { EnumVisitor } from "./visitors/enum_visitor.js";
-import { UnionVisitor } from "./visitors/union_visitor.js";
+} from "./visitors/interface_visitor.ts";
+import { EnumVisitor } from "./visitors/enum_visitor.ts";
+import { UnionVisitor } from "./visitors/union_visitor.ts";
 import {
   customAttributes,
   deriveDirective,
@@ -15,9 +18,9 @@ import {
   rustifyCaps,
   trimLines,
   types,
-} from "./utils/index.js";
-import { visibility } from "./utils/index.js";
-import * as utils from "../utils/index.js";
+} from "./utils/mod.ts";
+import { visibility } from "./utils/mod.ts";
+import * as utils from "../utils/mod.ts";
 
 export class RustBasic extends ContextWriter {
   constructor(writer: Writer) {
@@ -31,8 +34,8 @@ export class RustBasic extends ContextWriter {
           "THIS FILE IS GENERATED, DO NOT EDIT",
           "",
           `See https://apexlang.io for more information`,
-        ]
-      )
+        ],
+      ),
     );
     if (context.config.header) {
       if (Array.isArray(context.config.header)) {
@@ -66,7 +69,7 @@ export class RustBasic extends ContextWriter {
 
   visitAlias(context: Context): void {
     const { alias } = context;
-    let vis = visibility(alias.name, context.config);
+    const vis = visibility(alias.name, context.config);
 
     let prefix = rustDoc(alias.description);
 
@@ -79,17 +82,21 @@ export class RustBasic extends ContextWriter {
       customAttributes(alias.name, context.config),
         this.append(`
         ${prefix}
-        ${vis} struct ${rustifyCaps(alias.name)}(${vis} ${types.apexToRustType(
-          alias.type,
-          context.config
-        )});\n`);
+        ${vis} struct ${rustifyCaps(alias.name)}(${vis} ${
+          types.apexToRustType(
+            alias.type,
+            context.config,
+          )
+        });\n`);
     } else {
       this.append(`
         ${prefix}
-        ${vis} type ${rustifyCaps(alias.name)} = ${types.apexToRustType(
-        alias.type,
-        context.config
-      )};\n`);
+        ${vis} type ${rustifyCaps(alias.name)} = ${
+        types.apexToRustType(
+          alias.type,
+          context.config,
+        )
+      };\n`);
     }
   }
 }

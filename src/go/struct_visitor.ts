@@ -15,15 +15,15 @@ limitations under the License.
 */
 
 import {
-  Context,
   BaseVisitor,
-  Writer,
+  Context,
   Kind,
   Named,
-} from "@apexlang/core/model";
-import { expandType, fieldName } from "./helpers.js";
-import { translateAlias } from "./alias_visitor.js";
-import { formatComment } from "../utils/index.js";
+  Writer,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { expandType, fieldName } from "./helpers.ts";
+import { translateAlias } from "./alias_visitor.ts";
+import { formatComment } from "../utils/mod.ts";
 
 interface Serialize {
   value: string;
@@ -65,18 +65,19 @@ export class StructVisitor extends BaseVisitor {
       fieldNameTag = a.convert<Serialize>().value;
     });
 
-    const mapstructure =
-      context.config.mapstructureTag == true
-        ? ` mapstructure:"${fieldNameTag}"`
-        : ``;
+    const mapstructure = context.config.mapstructureTag == true
+      ? ` mapstructure:"${fieldNameTag}"`
+      : ``;
 
     this.write(
-      `\t${fieldName(field, field.name)} ${ptr}${expandType(
-        field.type!,
-        packageName,
-        true,
-        translateAlias(context)
-      )} \`json:"${fieldNameTag}${omitempty}" yaml:"${fieldNameTag}${omitempty}" msgpack:"${fieldNameTag}${omitempty}"${mapstructure}`
+      `\t${fieldName(field, field.name)} ${ptr}${
+        expandType(
+          field.type!,
+          packageName,
+          true,
+          translateAlias(context),
+        )
+      } \`json:"${fieldNameTag}${omitempty}" yaml:"${fieldNameTag}${omitempty}" msgpack:"${fieldNameTag}${omitempty}"${mapstructure}`,
     );
     this.triggerCallbacks(context, "StructTags");
     this.write(`\`\n`);

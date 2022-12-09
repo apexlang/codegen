@@ -14,9 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, Context } from "@apexlang/core/model";
-import { expandType } from "./helpers.js";
-import { formatComment } from "../utils/index.js";
+import {
+  BaseVisitor,
+  Context,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { expandType } from "./helpers.ts";
+import { formatComment } from "../utils/mod.ts";
 
 export interface Import {
   type?: boolean;
@@ -26,7 +29,7 @@ export interface Import {
 }
 
 export function defaultForAlias(
-  context: Context
+  context: Context,
 ): (named: string) => string | undefined {
   const aliases = context.config.aliases as { [key: string]: Import };
   if (aliases == undefined) {
@@ -54,7 +57,7 @@ export class AliasVisitor extends BaseVisitor {
 
     this.write(formatComment("// ", alias.description));
     this.write(
-      `export type ${alias.name} = ${expandType(alias.type!, false)}\n\n`
+      `export type ${alias.name} = ${expandType(alias.type!, false)}\n\n`,
     );
     super.triggerTypeField(context);
   }

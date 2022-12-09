@@ -1,0 +1,6 @@
+spec: ../spec.apexlang
+config:
+generates:
+  src/interfaces.ts:
+    module: '../../../src/typescript/mod.ts'
+    visitorClass: InterfacesVisitor

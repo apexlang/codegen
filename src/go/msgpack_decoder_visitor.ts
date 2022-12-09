@@ -14,9 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Context, BaseVisitor } from "@apexlang/core/model";
-import { fieldName } from "./helpers.js";
-import { msgpackRead } from "./msgpack_helpers.js";
+import {
+  BaseVisitor,
+  Context,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { fieldName } from "./helpers.ts";
+import { msgpackRead } from "./msgpack_helpers.ts";
 
 export class MsgPackDecoderVisitor extends BaseVisitor {
   visitTypeFieldsBefore(context: Context): void {
@@ -34,7 +37,7 @@ export class MsgPackDecoderVisitor extends BaseVisitor {
       ${context.fields.length > 0 ? "field" : "_"}, err := decoder.ReadString()
       if err != nil {
         return err
-      }\n`
+      }\n`,
     );
     if (context.fields.length > 0) {
       this.write(`switch field {\n`);
@@ -52,8 +55,8 @@ export class MsgPackDecoderVisitor extends BaseVisitor {
         true,
         "",
         field.type,
-        false
-      )
+        false,
+      ),
     );
     super.triggerTypeField(context);
   }

@@ -1,23 +1,23 @@
+// deno-lint-ignore-file no-explicit-any
 import {
   AnyType,
   Context,
   Kind,
-  Named,
   ObjectMap,
   Union,
-} from "@apexlang/core/model";
-import { codegenType, isNamed, isRecursiveType } from "../../utils/index.js";
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { codegenType, isNamed, isRecursiveType } from "../../utils/mod.ts";
 import {
+  customAttributes,
+  deriveDirective,
   rustDoc,
   rustifyCaps,
   trimLines,
-  deriveDirective,
-  visibility,
   types,
-  customAttributes,
-} from "../utils/index.js";
+  visibility,
+} from "../utils/mod.ts";
 
-import { SourceGenerator } from "./base.js";
+import { SourceGenerator } from "./base.ts";
 
 function getTypeName(t: AnyType): string {
   if (isNamed(t)) {
@@ -26,7 +26,7 @@ function getTypeName(t: AnyType): string {
     const apexType = codegenType(t);
     throw new Error(
       `Can't represent an Apex union with primitive or non-named types as a Rust enum.` +
-        ` Try turning "${apexType}" into an alias, e.g. "alias MyType = ${apexType}".`
+        ` Try turning "${apexType}" into an alias, e.g. "alias MyType = ${apexType}".`,
     );
   }
 }
@@ -43,15 +43,16 @@ export class UnionVisitor extends SourceGenerator<Union> {
 
   getSource(): string {
     const variants = this.root.types.map((t) => {
-      let isRecursive = isRecursiveType(t);
-      let isHeapAllocated = t.kind === Kind.Map || t.kind === Kind.List;
-      let baseType = types.apexToRustType(t, this.config);
-      let typeString =
-        isRecursive && !isHeapAllocated ? `Box<${baseType}>` : baseType;
+      const isRecursive = isRecursiveType(t);
+      const isHeapAllocated = t.kind === Kind.Map || t.kind === Kind.List;
+      const baseType = types.apexToRustType(t, this.config);
+      const typeString = isRecursive && !isHeapAllocated
+        ? `Box<${baseType}>`
+        : baseType;
       return `${getTypeName(t)}(${typeString})`;
     });
 
-    let prefix = trimLines([
+    const prefix = trimLines([
       rustDoc(this.root.description),
       deriveDirective(this.root.name, this.config),
       customAttributes(this.root.name, this.config),

@@ -21,16 +21,22 @@ jobs:
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
-      - run: npm install
-      #- run: npm run lint
-      - run: npm run build
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+      # - run: npm install
+      # - run: npm run lint
+      # - run: npm run build
 
       - uses: actions/setup-go@v3
         with:
           go-version: "1.19"
 
+      - name: Bundle module and dependencies
+        run: deno bundle src/mod.ts bundle.js
+
       - name: Install Apex CLI
-        run: wget -q https://apexlang.io/install.sh -O - | /bin/bash
+        run: deno install -A --unstable -f -n apex https://deno.land/x/apex_cli/apex.ts
 
       - name: Install Protoc
         run: |
@@ -45,19 +51,23 @@ jobs:
 
       - name: Install swagger-cli
         run: npm install -g @apidevtools/swagger-cli
+      
+      - name: Run the difference test
+        run: ./diffcheck.sh
+        working-directory: ./testdata
 
       - name: Validate generated OpenAPI
         run: find . -name 'openapi.yaml' -exec swagger-cli validate {} \;
         working-directory: ./testdata
 
-      - run: npm run test
+      # - run: npm run test
 
-      - name: Is Release?
-        if: startswith(github.ref, 'refs/tags/v')
-        run: echo "DEPLOY_PACKAGE=true" >> $GITHUB_ENV
+      # - name: Is Release?
+      #   if: startswith(github.ref, 'refs/tags/v')
+      #   run: echo "DEPLOY_PACKAGE=true" >> $GITHUB_ENV
 
-      - name: Publish to npm
-        if: env.DEPLOY_PACKAGE == 'true'
-        run: npm pack && npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+      # - name: Publish to npm
+      #   if: env.DEPLOY_PACKAGE == 'true'
+      #   run: npm pack && npm publish --access public
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}

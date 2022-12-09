@@ -15,38 +15,37 @@ limitations under the License.
 */
 
 import {
+  Alias,
+  Annotated,
+  Annotation,
   AnyType,
   Context,
+  Enum,
+  Interface,
   Kind,
   List,
   Map,
-  Optional,
-  Type,
-  Annotated,
-  Alias,
-  Enum,
-  Annotation,
-  TypeResolver,
-  Operation,
-  Stream,
-  Union,
-  Primitive,
   Named,
-  Interface,
-  Void,
-} from "@apexlang/core/model";
+  Operation,
+  Optional,
+  Primitive,
+  Stream,
+  Type,
+  TypeResolver,
+  Union,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
 import {
   FieldDefinition,
-  Name,
-  Named as ASTNamed,
-  TypeDefinition,
-  Optional as OptionalAST,
-  Type as ASTType,
   ListType,
   MapType,
+  Name,
+  Named as ASTNamed,
+  Optional as OptionalAST,
   Stream as StreamType,
   StringValue,
-} from "@apexlang/core/ast";
+  Type as ASTType,
+  TypeDefinition,
+} from "https://deno.land/x/apex_core@v0.1.0/ast/mod.ts";
 
 export function isOneOfType(context: Context, types: string[]): boolean {
   if (context.interface) {
@@ -93,7 +92,7 @@ export function isService(context: Context): boolean {
 }
 
 export function hasServiceCode(context: Context): boolean {
-  for (let name in context.namespace.interfaces) {
+  for (const name in context.namespace.interfaces) {
     const role = context.namespace.interfaces[name];
     if (role.annotation("service") == undefined) {
       continue;
@@ -206,7 +205,7 @@ export function isNamed(t: AnyType): t is NamedType {
  * Determines if Type Node is a Named node and if its type is not one of the base translation types.
  * @param t Node that is a Type node
  */
-export function isObject(t: AnyType, recurseOption: boolean = true): boolean {
+export function isObject(t: AnyType, recurseOption = true): boolean {
   while (t.kind == Kind.Alias || t.kind == Kind.Optional) {
     if (t.kind == Kind.Optional) {
       if (recurseOption) {
@@ -236,21 +235,23 @@ export function visitNamed(t: AnyType, callback: (name: string) => void): void {
   }
 
   switch (t.kind) {
-    case Kind.Type:
+    case Kind.Type: {
       const named = t as Type;
       callback(named.name);
       break;
+    }
     case Kind.Optional:
       visitNamed((t as Optional).type, callback);
       break;
     case Kind.List:
       visitNamed((t as List).type, callback);
       break;
-    case Kind.Map:
+    case Kind.Map: {
       const m = t as Map;
       visitNamed(m.keyType, callback);
       visitNamed(m.valueType, callback);
       break;
+    }
   }
 }
 
@@ -272,7 +273,7 @@ export const primitives = new Set([
 export function formatComment(
   prefix: string,
   text: string | undefined,
-  wrapLength: number = 80
+  wrapLength = 80,
 ): string {
   if (text == undefined) {
     return "";
@@ -285,7 +286,7 @@ export function formatComment(
   // Replace single newline characters with space so that the logic below
   // handles line wrapping. Multiple newlines are preserved. It was simpler
   // to do this than regex.
-  for (i = 1; i < textValue.length - 1; i++) {
+  for (let i = 1; i < textValue.length - 1; i++) {
     if (
       textValue[i] == "\n" &&
       textValue[i - 1] != "\n" &&
@@ -298,8 +299,8 @@ export function formatComment(
   let comment = "";
   let line = "";
   let word = "";
-  for (var i = 0; i < textValue.length; i++) {
-    let c = textValue[i];
+  for (let i = 0; i < textValue.length; i++) {
+    const c = textValue[i];
     if (c == " " || c == "\n") {
       if (line.length + word.length > wrapLength) {
         if (comment.length > 0) {
@@ -422,10 +423,10 @@ export function noCase(input: string, options: Options = {}) {
     delimiter = " ",
   } = options;
 
-  let result = replace(
+  const result = replace(
     replace(input, splitRegexp, "$1\0$2"),
     stripRegexp,
-    "\0"
+    "\0",
   );
   let start = 0;
   let end = result.length;
@@ -534,7 +535,7 @@ interface RenameDirective {
 
 export function renamed(
   annotated: Annotated,
-  defaultVal?: string
+  defaultVal?: string,
 ): string | undefined {
   let ret: string | undefined = defaultVal;
   annotated.annotation("rename", (a: Annotation) => {
@@ -555,7 +556,7 @@ export function operationTypeName(operation: Operation): string {
 export function operationArgsType(
   iface: Interface | undefined,
   operation: Operation,
-  prefix?: string
+  prefix?: string,
 ): string {
   return (
     (prefix || "") +
@@ -569,19 +570,19 @@ export function convertOperationToType(
   tr: TypeResolver,
   iface: Interface | undefined,
   operation: Operation,
-  prefix?: string
+  prefix?: string,
 ): Type {
   const parameters = operation.parameters.filter(
-    (p) => p.type.kind != Kind.Stream
+    (p) => p.type.kind != Kind.Stream,
   );
-  var fields = parameters.map((param) => {
+  const fields = parameters.map((param) => {
     return new FieldDefinition(
       param.node.loc,
       param.node.name,
       param.node.description,
       param.node.type,
       param.node.default,
-      param.node.annotations
+      param.node.annotations,
     );
   });
   return new Type(
@@ -590,18 +591,18 @@ export function convertOperationToType(
       operation.node.loc,
       new Name(
         operation.node.name.loc,
-        operationArgsType(iface, operation, prefix)
+        operationArgsType(iface, operation, prefix),
       ),
       undefined,
       [],
       operation.node.annotations,
-      fields
-    )
+      fields,
+    ),
   );
 }
 
 export function convertUnionToType(tr: TypeResolver, union: Union): Type {
-  var fields = union.types.map((param) => {
+  const fields = union.types.map((param) => {
     const n = typeName(param);
     const t = modelToAST(param);
     return new FieldDefinition(
@@ -610,7 +611,7 @@ export function convertUnionToType(tr: TypeResolver, union: Union): Type {
       undefined,
       new OptionalAST(undefined, t),
       undefined,
-      []
+      [],
     );
   });
   return new Type(
@@ -623,8 +624,8 @@ export function convertUnionToType(tr: TypeResolver, union: Union): Type {
         : undefined,
       [],
       union.node.annotations,
-      fields
-    )
+      fields,
+    ),
   );
 }
 
@@ -658,7 +659,7 @@ export function modelToAST(t: AnyType): ASTType {
       return new MapType(
         undefined,
         modelToAST(l.keyType),
-        modelToAST(l.keyType)
+        modelToAST(l.keyType),
       );
     }
   }
@@ -701,7 +702,7 @@ export function typeName(t: AnyType): string {
 export function convertArrayToObject<T, D>(
   array: T[],
   keyFunc: (value: T) => string,
-  convert: (value: T) => D = (value: T) => value as unknown as D
+  convert: (value: T) => D = (value: T) => value as unknown as D,
 ): { [key: string]: D } {
   const obj: { [key: string]: D } = {};
   array.forEach((value) => {
@@ -752,12 +753,14 @@ export function codegenType(t: AnyType): string {
       return (t as Named).name;
     case Kind.Primitive:
       return (t as Primitive).name;
-    case Kind.Map:
+    case Kind.Map: {
       const m = t as Map;
       return `{${codegenType(m.keyType)}: ${codegenType(m.valueType)}}`;
-    case Kind.List:
+    }
+    case Kind.List: {
       const l = t as List;
       return `[${codegenType(l.type)}]`;
+    }
     case Kind.Optional:
       return `${codegenType((t as Optional).type)}?`;
     default:
@@ -782,18 +785,20 @@ function fillToLengthWith(base: string, len: number, filler: string): string {
 function nineBoxRow(
   rowDef: NineBoxRow,
   content: string,
-  rowLength: number
+  rowLength: number,
 ): string {
-  return `${rowDef[0]}${fillToLengthWith(
-    content,
-    rowLength - rowDef[0].length - rowDef[2].length,
-    rowDef[1]
-  )}${rowDef[2]}`;
+  return `${rowDef[0]}${
+    fillToLengthWith(
+      content,
+      rowLength - rowDef[0].length - rowDef[2].length,
+      rowDef[1],
+    )
+  }${rowDef[2]}`;
 }
 
 export function generatedHeader(
   lines: string[],
-  nineBox = defaultNineBox
+  nineBox = defaultNineBox,
 ): string {
   const maxLength =
     lines.reduce((acc, next) => (next.length > acc ? next.length : acc), 0) +
@@ -812,9 +817,10 @@ export function generatedHeader(
 
 const OMIT_KEYS = ["node", "source"];
 
-export function inspect(o: any, omit = OMIT_KEYS) {
+// deno-lint-ignore no-explicit-any
+export function inspect(o: any, _omit = OMIT_KEYS) {
   console.log(
-    JSON.stringify(o, (k, v) => (OMIT_KEYS.indexOf(k) === -1 ? v : undefined))
+    JSON.stringify(o, (k, v) => (OMIT_KEYS.indexOf(k) === -1 ? v : undefined)),
   );
 }
 

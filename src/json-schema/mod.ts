@@ -14,6 +14,5 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-export * from "./proto_visitor.js";
-
-export { ProtoVisitor as default } from "./proto_visitor.js";
+export { JsonSchemaVisitor } from "./json-schema.ts";
+export { JsonSchemaVisitor as default } from "./json-schema.ts";

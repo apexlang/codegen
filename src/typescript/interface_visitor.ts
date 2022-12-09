@@ -14,9 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Context, BaseVisitor, Writer } from "@apexlang/core/model";
-import { expandType, mapArg, mapArgs } from "./helpers.js";
-import { camelCase, formatComment } from "../utils/index.js";
+import {
+  BaseVisitor,
+  Context,
+  Writer,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { expandType, mapArg, mapArgs } from "./helpers.ts";
+import { camelCase, formatComment } from "../utils/mod.ts";
 
 export class InterfaceVisitor extends BaseVisitor {
   private stateful: boolean;

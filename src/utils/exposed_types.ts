@@ -15,19 +15,19 @@ limitations under the License.
 */
 
 import {
-  Context,
-  BaseVisitor,
-  Kind,
-  Named,
-  Type,
-  AnyType,
-  Union,
   Alias,
-  Map,
+  AnyType,
+  BaseVisitor,
+  Context,
+  Kind,
   List,
+  Map,
+  Named,
   Optional,
-} from "@apexlang/core/model";
-import { isNamed, isService } from "./utilities.js";
+  Type,
+  Union,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { isNamed, isService } from "./utilities.ts";
 
 export class ExposedTypesVisitor extends BaseVisitor {
   found: Set<string> = new Set<string>();
@@ -43,36 +43,37 @@ export class ExposedTypesVisitor extends BaseVisitor {
     }
 
     switch (any.kind) {
-      case Kind.Optional:
+      case Kind.Optional: {
         const o = any as Optional;
         this.checkType(o.type);
         break;
-
-      case Kind.Type:
+      }
+      case Kind.Type: {
         const t = any as Type;
         t.fields.forEach((field) => this.checkType(field.type));
         break;
-
-      case Kind.Union:
+      }
+      case Kind.Union: {
         const u = any as Union;
         u.types.forEach((t) => this.checkType(t));
         break;
-
-      case Kind.Alias:
+      }
+      case Kind.Alias: {
         const a = any as Alias;
         this.checkType(a.type);
         break;
-
-      case Kind.Map:
+      }
+      case Kind.Map: {
         const m = any as Map;
         this.checkType(m.keyType);
         this.checkType(m.valueType);
         break;
-
-      case Kind.List:
+      }
+      case Kind.List: {
         const l = any as List;
         this.checkType(l.type);
         break;
+      }
     }
   }
 

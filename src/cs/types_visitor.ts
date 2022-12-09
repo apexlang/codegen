@@ -14,9 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Argument, BaseVisitor, Context } from "@apexlang/core/model";
-import { camelCase, formatComment, pascalCase } from "../utils";
-import { expandType } from "./helpers";
+import {
+  Argument,
+  BaseVisitor,
+  Context,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { camelCase, formatComment, pascalCase } from "../utils/mod.ts";
+import { expandType } from "./helpers.ts";
 
 export class TypeVisitor extends BaseVisitor {
   visitTypeBefore(context: Context): void {
@@ -41,7 +45,7 @@ export class TypeVisitor extends BaseVisitor {
 
     if (range || email || notEmpty) {
       const name = camelCase(field.name);
-      let propName = pascalCase(field.name);
+      const propName = pascalCase(field.name);
 
       this.write(`    private ${type} ${name};`);
 
@@ -53,10 +57,10 @@ export class TypeVisitor extends BaseVisitor {
 
       if (email && type === "string") {
         this.write(
-          '        if (!System.Text.RegularExpressions.Regex.IsMatch(value, @"^([\\w-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([\\w-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$")) {\n'
+          '        if (!System.Text.RegularExpressions.Regex.IsMatch(value, @"^([\\w-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([\\w-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$")) {\n',
         );
         this.write(
-          `          throw new ArgumentException("value must be an email address", "${propName}");\n`
+          `          throw new ArgumentException("value must be an email address", "${propName}");\n`,
         );
         this.write("        }\n");
       }
@@ -78,7 +82,7 @@ export class TypeVisitor extends BaseVisitor {
         }
         this.write("  ) {\n");
         this.write(
-          `          throw new ArgumentException("value must be in range", "${propName}");\n`
+          `          throw new ArgumentException("value must be in range", "${propName}");\n`,
         );
         this.write("        }\n");
       }
@@ -100,10 +104,11 @@ export class TypeVisitor extends BaseVisitor {
   }
 }
 
+// deno-lint-ignore no-explicit-any
 function getRangeArguments(args: Argument[]): { min: any; max: any } {
-  let obj = { min: undefined, max: undefined };
+  const obj = { min: undefined, max: undefined };
   for (const arg of args) {
-    // @ts-ignore
+    // @ts-ignore: this is ok
     obj[arg.name] = arg.value.getValue();
   }
 

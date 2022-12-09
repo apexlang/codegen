@@ -14,9 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Context, BaseVisitor } from "@apexlang/core/model";
-import { expandType, defValue } from "./helpers.js";
-import { formatComment } from "../utils/index.js";
+import {
+  BaseVisitor,
+  Context,
+} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { defValue, expandType } from "./helpers.ts";
+import { formatComment } from "../utils/mod.ts";
 
 export class ClassVisitor extends BaseVisitor {
   visitTypeBefore(context: Context): void {
@@ -58,13 +61,13 @@ class ConstructorVisitor extends BaseVisitor {
     this.write(
       t.fields
         .map((field) => `${field.name} = ${defValue(context, field)}`)
-        .join(`,\n`)
+        .join(`,\n`),
     );
     this.write(`}: {`);
     this.write(
       t.fields
         .map((field) => `${field.name}?: ${expandType(field.type!, true)}`)
-        .join(`,\n`)
+        .join(`,\n`),
     );
     this.write(`} = {}) {\n`);
   }
