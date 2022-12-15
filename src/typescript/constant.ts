@@ -27,5 +27,6 @@ export const translations = new Map<string, string>([
   ["u8", "number"],
   ["f64", "number"],
   ["f32", "number"],
+  ["bool", "boolean"],
   ["datetime", "Date"],
 ]);

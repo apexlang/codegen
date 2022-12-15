@@ -14,10 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import {
-  Context,
-  Operation,
-} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { Context, Operation } from "../deps/core/model.ts";
 
 export interface PathDirective {
   value: string;

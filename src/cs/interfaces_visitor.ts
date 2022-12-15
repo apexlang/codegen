@@ -14,12 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import {
-  BaseVisitor,
-  Context,
-  Visitor,
-  Writer,
-} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { BaseVisitor, Context, Visitor, Writer } from "../deps/core/model.ts";
 import { TypeVisitor } from "./types_visitor.ts";
 import { InterfaceVisitor } from "./interface_visitor.ts";
 import { parseNamespaceName } from "./helpers.ts";

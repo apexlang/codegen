@@ -30,7 +30,7 @@ import {
   Primitive,
   Type,
   Valued,
-} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+} from "../deps/core/model.ts";
 import { capitalize, renamed } from "../utils/mod.ts";
 import { defaultForAlias } from "./alias_visitor.ts";
 import { translations } from "./constant.ts";
@@ -79,7 +79,7 @@ export function defValue(context: Context, fieldDef: Field): string {
         case "ID":
         case "string":
           return `''`;
-        case "bool":
+        case "boolean":
           return "false";
         case "i8":
         case "u8":
@@ -134,7 +134,7 @@ export function defaultValueForType(type: AnyType): string {
         case "ID":
         case "string":
           return `''`;
-        case "bool":
+        case "boolean":
           return "false";
         case "i8":
         case "u8":

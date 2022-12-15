@@ -21,7 +21,7 @@ import {
   Map,
   Named,
   Optional,
-} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+} from "../deps/core/model.ts";
 import { pascalCase } from "../utils/mod.ts";
 import { translations } from "./constant.ts";
 

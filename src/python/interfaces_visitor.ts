@@ -24,7 +24,7 @@ import {
   Type,
   Union,
   Visitor,
-} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+} from "../deps/core/model.ts";
 import { ClassVisitor } from "./class_visitor.ts";
 import { InterfaceVisitor } from "./interface_visitor.ts";
 import { isHandler, isProvider, visitNamed } from "../utils/mod.ts";

@@ -1,5 +1,5 @@
-export * as types from "./types.js";
-export * as convert from "./conversions.js";
+export * as types from "./types.ts";
+export * as convert from "./conversions.ts";
 
 /**
  * A utility function to checks if a name is a reserved word.

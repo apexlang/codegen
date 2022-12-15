@@ -27,7 +27,7 @@ import {
   Parameter,
   Primitive,
   PrimitiveName,
-} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+} from "../deps/core/model.ts";
 import { Import, translateAlias } from "./alias_visitor.ts";
 import { translations } from "./constant.ts";
 import { expandType, fieldName, returnShare } from "./helpers.ts";

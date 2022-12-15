@@ -28,10 +28,7 @@ export * from "./alias_visitor.ts";
 export { InterfacesVisitor as default } from "./interfaces_visitor.ts";
 
 import { formatComment, isOneOfType, pascalCase } from "../utils/mod.ts";
-import {
-  BaseVisitor,
-  Context,
-} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { BaseVisitor, Context } from "../deps/core/model.ts";
 import { expandType, parseNamespaceName } from "./helpers.ts";
 
 export class ScaffoldVisitor extends BaseVisitor {

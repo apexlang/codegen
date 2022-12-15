@@ -14,11 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import {
-  Argument,
-  BaseVisitor,
-  Context,
-} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { Argument, BaseVisitor, Context } from "../deps/core/model.ts";
 import { camelCase, formatComment, pascalCase } from "../utils/mod.ts";
 import { expandType } from "./helpers.ts";
 

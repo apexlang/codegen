@@ -32,7 +32,7 @@ import {
   PrimitiveName,
   Stream,
   Valued,
-} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+} from "../deps/core/model.ts";
 import { capitalize, renamed } from "../utils/mod.ts";
 import { Import } from "./alias_visitor.ts";
 import { translations } from "./constant.ts";

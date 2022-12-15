@@ -20,7 +20,7 @@ import {
   Kind,
   Named,
   Writer,
-} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+} from "../deps/core/model.ts";
 import { expandType, fieldName } from "./helpers.ts";
 import { translateAlias } from "./alias_visitor.ts";
 import { formatComment } from "../utils/mod.ts";
@@ -68,6 +68,7 @@ export class StructVisitor extends BaseVisitor {
     const mapstructure = context.config.mapstructureTag == true
       ? ` mapstructure:"${fieldNameTag}"`
       : ``;
+    const customTags = this.structTags(context);
 
     this.write(
       `\t${fieldName(field, field.name)} ${ptr}${
@@ -77,7 +78,7 @@ export class StructVisitor extends BaseVisitor {
           true,
           translateAlias(context),
         )
-      } \`json:"${fieldNameTag}${omitempty}" yaml:"${fieldNameTag}${omitempty}" msgpack:"${fieldNameTag}${omitempty}"${mapstructure}`,
+      } \`json:"${fieldNameTag}${omitempty}" yaml:"${fieldNameTag}${omitempty}" msgpack:"${fieldNameTag}${omitempty}"${mapstructure}${customTags}`,
     );
     this.triggerCallbacks(context, "StructTags");
     this.write(`\`\n`);
@@ -99,5 +100,9 @@ export class StructVisitor extends BaseVisitor {
       }\n\n`);
     }
     super.triggerTypeAfter(context);
+  }
+
+  structTags(_context: Context): string {
+    return "";
   }
 }

@@ -1,6 +1,6 @@
-import { parse } from "./parse.js";
-import { DefaultVisitor } from "../src/default-visitor.js";
-import { Writer } from "@apexlang/core/model";
+import { parse } from "./parse.ts";
+import { DefaultVisitor } from "../src/default-visitor.ts";
+import { Writer } from "https://deno.land/x/apex_core@v0.1.1/model/mod.ts";
 
 describe("default visitor", () => {
   test("should generate apex from apex", () => {
