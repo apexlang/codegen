@@ -16,14 +16,7 @@ limitations under the License.
 
 // This Visitor generates how final output should look like by combining all the visitors together
 
-import {
-  BaseVisitor,
-  Context,
-} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
-import {
-  Visitor,
-  Writer,
-} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { BaseVisitor, Context, Visitor, Writer } from "../deps/core/model.ts";
 import { InterfacesVisitor } from "./interfaces_visitor.ts";
 import { MinimalAPIVisitor } from "./api_visitor.ts";
 import { ScaffoldVisitor } from "./scaffold_visitor.ts";

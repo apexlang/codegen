@@ -14,10 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import {
-  BaseVisitor,
-  Context,
-} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { BaseVisitor, Context } from "../deps/core/model.ts";
 import { ClassVisitor } from "./class_visitor.ts";
 import { InterfaceVisitor } from "./interface_visitor.ts";
 import { AliasVisitor } from "./alias_visitor.ts";

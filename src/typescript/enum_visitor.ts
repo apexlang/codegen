@@ -16,19 +16,27 @@ limitations under the License.
 
 import { BaseVisitor, Context } from "../deps/core/model.ts";
 import { formatComment, pascalCase } from "../utils/mod.ts";
-import { expandType } from "../go/mod.ts";
 
-export class UnionVisitor extends BaseVisitor {
-  visitUnion(context: Context): void {
-    const { union } = context;
-    this.write(`  ${formatComment("// ", union.description)}`);
-    this.write(`public record ${union.name} {\n`);
-    union.types.forEach((t) => {
-      const typeName = expandType(t);
-      this.write(`    public ${pascalCase(typeName)} ${typeName};`);
-      this.triggerCallbacks(context, "UnionStructTags");
-      this.write(`\n`);
-    });
-    this.write(`  }\n\n`);
+export class EnumVisitor extends BaseVisitor {
+  visitEnumBefore(context: Context): void {
+    super.triggerEnumsBefore(context);
+    this.write(formatComment("// ", context.enum.description));
+    this.write(`export enum ${context.enum.name} {\n`);
+  }
+
+  visitEnumValue(context: Context): void {
+    const { enumValue } = context;
+    this.write(formatComment("// ", enumValue.description));
+    this.write(
+      `\t${context.enum.name}${
+        pascalCase(enumValue.name)
+      } ${context.enum.name} = ${enumValue.index}\n`,
+    );
+    super.triggerTypeField(context);
+  }
+
+  visitEnumAfter(context: Context): void {
+    this.write(`}\n\n`);
+    super.triggerEnumsAfter(context);
   }
 }

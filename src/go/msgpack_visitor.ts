@@ -14,12 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import {
-  BaseVisitor,
-  Context,
-  Kind,
-  Writer,
-} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { BaseVisitor, Context, Kind, Writer } from "../deps/core/model.ts";
 import { convertOperationToType, convertUnionToType } from "../utils/mod.ts";
 import { Import } from "./alias_visitor.ts";
 import { MsgPackDecoderVisitor } from "./msgpack_decoder_visitor.ts";

@@ -32,7 +32,7 @@ import {
   PrimitiveName,
   Stream,
   Valued,
-} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+} from "../deps/core/model.ts";
 import { capitalize, renamed } from "../utils/mod.ts";
 import { Import } from "./alias_visitor.ts";
 import { translations } from "./constant.ts";
@@ -278,17 +278,24 @@ export const expandType = (
         }
       }
       let expanded = expandType(nestedType, packageName, true, translate);
+      let nonAliasType = nestedType;
+      while (nonAliasType.kind == Kind.Alias) {
+        nonAliasType = (nonAliasType as Alias).type;
+      }
       if (
         useOptional &&
         !(
-          nestedType.kind === Kind.Map ||
-          nestedType.kind === Kind.List ||
+          nonAliasType.kind === Kind.Map ||
+          nonAliasType.kind === Kind.List ||
+          (nonAliasType.kind === Kind.Primitive &&
+            (nonAliasType as Primitive).name == PrimitiveName.Bytes) ||
           expanded == "[]byte"
         )
       ) {
         if (expanded.startsWith("*")) {
           expanded = expanded.substring(1);
         }
+
         return `*${expanded}`;
       }
       return expanded;

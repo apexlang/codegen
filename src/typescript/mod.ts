@@ -17,6 +17,7 @@ limitations under the License.
 export * from "./alias_visitor.ts";
 export * from "./args_visitor.ts";
 export * from "./class_visitor.ts";
+export * from "./enum_visitor.ts";
 export * from "./handler_visitor.ts";
 export * from "./imports_visitor.ts";
 export * from "./interface_visitor.ts";

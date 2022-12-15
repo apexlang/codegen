@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Named } from "https://deno.land/x/apex_core@v0.1.0/ast/mod.ts";
+import { Named } from "../deps/core/ast.ts";
 import {
   AnyType,
   BaseVisitor,
@@ -27,7 +27,7 @@ import {
   PrimitiveName,
   Type,
   Writer,
-} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+} from "../deps/core/model.ts";
 import {
   ArraySchemaObject,
   ReferenceObject,

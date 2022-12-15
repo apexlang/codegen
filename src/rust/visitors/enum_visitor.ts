@@ -1,8 +1,4 @@
-import {
-  Context,
-  Enum,
-  ObjectMap,
-} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { Context, Enum, ObjectMap } from "../../deps/core/model.ts";
 import { IndexTypeDirective } from "../directives.ts";
 import {
   customAttributes,

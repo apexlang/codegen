@@ -8,7 +8,7 @@ import {
   Type,
   Union,
   Writer,
-} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+} from "../../deps/core/model.ts";
 
 export type VisitorTypes = Alias | Type | Union | Enum | Interface;
 

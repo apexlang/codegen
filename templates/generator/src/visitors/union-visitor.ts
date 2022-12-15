@@ -1,11 +1,11 @@
 import {
   Context,
   Union,
-} from "https://deno.land/x/apex_core@v0.1.0/model";
-import { convertDescription } from "../utils/conversions.js";
-import { convertType } from "../utils/types.js";
+} from "https://deno.land/x/apex_core@v0.1.1/model/mod.ts";
+import { convertDescription } from "../utils/conversions.ts";
+import { convertType } from "../utils/types.ts";
 
-import { SourceGenerator } from "./base.js";
+import { SourceGenerator } from "./base.ts";
 
 /**
  * Apex type definitions come from syntax like this:

@@ -1,7 +1,4 @@
-import {
-  Context,
-  Writer,
-} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { Context, Writer } from "../deps/core/model.ts";
 import { ContextWriter } from "./visitors/base.ts";
 import { StructVisitor } from "./visitors/struct_visitor.ts";
 import {

@@ -24,7 +24,7 @@ import {
   Optional,
   Type,
   Writer,
-} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+} from "../deps/core/model.ts";
 import {
   camelCase,
   isHandler,

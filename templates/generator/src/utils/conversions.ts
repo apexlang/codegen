@@ -2,9 +2,9 @@ import {
   ObjectMap,
   Operation,
   Parameter,
-} from "https://deno.land/x/apex_core@v0.1.0/model";
-import * as utils from "@apexlang/codegen/utils";
-import { convertType } from "./types";
+} from "https://deno.land/x/apex_core@v0.1.1/model/mod.ts";
+import * as utils from "https://deno.land/x/apex_codegen@v0.1.1/utils/mod.ts";
+import { convertType } from "./types.ts";
 
 /**
  * Convert a description to the appropriate format for the destination.

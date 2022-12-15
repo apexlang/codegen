@@ -1,14 +1,13 @@
 import {
   BaseVisitor,
   Context,
-  Writer,
-} from "https://deno.land/x/apex_core@v0.1.0/model";
-import { TypeVisitor } from "./visitors/type-visitor.js";
-import { InterfaceVisitor } from "./visitors/interface-visitor.js";
-import { EnumVisitor } from "./visitors/enum-visitor.js";
-import { UnionVisitor } from "./visitors/union-visitor.js";
-import { AliasVisitor } from "./visitors/alias-visitor.js";
-import { convertOperation } from "./utils/conversions.js";
+} from "https://deno.land/x/apex_core@v0.1.1/model/mod.ts";
+import { TypeVisitor } from "./visitors/type-visitor.ts";
+import { InterfaceVisitor } from "./visitors/interface-visitor.ts";
+import { EnumVisitor } from "./visitors/enum-visitor.ts";
+import { UnionVisitor } from "./visitors/union-visitor.ts";
+import { AliasVisitor } from "./visitors/alias-visitor.ts";
+import { convertOperation } from "./utils/conversions.ts";
 
 export class DefaultVisitor extends BaseVisitor {
   /* ************************************************************************ *

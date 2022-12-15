@@ -14,11 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import {
-  Annotated,
-  BaseVisitor,
-  Context,
-} from "https://deno.land/x/apex_core@v0.1.0/model/mod.ts";
+import { Annotated, BaseVisitor, Context } from "../deps/core/model.ts";
 import { formatComment, typeName } from "../utils/mod.ts";
 import { expandType, fieldName } from "./helpers.ts";
 
