@@ -1,0 +1,32 @@
+<div class="interface-definition">
+  <h3 id="<%= name %>"><%= name %></h3>
+  <p><%= description %></p>
+  <ul>
+    <% for (const op of operations) { %>
+    <li>
+    <div class=operation>
+      <h4><%= op.name %></h4>
+      <% if (op.description) { %><p><%= op.description %></p><% } %>
+      <div class=return>
+      <span><%= expandType(op.type) %></span>
+      </div>
+      <div class="parameters">
+      <% if (op.parameters.length === 0)  {%>
+      <span>None</span>
+      <% } else { %>
+      <ol>
+        <% for (const field of op.parameters) { %>
+        <li>
+          <span class="name"><%= field.name %></span>
+          <span class="type <%= field.type.kind === 'Optional' ? 'optional' : '' %>"><%= expandType(field.type) %></span>
+          <% if (field.description) { %><span class="description"><%= field.description %></span> <% } %>
+        </li>
+        <% } %>
+      </ol>
+      <% } %>
+      </div>
+    </div>
+    </li>
+    <% } %>
+  </ul>
+</div>
