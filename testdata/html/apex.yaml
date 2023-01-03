@@ -1,0 +1,6 @@
+spec: spec.apexlang
+generates:
+  docs.html:
+    module: ../../src/html
+    visitorClass: HtmlVisitor
+    config:
