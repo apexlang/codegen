@@ -1,31 +1,29 @@
-import { BaseVisitor, Context, Writer } from "@apexlang/core/model";
-import { expandType } from "./helpers";
+import { BaseVisitor, Context, Writer } from '../deps/core/model.ts';
+import { expandType } from './helpers.ts';
+import { templates } from './templates.ts';
 
-import template from "lodash.template";
-import indexSource from "./templates/index.ejs.txt";
-import typeSource from "./templates/type.ejs.txt";
-import enumSource from "./templates/enum.ejs.txt";
-import aliasSource from "./templates/alias.ejs.txt";
-import unionSource from "./templates/union.ejs.txt";
-import interfaceSource from "./templates/interface.ejs.txt";
-import stylesSource from "./templates/styles.css.txt";
+import { render, compile } from 'https://deno.land/x/deno_ejs@v0.2.5/mod.ts';
 
-const indexTemplate = template(indexSource);
-const typeTemplate = template(typeSource);
-const interfaceTemplate = template(interfaceSource);
-const aliasTemplate = template(aliasSource);
-const unionTemplate = template(unionSource);
-const enumTemplate = template(enumSource);
+// const indexTemplate = compile(templates.index, {});
+// const typeTemplate = compile(templates.type, {});
+// const interfaceTemplate = compile(templates.interface, {});
+// const aliasTemplate = compile(templates.alias, {});
+// const unionTemplate = compile(templates.union, {});
+// const enumTemplate = compile(templates.enum, {});
+
+function template(src: string, data: any): string {
+  return render(src, data, {});
+}
 
 export class HtmlVisitor extends BaseVisitor {
-  protected source: string = "";
-  protected namespace: string = "";
-  protected description: string = "";
-  protected types: string = "";
-  protected enums: string = "";
-  protected unions: string = "";
-  protected aliases: string = "";
-  protected interfaces: string = "";
+  protected source = '';
+  protected namespace = '';
+  protected description = '';
+  protected types = '';
+  protected enums = '';
+  protected unions = '';
+  protected aliases = '';
+  protected interfaces = '';
 
   visitContextBefore(context: Context): void {
     this.source += `<h1>${context.config.title}</h1>`;
@@ -33,7 +31,7 @@ export class HtmlVisitor extends BaseVisitor {
 
   visitContextAfter(context: Context): void {
     this.write(
-      indexTemplate({
+      template(templates.index, {
         title: context.config.title,
         namespace: this.namespace,
         description: this.description,
@@ -42,19 +40,19 @@ export class HtmlVisitor extends BaseVisitor {
         enums: this.enums,
         aliases: this.aliases,
         unions: this.unions,
-        styles: context.config.styles || stylesSource,
+        styles: context.config.styles || templates.styles,
       })
     );
   }
 
   visitNamespace(context: Context): void {
     this.namespace = context.namespace.name;
-    this.description = context.namespace.description || "";
+    this.description = context.namespace.description || '';
   }
 
   visitInterface(context: Context): void {
     const node = context.interface;
-    this.interfaces += interfaceTemplate({
+    this.interfaces += template(templates.interface, {
       name: node.name,
       description: node.description,
       operations: node.operations,
@@ -64,7 +62,7 @@ export class HtmlVisitor extends BaseVisitor {
 
   visitType(context: Context): void {
     const typ = context.type;
-    this.types += typeTemplate({
+    this.types += template(templates.type, {
       name: typ.name,
       description: typ.description,
       fields: typ.fields,
@@ -72,33 +70,33 @@ export class HtmlVisitor extends BaseVisitor {
     });
   }
 
-  // visitEnum(context: Context): void {
-  //   const typ = context.type;
-  //   this.types += enumTemplate({
-  //     name: typ.name,
-  //     description: typ.description,
-  //     fields: typ.fields,
-  //     expandType,
-  //   });
-  // }
+  visitEnum(context: Context): void {
+    const e = context.enum;
+    this.enums += template(templates.enum, {
+      name: e.name,
+      description: e.description,
+      values: e.values,
+      expandType,
+    });
+  }
 
-  // visitAlias(context: Context): void {
-  //   const typ = context.type;
-  //   this.types += aliasTemplate({
-  //     name: typ.name,
-  //     description: typ.description,
-  //     fields: typ.fields,
-  //     expandType,
-  //   });
-  // }
+  visitAlias(context: Context): void {
+    const a = context.alias;
+    this.aliases += template(templates.alias, {
+      name: a.name,
+      description: a.description,
+      type: a.type,
+      expandType,
+    });
+  }
 
-  // visitUnion(context: Context): void {
-  //   const typ = context.type;
-  //   this.types += unionTemplate({
-  //     name: typ.name,
-  //     description: typ.description,
-  //     fields: typ.fields,
-  //     expandType,
-  //   });
-  // }
+  visitUnion(context: Context): void {
+    const u = context.union;
+    this.unions += template(templates.union, {
+      name: u.name,
+      description: u.description,
+      types: u.types,
+      expandType,
+    });
+  }
 }

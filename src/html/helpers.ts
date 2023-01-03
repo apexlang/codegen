@@ -5,7 +5,7 @@ import {
   List,
   Map,
   Named,
-} from "@apexlang/core/model";
+} from '../deps/core/model.ts';
 
 export const expandType = (type: AnyType): string => {
   switch (type.kind) {
@@ -27,7 +27,7 @@ export const expandType = (type: AnyType): string => {
       const nestedType = (type as Optional).type;
       return expandType(nestedType);
     case Kind.Void:
-      return "void";
+      return 'void';
     default:
       throw new Error(`Could not expand type ${type.kind}`);
   }
