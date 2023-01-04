@@ -1,5 +1,5 @@
-spec: ./apex.apexlang
+spec: ./apex.axdl
 generates:
   generated.txt:
-    module: ../src
+    module: ../src/mod.ts
     config:
