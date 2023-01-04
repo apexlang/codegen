@@ -1,0 +1,7 @@
+spec: ../spec.apexlang
+generates:
+  docs.md:
+    module: ../../../src/markdown/mod.ts
+    visitorClass: MarkdownVisitor
+    config:
+      title: My Apex API
