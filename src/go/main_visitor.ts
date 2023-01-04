@@ -54,7 +54,7 @@ export class MainVisitor extends BaseVisitor {
     grpc.environmentKey = grpc.environmentKey || "GRPC_ADDRESS";
 
     config.package = config.package || "mypackage";
-    config.module = config.module || "githib.com/myorg/mymodule";
+    config.module = config.module || "github.com/myorg/mymodule";
     config.imports = config.imports || [];
 
     // Default import
