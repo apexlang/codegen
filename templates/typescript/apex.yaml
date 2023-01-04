@@ -8,9 +8,9 @@ config:
       default: uuidv4()
 generates:
   src/interfaces.ts:
-    module: '@apexlang/codegen/typescript'
+    module: 'https://deno.land/x/apex_codegen@v0.1.2/typescript/mod.ts'
     visitorClass: InterfacesVisitor
   src/service.ts:
     ifNotExists: true
-    module: '@apexlang/codegen/typescript'
+    module: 'https://deno.land/x/apex_codegen@v0.1.2/typescript/mod.ts'
     visitorClass: ScaffoldVisitor
