@@ -7,10 +7,10 @@ config:
     interface: "logr.Logger"
 generates:
   openapi.yaml:
-    module: '@apexlang/codegen/openapiv3'
+    module: 'https://deno.land/x/apex_codegen@v0.1.2/openapiv3/mod.ts'
     visitorClass: OpenAPIV3Visitor
   proto/service.proto:
-    module: '@apexlang/codegen/proto'
+    module: 'https://deno.land/x/apex_codegen@v0.1.2/proto/mod.ts'
     visitorClass: ProtoVisitor
     config:
       options:
@@ -24,31 +24,31 @@ generates:
           --go-grpc_opt=paths=source_relative
           proto/service.proto
   pkg/{{.package}}/interfaces.go:
-    module: '@apexlang/codegen/go'
+    module: 'https://deno.land/x/apex_codegen@v0.1.2/go/mod.ts'
     visitorClass: InterfacesVisitor
   pkg/{{.package}}/fiber.go:
-    module: '@apexlang/codegen/go'
+    module: 'https://deno.land/x/apex_codegen@v0.1.2/go/mod.ts'
     visitorClass: FiberVisitor
   pkg/{{.package}}/grpc.go:
-    module: '@apexlang/codegen/go'
+    module: 'https://deno.land/x/apex_codegen@v0.1.2/go/mod.ts'
     visitorClass: GRPCVisitor
     config:
       protoPackage: {{.module}}/proto
   pkg/{{.package}}/services.go:
     ifNotExists: true
-    module: '@apexlang/codegen/go'
+    module: 'https://deno.land/x/apex_codegen@v0.1.2/go/mod.ts'
     visitorClass: ScaffoldVisitor
     config:
       types:
         - service
   pkg/{{.package}}/providers.go:
     ifNotExists: true
-    module: '@apexlang/codegen/go'
+    module: 'https://deno.land/x/apex_codegen@v0.1.2/go/mod.ts'
     visitorClass: ScaffoldVisitor
     config:
       types:
         - provider
   cmd/main.go:
     ifNotExists: false  # Change to true to control dependency injection
-    module: '@apexlang/codegen/go'
+    module: 'https://deno.land/x/apex_codegen@v0.1.2/go/mod.ts'
     visitorClass: MainVisitor

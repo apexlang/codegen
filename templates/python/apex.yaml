@@ -1,9 +1,9 @@
 spec: spec.apexlang
 generates:
   interfaces.py:
-    module: '@apexlang/codegen/python'
+    module: 'https://deno.land/x/apex_codegen@v0.1.2/python/mod.ts'
     visitorClass: InterfacesVisitor
   service.py:
     ifNotExists: true
-    module: '@apexlang/codegen/python'
+    module: 'https://deno.land/x/apex_codegen@v0.1.2/python/mod.ts'
     visitorClass: ScaffoldVisitor
