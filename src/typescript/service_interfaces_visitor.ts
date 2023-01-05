@@ -16,19 +16,20 @@ limitations under the License.
 
 import { BaseVisitor, Context } from '../deps/core/model.ts';
 import { ClassVisitor } from './class_visitor.ts';
-import { InterfaceVisitor } from './interface_visitor.ts';
+import { ServiceInterfaceVisitor } from './service_interface_visitor.ts';
 import { AliasVisitor } from './alias_visitor.ts';
 import { ImportsVisitor } from './imports_visitor.ts';
 
-export class InterfacesVisitor extends BaseVisitor {
+export class ServiceInterfacesVisitor extends BaseVisitor {
   visitNamespaceBefore(context: Context): void {
+    this.write(`import { Expose, Type } from "class-transformer";\n`);
     const e = new ImportsVisitor(this.writer);
     context.namespace.accept(context, e);
     this.write(`\n`);
   }
 
   visitInterfaceBefore(context: Context): void {
-    const iface = new InterfaceVisitor(this.writer);
+    const iface = new ServiceInterfaceVisitor(this.writer);
     context.interface.accept(context, iface);
   }
 

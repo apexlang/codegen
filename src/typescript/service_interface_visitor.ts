@@ -18,7 +18,7 @@ import { BaseVisitor, Context, Writer } from '../deps/core/model.ts';
 import { expandType, mapArg, mapArgs } from './helpers.ts';
 import { camelCase, formatComment } from '../utils/mod.ts';
 
-export class InterfaceVisitor extends BaseVisitor {
+export class ServiceInterfaceVisitor extends BaseVisitor {
   private stateful: boolean;
 
   constructor(writer: Writer, stateful: boolean = false) {
@@ -44,7 +44,7 @@ export class InterfaceVisitor extends BaseVisitor {
     } else {
       opVal += mapArgs(operation.parameters);
     }
-    opVal += `): ${expandType(operation.type, true)}\n`;
+    opVal += `): Promise<${expandType(operation.type, true)}>\n`;
     this.write(opVal);
     super.triggerOperation(context);
   }

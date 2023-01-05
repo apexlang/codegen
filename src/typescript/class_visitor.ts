@@ -14,16 +14,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, Context } from "../deps/core/model.ts";
-import { defValue, expandType } from "./helpers.ts";
-import { formatComment } from "../utils/mod.ts";
+import { BaseVisitor, Context, Field } from '../deps/core/model.ts';
+import { defValue, expandType } from './helpers.ts';
+import { formatComment } from '../utils/mod.ts';
 
 export class ClassVisitor extends BaseVisitor {
+  decorate(field: Field): string {
+    return '';
+  }
   visitTypeBefore(context: Context): void {
     super.triggerTypeBefore(context);
     const t = context.type!;
-    this.write(formatComment("// ", t.description));
-    if (!t.name.endsWith("Args")) {
+    this.write(formatComment('// ', t.description));
+    if (!t.name.endsWith('Args')) {
       this.write(`export `);
     }
     this.write(`class ${t.name} {\n`);
@@ -31,12 +34,12 @@ export class ClassVisitor extends BaseVisitor {
 
   visitTypeField(context: Context): void {
     const field = context.field!;
-    this.write(formatComment("  // ", field.description));
+    this.write(formatComment('  // ', field.description));
     const et = expandType(field.type!, true);
-    if (et.indexOf("Date") != -1) {
-      this.write(`@Type(() => Date) `);
+    if (et.indexOf('Date') != -1) {
+      this.write(`${this.decorate(field)} `);
     }
-    this.write(`  @Expose() ${field.name}: ${et};\n`);
+    this.write(`  ${this.decorate(field)} ${field.name}: ${et};\n`);
     super.triggerTypeField(context);
   }
 
@@ -58,13 +61,13 @@ class ConstructorVisitor extends BaseVisitor {
     this.write(
       t.fields
         .map((field) => `${field.name} = ${defValue(context, field)}`)
-        .join(`,\n`),
+        .join(`,\n`)
     );
     this.write(`}: {`);
     this.write(
       t.fields
         .map((field) => `${field.name}?: ${expandType(field.type!, true)}`)
-        .join(`,\n`),
+        .join(`,\n`)
     );
     this.write(`} = {}) {\n`);
   }
