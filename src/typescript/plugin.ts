@@ -1,7 +1,7 @@
-import { Configuration } from 'https://deno.land/x/apex_cli@v0.0.6/src/config.ts';
-import * as apex from 'https://deno.land/x/apex_core@v0.1.0/mod.ts';
+import { Configuration } from "https://deno.land/x/apex_cli@v0.0.6/src/config.ts";
+import * as apex from "https://deno.land/x/apex_core@v0.1.0/mod.ts";
 
-const importUrl = new URL('.', import.meta.url);
+const importUrl = new URL(".", import.meta.url);
 
 function urlify(relpath: string): string {
   const url = new URL(relpath, importUrl).toString();
@@ -11,7 +11,7 @@ function urlify(relpath: string): string {
 
 export default function (
   doc: apex.ast.Document,
-  config: Configuration
+  config: Configuration,
 ): Configuration {
   config.generates ||= {};
 
@@ -19,20 +19,20 @@ export default function (
   config.config.aliases ||= {};
   (config.config.aliases as any).UUID = {
     type: true,
-    import: 'v4 as uuidv4',
-    from: 'uuid',
-    default: 'uuidv4()',
+    import: "v4 as uuidv4",
+    from: "uuid",
+    default: "uuidv4()",
   };
   config.generates[`./src/api.ts`] = {
     ifNotExists: true,
-    module: 'https://deno.land/x/apex_codegen/typescript/mod.ts',
-    visitorClass: 'ApiVisitor',
+    module: "https://deno.land/x/apex_codegen/typescript/mod.ts",
+    visitorClass: "ApiVisitor",
     config: {},
   };
   config.generates[`./src/interfaces.ts`] = {
     ifNotExists: true,
-    module: 'https://deno.land/x/apex_codegen/typescript/mod.ts',
-    visitorClass: 'InterfacesVisitor',
+    module: "https://deno.land/x/apex_codegen/typescript/mod.ts",
+    visitorClass: "InterfacesVisitor",
     config: {},
   };
 
