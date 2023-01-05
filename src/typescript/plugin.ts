@@ -23,6 +23,14 @@ export default function (
     from: 'uuid',
     default: 'uuidv4()',
   };
+  config.generates[`./src/api.ts`] = {
+    ifNotExists: true,
+    module:
+      '/Users/jsoverson/development/src/apex-codegen/src/typescript/mod.ts',
+    // module: 'https://deno.land/x/apex_codegen/typescript/mod.ts',
+    visitorClass: 'ApiVisitor',
+    config: {},
+  };
   config.generates[`./src/interfaces.ts`] = {
     ifNotExists: true,
     module:
