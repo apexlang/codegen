@@ -14,11 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, Context } from '../deps/core/model.ts';
-import { ClassVisitor } from './class_visitor.ts';
-import { InterfaceVisitor } from './interface_visitor.ts';
-import { AliasVisitor } from './alias_visitor.ts';
-import { ImportsVisitor } from './imports_visitor.ts';
+import { BaseVisitor, Context } from "../deps/core/model.ts";
+import { ClassVisitor } from "./class_visitor.ts";
+import { InterfaceVisitor } from "./interface_visitor.ts";
+import { AliasVisitor } from "./alias_visitor.ts";
+import { ImportsVisitor } from "./imports_visitor.ts";
 
 export class InterfacesVisitor extends BaseVisitor {
   visitNamespaceBefore(context: Context): void {

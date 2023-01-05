@@ -25,7 +25,7 @@ import {
   Optional,
   Type,
   Writer,
-} from '../deps/core/model.ts';
+} from "../deps/core/model.ts";
 import {
   camelCase,
   isHandler,
@@ -33,8 +33,8 @@ import {
   isVoid,
   noCode,
   pascalCase,
-} from '../utils/mod.ts';
-import { defaultValueForType, expandType, mapArg, mapArgs } from './helpers.ts';
+} from "../utils/mod.ts";
+import { defaultValueForType, expandType, mapArg, mapArgs } from "./helpers.ts";
 
 export class ApiVisitor extends BaseVisitor {
   visitNamespaceBefore(context: Context): void {
@@ -71,7 +71,7 @@ class ImplVisitor extends BaseVisitor {
       return;
     }
     this.write(`\n`);
-    let opVal = '';
+    let opVal = "";
     opVal += `${camelCase(operation.name)}(`;
     if (operation.isUnary()) {
       opVal += mapArg(operation.unaryOp());

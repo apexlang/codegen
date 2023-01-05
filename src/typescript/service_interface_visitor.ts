@@ -14,9 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, Context, Writer } from '../deps/core/model.ts';
-import { expandType, mapArg, mapArgs } from './helpers.ts';
-import { camelCase, formatComment } from '../utils/mod.ts';
+import { BaseVisitor, Context, Writer } from "../deps/core/model.ts";
+import { expandType, mapArg, mapArgs } from "./helpers.ts";
+import { camelCase, formatComment } from "../utils/mod.ts";
 
 export class ServiceInterfaceVisitor extends BaseVisitor {
   private stateful: boolean;
@@ -29,15 +29,15 @@ export class ServiceInterfaceVisitor extends BaseVisitor {
   visitInterfaceBefore(context: Context): void {
     super.triggerInterfaceBefore(context);
     const { interface: iface } = context;
-    this.write(formatComment('// ', iface.description));
+    this.write(formatComment("// ", iface.description));
     this.write(`export interface ${iface.name} {
       \n`);
   }
 
   visitOperation(context: Context): void {
     const operation = context.operation!;
-    let opVal = '';
-    this.write(formatComment('  // ', operation.description));
+    let opVal = "";
+    this.write(formatComment("  // ", operation.description));
     opVal += `${camelCase(operation.name)}(`;
     if (operation.isUnary()) {
       opVal += mapArg(operation.unaryOp());
