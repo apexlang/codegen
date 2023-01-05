@@ -25,17 +25,13 @@ export default function (
   };
   config.generates[`./src/api.ts`] = {
     ifNotExists: true,
-    module:
-      '/Users/jsoverson/development/src/apex-codegen/src/typescript/mod.ts',
-    // module: 'https://deno.land/x/apex_codegen/typescript/mod.ts',
+    module: 'https://deno.land/x/apex_codegen/typescript/mod.ts',
     visitorClass: 'ApiVisitor',
     config: {},
   };
   config.generates[`./src/interfaces.ts`] = {
     ifNotExists: true,
-    module:
-      '/Users/jsoverson/development/src/apex-codegen/src/typescript/mod.ts',
-    // module: 'https://deno.land/x/apex_codegen/typescript/mod.ts',
+    module: 'https://deno.land/x/apex_codegen/typescript/mod.ts',
     visitorClass: 'InterfacesVisitor',
     config: {},
   };
