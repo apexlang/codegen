@@ -1,126 +1,121 @@
-import { Expose, Type } from "class-transformer";
-
 export type UUID = string;
 
 export interface MyService {
-  emptyVoid(): Promise<unknown>;
-  unaryType(value: MyType): Promise<MyType>;
-  unaryEnum(value: MyEnum): Promise<MyEnum>;
-  unaryAlias(value: UUID): Promise<UUID>;
-  unaryString(value: string): Promise<string>;
-  unaryI64(value: number): Promise<number>;
-  unaryI32(value: number): Promise<number>;
-  unaryI16(value: number): Promise<number>;
-  unaryI8(value: number): Promise<number>;
-  unaryU64(value: number): Promise<number>;
-  unaryU32(value: number): Promise<number>;
-  unaryU16(value: number): Promise<number>;
-  unaryU8(value: number): Promise<number>;
-  unaryF64(value: number): Promise<number>;
-  unaryF32(value: number): Promise<number>;
-  unaryBytes(value: ArrayBuffer): Promise<ArrayBuffer>;
-  funcType(value: MyType, optional: MyType | undefined): Promise<MyType>;
-  funcEnum(value: MyEnum, optional: MyEnum | undefined): Promise<MyEnum>;
-  funcAlias(value: UUID, optional: UUID | undefined): Promise<UUID>;
-  funcString(value: string, optional: string | undefined): Promise<string>;
-  funcI64(value: number, optional: number | undefined): Promise<number>;
-  funcI32(value: number, optional: number | undefined): Promise<number>;
-  funcI16(value: number, optional: number | undefined): Promise<number>;
-  funcI8(value: number, optional: number | undefined): Promise<number>;
-  funcU64(value: number, optional: number | undefined): Promise<number>;
-  funcU32(value: number, optional: number | undefined): Promise<number>;
-  funcU16(value: number, optional: number | undefined): Promise<number>;
-  funcU8(value: number, optional: number | undefined): Promise<number>;
-  funcF64(value: number, optional: number | undefined): Promise<number>;
-  funcF32(value: number, optional: number | undefined): Promise<number>;
-  funcBytes(
-    value: ArrayBuffer,
-    optional: ArrayBuffer | undefined
-  ): Promise<ArrayBuffer>;
+  emptyVoid(): unknown;
+  unaryType(value: MyType): MyType;
+  unaryEnum(value: MyEnum): MyEnum;
+  unaryAlias(value: UUID): UUID;
+  unaryString(value: string): string;
+  unaryI64(value: number): number;
+  unaryI32(value: number): number;
+  unaryI16(value: number): number;
+  unaryI8(value: number): number;
+  unaryU64(value: number): number;
+  unaryU32(value: number): number;
+  unaryU16(value: number): number;
+  unaryU8(value: number): number;
+  unaryF64(value: number): number;
+  unaryF32(value: number): number;
+  unaryBytes(value: ArrayBuffer): ArrayBuffer;
+  funcType(value: MyType, optional: MyType | undefined): MyType;
+  funcEnum(value: MyEnum, optional: MyEnum | undefined): MyEnum;
+  funcAlias(value: UUID, optional: UUID | undefined): UUID;
+  funcString(value: string, optional: string | undefined): string;
+  funcI64(value: number, optional: number | undefined): number;
+  funcI32(value: number, optional: number | undefined): number;
+  funcI16(value: number, optional: number | undefined): number;
+  funcI8(value: number, optional: number | undefined): number;
+  funcU64(value: number, optional: number | undefined): number;
+  funcU32(value: number, optional: number | undefined): number;
+  funcU16(value: number, optional: number | undefined): number;
+  funcU8(value: number, optional: number | undefined): number;
+  funcF64(value: number, optional: number | undefined): number;
+  funcF32(value: number, optional: number | undefined): number;
+  funcBytes(value: ArrayBuffer, optional: ArrayBuffer | undefined): ArrayBuffer;
 }
 
 export interface Repository {
-  getData(): Promise<MyType>;
+  getData(): MyType;
 }
 
 // MyType is a class
 export class MyType {
   // same type value
-  @Expose() sameValue: MyType | undefined;
+  sameValue: MyType | undefined;
   // type value
-  @Expose() typeValue: MyOtherType;
+  typeValue: MyOtherType;
   // string value
-  @Expose() stringValue: string;
+  stringValue: string;
   // string option
-  @Expose() stringOption: string | undefined;
+  stringOption: string | undefined;
   // i64 value
-  @Expose() i64Value: number;
+  i64Value: number;
   // i64 option
-  @Expose() i64Option: number | undefined;
+  i64Option: number | undefined;
   // i32 value
-  @Expose() i32Value: number;
+  i32Value: number;
   // i32 option
-  @Expose() i32Option: number | undefined;
+  i32Option: number | undefined;
   // i16 value
-  @Expose() i16Value: number;
+  i16Value: number;
   // i16 option
-  @Expose() i16Option: number | undefined;
+  i16Option: number | undefined;
   // i8 value
-  @Expose() i8Value: number;
+  i8Value: number;
   // i8 option
-  @Expose() i8Option: number | undefined;
+  i8Option: number | undefined;
   // u64 value
-  @Expose() u64Value: number;
+  u64Value: number;
   // u64 option
-  @Expose() u64Option: number | undefined;
+  u64Option: number | undefined;
   // u32 value
-  @Expose() u32Value: number;
+  u32Value: number;
   // u32 option
-  @Expose() u32Option: number | undefined;
+  u32Option: number | undefined;
   // u16 value
-  @Expose() u16Value: number;
+  u16Value: number;
   // u16 option
-  @Expose() u16Option: number | undefined;
+  u16Option: number | undefined;
   // u8 value
-  @Expose() u8Value: number;
+  u8Value: number;
   // u8 option
-  @Expose() u8Option: number | undefined;
+  u8Option: number | undefined;
   // f64 value
-  @Expose() f64Value: number;
+  f64Value: number;
   // f64 option
-  @Expose() f64Option: number | undefined;
+  f64Option: number | undefined;
   // f32 value
-  @Expose() f32Value: number;
+  f32Value: number;
   // f32 option
-  @Expose() f32Option: number | undefined;
+  f32Option: number | undefined;
   // datetime value
-  @Type(() => Date) @Expose() datetimeValue: Date;
+  datetimeValue: Date;
   // datetime option
-  @Type(() => Date) @Expose() datetimeOption: Date | undefined;
+  datetimeOption: Date | undefined;
   // bytes value
-  @Expose() bytesValue: ArrayBuffer;
+  bytesValue: ArrayBuffer;
   // bytes option
-  @Expose() bytesOption: ArrayBuffer | undefined;
+  bytesOption: ArrayBuffer | undefined;
   // map value
-  @Expose() mapValue: Map<string, number>;
+  mapValue: Map<string, number>;
   // map of types
-  @Expose() mapOfTypes: Map<string, MyType>;
+  mapOfTypes: Map<string, MyType>;
   // array value
-  @Expose() arrayValue: Array<string>;
+  arrayValue: Array<string>;
   // array of types
-  @Expose() arrayOfTypes: Array<MyType>;
+  arrayOfTypes: Array<MyType>;
   // union value
-  @Expose() unionValue: MyUnion;
+  unionValue: MyUnion;
   // union option
-  @Expose() unionOption: MyUnion | undefined;
+  unionOption: MyUnion | undefined;
   // enum value
-  @Expose() enumValue: MyEnum;
+  enumValue: MyEnum;
   // enum option
-  @Expose() enumOption: MyEnum | undefined;
+  enumOption: MyEnum | undefined;
   // enum value
-  @Expose() aliasValue: UUID;
+  aliasValue: UUID;
   // enum option
-  @Expose() aliasOption: UUID | undefined;
+  aliasOption: UUID | undefined;
 
   constructor({
     sameValue = null,
@@ -243,8 +238,8 @@ export class MyType {
 }
 
 export class MyOtherType {
-  @Expose() foo: string;
-  @Expose() bar: string;
+  foo: string;
+  bar: string;
 
   constructor({ foo = "", bar = "" }: { foo?: string; bar?: string } = {}) {
     this.foo = foo;
