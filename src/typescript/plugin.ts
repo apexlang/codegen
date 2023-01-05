@@ -25,7 +25,9 @@ export default function (
   };
   config.generates[`./src/interfaces.ts`] = {
     ifNotExists: true,
-    module: 'https://deno.land/x/apex_codegen/typescript/mod.ts',
+    module:
+      '/Users/jsoverson/development/src/apex-codegen/src/typescript/mod.ts',
+    // module: 'https://deno.land/x/apex_codegen/typescript/mod.ts',
     visitorClass: 'InterfacesVisitor',
     config: {},
   };
