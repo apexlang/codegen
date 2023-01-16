@@ -148,9 +148,9 @@ export class ImportsVisitor extends BaseVisitor {
             type: "JSON",
             import: "encoding/json",
           });
-          this.addType("FMT", {
-            type: "FMT",
-            import: "fmt",
+          this.addType("ERRORS", {
+            type: "ERRORS",
+            import: "errors",
           });
         }
         break;

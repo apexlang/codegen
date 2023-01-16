@@ -70,7 +70,7 @@ export class EnumVisitor extends BaseVisitor {
       var ok bool
       *e, ok = toID${context.enum.name}[str]
       if !ok {
-        return fmt.Errorf("unknown value %q for ${context.enum.name}", str)
+        return errors.New("unknown value \\"" + str + "\\" for ${context.enum.name}")
       }
       return nil
     }\n\n`);
