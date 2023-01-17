@@ -16,6 +16,7 @@ limitations under the License.
 
 import { BaseVisitor, Context } from "../deps/core/model.ts";
 import { ClassVisitor } from "./class_visitor.ts";
+import { EnumVisitor } from "./enum_visitor.ts";
 import { InterfaceVisitor } from "./interface_visitor.ts";
 import { AliasVisitor } from "./alias_visitor.ts";
 import { ImportsVisitor } from "./imports_visitor.ts";
@@ -37,12 +38,10 @@ export class InterfacesVisitor extends BaseVisitor {
     context.alias!.accept(context, e);
   }
 
-  // visitEnum(context: Context): void {
-  //   const e = new EnumVisitor(this.writer);
-  //   context.enum!.accept(context, e);
-  //   const s = new EnumVisitorToString(this.writer);
-  //   context.enum!.accept(context, s);
-  // }
+  visitEnum(context: Context): void {
+    const e = new EnumVisitor(this.writer);
+    context.enum!.accept(context, e);
+  }
 
   visitType(context: Context): void {
     const clazz = new ClassVisitor(this.writer);

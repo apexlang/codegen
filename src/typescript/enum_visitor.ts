@@ -28,9 +28,7 @@ export class EnumVisitor extends BaseVisitor {
     const { enumValue } = context;
     this.write(formatComment("// ", enumValue.description));
     this.write(
-      `\t${context.enum.name}${
-        pascalCase(enumValue.name)
-      } ${context.enum.name} = ${enumValue.index}\n`,
+      `\t${pascalCase(enumValue.name)} = ${enumValue.index},\n`,
     );
     super.triggerTypeField(context);
   }
