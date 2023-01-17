@@ -5,7 +5,7 @@ package outputtest
 import (
 	"context"
 	"encoding/json"
-	"fmt"
+	"errors"
 	"time"
 
 	"github.com/google/uuid"
@@ -196,7 +196,7 @@ func (e *MyEnum) FromString(str string) error {
 	var ok bool
 	*e, ok = toIDMyEnum[str]
 	if !ok {
-		return fmt.Errorf("unknown value %q for MyEnum", str)
+		return errors.New("unknown value \"" + str + "\" for MyEnum")
 	}
 	return nil
 }

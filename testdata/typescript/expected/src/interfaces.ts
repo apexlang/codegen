@@ -246,3 +246,13 @@ export class MyOtherType {
     this.bar = bar;
   }
 }
+
+// MyEnum is an emuneration
+export enum MyEnum {
+  // ONE value
+  One = 0,
+  // TWO value
+  Two = 1,
+  // THREE value
+  Three = 2
+}
