@@ -14,12 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, Context } from "../deps/core/model.ts";
+import { Context } from "../deps/core/model.ts";
 import { expandType, mapParam, methodName, returnPointer } from "./helpers.ts";
 import { translateAlias } from "./alias_visitor.ts";
 import { formatComment, isVoid, noCode } from "../utils/mod.ts";
+import { getImporter, GoVisitor } from "./go_visitor.ts";
+import { IMPORTS } from "./constant.ts";
 
-export class InterfaceVisitor extends BaseVisitor {
+export class InterfaceVisitor extends GoVisitor {
   visitInterfaceBefore(context: Context): void {
     const { interface: iface } = context;
     this.write(formatComment("// ", iface.description));
@@ -31,11 +33,13 @@ export class InterfaceVisitor extends BaseVisitor {
     if (noCode(operation)) {
       return;
     }
+
+    const $ = getImporter(context, IMPORTS);
     this.write(formatComment("// ", operation.description));
     this.write(
       `type ${
         methodName(operation, operation.name)
-      }Fn func(ctx context.Context`,
+      }Fn func(ctx ${$.context}.Context`,
     );
     operation.parameters.forEach((p) =>
       this.visitParam(context.clone({ parameter: p }))
@@ -50,8 +54,10 @@ export class InterfaceVisitor extends BaseVisitor {
     if (noCode(operation)) {
       return;
     }
+
+    const $ = getImporter(context, IMPORTS);
     this.write(formatComment("// ", operation.description));
-    this.write(`${methodName(operation, operation.name)}(ctx context.Context`);
+    this.write(`${methodName(operation, operation.name)}(ctx ${$.context}.Context`);
     operation.parameters.forEach((p) =>
       this.visitParam(context.clone({ parameter: p }))
     );

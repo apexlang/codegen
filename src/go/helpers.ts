@@ -36,6 +36,7 @@ import {
 import { capitalize, renamed } from "../utils/mod.ts";
 import { Import } from "./alias_visitor.ts";
 import { translations } from "./constant.ts";
+import { getImports } from "./go_visitor.ts";
 
 /**
  * Takes an array of ValuedDefintions and returns a string based on supplied params.
@@ -320,6 +321,8 @@ export function fieldName(annotated: Annotated, name: string): string {
   let str = capitalize(name);
   if (str.endsWith("Id")) {
     str = str.substring(0, str.length - 2) + "ID";
+  } else if (str.endsWith("Ids")) {
+    str = str.substring(0, str.length - 3) + "IDs";
   } else if (str.endsWith("Url")) {
     str = str.substring(0, str.length - 3) + "URL";
   } else if (str.endsWith("Uri")) {
@@ -340,6 +343,8 @@ export function parameterName(annotated: Annotated, name: string): string {
   let str = name;
   if (str.endsWith("Id")) {
     str = str.substring(0, str.length - 2) + "ID";
+  } else if (str.endsWith("Ids")) {
+    str = str.substring(0, str.length - 3) + "IDs";
   } else if (str.endsWith("Url")) {
     str = str.substring(0, str.length - 3) + "URL";
   } else if (str.endsWith("Uri")) {
@@ -375,6 +380,8 @@ export function mapParams(
   packageName?: string,
   translate?: (named: string) => string | undefined,
 ): string {
+  const imports = getImports(context);
+  imports.stdlib("context");
   return (
     `ctx context.Context` +
     (args.length > 0 ? ", " : "") +
@@ -387,11 +394,13 @@ export function mapParams(
 }
 
 export function mapParam(
-  _context: Context,
+  context: Context,
   arg: Parameter,
   packageName?: string,
   translate?: (named: string) => string | undefined,
 ): string {
+  const imports = getImports(context);
+  imports.type(arg.type);
   return `${parameterName(arg, arg.name)} ${
     returnPointer(
       arg.type,

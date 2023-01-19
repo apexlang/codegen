@@ -14,9 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, Context } from "../deps/core/model.ts";
+import { Context } from "../deps/core/model.ts";
 import { expandType } from "./helpers.ts";
 import { formatComment } from "../utils/mod.ts";
+import { GoVisitor } from "./go_visitor.ts";
 
 export interface Import {
   type: string;
@@ -43,7 +44,7 @@ export function translateAlias({
   };
 }
 
-export class AliasVisitor extends BaseVisitor {
+export class AliasVisitor extends GoVisitor {
   visitAlias(context: Context): void {
     const { config, alias } = context;
     const aliases = config.aliases as { [key: string]: Import };

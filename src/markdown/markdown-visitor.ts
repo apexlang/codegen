@@ -1,5 +1,5 @@
-import { BaseVisitor, Context } from '../deps/core/model.ts';
-import { expandType } from './helpers.ts';
+import { BaseVisitor, Context } from "../deps/core/model.ts";
+import { expandType } from "./helpers.ts";
 
 export class MarkdownVisitor extends BaseVisitor {
   writeDescription(description?: string) {
@@ -9,7 +9,7 @@ export class MarkdownVisitor extends BaseVisitor {
   }
 
   writeLn(line: string) {
-    this.write(line + '\n');
+    this.write(line + "\n");
   }
 
   writeHeader(header: string) {
@@ -21,7 +21,7 @@ export class MarkdownVisitor extends BaseVisitor {
   }
 
   inlineDescription(desc?: string): string {
-    return desc ? `: ${desc}` : '';
+    return desc ? `: ${desc}` : "";
   }
 
   visitNamespace(context: Context): void {
@@ -35,7 +35,7 @@ export class MarkdownVisitor extends BaseVisitor {
   }
 
   public visitInterfacesBefore(_: Context): void {
-    this.writeHeader('Interfaces');
+    this.writeHeader("Interfaces");
   }
 
   visitInterface(context: Context): void {
@@ -45,17 +45,19 @@ export class MarkdownVisitor extends BaseVisitor {
     for (const operation of node.operations) {
       const params = operation.parameters
         .map((p) => `${p.name}: ${expandType(p.type)}`)
-        .join(', ');
+        .join(", ");
       this.writeLn(
-        `- **\`${operation.name}(${params}) -> ${expandType(
-          operation.type
-        )}\`**${this.inlineDescription(operation.description)}`
+        `- **\`${operation.name}(${params}) -> ${
+          expandType(
+            operation.type,
+          )
+        }\`**${this.inlineDescription(operation.description)}`,
       );
     }
   }
 
   public visitTypesBefore(_: Context): void {
-    this.writeHeader('Types');
+    this.writeHeader("Types");
   }
 
   visitType(context: Context): void {
@@ -64,15 +66,17 @@ export class MarkdownVisitor extends BaseVisitor {
     this.writeDescription(typ.description);
     for (const field of typ.fields) {
       this.writeLn(
-        `- **\`${field.name}: ${expandType(
-          field.type
-        )}\`** ${this.inlineDescription(field.description)}`
+        `- **\`${field.name}: ${
+          expandType(
+            field.type,
+          )
+        }\`** ${this.inlineDescription(field.description)}`,
       );
     }
   }
 
   public visitEnumsBefore(_: Context): void {
-    this.writeHeader('Enums');
+    this.writeHeader("Enums");
   }
 
   visitEnum(context: Context): void {
@@ -81,12 +85,12 @@ export class MarkdownVisitor extends BaseVisitor {
 
     this.writeDescription(e.description);
     for (const value of e.values) {
-      this.writeLn(`- ${value.name}${value.description || ''}`);
+      this.writeLn(`- ${value.name}${value.description || ""}`);
     }
   }
 
   public visitAliasesBefore(_: Context): void {
-    this.writeHeader('Aliases');
+    this.writeHeader("Aliases");
   }
 
   visitAlias(context: Context): void {
@@ -97,12 +101,12 @@ export class MarkdownVisitor extends BaseVisitor {
   }
 
   public visitUnionsBefore(_: Context): void {
-    this.writeHeader('Unions');
+    this.writeHeader("Unions");
   }
 
   visitUnion(context: Context): void {
     const u = context.union;
     this.writeDefinitionName(u.name);
-    this.writeLn(`\`${u.name} = ${u.types.map(expandType).join(' | ')}\``);
+    this.writeLn(`\`${u.name} = ${u.types.map(expandType).join(" | ")}\``);
   }
 }

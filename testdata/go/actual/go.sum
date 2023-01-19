@@ -45,8 +45,8 @@ github.com/valyala/fasthttp v1.40.0 h1:CRq/00MfruPGFLTQKY8b+8SfdK60TxNztjRMnH0t1
 github.com/valyala/fasthttp v1.40.0/go.mod h1:t/G+3rLek+CyY9bnIE+YlMRddxVAAGjhxndDB4i4C0I=
 github.com/valyala/tcplisten v1.0.0 h1:rBHj/Xf+E1tRGZyWIWwJDiRY0zc1Js+CV5DqwacVSA8=
 github.com/valyala/tcplisten v1.0.0/go.mod h1:T0xQ8SeCZGxckz9qRXTfG43PvQ/mcWh7FwZEA7Ioqkc=
-github.com/wapc/tinygo-msgpack v0.1.4 h1:oiwtclAGh/A+x024gCFXxey/iNtRmGaE+nvtyAw2vvo=
-github.com/wapc/tinygo-msgpack v0.1.4/go.mod h1:2P4rQimy/6oQAkytwC2LdtVjLJ2D1dYkQHejfCtZXZQ=
+github.com/wapc/tinygo-msgpack v0.1.5 h1:qdIKaWyjwwzElfbPBroV2nkyS5ahzuvIr6fVJJ7U0wc=
+github.com/wapc/tinygo-msgpack v0.1.5/go.mod h1:2P4rQimy/6oQAkytwC2LdtVjLJ2D1dYkQHejfCtZXZQ=
 go.uber.org/atomic v1.7.0/go.mod h1:fEN4uk6kAWBTFdckzkM89CLk9XfWZrxpCo0nPH17wJc=
 go.uber.org/atomic v1.10.0 h1:9qC72Qh0+3MqyJbAn8YU5xVq1frD8bn3JtD2oXtafVQ=
 go.uber.org/atomic v1.10.0/go.mod h1:LUxbIzbOniOlMKjJjyPfpl4v+PKK2cNJn91OQbhoJI0=

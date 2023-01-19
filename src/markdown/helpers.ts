@@ -1,11 +1,11 @@
 import {
   AnyType,
-  Optional,
   Kind,
   List,
   Map,
   Named,
-} from '../deps/core/model.ts';
+  Optional,
+} from "../deps/core/model.ts";
 
 export const expandType = (type: AnyType): string => {
   switch (type.kind) {
@@ -30,7 +30,7 @@ export const expandType = (type: AnyType): string => {
       return expandType(nestedType);
     }
     case Kind.Void:
-      return 'void';
+      return "void";
     default:
       throw new Error(`Could not expand type ${type.kind}`);
   }

@@ -29,7 +29,8 @@ import {
   PrimitiveName,
 } from "../deps/core/model.ts";
 import { Import, translateAlias } from "./alias_visitor.ts";
-import { translations } from "./constant.ts";
+import { IMPORTS, translations } from "./constant.ts";
+import { getImporter } from "./go_visitor.ts";
 import { expandType, fieldName, returnShare } from "./helpers.ts";
 import {
   msgpackCastFuncs,
@@ -56,6 +57,7 @@ export function msgpackRead(
   t: AnyType,
   prevOptional: boolean,
 ): string {
+  const $ = getImporter(context, IMPORTS);
   const tr = translateAlias(context);
   const returnPrefix = defaultVal == "" ? "" : `${defaultVal}, `;
   let prefix = "return ";
@@ -103,10 +105,10 @@ export function msgpackRead(
       if (imp && imp.parse) {
         if (prevOptional) {
           const decoder = msgpackDecodeNillableFuncs.get(prim.name)!;
-          return `${prefix}convert.NillableParse(${imp.parse})(decoder.${decoder}())\n`;
+          return `${prefix}${$.msgpackconvert}.NillableParse(${imp.parse})(decoder.${decoder}())\n`;
         } else {
           const decoder = msgpackDecodeFuncs.get(prim.name)!;
-          return `${prefix}convert.Parse(${imp.parse})(decoder.${decoder}())\n`;
+          return `${prefix}${$.msgpackconvert}.Parse(${imp.parse})(decoder.${decoder}())\n`;
         }
       }
       if (prevOptional) {
@@ -127,9 +129,9 @@ export function msgpackRead(
     case Kind.Primitive: {
       const namedNode = t as Named;
       const amp = typeInstRef ? "&" : "";
-      let decodeFn = `msgpack.Decode[${namedNode.name}](${amp}decoder)`;
+      let decodeFn = `${$.msgpack}.Decode[${namedNode.name}](${amp}decoder)`;
       if (prevOptional) {
-        decodeFn = `msgpack.DecodeNillable[${namedNode.name}](decoder)`;
+        decodeFn = `${$.msgpack}.DecodeNillable[${namedNode.name}](decoder)`;
       }
       if (prevOptional && msgpackDecodeNillableFuncs.has(namedNode.name)) {
         decodeFn = `decoder.${
@@ -144,10 +146,10 @@ export function msgpackRead(
     }
     case Kind.Enum: {
       const e = t as Enum;
-      let decodeFn = `convert.Numeric[${e.name}](decoder.ReadInt32())`;
+      let decodeFn = `${$.msgpackconvert}.Numeric[${e.name}](decoder.ReadInt32())`;
       if (prevOptional) {
         decodeFn =
-          `convert.NillableNumeric[${e.name}](decoder.ReadNillableInt32())`;
+          `${$.msgpackconvert}.NillableNumeric[${e.name}](decoder.ReadNillableInt32())`;
       }
       return `${prefix}${decodeFn}\n`;
     }

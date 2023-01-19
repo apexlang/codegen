@@ -14,22 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import {
-  BaseVisitor,
-  Context,
-  Kind,
-  Named,
-  Writer,
-} from "../deps/core/model.ts";
+import { Context, Kind, Named, Writer } from "../deps/core/model.ts";
 import { expandType, fieldName } from "./helpers.ts";
 import { translateAlias } from "./alias_visitor.ts";
 import { formatComment } from "../utils/mod.ts";
+import { getImports, GoVisitor } from "./go_visitor.ts";
 
 interface Serialize {
   value: string;
 }
 
-export class StructVisitor extends BaseVisitor {
+export class StructVisitor extends GoVisitor {
   private writeTypeInfo: boolean;
 
   constructor(writer: Writer, writeTypeInfo: boolean = false) {
@@ -49,6 +44,8 @@ export class StructVisitor extends BaseVisitor {
 
   visitTypeField(context: Context): void {
     const { field, type } = context;
+    const importer = getImports(context);
+    importer.type(field.type);
     const packageName = context.config.otherPackage;
 
     const omitempty = field.type.kind === Kind.Optional ? ",omitempty" : "";

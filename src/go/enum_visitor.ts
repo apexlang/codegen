@@ -14,10 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, Context, Writer } from "../deps/core/model.ts";
+import { Context, Writer } from "../deps/core/model.ts";
 import { formatComment, pascalCase } from "../utils/mod.ts";
+import { IMPORTS } from "./constant.ts";
+import { getImporter, GoVisitor } from "./go_visitor.ts";
 
-export class EnumVisitor extends BaseVisitor {
+export class EnumVisitor extends GoVisitor {
   private writeTypeInfo: boolean;
 
   constructor(writer: Writer, writeTypeInfo: boolean = false) {
@@ -45,6 +47,7 @@ export class EnumVisitor extends BaseVisitor {
   }
 
   visitEnumAfter(context: Context): void {
+    const $ = getImporter(context, IMPORTS);
     this.write(`)\n\n`);
 
     const toStringVisitor = new EnumVisitorToStringMap(this.writer);
@@ -70,7 +73,7 @@ export class EnumVisitor extends BaseVisitor {
       var ok bool
       *e, ok = toID${context.enum.name}[str]
       if !ok {
-        return errors.New("unknown value \\"" + str + "\\" for ${context.enum.name}")
+        return ${$.errors}.New("unknown value \\"" + str + "\\" for ${context.enum.name}")
       }
       return nil
     }\n\n`);
@@ -81,7 +84,7 @@ export class EnumVisitor extends BaseVisitor {
     if (jsonSupport) {
       this.write(`// MarshalJSON marshals the enum as a quoted json string
 func (e ${context.enum.name}) MarshalJSON() ([]byte, error) {
-  return json.Marshal(e.String())
+  return ${$.json}.Marshal(e.String())
 }
 
 // UnmarshalJSON unmashals a quoted json string to the enum value
@@ -99,7 +102,7 @@ func (e *${context.enum.name}) UnmarshalJSON(b []byte) error {
   }
 }
 
-export class EnumVisitorToStringMap extends BaseVisitor {
+export class EnumVisitorToStringMap extends GoVisitor {
   visitEnumBefore(context: Context): void {
     super.triggerEnumsBefore(context);
     this.write(
@@ -122,7 +125,7 @@ export class EnumVisitorToStringMap extends BaseVisitor {
   }
 }
 
-export class EnumVisitorToIDMap extends BaseVisitor {
+export class EnumVisitorToIDMap extends GoVisitor {
   visitEnumBefore(context: Context): void {
     super.triggerEnumsBefore(context);
     this.write(
