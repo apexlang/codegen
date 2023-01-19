@@ -14,8 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, Context, Writer } from "../deps/core/model.ts";
+import { Context, Writer } from "../deps/core/model.ts";
 import { camelCase, InterfaceUsesVisitor, UsesVisitor } from "../utils/mod.ts";
+import { IMPORTS } from "./constant.ts";
+import { getImporter, getImports, GoVisitor } from "./go_visitor.ts";
 
 interface Config {
   http: Listener;
@@ -31,13 +33,22 @@ interface Listener {
   environmentKey: string;
 }
 
-export class MainVisitor extends BaseVisitor {
+export class MainVisitor extends GoVisitor {
   // Overridable visitor implementations
   usesVisitor = (writer: Writer): UsesVisitor =>
     new InterfaceUsesVisitor(writer);
 
+  writeHead(context: Context): void {
+    const prev = context.config.package;
+    context.config.package = "main";
+    context.config.doNotEdit = false;
+    super.writeHead(context);
+    context.config.package = prev;
+  }
+
   visitNamespaceBefore(context: Context): void {
     const config = context.config as Config;
+    const $ = getImporter(context, IMPORTS);
     const http = config.http || {};
     const grpc = config.grpc || {};
 
@@ -53,60 +64,28 @@ export class MainVisitor extends BaseVisitor {
     grpc.defaultAddress = grpc.defaultAddress || ":4000";
     grpc.environmentKey = grpc.environmentKey || "GRPC_ADDRESS";
 
+    const importer = getImports(context);
+
     config.package = config.package || "mypackage";
     config.module = config.module || "github.com/myorg/mymodule";
-    config.imports = config.imports || [];
 
-    // Default import
-    if (config.imports.length == 0) {
-      config.imports.push(`${config.module}/pkg/${config.package}`);
-    }
+    // Import of main package
+    importer.firstparty(`${config.module}/pkg/${config.package}`);
 
     const usesVisitor = this.usesVisitor(this.writer);
     context.namespace.accept(context, usesVisitor);
 
-    this.write(`package main
-
-import (
-	"context"
-	"errors"\n`);
-    if (grpc.enabled) {
-      this.write(`\t"net"\n`);
-    }
-    this.write(`\t"os"
-
-	"github.com/go-logr/zapr"\n`);
-    if (http.enabled) {
-      this.write(`\t"github.com/gofiber/fiber/v2"\n`);
-    }
-    this.write(`\t"github.com/oklog/run"
-	"go.uber.org/zap"\n`);
-    if (grpc.enabled) {
-      this.write(`\t"google.golang.org/grpc"\n`);
-    }
-    this.write(`\n`);
-    if (http.enabled) {
-      this.write(`\t"github.com/apexlang/api-go/transport/tfiber"\n`);
-    }
-    if (grpc.enabled) {
-      this.write(`\t"github.com/apexlang/api-go/transport/tgrpc"\n`);
-    }
-    this.write(`\n`);
-
-    config.imports.forEach((module) => this.write(`\t"${module}"\n`));
-
-    this.write(`\n)
-
+    this.write(`
 func main() {
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := ${$.context}.WithCancel(${$.context}.Background())
 	defer cancel()
 
 	// Initialize logger
-	zapLog, err := zap.NewDevelopment()
+	zapLog, err := ${$.zap}.NewDevelopment()
 	if err != nil {
 		panic(err)
 	}
-	log := zapr.NewLogger(zapLog)
+	log := ${$.zapr}.NewLogger(zapLog)
 
   // Connect to data sources
 
@@ -130,20 +109,20 @@ func main() {
       );
     });
 
-    this.write(`\nvar g run.Group\n`);
+    this.write(`\nvar g ${$.run}.Group\n`);
     if (http.enabled) {
       this.write(`// REST/HTTP
     {
       // Fiber app config with custom error handler
-      config := fiber.Config{
+      config := ${$.fiber}.Config{
         DisableStartupMessage: true,
         ErrorHandler: tfiber.ErrorHandler,
       }
-      app := fiber.New(config)\n`);
+      app := ${$.fiber}.New(config)\n`);
 
       usesVisitor.services.forEach((_, service) => {
         this.write(
-          `tfiber.Register(app, ${config.package}.${service}Fiber(${
+          `${$.tfiber}.Register(app, ${config.package}.${service}Fiber(${
             camelCase(
               service,
             )
@@ -166,11 +145,11 @@ func main() {
     if (grpc.enabled) {
       this.write(`// gRPC
 	{
-		server := grpc.NewServer()\n`);
+		server := ${$.grpc}.NewServer()\n`);
 
       usesVisitor.services.forEach((_, service) => {
         this.write(
-          `tgrpc.Register(server, ${config.package}.${service}GRPC(${
+          `${$.tgrpc}.Register(server, ${config.package}.${service}GRPC(${
             camelCase(
               service,
             )
@@ -183,7 +162,7 @@ func main() {
           `listenAddr := getEnv("${grpc.environmentKey}", "${grpc.defaultAddress}")
     log.Info("gRPC server", "address", listenAddr)
 		g.Add(func() error {
-			ln, err := net.Listen("tcp", listenAddr)
+			ln, err := ${$.net}.Listen("tcp", listenAddr)
 			if err != nil {
 				return err
 			}
@@ -196,18 +175,18 @@ func main() {
     }
     this.write(`// Termination signals
 	{
-		g.Add(run.SignalHandler(ctx, os.Interrupt, os.Kill))
+		g.Add(${$.run}.SignalHandler(ctx, os.Interrupt, os.Kill))
 	}
 
-	var se run.SignalError
-	if err := g.Run(); err != nil && !errors.As(err, &se) {
+	var se ${$.run}.SignalError
+	if err := g.Run(); err != nil && !${$.errors}.As(err, &se) {
 		log.Error(err, "goroutine error")
 		os.Exit(1)
 	}
 }
 
 func getEnv(key string, defaultVal string) string {
-	val, ok := os.LookupEnv(key)
+	val, ok := ${$.os}.LookupEnv(key)
 	if !ok {
 		val = defaultVal
 	}

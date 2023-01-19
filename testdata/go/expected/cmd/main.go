@@ -6,14 +6,13 @@ import (
 	"net"
 	"os"
 
+	"github.com/apexlang/api-go/transport/tfiber"
+	"github.com/apexlang/api-go/transport/tgrpc"
 	"github.com/go-logr/zapr"
 	"github.com/gofiber/fiber/v2"
 	"github.com/oklog/run"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
-
-	"github.com/apexlang/api-go/transport/tfiber"
-	"github.com/apexlang/api-go/transport/tgrpc"
 
 	"github.com/apexlang/outputtest/pkg/outputtest"
 )

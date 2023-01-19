@@ -3,15 +3,11 @@
 package outputtest
 
 import (
-	"github.com/gofiber/fiber/v2"
-
-	"github.com/google/uuid"
-
 	"github.com/apexlang/api-go/transport/httpresponse"
 	"github.com/apexlang/api-go/transport/tfiber"
+	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 )
-
-const _ = httpresponse.Package
 
 func MyServiceFiber(service MyService) tfiber.RegisterFn {
 	return func(router fiber.Router) {

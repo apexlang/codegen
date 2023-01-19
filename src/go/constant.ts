@@ -30,3 +30,26 @@ export const translations = new Map<string, string>([
   ["f64", "float64"],
   ["datetime", "time.Time"],
 ]);
+
+export const IMPORTS = {
+  context: "context",
+  errors: "errors",
+  json: "encoding/json",
+  net: "net",
+  os: "os",
+  fiber: "github.com/gofiber/fiber/v2",
+  tfiber: "github.com/apexlang/api-go/transport/tfiber",
+  httpresponse: "github.com/apexlang/api-go/transport/httpresponse",
+  emptypb: "google.golang.org/protobuf/types/known/emptypb",
+  errorz: "github.com/apexlang/api-go/errorz",
+  convert: "github.com/apexlang/api-go/convert",
+  timestamppb: "google.golang.org/protobuf/types/known/timestamppb",
+  wrapperspb: "google.golang.org/protobuf/types/known/wrapperspb",
+  grpc: "google.golang.org/grpc",
+  tgrpc: "github.com/apexlang/api-go/transport/tgrpc",
+  msgpack: "github.com/wapc/tinygo-msgpack",
+  msgpackconvert: ["convert", "github.com/wapc/tinygo-msgpack/convert"],
+  zap: "go.uber.org/zap",
+  zapr: "github.com/go-logr/zapr",
+  run: "github.com/oklog/run",
+};

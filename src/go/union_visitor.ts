@@ -14,18 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Annotated, BaseVisitor, Context } from "../deps/core/model.ts";
+import { Annotated, Context } from "../deps/core/model.ts";
 import { formatComment, typeName } from "../utils/mod.ts";
+import { getImports, GoVisitor } from "./go_visitor.ts";
 import { expandType, fieldName } from "./helpers.ts";
 
 interface UnionKey {
   value: string;
 }
 
-export class UnionVisitor extends BaseVisitor {
+export class UnionVisitor extends GoVisitor {
   visitUnion(context: Context): void {
     const tick = "`";
     const { union } = context;
+    const imports = getImports(context);
     this.write(formatComment("// ", union.description));
     this.write(`type ${union.name} struct {\n`);
     union.types.forEach((t) => {
@@ -36,6 +38,8 @@ export class UnionVisitor extends BaseVisitor {
           tname = a.convert<UnionKey>().value;
         });
       }
+
+      imports.type(t);
       const expandedName = expandType(t);
       this.write(
         `${

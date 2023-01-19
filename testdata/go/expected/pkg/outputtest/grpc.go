@@ -5,22 +5,16 @@ package outputtest
 import (
 	"context"
 
+	"github.com/apexlang/api-go/convert"
+	"github.com/apexlang/api-go/errorz"
+	"github.com/apexlang/api-go/transport/tgrpc"
 	"github.com/google/uuid"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 
-	"github.com/apexlang/api-go/convert"
-	"github.com/apexlang/api-go/errorz"
-	"github.com/apexlang/api-go/transport/tgrpc"
-
 	pb "github.com/apexlang/outputtest/proto"
-)
-
-const (
-	_ = convert.Package
-	_ = errorz.Package
 )
 
 func MyServiceGRPC(s MyService) tgrpc.RegisterFn {

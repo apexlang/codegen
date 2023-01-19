@@ -14,19 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import {
-  Alias,
-  AnyType,
-  BaseVisitor,
-  Context,
-  Kind,
-  List,
-  Map,
-  Optional,
-  Primitive,
-  PrimitiveName,
-  Type,
-} from "../deps/core/model.ts";
+import { Context } from "../deps/core/model.ts";
 import {
   defaultValueForType,
   expandType,
@@ -36,14 +24,9 @@ import {
   returnPointer,
   returnShare,
 } from "./helpers.ts";
-import {
-  camelCase,
-  hasServiceCode,
-  isOneOfType,
-  isVoid,
-  noCode,
-} from "../utils/mod.ts";
-import { Import, translateAlias } from "./alias_visitor.ts";
+import { camelCase, isOneOfType, isVoid, noCode } from "../utils/mod.ts";
+import { translateAlias } from "./alias_visitor.ts";
+import { getImports, GoVisitor } from "./go_visitor.ts";
 
 interface Logger {
   import: string;
@@ -54,9 +37,13 @@ function getLogger(context: Context): Logger | undefined {
   return context.config.logger as Logger;
 }
 
-export class ScaffoldVisitor extends BaseVisitor {
+export class ScaffoldVisitor extends GoVisitor {
+  writeHead(context: Context): void {
+    context.config.doNotEdit = false;
+    super.writeHead(context);
+  }
+
   visitNamespaceBefore(context: Context): void {
-    const packageName = context.config.package || "myapp";
     super.visitNamespaceBefore(context);
     const logger = getLogger(context);
 
@@ -69,20 +56,9 @@ export class ScaffoldVisitor extends BaseVisitor {
         return isOneOfType(c, roleTypes) || roleNames.indexOf(iface.name) != -1;
       }) != undefined;
 
-    this.write(`package ${packageName}\n\n`);
-
     // Only emit import section if there are interfaces to generate.
-    if (hasInterfaces) {
-      this.write(`import (\n`);
-      if (hasServiceCode(context)) {
-        this.write(`\t"context"\n\n`);
-      }
-      const importsVisitor = new ImportsVisitor(this.writer);
-      context.namespace.accept(context, importsVisitor);
-      if (logger) {
-        this.write(`\t"${logger.import}"\n`);
-      }
-      this.write(`)\n\n`);
+    if (hasInterfaces && logger) {
+      getImports(context).thirdparty(logger.import);
     }
 
     const service = new ServiceVisitor(this.writer);
@@ -90,7 +66,7 @@ export class ScaffoldVisitor extends BaseVisitor {
   }
 }
 
-class ServiceVisitor extends BaseVisitor {
+class ServiceVisitor extends GoVisitor {
   visitInterfaceBefore(context: Context): void {
     const roleNames = (context.config.names as string[]) || [];
     const roleTypes = (context.config.types as string[]) || [];
@@ -190,126 +166,6 @@ class ServiceVisitor extends BaseVisitor {
     }
     this.write(` // TODO: Provide implementation.\n`);
     this.write(`}\n`);
-  }
-}
-
-class ImportsVisitor extends BaseVisitor {
-  private imports: { [key: string]: Import } = {};
-  private externalImports: { [key: string]: Import } = {};
-
-  visitNamespaceAfter(_context: Context): void {
-    const stdLib = [];
-    for (const key in this.imports) {
-      const i = this.imports[key];
-      if (i.import) {
-        stdLib.push(i.import);
-      }
-    }
-    stdLib.sort();
-    for (const lib of stdLib) {
-      this.write(`\t"${lib}"\n`);
-    }
-
-    const thirdPartyLib = [];
-    for (const key in this.externalImports) {
-      const i = this.externalImports[key];
-      if (i.import) {
-        thirdPartyLib.push(i.import);
-      }
-    }
-    thirdPartyLib.sort();
-    if (thirdPartyLib.length > 0) {
-      this.write(`\n`);
-    }
-    for (const lib of thirdPartyLib) {
-      this.write(`\t"${lib}"\n`);
-    }
-  }
-
-  addType(name: string, i: Import) {
-    if (i == undefined || i.import == undefined) {
-      return;
-    }
-    if (i.import.indexOf(".") != -1) {
-      if (this.externalImports[name] === undefined) {
-        this.externalImports[name] = i;
-      }
-    } else {
-      if (this.imports[name] === undefined) {
-        this.imports[name] = i;
-      }
-    }
-  }
-
-  checkType(context: Context, type: AnyType): void {
-    const aliases = (context.config.aliases as { [key: string]: Import }) || {};
-
-    switch (type.kind) {
-      case Kind.Alias: {
-        const a = type as Alias;
-        const i = aliases[a.name];
-        this.addType(a.name, i);
-        break;
-      }
-
-      case Kind.Primitive: {
-        const prim = type as Primitive;
-        switch (prim.name) {
-          case PrimitiveName.DateTime:
-            this.addType("Time", {
-              type: "time.Time",
-              import: "time",
-            });
-            break;
-        }
-        break;
-      }
-      case Kind.Type: {
-        const named = type as Type;
-        const i = aliases[named.name];
-        if (named.name === "datetime" && i == undefined) {
-          this.addType("Time", {
-            type: "time.Time",
-            import: "time",
-          });
-          return;
-        }
-        this.addType(named.name, i);
-        break;
-      }
-      case Kind.List: {
-        const list = type as List;
-        this.checkType(context, list.type);
-        break;
-      }
-      case Kind.Map: {
-        const map = type as Map;
-        this.checkType(context, map.keyType);
-        this.checkType(context, map.valueType);
-        break;
-      }
-      case Kind.Optional: {
-        const optional = type as Optional;
-        this.checkType(context, optional.type);
-        break;
-      }
-      case Kind.Enum:
-        break;
-    }
-  }
-
-  visitParameter(context: Context): void {
-    if (!isValid(context)) {
-      return;
-    }
-    this.checkType(context, context.parameter.type);
-  }
-
-  visitOperation(context: Context): void {
-    if (!isValid(context)) {
-      return;
-    }
-    this.checkType(context, context.operation.type);
   }
 }
 

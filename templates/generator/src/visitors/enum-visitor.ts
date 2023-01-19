@@ -1,7 +1,7 @@
 import {
   Context,
   Enum,
-} from "https://deno.land/x/apex_core@v0.1.1/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.2/model/mod.ts";
 import { convertDescription } from "../utils/conversions.ts";
 
 import { SourceGenerator } from "./base.ts";

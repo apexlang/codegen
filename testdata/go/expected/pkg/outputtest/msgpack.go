@@ -8,8 +8,6 @@ import (
 	"github.com/wapc/tinygo-msgpack/convert"
 )
 
-var _ = convert.Package
-
 type MyServiceFuncTypeArgs struct {
 	Value    MyType  `json:"value" yaml:"value" msgpack:"value"`
 	Optional *MyType `json:"optional,omitempty" yaml:"optional,omitempty" msgpack:"optional,omitempty"`

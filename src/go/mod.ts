@@ -14,13 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+export * from "./go_visitor.ts";
 export * from "./alias_visitor.ts";
 export * from "./constant.ts";
 export * from "./enum_visitor.ts";
 export * from "./fiber_visitor.ts";
 export * from "./grpc_visitor.ts";
 export * from "./helpers.ts";
-export * from "./imports_visitor.ts";
 export * from "./interface_visitor.ts";
 export * from "./interfaces_visitor.ts";
 export * from "./main_visitor.ts";
