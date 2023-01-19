@@ -90,7 +90,7 @@ func (e ${context.enum.name}) MarshalJSON() ([]byte, error) {
 // UnmarshalJSON unmashals a quoted json string to the enum value
 func (e *${context.enum.name}) UnmarshalJSON(b []byte) error {
 	var str string
-	err := json.Unmarshal(b, &str)
+	err := ${$.json}.Unmarshal(b, &str)
 	if err != nil {
 		return err
 	}
