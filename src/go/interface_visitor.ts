@@ -57,7 +57,9 @@ export class InterfaceVisitor extends GoVisitor {
 
     const $ = getImporter(context, IMPORTS);
     this.write(formatComment("// ", operation.description));
-    this.write(`${methodName(operation, operation.name)}(ctx ${$.context}.Context`);
+    this.write(
+      `${methodName(operation, operation.name)}(ctx ${$.context}.Context`,
+    );
     operation.parameters.forEach((p) =>
       this.visitParam(context.clone({ parameter: p }))
     );

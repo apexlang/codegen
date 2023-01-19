@@ -43,7 +43,12 @@ import {
   unwrapKinds,
 } from "../utils/mod.ts";
 import { IMPORTS } from "./constant.ts";
-import { getImporter, getImports, GoVisitor, ImportNames, Imports } from "./go_visitor.ts";
+import {
+  getImporter,
+  getImports,
+  GoVisitor,
+  ImportNames,
+} from "./go_visitor.ts";
 import { expandType, fieldName, methodName, returnShare } from "./helpers.ts";
 import { StructVisitor } from "./struct_visitor.ts";
 
@@ -183,7 +188,7 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
           const p = pt as Primitive;
 
           if (p.name == PrimitiveName.DateTime) {
-            $.timestamppb // Cause import
+            $.timestamppb; // Cause import
           }
 
           switch (p.name) {
@@ -690,9 +695,9 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
             const a = optType as Alias;
             const imp = this.aliases[a.name];
             if (imp) {
-              return `${$.convert}.NillableEt(&et, ${from}.${capitalize(f.name)}, ${
-                imp.parse || "Parse"
-              })`;
+              return `${$.convert}.NillableEt(&et, ${from}.${
+                capitalize(f.name)
+              }, ${imp.parse || "Parse"})`;
             }
             optType = a.type;
           }
@@ -826,9 +831,7 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
 
   writeInputField($: ImportNames<any>, f: Field) {
     this.write(
-      `${fieldName(f, f.name)}: ${
-        this.writeInput($, f, "from", false)
-      },\n`,
+      `${fieldName(f, f.name)}: ${this.writeInput($, f, "from", false)},\n`,
     );
   }
 
@@ -949,7 +952,10 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
   }
 }
 
-function primitiveWrapperType($: ImportNames<any>, name: PrimitiveName): string {
+function primitiveWrapperType(
+  $: ImportNames<any>,
+  name: PrimitiveName,
+): string {
   switch (name) {
     case PrimitiveName.String:
       return `*${$.wrapperspb}.StringValue`;

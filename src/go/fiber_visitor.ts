@@ -47,8 +47,10 @@ class FiberServiceVisitor extends GoVisitor {
     const { interface: iface } = context;
     const $ = getImporter(context, IMPORTS);
     this
-      .write(`func ${iface.name}Fiber(service ${iface.name}) ${$.tfiber}.RegisterFn {
-    return func(router ${$.fiber}.Router) {\n`);
+      .write(
+        `func ${iface.name}Fiber(service ${iface.name}) ${$.tfiber}.RegisterFn {
+    return func(router ${$.fiber}.Router) {\n`,
+      );
   }
 
   visitOperation(context: Context): void {

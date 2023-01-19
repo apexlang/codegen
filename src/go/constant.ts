@@ -52,4 +52,4 @@ export const IMPORTS = {
   zap: "go.uber.org/zap",
   zapr: "github.com/go-logr/zapr",
   run: "github.com/oklog/run",
-}
+};

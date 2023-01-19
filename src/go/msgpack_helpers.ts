@@ -146,7 +146,8 @@ export function msgpackRead(
     }
     case Kind.Enum: {
       const e = t as Enum;
-      let decodeFn = `${$.msgpackconvert}.Numeric[${e.name}](decoder.ReadInt32())`;
+      let decodeFn =
+        `${$.msgpackconvert}.Numeric[${e.name}](decoder.ReadInt32())`;
       if (prevOptional) {
         decodeFn =
           `${$.msgpackconvert}.NillableNumeric[${e.name}](decoder.ReadNillableInt32())`;
