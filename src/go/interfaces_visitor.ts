@@ -17,7 +17,7 @@ limitations under the License.
 
 import { Context, Visitor, Writer } from "../deps/core/model.ts";
 import { EnumVisitor } from "./enum_visitor.ts";
-import { StructVisitor } from "./struct_visitor.ts";
+import { DefaultsVisitor, StructVisitor } from "./struct_visitor.ts";
 import { AliasVisitor } from "./alias_visitor.ts";
 import { isHandler, isProvider } from "../utils/mod.ts";
 import { UnionVisitor } from "./union_visitor.ts";
@@ -25,13 +25,14 @@ import { InterfaceVisitor } from "./interface_visitor.ts";
 import { GoVisitor } from "./go_visitor.ts";
 
 export class InterfacesVisitor extends GoVisitor {
-  writeTypeInfo = true;
+  writeTypeInfo = false;
 
   // Overridable visitor implementations
   serviceVisitor = (writer: Writer): Visitor => new InterfaceVisitor(writer);
   dependencyVisitor = (writer: Writer): Visitor => new InterfaceVisitor(writer);
   structVisitor = (writer: Writer): Visitor =>
     new StructVisitor(writer, this.writeTypeInfo);
+  defaultsVisitor = (writer: Writer): Visitor => new DefaultsVisitor(writer);
   enumVisitor = (writer: Writer): Visitor =>
     new EnumVisitor(writer, this.writeTypeInfo);
   unionVisitor = (writer: Writer): Visitor => new UnionVisitor(writer);
@@ -41,7 +42,7 @@ export class InterfacesVisitor extends GoVisitor {
     const { namespace: ns } = context;
     this.writeTypeInfo = context.config.writeTypeInfo as boolean;
     if (this.writeTypeInfo == undefined) {
-      this.writeTypeInfo = true;
+      this.writeTypeInfo = false;
     }
 
     if (this.writeTypeInfo) {
@@ -94,7 +95,9 @@ export class InterfacesVisitor extends GoVisitor {
   }
 
   visitType(context: Context): void {
-    const visitor = this.structVisitor(this.writer);
-    context.type.accept(context, visitor);
+    const sVisitor = this.structVisitor(this.writer);
+    context.type.accept(context, sVisitor);
+    const dVisitor = this.defaultsVisitor(this.writer);
+    context.type.accept(context, dVisitor);
   }
 }
