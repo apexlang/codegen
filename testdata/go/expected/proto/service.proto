@@ -120,6 +120,10 @@ message MyType {
   string alias_value = 37;
   // enum option
   optional string alias_option = 38;
+  // bool value
+  bool bool_value = 39;
+  // bool option
+  optional bool bool_option = 40;
 }
 
 message MyOtherType {

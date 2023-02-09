@@ -543,6 +543,8 @@ func convertInputMyType(from *pb.MyType) (*MyType, error) {
 		EnumOption:     (*MyEnum)(from.EnumOption),
 		AliasValue:     errorz.Track(&et, uuid.Parse, from.AliasValue),
 		AliasOption:    convert.NillableEt(&et, from.AliasOption, uuid.Parse),
+		BoolValue:      from.BoolValue,
+		BoolOption:     from.BoolOption,
 	}
 	if errz := et.Errors(); errz != nil {
 		return nil, errz
@@ -635,6 +637,8 @@ func convertOutputMyType(from *MyType) *pb.MyType {
 		AliasOption: convert.Nillable(from.AliasOption, func(value uuid.UUID) string {
 			return value.String()
 		}),
+		BoolValue:  from.BoolValue,
+		BoolOption: from.BoolOption,
 	}
 }
 

@@ -885,6 +885,10 @@ components:
         aliasOption:
           description: enum option
           type: string
+        boolValue:
+          description: bool value
+        boolOption:
+          description: bool option
       required:
         - typeValue
         - stringValue
@@ -907,6 +911,7 @@ components:
         - unionValue
         - enumValue
         - aliasValue
+        - boolValue
     MyOtherType:
       type: object
       properties:

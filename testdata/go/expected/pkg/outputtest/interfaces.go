@@ -11,12 +11,6 @@ import (
 	"github.com/google/uuid"
 )
 
-type ns struct{}
-
-func (n *ns) Namespace() string {
-	return "apex.testing"
-}
-
 type MyService interface {
 	EmptyVoid(ctx context.Context) error
 	UnaryType(ctx context.Context, value *MyType) (*MyType, error)
@@ -57,7 +51,6 @@ type Repository interface {
 
 // MyType is a class
 type MyType struct {
-	ns
 	// same type value
 	SameValue *MyType `json:"sameValue,omitempty" yaml:"sameValue,omitempty" msgpack:"sameValue,omitempty"`
 	// type value
@@ -134,20 +127,32 @@ type MyType struct {
 	AliasValue uuid.UUID `json:"aliasValue" yaml:"aliasValue" msgpack:"aliasValue"`
 	// enum option
 	AliasOption *uuid.UUID `json:"aliasOption,omitempty" yaml:"aliasOption,omitempty" msgpack:"aliasOption,omitempty"`
+	// bool value
+	BoolValue bool `json:"boolValue" yaml:"boolValue" msgpack:"boolValue"`
+	// bool option
+	BoolOption *bool `json:"boolOption,omitempty" yaml:"boolOption,omitempty" msgpack:"boolOption,omitempty"`
 }
 
-func (m *MyType) Type() string {
-	return "MyType"
+// DefaultMyType returns a `MyType` struct populated with its default values.
+func DefaultMyType() MyType {
+	return MyType{
+		StringValue: "test",
+		I64Value:    1234,
+		BoolValue:   true,
+	}
 }
 
 type MyOtherType struct {
-	ns
 	Foo string `json:"foo" yaml:"foo" msgpack:"foo"`
 	Bar string `json:"bar" yaml:"bar" msgpack:"bar"`
 }
 
-func (m *MyOtherType) Type() string {
-	return "MyOtherType"
+// DefaultMyOtherType returns a `MyOtherType` struct populated with its default
+// values.
+func DefaultMyOtherType() MyOtherType {
+	return MyOtherType{
+		Foo: "1234",
+	}
 }
 
 type MyUnion struct {
@@ -178,10 +183,6 @@ var toIDMyEnum = map[string]MyEnum{
 	"one":   MyEnumOne,
 	"TWO":   MyEnumTwo,
 	"three": MyEnumThree,
-}
-
-func (e MyEnum) Type() string {
-	return "MyEnum"
 }
 
 func (e MyEnum) String() string {

@@ -864,6 +864,10 @@ func (o *MyType) Decode(decoder msgpack.Reader) error {
 			o.AliasValue, err = convert.Parse(uuid.Parse)(decoder.ReadString())
 		case "aliasOption":
 			o.AliasOption, err = convert.NillableParse(uuid.Parse)(decoder.ReadNillableString())
+		case "boolValue":
+			o.BoolValue, err = decoder.ReadBool()
+		case "boolOption":
+			o.BoolOption, err = decoder.ReadNillableBool()
 		default:
 			err = decoder.Skip()
 		}
@@ -880,7 +884,7 @@ func (o *MyType) Encode(encoder msgpack.Writer) error {
 		encoder.WriteNil()
 		return nil
 	}
-	encoder.WriteMapSize(38)
+	encoder.WriteMapSize(40)
 	encoder.WriteString("sameValue")
 	o.SameValue.Encode(encoder)
 	encoder.WriteString("typeValue")
@@ -983,6 +987,10 @@ func (o *MyType) Encode(encoder msgpack.Writer) error {
 	} else {
 		encoder.WriteString(o.AliasOption.String())
 	}
+	encoder.WriteString("boolValue")
+	encoder.WriteBool(o.BoolValue)
+	encoder.WriteString("boolOption")
+	encoder.WriteNillableBool(o.BoolOption)
 
 	return nil
 }
