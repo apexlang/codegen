@@ -19,6 +19,7 @@ import { expandType, fieldName } from "./helpers.ts";
 import { translateAlias } from "./alias_visitor.ts";
 import { formatComment } from "../utils/mod.ts";
 import { getImports, GoVisitor } from "./go_visitor.ts";
+import { Kind as ASTKind, StringValue, Value } from "../deps/core/ast.ts";
 
 interface Serialize {
   value: string;
@@ -37,7 +38,13 @@ export class StructVisitor extends GoVisitor {
     super.triggerTypeBefore(context);
     this.write(formatComment("// ", type.description));
     this.write(`type ${type.name} struct {\n`);
-    if (this.writeTypeInfo) {
+
+    let writeTypeInfo = context.config.writeTypeInfo as boolean;
+    if (writeTypeInfo == undefined) {
+      writeTypeInfo = this.writeTypeInfo;
+    }
+
+    if (writeTypeInfo) {
       this.write(`  ns\n`);
     }
   }
@@ -102,4 +109,48 @@ export class StructVisitor extends GoVisitor {
   structTags(_context: Context): string {
     return "";
   }
+}
+
+export class DefaultsVisitor extends GoVisitor {
+  visitTypeBefore(context: Context): void {
+    const { type } = context;
+    super.triggerTypeBefore(context);
+    this.write(
+      formatComment(
+        "// ",
+        `Default${type.name} returns a \`${type.name}\` struct populated with its default values.`,
+      ),
+    );
+    this.write(`func Default${type.name}() ${type.name} {
+      return ${type.name}{\n`);
+  }
+
+  public visitTypeField(context: Context): void {
+    const { field } = context;
+    if (!field.default) {
+      return;
+    }
+    this.write(
+      `\t${fieldName(field, field.name)}: ${valueLiteral(field.default)},\n`,
+    );
+  }
+
+  visitTypeAfter(_context: Context): void {
+    this.write(`}\n}\n\n`);
+  }
+}
+
+function valueLiteral(value: Value): string {
+  switch (value.getKind()) {
+    case ASTKind.StringValue: {
+      const sv = value as StringValue;
+      return `"${
+        sv.value.replaceAll(`\\`, `\\\\`).replaceAll(`"`, `\\"`).replaceAll(
+          `\n`,
+          `\\n`,
+        )
+      }"`;
+    }
+  }
+  return `${value.getValue()}`;
 }

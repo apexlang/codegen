@@ -102,11 +102,11 @@ type MyType {
   "type value"
   typeValue: MyOtherType @n(2)
   "string value"
-  stringValue: string @n(3)
+  stringValue: string = "test" @n(3)
   "string option"
   stringOption: string? @n(4)
   "i64 value"
-  i64Value: i64 @n(5)
+  i64Value: i64 = 1234 @n(5)
   "i64 option"
   i64Option: i64? @n(6)
   "i32 value"
@@ -173,12 +173,16 @@ type MyType {
   aliasValue: UUID @n(37)
   "enum option"
   aliasOption: UUID? @n(38)
+  "bool value"
+  boolValue: bool = true @n(39)
+  "bool option"
+  boolOption: bool? @n(40)
   # "any value"
   # anyValue: any @n(999)
 }
 
 type MyOtherType {
-  foo: string @n(1)
+  foo: string = "1234" @n(1)
   bar: string @n(2)
 }
 
