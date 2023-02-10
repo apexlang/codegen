@@ -234,7 +234,8 @@ export const expandType = (
     case Kind.Alias:
     case Kind.Enum:
     case Kind.Type:
-    case Kind.Union: {
+    case Kind.Union:
+    case Kind.Interface: {
       let namedValue = (type as Named).name;
       if (translate != undefined) {
         namedValue = translate(namedValue) || namedValue;
