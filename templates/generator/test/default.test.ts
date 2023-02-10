@@ -1,9 +1,9 @@
-import { parse } from './parse.ts';
-import { DefaultVisitor } from '../src/default-visitor.ts';
-import { Writer } from 'https://deno.land/x/apex_core@v0.1.2/model/mod.ts';
-import { assert } from 'https://deno.land/std@0.167.0/testing/asserts.ts';
+import { parse } from "./parse.ts";
+import { DefaultVisitor } from "../src/default-visitor.ts";
+import { Writer } from "https://deno.land/x/apex_core@v0.1.3/model/mod.ts";
+import { assert } from "https://deno.land/std@0.167.0/testing/asserts.ts";
 
-Deno.test('should generate apex from apex', () => {
+Deno.test("should generate apex from apex", () => {
   // Define test apex we can parse.
   const apex = `
     namespace "test"
