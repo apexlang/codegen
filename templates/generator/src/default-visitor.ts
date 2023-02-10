@@ -1,7 +1,7 @@
 import {
   BaseVisitor,
   Context,
-} from "https://deno.land/x/apex_core@v0.1.2/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.3/model/mod.ts";
 import { TypeVisitor } from "./visitors/type-visitor.ts";
 import { InterfaceVisitor } from "./visitors/interface-visitor.ts";
 import { EnumVisitor } from "./visitors/enum-visitor.ts";
@@ -10,13 +10,13 @@ import { AliasVisitor } from "./visitors/alias-visitor.ts";
 import { convertOperation } from "./utils/conversions.ts";
 
 export class DefaultVisitor extends BaseVisitor {
-  /* ************************************************************************ *
+  /************************************************************************ *
    *  Override the BaseVisitor's visitXxxx methods to add custom logic        *
    *  that runs each time your class visit's a node in the Apex schema.       *
    *                                                                          *
    *  Every visitor has corresponding visitXxxxBefore() and visitXxxxAfter()  *
    *  methods that run before and after a visit.                              *
-   * ************************************************************************ */
+   * *************************************************************************/
 
   // .visitContextBefore() runs at the start of execution.
   visitContextBefore(context: Context): void {

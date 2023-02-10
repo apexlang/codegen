@@ -1,7 +1,7 @@
 import {
   Alias,
   Context,
-} from "https://deno.land/x/apex_core@v0.1.2/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.3/model/mod.ts";
 import { convertDescription } from "../utils/conversions.ts";
 import { convertType } from "../utils/types.ts";
 

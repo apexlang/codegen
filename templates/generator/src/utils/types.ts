@@ -8,7 +8,7 @@ import {
   Optional,
   Primitive,
   PrimitiveName,
-} from "https://deno.land/x/apex_core@v0.1.2/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.3/model/mod.ts";
 
 /**
  * Convert an Apex type to a type suitable for the destination format.
