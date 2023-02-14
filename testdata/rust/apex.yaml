@@ -1,4 +1,4 @@
-spec: ../spec.apexlang
+spec: ../apex.axdl
 generates:
   basics.rs:
     module: '../../../src/rust/mod.ts'

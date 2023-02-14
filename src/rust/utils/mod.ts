@@ -16,10 +16,9 @@ export function trimLines(lines: string[]): string {
   return finalLines.join("\n");
 }
 
-export function rustify(name: string): string {
+export function rustify(name: string, partial = false): string {
   const base = snakeCase(name);
-
-  return isReservedWord(base) ? `r#${base}` : base;
+  return isReservedWord(base) && !partial ? `r#${base}` : base;
 }
 
 export function rustifyCaps(name: string): string {
