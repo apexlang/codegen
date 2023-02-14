@@ -4,6 +4,7 @@ import {
   Context,
   Kind,
   ObjectMap,
+  Primitive,
   Union,
 } from "../../deps/core/model.ts";
 import { codegenType, isNamed, isRecursiveType } from "../../utils/mod.ts";
@@ -23,11 +24,17 @@ function getTypeName(t: AnyType): string {
   if (isNamed(t)) {
     return t.name;
   } else {
-    const apexType = codegenType(t);
-    throw new Error(
-      `Can't represent an Apex union with primitive or non-named types as a Rust enum.` +
-        ` Try turning "${apexType}" into an alias, e.g. "alias MyType = ${apexType}".`,
-    );
+    switch (t.kind) {
+      case Kind.Primitive:
+        return (t as Primitive).name;
+      default: {
+        const apexType = codegenType(t);
+        throw new Error(
+          `Can't represent an Apex union with non-named types as a Rust enum.` +
+            ` Try turning "${apexType}" into an alias, e.g. "alias MyType = ${apexType}".`,
+        );
+      }
+    }
   }
 }
 

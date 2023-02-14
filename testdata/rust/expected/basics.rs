@@ -4,11 +4,141 @@
  * See https://apexlang.io for more information *
  ***********************************************/
 
-pub type MyString = String;
-
 pub type Uuid = String;
 
-fn hello(this: String, that: u64) -> String;
+pub type MyAlias = String;
+
+fn some_calc(rhs: i64, lhs: i64) -> i64;
+
+pub trait MyStreamer {
+    fn request_stream_i64() -> Box<dyn Stream<Item = i64>>;
+
+    fn request_stream_f64() -> Box<dyn Stream<Item = f64>>;
+
+    fn request_stream_type() -> Box<dyn Stream<Item = MyType>>;
+
+    fn request_stream_enum() -> Box<dyn Stream<Item = MyEnum>>;
+
+    fn request_stream_uuid() -> Box<dyn Stream<Item = Uuid>>;
+
+    fn request_stream_alias() -> Box<dyn Stream<Item = MyAlias>>;
+
+    fn request_stream_string() -> Box<dyn Stream<Item = String>>;
+
+    fn request_stream_bool() -> Box<dyn Stream<Item = bool>>;
+
+    fn request_stream_datetime() -> Box<dyn Stream<Item = time::OffsetDateTime>>;
+
+    fn request_stream_list() -> Box<dyn Stream<Item = Vec<String>>>;
+
+    fn request_stream_map() -> Box<dyn Stream<Item = std::collections::HashMap<String, String>>>;
+
+    fn request_stream_args_i64(value: i64) -> Box<dyn Stream<Item = i64>>;
+
+    fn request_stream_args_f64(value: f64) -> Box<dyn Stream<Item = f64>>;
+
+    fn request_stream_args_type(value: MyType) -> Box<dyn Stream<Item = MyType>>;
+
+    fn request_stream_args_enum(value: MyEnum) -> Box<dyn Stream<Item = MyEnum>>;
+
+    fn request_stream_args_uuid(value: Uuid) -> Box<dyn Stream<Item = Uuid>>;
+
+    fn request_stream_args_alias(value: MyAlias) -> Box<dyn Stream<Item = MyAlias>>;
+
+    fn request_stream_args_string(value: String) -> Box<dyn Stream<Item = String>>;
+
+    fn request_stream_args_bool(value: bool) -> Box<dyn Stream<Item = bool>>;
+
+    fn request_stream_args_datetime(
+        value: time::OffsetDateTime,
+    ) -> Box<dyn Stream<Item = time::OffsetDateTime>>;
+
+    fn request_stream_args_list(value: Vec<String>) -> Box<dyn Stream<Item = Vec<String>>>;
+
+    fn request_stream_args_map(
+        value: std::collections::HashMap<String, String>,
+    ) -> Box<dyn Stream<Item = std::collections::HashMap<String, String>>>;
+
+    fn request_channel_i64(r#in: Box<dyn Stream<Item = i64>>) -> Box<dyn Stream<Item = i64>>;
+
+    fn request_channel_f64(r#in: Box<dyn Stream<Item = f64>>) -> Box<dyn Stream<Item = f64>>;
+
+    fn request_channel_type(r#in: Box<dyn Stream<Item = MyType>>)
+        -> Box<dyn Stream<Item = MyType>>;
+
+    fn request_channel_enum(r#in: Box<dyn Stream<Item = MyEnum>>)
+        -> Box<dyn Stream<Item = MyEnum>>;
+
+    fn request_channel_alias(r#in: Box<dyn Stream<Item = Uuid>>) -> Box<dyn Stream<Item = Uuid>>;
+
+    fn request_channel_string(
+        r#in: Box<dyn Stream<Item = String>>,
+    ) -> Box<dyn Stream<Item = String>>;
+
+    fn request_channel_bool(r#in: Box<dyn Stream<Item = bool>>) -> Box<dyn Stream<Item = bool>>;
+
+    fn request_channel_datetime(
+        r#in: Box<dyn Stream<Item = time::OffsetDateTime>>,
+    ) -> Box<dyn Stream<Item = time::OffsetDateTime>>;
+
+    fn request_channel_list(
+        r#in: Box<dyn Stream<Item = Vec<String>>>,
+    ) -> Box<dyn Stream<Item = Vec<String>>>;
+
+    fn request_channel_map(
+        r#in: Box<dyn Stream<Item = std::collections::HashMap<String, String>>>,
+    ) -> Box<dyn Stream<Item = std::collections::HashMap<String, String>>>;
+
+    fn request_channel_args_i64(
+        value: i64,
+        r#in: Box<dyn Stream<Item = i64>>,
+    ) -> Box<dyn Stream<Item = i64>>;
+
+    fn request_channel_args_f64(
+        value: f64,
+        r#in: Box<dyn Stream<Item = f64>>,
+    ) -> Box<dyn Stream<Item = f64>>;
+
+    fn request_channel_args_type(
+        value: MyType,
+        r#in: Box<dyn Stream<Item = MyType>>,
+    ) -> Box<dyn Stream<Item = MyType>>;
+
+    fn request_channel_args_enum(
+        value: MyEnum,
+        r#in: Box<dyn Stream<Item = MyEnum>>,
+    ) -> Box<dyn Stream<Item = MyEnum>>;
+
+    fn request_channel_args_alias(
+        value: Uuid,
+        r#in: Box<dyn Stream<Item = Uuid>>,
+    ) -> Box<dyn Stream<Item = Uuid>>;
+
+    fn request_channel_args_string(
+        value: String,
+        r#in: Box<dyn Stream<Item = String>>,
+    ) -> Box<dyn Stream<Item = String>>;
+
+    fn request_channel_args_bool(
+        value: bool,
+        r#in: Box<dyn Stream<Item = bool>>,
+    ) -> Box<dyn Stream<Item = bool>>;
+
+    fn request_channel_args_datetime(
+        value: time::OffsetDateTime,
+        r#in: Box<dyn Stream<Item = time::OffsetDateTime>>,
+    ) -> Box<dyn Stream<Item = time::OffsetDateTime>>;
+
+    fn request_channel_args_list(
+        value: Vec<String>,
+        r#in: Box<dyn Stream<Item = Vec<String>>>,
+    ) -> Box<dyn Stream<Item = Vec<String>>>;
+
+    fn request_channel_args_map(
+        value: std::collections::HashMap<String, String>,
+        r#in: Box<dyn Stream<Item = std::collections::HashMap<String, String>>>,
+    ) -> Box<dyn Stream<Item = std::collections::HashMap<String, String>>>;
+}
 
 pub(crate) trait MyService {
     fn empty_void() -> ();
@@ -17,7 +147,9 @@ pub(crate) trait MyService {
 
     fn unary_enum(value: MyEnum) -> MyEnum;
 
-    fn unary_alias(value: Uuid) -> Uuid;
+    fn unary_uuid(value: Uuid) -> Uuid;
+
+    fn unary_alias(value: MyAlias) -> MyAlias;
 
     fn unary_string(value: String) -> String;
 
@@ -43,11 +175,21 @@ pub(crate) trait MyService {
 
     fn unary_bytes(value: Vec<u8>) -> Vec<u8>;
 
+    fn unary_datetime(value: time::OffsetDateTime) -> time::OffsetDateTime;
+
+    fn unary_list(value: Vec<String>) -> Vec<String>;
+
+    fn unary_map(
+        value: std::collections::HashMap<String, String>,
+    ) -> std::collections::HashMap<String, String>;
+
     fn func_type(value: MyType, optional: Option<MyType>) -> MyType;
 
     fn func_enum(value: MyEnum, optional: Option<MyEnum>) -> MyEnum;
 
-    fn func_alias(value: Uuid, optional: Option<Uuid>) -> Uuid;
+    fn func_uuid(value: Uuid, optional: Option<Uuid>) -> Uuid;
+
+    fn func_alias(value: MyAlias, optional: Option<MyAlias>) -> MyAlias;
 
     fn func_string(value: String, optional: Option<String>) -> String;
 
@@ -72,6 +214,18 @@ pub(crate) trait MyService {
     fn func_f32(value: f32, optional: Option<f32>) -> f32;
 
     fn func_bytes(value: Vec<u8>, optional: Option<Vec<u8>>) -> Vec<u8>;
+
+    fn func_datetime(
+        value: time::OffsetDateTime,
+        optional: Option<time::OffsetDateTime>,
+    ) -> time::OffsetDateTime;
+
+    fn func_list(value: Vec<String>, optional: Option<Vec<String>>) -> Vec<String>;
+
+    fn func_map(
+        value: std::collections::HashMap<String, String>,
+        optional: Option<std::collections::HashMap<String, String>>,
+    ) -> std::collections::HashMap<String, String>;
 }
 
 pub trait Repository {
@@ -207,7 +361,7 @@ pub struct MyOtherType {
 pub enum MyUnion {
     MyType(Box<MyType>),
     MyEnum(MyEnum),
-    MyString(MyString),
+    string(String),
 }
 
 /// MyEnum is an emuneration
