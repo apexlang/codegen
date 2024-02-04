@@ -10,11 +10,15 @@ for dir in */; do
         echo "Generating code in $dir"
         mkdir -p "$dir/actual"
         cd "$dir/actual"
+        rm -Rf *
         apex generate ../apex.yaml
         cd ..
         echo "Checking $dir for diffs"
         diff -r ./expected ./actual
     ) ; then
+        cd "$dir"
+        tree .
+        cd ..
         FAILED=true
     fi
     echo "------------------------------------"

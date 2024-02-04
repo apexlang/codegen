@@ -32,10 +32,10 @@ await build({
     license: "Apache-2.0",
     repository: {
       type: "git",
-      url: "https://www.github.com/apexlang/apex-js",
+      url: "https://github.com/apexlang/apex-js",
     },
     bugs: {
-      url: "https://www.github.com/apexlang/apex-js/issues",
+      url: "https://github.com/apexlang/apex-js/issues",
     },
   },
   postBuild() {

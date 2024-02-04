@@ -4,7 +4,7 @@ import { expandType } from "./helpers.ts";
 export class MarkdownVisitor extends BaseVisitor {
   writeDescription(description?: string) {
     if (description) {
-      this.writeLn(`\n${description}\n`);
+      this.writeLn(`${description.trim()}\n`);
     }
   }
 
@@ -17,7 +17,7 @@ export class MarkdownVisitor extends BaseVisitor {
   }
 
   writeDefinitionName(name: string) {
-    this.write(`\n### **${name}**\n`);
+    this.writeLn(`\n### **${name}**\n`);
   }
 
   inlineDescription(desc?: string): string {
@@ -29,7 +29,7 @@ export class MarkdownVisitor extends BaseVisitor {
       this.writeLn(`# ${context.config.title}\n`);
       this.writeLn(`Namespace: **\`${context.namespace.name}\`**`);
     } else {
-      this.writeLn(`# ${context.namespace.name}`);
+      this.writeLn(`# ${context.namespace.name}\n`);
     }
     this.writeDescription(context.namespace.description);
   }
@@ -51,7 +51,7 @@ export class MarkdownVisitor extends BaseVisitor {
           expandType(
             operation.type,
           )
-        }\`**${this.inlineDescription(operation.description)}`,
+        }\`**${this.inlineDescription(operation.description)}`.trimEnd(),
       );
     }
   }
@@ -70,7 +70,7 @@ export class MarkdownVisitor extends BaseVisitor {
           expandType(
             field.type,
           )
-        }\`** ${this.inlineDescription(field.description)}`,
+        }\`** ${this.inlineDescription(field.description)}`.trimEnd(),
       );
     }
   }
