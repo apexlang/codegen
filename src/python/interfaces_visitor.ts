@@ -160,8 +160,8 @@ function tsort(context: Context): void {
       }
       case Kind.Union: {
         const un = t as Union;
-        un.types.map((ty) => {
-          visitNamed(ty, (name: string) => {
+        un.members.map((member) => {
+          visitNamed(member.type, (name: string) => {
             if (d.indexOf(name) == -1) {
               d.push(name);
             }

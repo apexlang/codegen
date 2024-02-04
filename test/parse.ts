@@ -1,4 +1,4 @@
-import { parse as parseApex } from "https://deno.land/x/apex_core@v0.1.3/mod.ts";
+import { parse as parseApex } from "https://deno.land/x/apex_core@v0.1.5/mod.ts";
 import { Context, Namespace, Type } from "../src/deps/core/model.ts";
 
 export function parse(src: string): Namespace {
@@ -9,6 +9,6 @@ export function parse(src: string): Namespace {
 
 export function getTypes(namespace: Namespace, types: string[]): Type[] {
   return Object.entries(namespace.types)
-    .filter(([name, type]) => (types.indexOf(name) === -1 ? false : true))
-    .map(([n, t]) => t);
+    .filter(([name, _type]) => (types.indexOf(name) === -1 ? false : true))
+    .map(([_n, t]) => t);
 }

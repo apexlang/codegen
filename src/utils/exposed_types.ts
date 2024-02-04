@@ -55,7 +55,7 @@ export class ExposedTypesVisitor extends BaseVisitor {
       }
       case Kind.Union: {
         const u = any as Union;
-        u.types.forEach((t) => this.checkType(t));
+        u.members.forEach((member) => this.checkType(member.type));
         break;
       }
       case Kind.Alias: {

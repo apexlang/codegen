@@ -162,12 +162,19 @@ package ${ns.name};\n\n`);
     this.write(formatComment("// ", u.description));
     this.write(`message ${pascalCase(u.name)} {\n`);
     this.write(`  oneof value {\n`);
-    let i = 0;
-    for (const t of u.types) {
-      const n = t as Named;
-      i++;
+
+    for (const member of u.members) {
+      const n = member.type as Named;
+
+      const fieldnumAnnotation = member.annotation("n");
+      if (!fieldnumAnnotation) {
+        throw new Error(`${u.name}.${n.name} requires a @n`);
+      }
+
       this.write(
-        `    ${typeSignature(t)} ${snakeCase(n.name)}_value = ${i};\n`,
+        `    ${typeSignature(member.type)} ${
+          snakeCase(n.name)
+        }_value = ${n};\n`,
       );
     }
     this.write(`  }\n`);

@@ -155,7 +155,7 @@ export class MyType {
     enumValue = new MyEnum(),
     enumOption = null,
     aliasValue = new UUID(),
-    aliasOption = null
+    aliasOption = null,
   }: {
     sameValue?: MyType | undefined;
     typeValue?: MyOtherType;
@@ -254,5 +254,5 @@ export enum MyEnum {
   // TWO value
   Two = 1,
   // THREE value
-  Three = 2
+  Three = 2,
 }

@@ -1,7 +1,7 @@
 import {
   BaseVisitor,
   Context,
-} from "https://deno.land/x/apex_core@v0.1.3/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.5/model/mod.ts";
 import { TypeVisitor } from "./visitors/type-visitor.ts";
 import { InterfaceVisitor } from "./visitors/interface-visitor.ts";
 import { EnumVisitor } from "./visitors/enum-visitor.ts";

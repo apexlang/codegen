@@ -2,7 +2,7 @@ import {
   ObjectMap,
   Operation,
   Parameter,
-} from "https://deno.land/x/apex_core@v0.1.3/model/mod.ts";
+} from "https://deno.land/x/apex_core@v0.1.5/model/mod.ts";
 import * as utils from "https://deno.land/x/apex_codegen@v0.1.7/utils/mod.ts";
 import { convertType } from "./types.ts";
 

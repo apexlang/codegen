@@ -5,9 +5,11 @@ Namespace: **`apex.testing`**
 ## Aliases
 
 ### **MyString**
+
 `alias MyString = string`
 
 ### **UUID**
+
 `alias UUID = string`
 
 ## Interfaces
@@ -49,6 +51,7 @@ MyService service
 - **`funcBytes(value: bytes, optional: bytes) -> bytes`**
 
 ### **Repository**
+
 - **`getData() -> MyType`**
 
 ## Types
@@ -97,12 +100,14 @@ MyType is a class
 - **`aliasOption: UUID`** : enum option
 
 ### **MyOtherType**
-- **`foo: string`** 
-- **`bar: string`** 
+
+- **`foo: string`**
+- **`bar: string`**
 
 ## Unions
 
 ### **MyUnion**
+
 `MyUnion = MyType | MyEnum | MyString`
 
 ## Enums

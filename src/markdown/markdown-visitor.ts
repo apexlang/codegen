@@ -107,6 +107,10 @@ export class MarkdownVisitor extends BaseVisitor {
   visitUnion(context: Context): void {
     const u = context.union;
     this.writeDefinitionName(u.name);
-    this.writeLn(`\`${u.name} = ${u.types.map(expandType).join(" | ")}\``);
+    this.writeLn(
+      `\`${u.name} = ${
+        u.members.map((m) => m.type).map(expandType).join(" | ")
+      }\``,
+    );
   }
 }

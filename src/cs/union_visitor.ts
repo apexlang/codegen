@@ -23,8 +23,8 @@ export class UnionVisitor extends BaseVisitor {
     const { union } = context;
     this.write(`  ${formatComment("// ", union.description)}`);
     this.write(`public record ${union.name} {\n`);
-    union.types.forEach((t) => {
-      const typeName = expandType(t);
+    union.members.forEach((member) => {
+      const typeName = expandType(member.type);
       this.write(`    public ${pascalCase(typeName)} ${typeName};`);
       this.triggerCallbacks(context, "UnionStructTags");
       this.write(`\n`);

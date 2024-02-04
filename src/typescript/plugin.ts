@@ -1,23 +1,23 @@
 import { Configuration } from "https://deno.land/x/apex_cli@v0.0.18/src/config.ts";
-import * as apex from "https://deno.land/x/apex_core@v0.1.3/mod.ts";
+import * as ast from "https://deno.land/x/apex_core@v0.1.5/ast.ts";
 
 const importUrl = new URL(".", import.meta.url);
 
-function urlify(relpath: string): string {
+function _urlify(relpath: string): string {
   const url = new URL(relpath, importUrl).toString();
   console.error(url);
   return url;
 }
 
 export default function (
-  doc: apex.ast.Document,
+  _doc: ast.Document,
   config: Configuration,
 ): Configuration {
   config.generates ||= {};
 
   config.config ||= {};
   config.config.aliases ||= {};
-  (config.config.aliases as any).UUID = {
+  (config.config.aliases as Record<string, unknown>).UUID = {
     type: true,
     import: "v4 as uuidv4",
     from: "uuid",

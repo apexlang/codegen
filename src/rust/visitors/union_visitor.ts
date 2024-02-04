@@ -49,7 +49,8 @@ export class UnionVisitor extends SourceGenerator<Union> {
   }
 
   getSource(): string {
-    const variants = this.root.types.map((t) => {
+    const variants = this.root.members.map((member) => {
+      const t = member.type;
       const isRecursive = isRecursiveType(t);
       const isHeapAllocated = t.kind === Kind.Map || t.kind === Kind.List;
       const baseType = types.apexToRustType(t, this.config);

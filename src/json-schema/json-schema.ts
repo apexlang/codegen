@@ -167,7 +167,7 @@ class UnionVisitor extends BaseVisitor {
     const { union } = context;
     const arr: SchemaObject[] = [];
     convertArrayToObject(
-      union.types,
+      union.members.map((m) => m.type),
       (t: AnyType) => {
         switch (t.kind) {
           case Kind.Union:
