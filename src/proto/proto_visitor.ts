@@ -170,11 +170,12 @@ package ${ns.name};\n\n`);
       if (!fieldnumAnnotation) {
         throw new Error(`${u.name}.${n.name} requires a @n`);
       }
+      const fieldnum = fieldnumAnnotation.convert<FieldNumDirective>();
 
       this.write(
         `    ${typeSignature(member.type)} ${
           snakeCase(n.name)
-        }_value = ${n};\n`,
+        }_value = ${fieldnum.value};\n`,
       );
     }
     this.write(`  }\n`);

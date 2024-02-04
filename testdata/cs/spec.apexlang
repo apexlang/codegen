@@ -91,7 +91,7 @@ interface Repository @dependency {
   getData(): MyType
 }
 
-union MyUnion = MyType | MyEnum | string
+union MyUnion = MyType @n(1) | MyEnum @n(2) | string @n(3)
 
 alias UUID = string
 
