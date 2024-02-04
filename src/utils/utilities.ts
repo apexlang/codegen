@@ -602,9 +602,9 @@ export function convertOperationToType(
 }
 
 export function convertUnionToType(tr: TypeResolver, union: Union): Type {
-  const fields = union.types.map((param) => {
-    const n = typeName(param);
-    const t = modelToAST(param);
+  const fields = union.members.map((member) => {
+    const n = typeName(member.type);
+    const t = modelToAST(member.type);
     return new FieldDefinition(
       undefined,
       new Name(undefined, n),
@@ -849,7 +849,8 @@ export function isRecursiveType(typ: AnyType, seen: NamedType[] = []): boolean {
     case Kind.Union: {
       const t = typ as Union;
 
-      return t.types.filter((t) => isRecursiveType(t, seen)).length > 0;
+      return t.members.filter((member) => isRecursiveType(member.type, seen))
+        .length > 0;
     }
 
     case Kind.Type: {

@@ -9,3 +9,4 @@ bundle.js
 !/testdata/*/actual/go.*
 !/testdata/*/actual/package.*
 !/testdata/*/actual/requirements.txt
+npm

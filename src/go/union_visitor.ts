@@ -30,17 +30,14 @@ export class UnionVisitor extends GoVisitor {
     const imports = getImports(context);
     this.write(formatComment("// ", union.description));
     this.write(`type ${union.name} struct {\n`);
-    union.types.forEach((t) => {
-      let tname = typeName(t);
-      const annotated = t as Annotated;
-      if (annotated.annotation) {
-        annotated.annotation("unionKey", (a) => {
-          tname = a.convert<UnionKey>().value;
-        });
-      }
+    union.members.forEach((member) => {
+      let tname = typeName(member.type);
+      member.annotation("unionKey", (a) => {
+        tname = a.convert<UnionKey>().value;
+      });
 
-      imports.type(t);
-      const expandedName = expandType(t);
+      imports.type(member.type);
+      const expandedName = expandType(member.type);
       this.write(
         `${
           fieldName(

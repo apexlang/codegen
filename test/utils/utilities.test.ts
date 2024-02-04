@@ -1,7 +1,6 @@
-import { assert } from "https://deno.land/std@0.167.0/testing/asserts.ts";
+import { assert } from "https://deno.land/std@0.213.0/assert/assert.ts";
 import { isRecursiveType } from "../../src/utils/utilities.ts";
 import { getTypes, parse } from "../parse.ts";
-export * from "https://deno.land/std@0.167.0/testing/asserts.ts";
 
 Deno.test("should not identify recursive types", () => {
   const apex = `
@@ -16,7 +15,7 @@ Deno.test("should not identify recursive types", () => {
   }
   `;
   const model = parse(apex);
-  const [parent, child] = getTypes(model, ["Parent"]);
+  const [parent, _child] = getTypes(model, ["Parent"]);
   assert(isRecursiveType(parent));
 });
 

@@ -529,7 +529,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
       type: Types.OBJECT,
       description: union.description,
       properties: convertArrayToObject(
-        union.types,
+        union.members.map((m) => m.type),
         (t: AnyType) => {
           switch (t.kind) {
             case Kind.Union:

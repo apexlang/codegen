@@ -621,7 +621,8 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
       }
       switch {\n`,
       );
-    union.types.forEach((ut) => {
+    union.members.forEach((member) => {
+      const ut = member.type;
       this.write(`case from.${pascalCase(expandType(ut))} != nil:
             return &pb.${union.name}{\n`);
       switch (ut.kind) {
@@ -844,7 +845,8 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
       }
       switch v := from.Value.(type) {\n`,
       );
-    union.types.forEach((ut) => {
+    union.members.forEach((member) => {
+      const ut = member.type;
       if (ut.kind == Kind.Type) {
         const t = ut as Named;
         this.write(`case *pb.${union.name}_${pascalCase(expandType(ut))}Value:
@@ -919,7 +921,9 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
       case Kind.Union: {
         const u = a as Union;
         m[u.name] = u;
-        u.types.forEach((t) => this.checkType(context, t, m, types));
+        u.members.forEach((member) =>
+          this.checkType(context, member.type, m, types)
+        );
         break;
       }
       case Kind.Alias: {
