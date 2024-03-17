@@ -15,22 +15,22 @@ limitations under the License.
 */
 
 import {
-  Alias,
-  AnyType,
+  type Alias,
+  type AnyType,
   BaseVisitor,
-  Context,
-  Enum,
+  type Context,
+  type Enum,
   Kind,
-  List as ListType,
-  Map as MapType,
-  Named,
-  Optional,
-  Primitive,
+  type List as ListType,
+  type Map as MapType,
+  type Named,
+  type Optional,
+  type Primitive,
   PrimitiveName,
-  Stream,
-  Type,
-  Writer,
-} from "../deps/core/model.ts";
+  type Stream,
+  type Type,
+  type Writer,
+} from "@apexlang/core/model";
 import {
   convertOperationToType,
   ExposedTypesVisitor,
@@ -55,7 +55,7 @@ export class ProtoVisitor extends BaseVisitor {
   private exposedTypes = new Set<string>();
   private valueTypes = new Set<string>();
 
-  visitNamespaceBefore(context: Context) {
+  public override visitNamespaceBefore(context: Context) {
     const ns = context.namespace;
     const exposedTypes = new ExposedTypesVisitor(this.writer);
     ns.accept(context, exposedTypes);
@@ -65,13 +65,13 @@ export class ProtoVisitor extends BaseVisitor {
     this.valueTypes = wrapperTypes.found;
   }
 
-  visitNamespaceAfter(context: Context): void {
+  public override visitNamespaceAfter(context: Context): void {
     for (const request of this.requestTypes) {
       request.accept(context.clone({ type: request }), this);
     }
   }
 
-  visitNamespace(context: Context): void {
+  public override visitNamespace(context: Context): void {
     const ns = context.namespace;
     this.write(`syntax = "proto3";
 
@@ -87,7 +87,7 @@ package ${ns.name};\n\n`);
     ns.accept(context, visitor);
   }
 
-  visitInterface(context: Context) {
+  public override visitInterface(context: Context) {
     if (!shouldIncludeHandler(context)) {
       return;
     }
@@ -99,7 +99,7 @@ package ${ns.name};\n\n`);
     context.interface.accept(context, visitor);
   }
 
-  visitTypeBefore(context: Context): void {
+  public override visitTypeBefore(context: Context): void {
     const { type } = context;
     if (!this.exposedTypes.has(type.name)) {
       return;
@@ -108,7 +108,7 @@ package ${ns.name};\n\n`);
     this.write(`message ${type.name} {\n`);
   }
 
-  visitTypeField(context: Context): void {
+  public override visitTypeField(context: Context): void {
     const { type, field } = context;
     if (!this.exposedTypes.has(type.name)) {
       return;
@@ -126,7 +126,7 @@ package ${ns.name};\n\n`);
     );
   }
 
-  visitTypeAfter(context: Context): void {
+  public override visitTypeAfter(context: Context): void {
     const { type } = context;
     if (!this.exposedTypes.has(type.name)) {
       return;
@@ -134,7 +134,7 @@ package ${ns.name};\n\n`);
     this.write(`}\n\n`);
   }
 
-  visitEnum(context: Context): void {
+  public override visitEnum(context: Context): void {
     const e = context.enum;
     if (!this.exposedTypes.has(e.name)) {
       return;
@@ -154,7 +154,7 @@ package ${ns.name};\n\n`);
     this.write(`}\n\n`);
   }
 
-  visitUnion(context: Context): void {
+  public override visitUnion(context: Context): void {
     const u = context.union;
     if (!this.exposedTypes.has(u.name)) {
       return;
@@ -196,7 +196,8 @@ class RoleVisitor extends BaseVisitor {
     this.requestTypes = requestTypes;
     this.exposedTypes = exposedTypes;
   }
-  visitInterfaceBefore(context: Context): void {
+
+  public override visitInterfaceBefore(context: Context): void {
     if (!shouldIncludeHandler(context)) {
       return;
     }
@@ -205,7 +206,7 @@ class RoleVisitor extends BaseVisitor {
     this.write(`service ${iface.name} {\n`);
   }
 
-  visitOperationBefore(context: Context): void {
+  public override visitOperationBefore(context: Context): void {
     if (!shouldIncludeHandler(context)) {
       return;
     }
@@ -267,13 +268,13 @@ class RoleVisitor extends BaseVisitor {
     this.write(`) {};\n`);
   }
 
-  visitOperationAfter(context: Context): void {
+  public override visitOperationAfter(context: Context): void {
     if (!shouldIncludeHandler(context)) {
       return;
     }
   }
 
-  visitInterfaceAfter(context: Context): void {
+  public override visitInterfaceAfter(context: Context): void {
     if (!shouldIncludeHandler(context)) {
       return;
     }
@@ -386,7 +387,7 @@ class ImportVisitor extends BaseVisitor {
     }
   }
 
-  visitOperation(context: Context): void {
+  public override visitOperation(context: Context): void {
     if (!shouldIncludeHandler(context)) {
       return;
     }
@@ -398,7 +399,7 @@ class ImportVisitor extends BaseVisitor {
     this.checkSingleType(operation.type);
   }
 
-  visitParameter(context: Context): void {
+  public override visitParameter(context: Context): void {
     if (!shouldIncludeHandler(context)) {
       return;
     }
@@ -406,17 +407,17 @@ class ImportVisitor extends BaseVisitor {
     this.checkType(parameter.type);
   }
 
-  visitType(context: Context): void {
+  public override visitType(context: Context): void {
     const { type } = context;
     this.checkType(type);
   }
 
-  visitTypeField(context: Context): void {
+  public override visitTypeField(context: Context): void {
     const { field } = context;
     this.checkType(field.type);
   }
 
-  visitNamespaceAfter(_context: Context): void {
+  public override visitNamespaceAfter(_context: Context): void {
     if (this.found.size > 0) {
       this.write(`\n`);
     }
@@ -457,7 +458,7 @@ function primitiveMessageType(name: PrimitiveName): string {
 export class WrapperTypesVisitor extends BaseVisitor {
   found: Set<string> = new Set<string>();
 
-  visitOperation(context: Context): void {
+  public override visitOperation(context: Context): void {
     if (!isService(context)) {
       return;
     }

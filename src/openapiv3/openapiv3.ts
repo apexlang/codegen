@@ -16,21 +16,21 @@ limitations under the License.
 */
 
 import {
-  Alias,
-  AnyType,
+  type Alias,
+  type AnyType,
   BaseVisitor,
-  Context,
-  Field,
+  type Context,
+  type Field,
   Kind,
-  List as ListType,
-  Map as MapType,
-  Named,
-  Optional,
-  Primitive,
-  Type,
-  Writer,
-} from "../deps/core/model.ts";
-import {
+  type List as ListType,
+  type Map as MapType,
+  type Named,
+  type Optional,
+  type Primitive,
+  type Type,
+  type Writer,
+} from "@apexlang/core/model";
+import type {
   Document,
   ExternalDocumentationObject,
   InfoObject,
@@ -42,16 +42,16 @@ import {
   ResponsesObject,
   SchemaObject,
   ServerObject,
-} from "https://deno.land/x/openapi@0.1.0/mod.ts";
+} from "./types.ts";
 
-import { SummaryDirective } from "./directives.ts";
-import * as yaml from "https://deno.land/std@0.167.0/encoding/yaml.ts";
+import type { SummaryDirective } from "./directives.ts";
+import * as yaml from "@std/yaml";
 import {
   convertArrayToObject,
   ExposedTypesVisitor,
   isService,
 } from "../utils/mod.ts";
-import { getPath, ResponseDirective } from "../rest/mod.ts";
+import { getPath, type ResponseDirective } from "../rest/mod.ts";
 
 type Method = "get" | "post" | "options" | "put" | "delete" | "patch";
 
@@ -127,14 +127,14 @@ export class OpenAPIV3Visitor extends BaseVisitor {
     super(writer);
   }
 
-  visitNamespaceBefore(context: Context) {
+  public override visitNamespaceBefore(context: Context) {
     const ns = context.namespace;
     const visitor = new ExposedTypesVisitor(this.writer);
     ns.accept(context, visitor);
     this.exposedTypes = visitor.found;
   }
 
-  visitNamespaceAfter(context: Context): void {
+  public override visitNamespaceAfter(context: Context): void {
     const filename = context.config["$filename"];
     this.root.paths = this.paths;
     this.root.components = { schemas: this.schemas };
@@ -146,7 +146,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
     }
   }
 
-  visitNamespace(context: Context): void {
+  public override visitNamespace(context: Context): void {
     const ns = context.namespace;
     ns.annotation("info", (a) => {
       this.root.info = a.convert<InfoObject>();
@@ -160,7 +160,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
     });
   }
 
-  visitInterface(context: Context): void {
+  public override visitInterface(context: Context): void {
     if (!isService(context)) {
       return;
     }
@@ -172,7 +172,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
     });
   }
 
-  visitOperationBefore(context: Context): void {
+  public override visitOperationBefore(context: Context): void {
     if (!isService(context)) {
       return;
     }
@@ -221,7 +221,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
     pathItem[method] = this.operation;
   }
 
-  visitParameter(context: Context): void {
+  public override visitParameter(context: Context): void {
     if (!this.operation || !isService(context)) {
       return;
     }
@@ -435,7 +435,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
     this.operation!.parameters.push(p);
   }
 
-  visitOperationAfter(context: Context): void {
+  public override visitOperationAfter(context: Context): void {
     if (!this.operation || !isService(context)) {
       return;
     }
@@ -497,7 +497,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
     this.operation = undefined;
   }
 
-  visitType(context: Context): void {
+  public override visitType(context: Context): void {
     const { type } = context;
     if (!this.exposedTypes.has(type.name)) {
       return;
@@ -509,7 +509,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
     this.schemas[type.name] = schema;
   }
 
-  visitEnum(context: Context): void {
+  public override visitEnum(context: Context): void {
     const e = context.enum;
     if (!this.exposedTypes.has(e.name)) {
       return;
@@ -523,7 +523,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
     this.schemas[e.name] = schema;
   }
 
-  visitUnion(context: Context): void {
+  public override visitUnion(context: Context): void {
     const { union } = context;
     const schema: SchemaObject = {
       type: Types.OBJECT,
@@ -547,7 +547,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
     this.schemas[union.name] = schema;
   }
 
-  visitAlias(context: Context): void {
+  public override visitAlias(context: Context): void {
     const a = context.alias;
     const schema = this.typeToSchema(a);
     this.schemas[a.name] = schema;

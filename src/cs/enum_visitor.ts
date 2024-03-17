@@ -14,17 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, Context } from "../deps/core/model.ts";
+import { BaseVisitor, type Context } from "@apexlang/core/model";
 import { formatComment, pascalCase } from "../utils/mod.ts";
 
 export class EnumVisitor extends BaseVisitor {
-  visitEnumBefore(context: Context) {
+  public override visitEnumBefore(context: Context) {
     this.write(formatComment("  // ", context.enum.description));
     this.write(`  public enum ${pascalCase(context.enum.name)}\n  {\n`);
     super.visitEnumBefore(context);
   }
 
-  visitEnumAfter(context: Context) {
+  public override visitEnumAfter(context: Context) {
     this.write("  }\n");
 
     this.write(`
@@ -39,7 +39,7 @@ export class EnumVisitor extends BaseVisitor {
     super.visitEnumAfter(context);
   }
 
-  visitEnum(context: Context) {
+  public override visitEnum(context: Context) {
     const values = context.enum.values;
     for (let i = 0; i < values.length; ++i) {
       this.write(`    ${pascalCase(values[i].name)}`);

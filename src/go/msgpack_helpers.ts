@@ -15,20 +15,20 @@ limitations under the License.
 */
 
 import {
-  Alias,
-  AnyType,
-  Context,
-  Enum,
+  type Alias,
+  type AnyType,
+  type Context,
+  type Enum,
   Kind,
-  List,
-  Map,
-  Named,
-  Optional,
-  Parameter,
-  Primitive,
+  type List,
+  type Map,
+  type Named,
+  type Optional,
+  type Parameter,
+  type Primitive,
   PrimitiveName,
-} from "../deps/core/model.ts";
-import { Import, translateAlias } from "./alias_visitor.ts";
+} from "@apexlang/core/model";
+import { type Import, translateAlias } from "./alias_visitor.ts";
 import { IMPORTS, translations } from "./constant.ts";
 import { getImporter } from "./go_visitor.ts";
 import { expandType, fieldName, returnShare } from "./helpers.ts";

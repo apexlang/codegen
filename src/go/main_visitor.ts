@@ -14,8 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Context, Writer } from "../deps/core/model.ts";
-import { camelCase, InterfaceUsesVisitor, UsesVisitor } from "../utils/mod.ts";
+import type { Context, Writer } from "@apexlang/core/model";
+import {
+  camelCase,
+  InterfaceUsesVisitor,
+  type UsesVisitor,
+} from "../utils/mod.ts";
 import { IMPORTS } from "./constant.ts";
 import { getImporter, getImports, GoVisitor } from "./go_visitor.ts";
 
@@ -38,7 +42,7 @@ export class MainVisitor extends GoVisitor {
   usesVisitor = (writer: Writer): UsesVisitor =>
     new InterfaceUsesVisitor(writer);
 
-  writeHead(context: Context): void {
+  public override writeHead(context: Context): void {
     const prev = context.config.package;
     context.config.package = "main";
     context.config.doNotEdit = false;
@@ -46,7 +50,7 @@ export class MainVisitor extends GoVisitor {
     context.config.package = prev;
   }
 
-  visitNamespaceBefore(context: Context): void {
+  public override visitNamespaceBefore(context: Context): void {
     const config = context.config as Config;
     const $ = getImporter(context, IMPORTS);
     const http = config.http || {};

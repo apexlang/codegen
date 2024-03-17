@@ -15,11 +15,11 @@ limitations under the License.
 */
 
 import {
-  Annotation,
+  type Annotation,
   BaseVisitor,
-  Context,
-  Visitor,
-} from "../deps/core/model.ts";
+  type Context,
+  type Visitor,
+} from "@apexlang/core/model";
 import { isProvider, isService } from "./utilities.ts";
 
 export interface UsesVisitor extends Visitor {
@@ -31,7 +31,7 @@ export class InterfaceUsesVisitor extends BaseVisitor implements UsesVisitor {
   services: Map<string, string[]> = new Map();
   dependencies: string[] = [];
 
-  visitInterface(context: Context): void {
+  public override visitInterface(context: Context): void {
     const { interface: iface } = context;
     if (isService(context)) {
       let dependencies: string[] = [];

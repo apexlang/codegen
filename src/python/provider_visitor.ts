@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, Context } from "../deps/core/model.ts";
+import { BaseVisitor, type Context } from "@apexlang/core/model";
 import { expandType } from "./helpers.ts";
 import {
   camelCase,
@@ -26,14 +26,14 @@ import {
 } from "../utils/mod.ts";
 
 export class ProviderVisitor extends BaseVisitor {
-  visitInterfaceBefore(context: Context): void {
+  public override visitInterfaceBefore(context: Context): void {
     const { interface: iface } = context;
     this.write(`class ${iface.name}Impl(${iface.name}):
 \tdef __init__(self, invoker: Invoker):
 \t\tself.invoker = invoker\n\n`);
   }
 
-  visitOperation(context: Context): void {
+  public override visitOperation(context: Context): void {
     const { interface: iface } = context;
     this.write(`\n`);
     const operation = context.operation!;
@@ -90,7 +90,7 @@ export class ProviderVisitor extends BaseVisitor {
     super.triggerOperation(context);
   }
 
-  visitInterfaceAfter(context: Context): void {
+  public override visitInterfaceAfter(context: Context): void {
     if (!isProvider(context)) {
       super.triggerInterfaceAfter(context);
       return;

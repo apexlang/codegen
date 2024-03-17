@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Context } from "../deps/core/model.ts";
+import type { Context } from "@apexlang/core/model";
 import { expandType } from "./helpers.ts";
 import { formatComment } from "../utils/mod.ts";
 import { GoVisitor } from "./go_visitor.ts";
@@ -45,7 +45,7 @@ export function translateAlias({
 }
 
 export class AliasVisitor extends GoVisitor {
-  visitAlias(context: Context): void {
+  public override visitAlias(context: Context): void {
     const { config, alias } = context;
     const aliases = config.aliases as { [key: string]: Import };
     if (aliases && aliases[alias.name]) {

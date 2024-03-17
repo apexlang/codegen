@@ -14,14 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Context } from "../deps/core/model.ts";
+import type { Context } from "@apexlang/core/model";
 import { IMPORTS } from "./constant.ts";
 import { getImporter, GoVisitor } from "./go_visitor.ts";
 import { fieldName } from "./helpers.ts";
 import { msgpackEncode } from "./msgpack_helpers.ts";
 
 export class MsgPackEncoderVisitor extends GoVisitor {
-  visitTypeFieldsBefore(context: Context): void {
+  public override visitTypeFieldsBefore(context: Context): void {
     super.triggerTypeFieldsBefore(context);
     const $ = getImporter(context, IMPORTS);
 
@@ -35,7 +35,7 @@ export class MsgPackEncoderVisitor extends GoVisitor {
     );
   }
 
-  visitTypeField(context: Context): void {
+  public override visitTypeField(context: Context): void {
     const field = context.field;
     this.write(`encoder.WriteString("${field.name}")\n`);
     this.write(
@@ -49,7 +49,7 @@ export class MsgPackEncoderVisitor extends GoVisitor {
     super.triggerTypeField(context);
   }
 
-  visitTypeFieldsAfter(context: Context): void {
+  public override visitTypeFieldsAfter(context: Context): void {
     this.write(`
     return nil
   }\n\n`);
@@ -58,7 +58,7 @@ export class MsgPackEncoderVisitor extends GoVisitor {
 }
 
 export class MsgPackEncoderUnionVisitor extends GoVisitor {
-  visitTypeFieldsBefore(context: Context): void {
+  public override visitTypeFieldsBefore(context: Context): void {
     super.triggerTypeFieldsBefore(context);
     const $ = getImporter(context, IMPORTS);
     this.write(
@@ -70,7 +70,7 @@ export class MsgPackEncoderUnionVisitor extends GoVisitor {
     );
   }
 
-  visitTypeField(context: Context): void {
+  public override visitTypeField(context: Context): void {
     const field = context.field;
     this.write(`if o.${fieldName(field, field.name)} != nil {\n`);
     this.write(`encoder.WriteMapSize(1)\n`);
@@ -88,7 +88,7 @@ export class MsgPackEncoderUnionVisitor extends GoVisitor {
     super.triggerTypeField(context);
   }
 
-  visitTypeFieldsAfter(context: Context): void {
+  public override visitTypeFieldsAfter(context: Context): void {
     this.write(`
     encoder.WriteNil()
     return nil

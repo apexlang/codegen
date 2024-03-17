@@ -1,5 +1,5 @@
-import { Configuration } from "https://deno.land/x/apex_cli@v0.0.18/src/config.ts";
-import * as ast from "https://deno.land/x/apex_core@v0.1.5/ast.ts";
+import { Configuration } from "@apexlang/apex/config.ts";
+import * as ast from "@apexlang/core/ast";
 
 const importUrl = new URL(".", import.meta.url);
 
@@ -25,13 +25,13 @@ export default function (
   };
   config.generates[`./src/api.ts`] = {
     ifNotExists: true,
-    module: "https://deno.land/x/apex_codegen/typescript/mod.ts",
+    module: "@apexlang/codegen/typescript",
     visitorClass: "ApiVisitor",
     config: {},
   };
   config.generates[`./src/interfaces.ts`] = {
     ifNotExists: true,
-    module: "https://deno.land/x/apex_codegen/typescript/mod.ts",
+    module: "@apexlang/codegen/typescript",
     visitorClass: "InterfacesVisitor",
     config: {},
   };

@@ -21,7 +21,7 @@ import {
   Map,
   Named,
   Optional,
-} from "../deps/core/model.ts";
+} from "@apexlang/core/model";
 import { pascalCase } from "../utils/mod.ts";
 import { translations } from "./constant.ts";
 

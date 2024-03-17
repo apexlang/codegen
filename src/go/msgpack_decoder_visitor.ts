@@ -14,14 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Context } from "../deps/core/model.ts";
+import type { Context } from "@apexlang/core/model";
 import { IMPORTS } from "./constant.ts";
 import { getImporter, GoVisitor } from "./go_visitor.ts";
 import { fieldName } from "./helpers.ts";
 import { msgpackRead } from "./msgpack_helpers.ts";
 
 export class MsgPackDecoderVisitor extends GoVisitor {
-  visitTypeFieldsBefore(context: Context): void {
+  public override visitTypeFieldsBefore(context: Context): void {
     super.triggerTypeFieldsBefore(context);
     const $ = getImporter(context, IMPORTS);
 
@@ -45,7 +45,7 @@ export class MsgPackDecoderVisitor extends GoVisitor {
     }
   }
 
-  visitTypeField(context: Context): void {
+  public override visitTypeField(context: Context): void {
     const field = context.field!;
     this.write(`case "${field.name}":\n`);
     this.write(
@@ -62,7 +62,7 @@ export class MsgPackDecoderVisitor extends GoVisitor {
     super.triggerTypeField(context);
   }
 
-  visitTypeFieldsAfter(context: Context): void {
+  public override visitTypeFieldsAfter(context: Context): void {
     if (context.fields.length > 0) {
       this.write(`default:
         err = decoder.Skip()

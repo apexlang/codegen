@@ -14,12 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, Context } from "../deps/core/model.ts";
+import { BaseVisitor, type Context } from "@apexlang/core/model";
 import { formatComment, pascalCase } from "../utils/mod.ts";
 import { expandType } from "../go/mod.ts";
 
 export class UnionVisitor extends BaseVisitor {
-  visitUnion(context: Context): void {
+  public override visitUnion(context: Context): void {
     const { union } = context;
     this.write(`  ${formatComment("// ", union.description)}`);
     this.write(`public record ${union.name} {\n`);

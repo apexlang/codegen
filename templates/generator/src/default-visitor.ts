@@ -1,7 +1,4 @@
-import {
-  BaseVisitor,
-  Context,
-} from "https://deno.land/x/apex_core@v0.1.5/model/mod.ts";
+import { BaseVisitor, type Context } from "@apexlang/core/model";
 import { TypeVisitor } from "./visitors/type-visitor.ts";
 import { InterfaceVisitor } from "./visitors/interface-visitor.ts";
 import { EnumVisitor } from "./visitors/enum-visitor.ts";
@@ -19,7 +16,7 @@ export class DefaultVisitor extends BaseVisitor {
    * *************************************************************************/
 
   // .visitContextBefore() runs at the start of execution.
-  visitContextBefore(context: Context): void {
+  public override visitContextBefore(context: Context): void {
     // Add a generated header to your source by
     // uncommenting the following lines:
     /*
@@ -49,7 +46,7 @@ export class DefaultVisitor extends BaseVisitor {
     }
   }
 
-  visitContextAfter(context: Context): void {
+  public override visitContextAfter(context: Context): void {
     /*
       If a "footer" option exists in the configuration, add it to the
       generated output.
@@ -63,37 +60,37 @@ export class DefaultVisitor extends BaseVisitor {
     }
   }
 
-  visitNamespace(context: Context): void {
+  public override visitNamespace(context: Context): void {
     const { namespace } = context;
 
     // The name of the namespace from the Apex schema.
-    const name = namespace.name;
+    const _name = namespace.name;
 
     // Use `.write()` to write to the destination buffer.
     this.write(``);
   }
 
-  visitType(context: Context): void {
+  public override visitType(context: Context): void {
     this.write(new TypeVisitor(context).buffer());
   }
 
-  visitInterface(context: Context): void {
+  public override visitInterface(context: Context): void {
     this.write(new InterfaceVisitor(context).buffer());
   }
 
-  visitEnum(context: Context): void {
+  public override visitEnum(context: Context): void {
     this.write(new EnumVisitor(context).buffer());
   }
 
-  visitUnion(context: Context): void {
+  public override visitUnion(context: Context): void {
     this.write(new UnionVisitor(context).buffer());
   }
 
-  visitFunction(context: Context): void {
+  public override visitFunction(context: Context): void {
     this.write(convertOperation(context.operation, true, context.config));
   }
 
-  visitAlias(context: Context): void {
+  public override visitAlias(context: Context): void {
     this.write(new AliasVisitor(context).buffer());
   }
 }

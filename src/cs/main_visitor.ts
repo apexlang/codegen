@@ -16,22 +16,22 @@ limitations under the License.
 
 // This Visitor generates the Main method, which is the entry point for C# code.
 
-import { BaseVisitor, Context } from "../deps/core/model.ts";
+import { BaseVisitor, type Context } from "@apexlang/core/model";
 import { parseNamespaceName } from "./helpers.ts";
 
 export class MainVisitor extends BaseVisitor {
-  visitNamespaceBefore(context: Context) {
+  public override visitNamespaceBefore(context: Context) {
     this.write(`namespace ${parseNamespaceName(context.namespace.name)} {\n`);
     super.visitNamespace(context);
   }
 
-  visitNamespace(context: Context) {
+  public override visitNamespace(context: Context) {
     this.write(`public class MainClass {\n`);
     this.write(`\t public static void Main(String[] args) {\n`);
     super.visitNamespace(context);
   }
 
-  visitInterface(context: Context) {
+  public override visitInterface(context: Context) {
     const { interface: iface } = context;
     if (iface.annotation("service")) {
       if (iface.annotation("uses")) {
@@ -47,7 +47,7 @@ export class MainVisitor extends BaseVisitor {
     super.visitInterface(context);
   }
 
-  visitNamespaceAfter(context: Context) {
+  public override visitNamespaceAfter(context: Context) {
     this.write(`\t\t }\n`);
     this.write(`\t}\n`);
     this.write(`}\n`);

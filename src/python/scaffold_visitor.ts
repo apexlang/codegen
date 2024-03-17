@@ -15,17 +15,17 @@ limitations under the License.
 */
 
 import {
-  Alias,
-  AnyType,
+  type Alias,
+  type AnyType,
   BaseVisitor,
-  Context,
+  type Context,
   Kind,
-  List,
-  Map,
-  Optional,
-  Type,
-  Writer,
-} from "../deps/core/model.ts";
+  type List,
+  type Map,
+  type Optional,
+  type Type,
+  type Writer,
+} from "@apexlang/core/model";
 import { defaultValueForType, expandType, mapArg, mapArgs } from "./helpers.ts";
 import {
   isHandler,
@@ -36,7 +36,7 @@ import {
 } from "../utils/mod.ts";
 
 export class ScaffoldVisitor extends BaseVisitor {
-  visitNamespaceBefore(context: Context): void {
+  public override visitNamespaceBefore(context: Context): void {
     this.write(`#!/usr/bin/env python3\n`);
     const adapter = new AdapterTypesVisitor(this.writer);
     context.namespace.accept(context, adapter);
@@ -45,7 +45,7 @@ export class ScaffoldVisitor extends BaseVisitor {
     this.write(`\n`);
   }
 
-  visitNamespaceAfter(context: Context): void {
+  public override visitNamespaceAfter(context: Context): void {
     const main = new MainVisitor(this.writer);
     context.namespace.accept(context, main);
 
@@ -54,7 +54,7 @@ export class ScaffoldVisitor extends BaseVisitor {
 \n`);
   }
 
-  visitInterfaceBefore(context: Context): void {
+  public override visitInterfaceBefore(context: Context): void {
     if (!isHandler(context)) {
       return;
     }
@@ -64,11 +64,11 @@ export class ScaffoldVisitor extends BaseVisitor {
 }
 
 class MainVisitor extends BaseVisitor {
-  visitNamespaceBefore(_context: Context): void {
+  public override visitNamespaceBefore(_context: Context): void {
     this.write(`def main():\n`);
   }
 
-  visitInterfaceBefore(context: Context): void {
+  public override visitInterfaceBefore(context: Context): void {
     if (!isHandler(context)) {
       return;
     }
@@ -77,7 +77,7 @@ class MainVisitor extends BaseVisitor {
     this.write(`\tregister_${snakeCase(name)}(${name}Impl())\n`);
   }
 
-  visitNamespaceAfter(_context: Context): void {
+  public override visitNamespaceAfter(_context: Context): void {
     this.write(`\n\tstart()\n`);
   }
 }
@@ -90,7 +90,7 @@ class ImplVisitor extends BaseVisitor {
     this.stateful = stateful;
   }
 
-  visitInterfaceBefore(context: Context): void {
+  public override visitInterfaceBefore(context: Context): void {
     if (!isHandler(context)) {
       return;
     }
@@ -99,7 +99,7 @@ class ImplVisitor extends BaseVisitor {
     this.write(`class ${name}Impl(${name}):\n`);
   }
 
-  visitOperation(context: Context): void {
+  public override visitOperation(context: Context): void {
     this.write(`\n`);
     const { operation } = context;
     if (noCode(operation)) {
@@ -134,16 +134,17 @@ class ImplVisitor extends BaseVisitor {
     super.triggerOperation(context);
   }
 
-  visitInterfaceAfter(_context: Context): void {
+  public override visitInterfaceAfter(_context: Context): void {
     this.write(`\n\n`);
   }
 }
 
 class AdapterTypesVisitor extends BaseVisitor {
-  visitNamespaceBefore(_content: Context): void {
+  public override visitNamespaceBefore(_content: Context): void {
     this.write(`from adapter import start`);
   }
-  visitInterface(context: Context): void {
+
+  public override visitInterface(context: Context): void {
     const { interface: iface } = context;
     if (isHandler(context)) {
       this.write(`, register_${snakeCase(iface.name)}`);
@@ -152,7 +153,8 @@ class AdapterTypesVisitor extends BaseVisitor {
       this.write(`, ${snakeCase(iface.name)}`);
     }
   }
-  visitNamespaceAfter(_content: Context): void {
+
+  public override visitNamespaceAfter(_content: Context): void {
     this.write(`\n`);
   }
 }
@@ -161,7 +163,7 @@ class TypesVisitor extends BaseVisitor {
   hasObjects = false;
   found: Set<string> = new Set<string>();
 
-  visitNamespaceBefore(_context: Context): void {}
+  public override visitNamespaceBefore(_context: Context): void {}
 
   private addImport(name: string): void {
     if (!this.found.has(name)) {
@@ -204,24 +206,24 @@ class TypesVisitor extends BaseVisitor {
     }
   }
 
-  visitInterface(context: Context): void {
+  public override visitInterface(context: Context): void {
     const { interface: iface } = context;
     if (isHandler(context)) {
       this.addImport(iface.name);
     }
   }
 
-  visitOperation(context: Context): void {
+  public override visitOperation(context: Context): void {
     const operation = context.operation!;
     this.addType(operation.type);
   }
 
-  visitParameter(context: Context): void {
+  public override visitParameter(context: Context): void {
     const parameter = context.parameter!;
     this.addType(parameter.type);
   }
 
-  visitNamespaceAfter(_context: Context): void {
+  public override visitNamespaceAfter(_context: Context): void {
     if (this.hasObjects) {
       this.write(`\n\n`);
     }

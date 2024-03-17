@@ -1,7 +1,7 @@
 import { parse } from "./parse.ts";
 import { DefaultVisitor } from "../src/default-visitor.ts";
-import { Writer } from "https://deno.land/x/apex_core@v0.1.5/model/mod.ts";
-import { assert } from "https://deno.land/std@0.167.0/testing/asserts.ts";
+import { Writer } from "@apexlang/core/model";
+import { assert } from "@std/assert";
 
 Deno.test("should generate apex from apex", () => {
   // Define test apex we can parse.

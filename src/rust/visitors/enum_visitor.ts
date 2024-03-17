@@ -1,5 +1,5 @@
-import { Context, Enum, ObjectMap } from "../../deps/core/model.ts";
-import { IndexTypeDirective } from "../directives.ts";
+import type { Context, Enum, ObjectMap } from "@apexlang/core/model";
+import type { IndexTypeDirective } from "../directives.ts";
 import {
   customAttributes,
   rustDoc,
@@ -22,7 +22,7 @@ export class EnumVisitor extends SourceGenerator<Enum> {
     this.visibility = visibility(this.root.name, this.config);
   }
 
-  getSource(): string {
+  public override getSource(): string {
     const optionalDisplayImpl = this.hasDisplayValues
       ? displayImpl(this.root)
       : "";
@@ -56,7 +56,7 @@ export class EnumVisitor extends SourceGenerator<Enum> {
     `;
   }
 
-  visitEnumValue(context: Context): void {
+  public override visitEnumValue(context: Context): void {
     const { enumValue } = context;
     this.hasDisplayValues ||= enumValue.display !== undefined;
     this.hasIndices ||= enumValue.index !== undefined;

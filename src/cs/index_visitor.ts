@@ -16,7 +16,12 @@ limitations under the License.
 
 // This Visitor generates how final output should look like by combining all the visitors together
 
-import { BaseVisitor, Context, Visitor, Writer } from "../deps/core/model.ts";
+import {
+  BaseVisitor,
+  type Context,
+  type Visitor,
+  type Writer,
+} from "@apexlang/core/model";
 import { InterfacesVisitor } from "./interfaces_visitor.ts";
 import { MinimalAPIVisitor } from "./api_visitor.ts";
 import { ScaffoldVisitor } from "./scaffold_visitor.ts";
@@ -31,35 +36,35 @@ export class IndexVisitor extends BaseVisitor {
   main_visitor = (writer: Writer): Visitor => new MainVisitor(writer);
   typeVisitor = (writer: Writer): Visitor => new TypeVisitor(writer);
 
-  visitNamespaceBefore(context: Context) {
+  public override visitNamespaceBefore(context: Context) {
     const visitor = this.apiVisitor(this.writer);
     context.namespace.accept(context, visitor);
     this.write(`\n`);
     super.visitNamespaceBefore(context);
   }
 
-  visitNamespace(context: Context) {
+  public override visitNamespace(context: Context) {
     const visitor = this.scaffoldVisitor(this.writer);
     context.namespace.accept(context, visitor);
     this.write(`\n`);
     super.visitNamespace(context);
   }
 
-  visitInterface(context: Context) {
+  public override visitInterface(context: Context) {
     const visitor = this.interfacesVisitor(this.writer);
     context.interface.accept(context, visitor);
     this.write(`\n`);
     super.visitInterface(context);
   }
 
-  visitNamespaceAfter(context: Context) {
+  public override visitNamespaceAfter(context: Context) {
     const visitor = this.main_visitor(this.writer);
     context.namespace.accept(context, visitor);
     this.write(`\n`);
     super.visitNamespaceBefore(context);
   }
 
-  visitType(context: Context) {
+  public override visitType(context: Context) {
     const visitor = this.typeVisitor(this.writer);
     context.type.accept(context, visitor);
     super.visitType(context);

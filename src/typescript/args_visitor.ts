@@ -14,12 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, Context } from "../deps/core/model.ts";
+import { BaseVisitor, type Context } from "@apexlang/core/model";
 import { convertOperationToType, noCode } from "../utils/mod.ts";
 import { ClassVisitor } from "./class_visitor.ts";
 
 export class ArgsVisitor extends BaseVisitor {
-  visitOperation(context: Context): void {
+  public override visitOperation(context: Context): void {
     const { interface: iface, operation } = context;
     if (noCode(operation)) {
       return;

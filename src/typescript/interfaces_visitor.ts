@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, Context } from "../deps/core/model.ts";
+import { BaseVisitor, type Context } from "@apexlang/core/model";
 import { ClassVisitor } from "./class_visitor.ts";
 import { EnumVisitor } from "./enum_visitor.ts";
 import { InterfaceVisitor } from "./interface_visitor.ts";
@@ -22,28 +22,28 @@ import { AliasVisitor } from "./alias_visitor.ts";
 import { ImportsVisitor } from "./imports_visitor.ts";
 
 export class InterfacesVisitor extends BaseVisitor {
-  visitNamespaceBefore(context: Context): void {
+  public override visitNamespaceBefore(context: Context): void {
     const e = new ImportsVisitor(this.writer);
     context.namespace.accept(context, e);
     this.write(`\n`);
   }
 
-  visitInterfaceBefore(context: Context): void {
+  public override visitInterfaceBefore(context: Context): void {
     const iface = new InterfaceVisitor(this.writer);
     context.interface.accept(context, iface);
   }
 
-  visitAlias(context: Context): void {
+  public override visitAlias(context: Context): void {
     const e = new AliasVisitor(this.writer);
     context.alias!.accept(context, e);
   }
 
-  visitEnum(context: Context): void {
+  public override visitEnum(context: Context): void {
     const e = new EnumVisitor(this.writer);
     context.enum!.accept(context, e);
   }
 
-  visitType(context: Context): void {
+  public override visitType(context: Context): void {
     const clazz = new ClassVisitor(this.writer);
     context.type!.accept(context, clazz);
   }

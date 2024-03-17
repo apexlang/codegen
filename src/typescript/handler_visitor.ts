@@ -14,12 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, Context } from "../deps/core/model.ts";
+import { BaseVisitor, type Context } from "@apexlang/core/model";
 import { expandType, mapArg, mapArgs } from "./helpers.ts";
 import { camelCase, formatComment, noCode } from "../utils/mod.ts";
 
 export class HandlerVisitor extends BaseVisitor {
-  visitInterfaceBefore(context: Context): void {
+  public override visitInterfaceBefore(context: Context): void {
     super.triggerInterfaceBefore(context);
     const { interface: iface } = context;
     this.write(formatComment("// ", iface.description));
@@ -27,7 +27,7 @@ export class HandlerVisitor extends BaseVisitor {
       \n`);
   }
 
-  visitOperation(context: Context): void {
+  public override visitOperation(context: Context): void {
     const { operation } = context;
     if (noCode(operation)) {
       return;
@@ -45,7 +45,7 @@ export class HandlerVisitor extends BaseVisitor {
     super.triggerOperation(context);
   }
 
-  visitInterfaceAfter(context: Context): void {
+  public override visitInterfaceAfter(context: Context): void {
     this.write(`}\n\n`);
     super.triggerInterfaceAfter(context);
   }

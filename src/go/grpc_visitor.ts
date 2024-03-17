@@ -16,21 +16,21 @@ limitations under the License.
 */
 
 import {
-  Alias,
-  AnyType,
-  Context,
-  Enum,
-  Field,
+  type Alias,
+  type AnyType,
+  type Context,
+  type Enum,
+  type Field,
   Kind,
-  List,
-  Map,
-  Named,
-  Optional,
-  Primitive,
+  type List,
+  type Map,
+  type Named,
+  type Optional,
+  type Primitive,
   PrimitiveName,
-  Type,
-  Union,
-} from "../deps/core/model.ts";
+  type Type,
+  type Union,
+} from "@apexlang/core/model";
 import {
   capitalize,
   convertOperationToType,
@@ -47,7 +47,7 @@ import {
   getImporter,
   getImports,
   GoVisitor,
-  ImportNames,
+  type ImportNames,
 } from "./go_visitor.ts";
 import { expandType, fieldName, methodName, returnShare } from "./helpers.ts";
 import { StructVisitor } from "./struct_visitor.ts";
@@ -58,7 +58,7 @@ export class GRPCVisitor extends GoVisitor {
   private input: { [name: string]: NamedType } = {};
   private output: { [name: string]: NamedType } = {};
 
-  visitInterfaceBefore(context: Context): void {
+  public override visitInterfaceBefore(context: Context): void {
     if (!isService(context)) {
       return;
     }
@@ -88,7 +88,7 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
 }\n\n`);
   }
 
-  visitParameter(context: Context): void {
+  public override visitParameter(context: Context): void {
     if (!isService(context)) {
       return;
     }
@@ -96,7 +96,7 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
     this.checkType(context, parameter.type, this.input);
   }
 
-  visitOperation(context: Context): void {
+  public override visitOperation(context: Context): void {
     if (!isService(context)) {
       return;
     }
@@ -370,7 +370,7 @@ func New${iface.name}GRPCWrapper(service ${iface.name}) *${iface.name}GRPCWrappe
     this.write(`}\n\n`);
   }
 
-  visitNamespaceAfter(context: Context): void {
+  public override visitNamespaceAfter(context: Context): void {
     const $ = getImporter(context, IMPORTS);
     for (const name of Object.keys(this.input)) {
       const named = this.input[name];

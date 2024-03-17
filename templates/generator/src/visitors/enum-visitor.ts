@@ -1,7 +1,4 @@
-import {
-  Context,
-  Enum,
-} from "https://deno.land/x/apex_core@v0.1.5/model/mod.ts";
+import type { Context, Enum } from "@apexlang/core/model";
 import { convertDescription } from "../utils/conversions.ts";
 
 import { SourceGenerator } from "./base.ts";
@@ -25,35 +22,35 @@ export class EnumVisitor extends SourceGenerator<Enum> {
     super(context.enum, context);
   }
 
-  buffer(): string {
+  override buffer(): string {
     // The name of the Enum from the Apex schema.
-    const name = this.node.name;
+    const _name = this.node.name;
 
     // Get the buffered output. Your visitor operations write
     // to this buffer when they call `.write()`.
-    const innerSource = this.writer.string();
+    const _innerSource = this.writer.string();
 
     // A comment generated from the description.
-    const comment = convertDescription(this.node.description);
+    const _comment = convertDescription(this.node.description);
 
     // Combine the above to create and return new output here.
     return ``;
   }
 
-  visitEnumValue(context: Context): void {
+  override visitEnumValue(context: Context): void {
     const { enumValue } = context;
 
     // The name of the EnumValue variant.
-    const name = enumValue.name;
+    const _name = enumValue.name;
 
     // The display value for the Enum (if defined).
-    const display = enumValue.display;
+    const _display = enumValue.display;
 
     // The index of the Enum (if defined).
-    const index = enumValue.index;
+    const _index = enumValue.index;
 
     // A comment generated from the description.
-    const comment = convertDescription(this.node.description);
+    const _comment = convertDescription(this.node.description);
 
     // Append to the buffer in `this.writer`. Get the buffer's
     // state by calling `this.writer.string()`.

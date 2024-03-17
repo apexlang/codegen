@@ -14,12 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Context, Kind, Named, Writer } from "../deps/core/model.ts";
+import { Context, Kind, Named, Writer } from "@apexlang/core/model";
 import { expandType, fieldName } from "./helpers.ts";
 import { translateAlias } from "./alias_visitor.ts";
 import { formatComment } from "../utils/mod.ts";
 import { getImports, GoVisitor } from "./go_visitor.ts";
-import { Kind as ASTKind, StringValue, Value } from "../deps/core/ast.ts";
+import { Kind as ASTKind, StringValue, Value } from "@apexlang/core/ast";
 
 interface Serialize {
   value: string;
@@ -33,7 +33,7 @@ export class StructVisitor extends GoVisitor {
     this.writeTypeInfo = writeTypeInfo;
   }
 
-  visitTypeBefore(context: Context): void {
+  public override visitTypeBefore(context: Context): void {
     const { type } = context;
     super.triggerTypeBefore(context);
     this.write(formatComment("// ", type.description));
@@ -49,7 +49,7 @@ export class StructVisitor extends GoVisitor {
     }
   }
 
-  visitTypeField(context: Context): void {
+  public override visitTypeField(context: Context): void {
     const { field, type } = context;
     const importer = getImports(context);
     importer.type(field.type);
@@ -89,7 +89,7 @@ export class StructVisitor extends GoVisitor {
     super.triggerTypeField(context);
   }
 
-  visitTypeAfter(context: Context): void {
+  public override visitTypeAfter(context: Context): void {
     const { type } = context;
     const receiver = type.name.substring(0, 1).toLowerCase();
     this.write(`}\n\n`);
@@ -112,7 +112,7 @@ export class StructVisitor extends GoVisitor {
 }
 
 export class DefaultsVisitor extends GoVisitor {
-  visitTypeBefore(context: Context): void {
+  public override visitTypeBefore(context: Context): void {
     const { type } = context;
     super.triggerTypeBefore(context);
     this.write(
@@ -125,7 +125,7 @@ export class DefaultsVisitor extends GoVisitor {
       return ${type.name}{\n`);
   }
 
-  public visitTypeField(context: Context): void {
+  public override visitTypeField(context: Context): void {
     const { field } = context;
     if (!field.default) {
       return;
@@ -135,7 +135,7 @@ export class DefaultsVisitor extends GoVisitor {
     );
   }
 
-  visitTypeAfter(_context: Context): void {
+  public override visitTypeAfter(_context: Context): void {
     this.write(`}\n}\n\n`);
   }
 }

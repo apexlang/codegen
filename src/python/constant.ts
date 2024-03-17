@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-export const translations = new Map<string, string>([
+export const translations: Map<string, string> = new Map<string, string>([
   ["ID", "str"],
   ["string", "str"],
   ["i64", "int"],

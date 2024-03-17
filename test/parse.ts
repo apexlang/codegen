@@ -1,5 +1,5 @@
-import { parse as parseApex } from "https://deno.land/x/apex_core@v0.1.5/mod.ts";
-import { Context, Namespace, Type } from "../src/deps/core/model.ts";
+import { parse as parseApex } from "@apexlang/core";
+import { Context, type Namespace, type Type } from "@apexlang/core/model";
 
 export function parse(src: string): Namespace {
   const doc = parseApex(src);

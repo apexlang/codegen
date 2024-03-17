@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Context, Operation } from "../deps/core/model.ts";
+import { Context, Operation } from "@apexlang/core/model";
 
 export interface PathDirective {
   value: string;

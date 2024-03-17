@@ -14,7 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { AnyType, Context, Kind, Type } from "../deps/core/model.ts";
+import {
+  type AnyType,
+  type Context,
+  Kind,
+  type Type,
+} from "@apexlang/core/model";
 import {
   capitalize,
   convertOperationToType,
@@ -31,7 +36,7 @@ import { getImporter, GoVisitor } from "./go_visitor.ts";
 import { IMPORTS } from "./constant.ts";
 
 export class FiberVisitor extends GoVisitor {
-  visitInterfaceBefore(context: Context): void {
+  public override visitInterfaceBefore(context: Context): void {
     if (!isService(context)) {
       return;
     }
@@ -43,7 +48,7 @@ export class FiberVisitor extends GoVisitor {
 }
 
 class FiberServiceVisitor extends GoVisitor {
-  visitInterfaceBefore(context: Context): void {
+  public override visitInterfaceBefore(context: Context): void {
     const { interface: iface } = context;
     const $ = getImporter(context, IMPORTS);
     this
@@ -53,7 +58,7 @@ class FiberServiceVisitor extends GoVisitor {
       );
   }
 
-  visitOperation(context: Context): void {
+  public override visitOperation(context: Context): void {
     const { interface: iface, operation } = context;
     const $ = getImporter(context, IMPORTS);
     const path = getPath(context);
@@ -154,7 +159,7 @@ class FiberServiceVisitor extends GoVisitor {
     });
   }
 
-  visitInterfaceAfter(_context: Context): void {
+  public override visitInterfaceAfter(_context: Context): void {
     this.write(`  }
 }\n`);
   }

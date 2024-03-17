@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-export const msgpackCodecFuncs = new Map<string, string>([
+export const msgpackCodecFuncs: Map<string, string> = new Map<string, string>([
   ["ID", "StringToBytes"],
   ["bool", "BoolToBytes"],
   ["string", "StringToBytes"],
@@ -32,7 +32,7 @@ export const msgpackCodecFuncs = new Map<string, string>([
   ["bytes", "ByteArraToBytesy"],
 ]);
 
-export const msgpackDecodeFuncs = new Map<string, string>([
+export const msgpackDecodeFuncs: Map<string, string> = new Map<string, string>([
   ["ID", "ReadString"],
   ["bool", "ReadBool"],
   ["string", "ReadString"],
@@ -50,7 +50,10 @@ export const msgpackDecodeFuncs = new Map<string, string>([
   ["bytes", "ReadByteArray"],
 ]);
 
-export const msgpackDecodeNillableFuncs = new Map<string, string>([
+export const msgpackDecodeNillableFuncs: Map<string, string> = new Map<
+  string,
+  string
+>([
   ["ID", "ReadNillableString"],
   ["bool", "ReadNillableBool"],
   ["string", "ReadNillableString"],
@@ -68,7 +71,7 @@ export const msgpackDecodeNillableFuncs = new Map<string, string>([
   ["bytes", "ReadNillableByteArray"],
 ]);
 
-export const msgpackEncodeFuncs = new Map<string, string>([
+export const msgpackEncodeFuncs: Map<string, string> = new Map<string, string>([
   ["ID", "WriteString"],
   ["bool", "WriteBool"],
   ["string", "WriteString"],
@@ -86,7 +89,10 @@ export const msgpackEncodeFuncs = new Map<string, string>([
   ["bytes", "WriteByteArray"],
 ]);
 
-export const msgpackEncodeNillableFuncs = new Map<string, string>([
+export const msgpackEncodeNillableFuncs: Map<string, string> = new Map<
+  string,
+  string
+>([
   ["ID", "WriteNillableString"],
   ["bool", "WriteNillableBool"],
   ["string", "WriteNillableString"],
@@ -104,7 +110,7 @@ export const msgpackEncodeNillableFuncs = new Map<string, string>([
   ["bytes", "WriteNillableByteArray"],
 ]);
 
-export const msgpackCastFuncs = new Map<string, string>([
+export const msgpackCastFuncs: Map<string, string> = new Map<string, string>([
   ["ID", "convert.String"],
   ["bool", "convert.Bool"],
   ["string", "convert.String"],
@@ -121,7 +127,10 @@ export const msgpackCastFuncs = new Map<string, string>([
   ["bytes", "convert.ByteArray"],
 ]);
 
-export const msgpackCastNillableFuncs = new Map<string, string>([
+export const msgpackCastNillableFuncs: Map<string, string> = new Map<
+  string,
+  string
+>([
   ["ID", "convert.NillableString"],
   ["bool", "convert.NillableBool"],
   ["string", "convert.NillableString"],

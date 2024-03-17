@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, Context } from "../deps/core/model.ts";
+import { BaseVisitor, type Context } from "@apexlang/core/model";
 import { expandType } from "./helpers.ts";
 import { formatComment } from "../utils/mod.ts";
 
@@ -44,7 +44,7 @@ export function defaultForAlias(
 }
 
 export class AliasVisitor extends BaseVisitor {
-  visitAlias(context: Context): void {
+  public override visitAlias(context: Context): void {
     const alias = context.alias!;
 
     const aliases = context.config.aliases as { [key: string]: Import };
