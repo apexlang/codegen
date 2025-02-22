@@ -1,0 +1,12 @@
+tasks:
+  test:
+    description: Run tests
+    cmds:
+      - deno fmt --check src/ test/
+      - deno lint src/
+      - deno check ./**/*.ts
+      - deno test -A --unstable-worker-options --permit-no-files
+  install:
+    description: Install templates
+    cmds:
+      - apex install ./templates/mod.ts

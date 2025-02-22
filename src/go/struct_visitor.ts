@@ -1,5 +1,5 @@
 /*
-Copyright 2022 The Apex Authors.
+Copyright 2025 The Apex Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,12 +14,21 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Context, Kind, Named, Writer } from "@apexlang/core/model";
+import {
+  Context,
+  Kind,
+  Named,
+  Writer,
+} from "../../deps/@apexlang/core/model/mod.ts";
 import { expandType, fieldName } from "./helpers.ts";
 import { translateAlias } from "./alias_visitor.ts";
 import { formatComment } from "../utils/mod.ts";
 import { getImports, GoVisitor } from "./go_visitor.ts";
-import { Kind as ASTKind, StringValue, Value } from "@apexlang/core/ast";
+import {
+  Kind as ASTKind,
+  StringValue,
+  Value,
+} from "../../deps/@apexlang/core/ast/mod.ts";
 
 interface Serialize {
   value: string;

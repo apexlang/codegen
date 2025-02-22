@@ -1,0 +1,19 @@
+{
+  "name": "{{ .name }}",
+  "version": "{{ .version }}",
+  "description": "{{ .description }}",
+  "keywords": ["idl", "codegen"],
+  "exports": {
+    "./visitors": "./src/visitors/mod.ts"
+  },
+  "publish": {
+    "include": [
+      "LICENSE",
+      "README.md",
+      "templates",
+      "deps/**/*.ts",
+      "src/**/*.ts"
+    ],
+    "exclude": ["src/tests"]
+  }
+}

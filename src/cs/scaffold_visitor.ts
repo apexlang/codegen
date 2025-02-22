@@ -1,5 +1,5 @@
 /*
-Copyright 2022 The Apex Authors.
+Copyright 2025 The Apex Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ export * from "./alias_visitor.ts";
 export { InterfacesVisitor as default } from "./interfaces_visitor.ts";
 
 import { formatComment, isOneOfType, pascalCase } from "../utils/mod.ts";
-import { BaseVisitor, type Context } from "@apexlang/core/model";
+import { BaseVisitor, Context } from "../../deps/@apexlang/core/model/mod.ts";
 import { expandType, parseNamespaceName } from "./helpers.ts";
 
 export class ScaffoldVisitor extends BaseVisitor {

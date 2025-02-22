@@ -1,14 +1,14 @@
 import {
-  type Alias,
+  Alias,
   BaseVisitor,
-  type Context,
-  type Enum,
-  type Interface,
-  type ObjectMap,
-  type Type,
-  type Union,
+  Context,
+  Enum,
+  Interface,
+  ObjectMap,
+  Type,
+  Union,
   Writer,
-} from "@apexlang/core/model";
+} from "../../deps/@apexlang/core/model/mod.ts";
 
 export type VisitorTypes = Alias | Type | Union | Enum | Interface;
 

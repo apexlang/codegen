@@ -1,5 +1,5 @@
 /*
-Copyright 2022 The Apex Authors.
+Copyright 2025 The Apex Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,22 +15,22 @@ limitations under the License.
 */
 
 import {
-  type Alias,
-  type AnyType,
+  Alias,
+  AnyType,
   BaseVisitor,
-  type Context,
-  type Enum,
+  Context,
+  Enum,
   Kind,
-  type List as ListType,
-  type Map as MapType,
-  type Named,
-  type Optional,
-  type Primitive,
+  List as ListType,
+  Map as MapType,
+  Named,
+  Optional,
+  Primitive,
   PrimitiveName,
-  type Stream,
-  type Type,
-  type Writer,
-} from "@apexlang/core/model";
+  Stream,
+  Type,
+  Writer,
+} from "../../deps/@apexlang/core/model/mod.ts";
 import {
   convertOperationToType,
   ExposedTypesVisitor,

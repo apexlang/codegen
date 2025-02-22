@@ -1,10 +1,10 @@
 // deno-lint-ignore-file no-explicit-any
 import {
-  type Context,
+  Context,
   Kind,
-  type ObjectMap,
-  type Type,
-} from "@apexlang/core/model";
+  ObjectMap,
+  Type,
+} from "../../../deps/@apexlang/core/model/mod.ts";
 import { isPrimitive, isRecursiveType } from "../../utils/mod.ts";
 import {
   customAttributes,

@@ -1,5 +1,5 @@
 /*
-Copyright 2022 The Apex Authors.
+Copyright 2025 The Apex Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,9 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, type Context } from "@apexlang/core/model";
+import { BaseVisitor, Context } from "../../deps/@apexlang/core/model/mod.ts";
 import { formatComment, pascalCase } from "../utils/mod.ts";
-import { expandType, type Import } from "../go/mod.ts";
+import { expandType, Import } from "./helpers.ts";
 
 export class AliasVisitor extends BaseVisitor {
   public override visitAlias(context: Context): void {

@@ -29,7 +29,7 @@ export function rustifyCaps(name: string): string {
   return base;
 }
 
-import type { ObjectMap } from "@apexlang/core/model";
+import { ObjectMap } from "../../../deps/@apexlang/core/model/mod.ts";
 
 export type visibility = "pub" | "pub(crate)" | "";
 

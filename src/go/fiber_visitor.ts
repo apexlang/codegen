@@ -1,5 +1,5 @@
 /*
-Copyright 2022 The Apex Authors.
+Copyright 2025 The Apex Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,11 +15,11 @@ limitations under the License.
 */
 
 import {
-  type AnyType,
-  type Context,
+  AnyType,
+  Context,
   Kind,
-  type Type,
-} from "@apexlang/core/model";
+  Type,
+} from "../../deps/@apexlang/core/model/mod.ts";
 import {
   capitalize,
   convertOperationToType,

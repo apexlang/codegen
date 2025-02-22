@@ -1,5 +1,5 @@
 /*
-Copyright 2022 The Apex Authors.
+Copyright 2025 The Apex Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,17 +15,17 @@ limitations under the License.
 */
 
 import {
-  type Alias,
-  type AnyType,
+  Alias,
+  AnyType,
   BaseVisitor,
-  type Context,
+  Context,
   Kind,
-  type List,
-  type Map,
-  type Optional,
-  type Type,
-  type Writer,
-} from "@apexlang/core/model";
+  List,
+  Map,
+  Optional,
+  Type,
+  Writer,
+} from "../../deps/@apexlang/core/model/mod.ts";
 import { defaultValueForType, expandType, mapArg, mapArgs } from "./helpers.ts";
 import {
   isHandler,

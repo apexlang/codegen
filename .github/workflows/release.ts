@@ -4,6 +4,7 @@ function env(name: string): string {
   return val;
 }
 
+const files = env("FILES").split(/\s*,\s*/);
 const version = env("VERSION");
 
 if (!version.match(/^v\d+\.\d+\.\d+$/)) {
@@ -12,7 +13,7 @@ if (!version.match(/^v\d+\.\d+\.\d+$/)) {
 
 console.log("Updating versions in files");
 
-for (const file of ["jsr.json", "deno.json"]) {
+for (const file of files) {
   console.log(`Updating ${file} for ${version}...`);
   const orig = Deno.readTextFileSync(file);
   const updated = orig.replace(/\d+\.\d+\.\d+/, version.substring(1));

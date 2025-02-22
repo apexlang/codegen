@@ -22,6 +22,7 @@ jobs:
       - name: Update version and README.md
         env:
           VERSION: ${{ inputs.version }}
+          FILES: "README.md,jsr.json"
         run: |
           deno run --allow-run --allow-env --allow-write --allow-read ./.github/workflows/release.ts
       - name: Commit and tag release

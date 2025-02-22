@@ -1,4 +1,4 @@
-spec: ../spec.apexlang
+spec: ../apex.axdl
 generates:
   openapi.yaml:
     module: '../../../src/openapiv3/mod.ts'

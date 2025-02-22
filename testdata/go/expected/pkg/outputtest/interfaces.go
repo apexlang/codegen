@@ -216,3 +216,18 @@ func (e *MyEnum) UnmarshalJSON(b []byte) error {
 	}
 	return e.FromString(str)
 }
+
+// MarshalYAML marshals the enum as a YAML string
+func (e MyEnum) MarshalYAML() (any, error) {
+	return e.String(), nil
+}
+
+// UnmarshalYAML unmashals a quoted YAML string to the enum value
+func (e *MyEnum) UnmarshalYAML(unmarshal func(any) error) error {
+	var str string
+	if err := unmarshal(&str); err != nil {
+		return err
+	}
+
+	return e.FromString(str)
+}

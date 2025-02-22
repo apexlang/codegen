@@ -1,5 +1,5 @@
 /*
-Copyright 2022 The Apex Authors.
+Copyright 2025 The Apex Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,25 +15,25 @@ limitations under the License.
 */
 
 import {
-  type Alias,
-  type Annotated,
-  type Annotation,
-  type AnyType,
-  type Context,
-  type Enum,
-  type Interface,
+  Alias,
+  Annotated,
+  Annotation,
+  AnyType,
+  Context,
+  Enum,
+  Interface,
   Kind,
-  type List,
-  type Map,
-  type Named,
-  type Operation,
-  type Optional,
-  type Primitive,
-  type Stream,
+  List,
+  Map,
+  Named,
+  Operation,
+  Optional,
+  Primitive,
+  Stream,
   Type,
-  type TypeResolver,
-  type Union,
-} from "@apexlang/core/model";
+  TypeResolver,
+  Union,
+} from "../../deps/@apexlang/core/model/mod.ts";
 import {
   FieldDefinition,
   ListType,
@@ -43,9 +43,9 @@ import {
   Optional as OptionalAST,
   Stream as StreamType,
   StringValue,
-  type Type as ASTType,
+  Type as ASTType,
   TypeDefinition,
-} from "@apexlang/core/ast";
+} from "../../deps/@apexlang/core/ast/mod.ts";
 
 export function isOneOfType(context: Context, types: string[]): boolean {
   if (context.interface) {

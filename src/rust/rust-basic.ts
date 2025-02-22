@@ -1,4 +1,4 @@
-import type { Context, Writer } from "@apexlang/core/model";
+import { Context, Writer } from "../../deps/@apexlang/core/model/mod.ts";
 import { ContextWriter } from "./visitors/base.ts";
 import { StructVisitor } from "./visitors/struct_visitor.ts";
 import {

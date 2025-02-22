@@ -1,5 +1,5 @@
 /*
-Copyright 2022 The Apex Authors.
+Copyright 2025 The Apex Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,20 +15,20 @@ limitations under the License.
 */
 
 import {
-  type Alias,
-  type AnyType,
-  type Context,
-  type Enum,
+  Alias,
+  AnyType,
+  Context,
+  Enum,
   Kind,
-  type List,
-  type Map,
-  type Named,
-  type Optional,
-  type Parameter,
-  type Primitive,
+  List,
+  Map,
+  Named,
+  Optional,
+  Parameter,
+  Primitive,
   PrimitiveName,
-} from "@apexlang/core/model";
-import { type Import, translateAlias } from "./alias_visitor.ts";
+} from "../../deps/@apexlang/core/model/mod.ts";
+import { Import, translateAlias } from "./alias_visitor.ts";
 import { IMPORTS, translations } from "./constant.ts";
 import { getImporter } from "./go_visitor.ts";
 import { expandType, fieldName, returnShare } from "./helpers.ts";

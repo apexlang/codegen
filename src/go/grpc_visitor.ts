@@ -1,6 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
 /*
-Copyright 2022 The Apex Authors.
+Copyright 2025 The Apex Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,21 +16,21 @@ limitations under the License.
 */
 
 import {
-  type Alias,
-  type AnyType,
-  type Context,
-  type Enum,
-  type Field,
+  Alias,
+  AnyType,
+  Context,
+  Enum,
+  Field,
   Kind,
-  type List,
-  type Map,
-  type Named,
-  type Optional,
-  type Primitive,
+  List,
+  Map,
+  Named,
+  Optional,
+  Primitive,
   PrimitiveName,
-  type Type,
-  type Union,
-} from "@apexlang/core/model";
+  Type,
+  Union,
+} from "../../deps/@apexlang/core/model/mod.ts";
 import {
   capitalize,
   convertOperationToType,
@@ -47,7 +47,7 @@ import {
   getImporter,
   getImports,
   GoVisitor,
-  type ImportNames,
+  ImportNames,
 } from "./go_visitor.ts";
 import { expandType, fieldName, methodName, returnShare } from "./helpers.ts";
 import { StructVisitor } from "./struct_visitor.ts";

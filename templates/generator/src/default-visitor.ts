@@ -1,4 +1,4 @@
-import { BaseVisitor, type Context } from "@apexlang/core/model";
+import { BaseVisitor, Context } from "../deps/@apexlang/core/model/mod.ts";
 import { TypeVisitor } from "./visitors/type-visitor.ts";
 import { InterfaceVisitor } from "./visitors/interface-visitor.ts";
 import { EnumVisitor } from "./visitors/enum-visitor.ts";

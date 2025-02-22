@@ -1,5 +1,5 @@
 /*
-Copyright 2022 The Apex Authors.
+Copyright 2025 The Apex Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,16 +15,16 @@ limitations under the License.
 */
 
 import {
-  type AnyType,
+  AnyType,
   BaseVisitor,
-  type Context,
+  Context,
   Kind,
-  type List,
-  type Map,
-  type Optional,
-  type Type,
-} from "@apexlang/core/model";
-import type { Import } from "./alias_visitor.ts";
+  List,
+  Map,
+  Optional,
+  Type,
+} from "../../deps/@apexlang/core/model/mod.ts";
+import { Import } from "./alias_visitor.ts";
 
 export class ImportsVisitor extends BaseVisitor {
   private imports: { [key: string]: Import } = {};

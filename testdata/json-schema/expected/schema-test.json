@@ -136,10 +136,7 @@
           "type": "string"
         }
       },
-      "required": [
-        "foo",
-        "bar"
-      ]
+      "required": ["foo", "bar"]
     },
     "PhoneNumber": {
       "properties": {
@@ -150,10 +147,7 @@
           "$ref": "#/$defs/PhoneType"
         }
       },
-      "required": [
-        "number",
-        "type"
-      ]
+      "required": ["number", "type"]
     },
     "Cat": {
       "properties": {
@@ -161,9 +155,7 @@
           "type": "integer"
         }
       },
-      "required": [
-        "lives"
-      ]
+      "required": ["lives"]
     },
     "Dog": {
       "properties": {
@@ -171,9 +163,7 @@
           "type": "string"
         }
       },
-      "required": [
-        "years"
-      ]
+      "required": ["years"]
     },
     "MyUnion": {
       "type": "object",
@@ -201,20 +191,12 @@
     "MyEnum": {
       "description": "MyEnum is an emuneration",
       "type": "string",
-      "enum": [
-        "one",
-        "TWO",
-        "three"
-      ]
+      "enum": ["one", "TWO", "three"]
     },
     "PhoneType": {
       "description": "Example: enum",
       "type": "string",
-      "enum": [
-        "Mobile",
-        "Home",
-        "Work"
-      ]
+      "enum": ["Mobile", "Home", "Work"]
     }
   }
 }

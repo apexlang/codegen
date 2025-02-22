@@ -1,6 +1,6 @@
 // deno-lint-ignore-file no-explicit-any
 /*
-Copyright 2022 The Apex Authors.
+Copyright 2025 The Apex Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,19 +16,19 @@ limitations under the License.
 */
 
 import {
-  type Alias,
-  type AnyType,
+  Alias,
+  AnyType,
   BaseVisitor,
-  type Context,
+  Context,
   Kind,
-  type List,
-  type Map as MapType,
-  type Optional,
-  type Primitive,
+  List,
+  Map as MapType,
+  Optional,
+  Primitive,
   PrimitiveName,
-  type Type,
-} from "@apexlang/core/model";
-import type { Import } from "./alias_visitor.ts";
+  Type,
+} from "../../deps/@apexlang/core/model/mod.ts";
+import { Import } from "./alias_visitor.ts";
 
 interface Imported {
   as?: string;

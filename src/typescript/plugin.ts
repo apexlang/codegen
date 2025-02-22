@@ -1,5 +1,5 @@
-import { Configuration } from "@apexlang/apex/config.ts";
-import * as ast from "@apexlang/core/ast";
+import { Configuration } from "../../deps/@apexlang/apex/config/mod.ts";
+import * as ast from "../../deps/@apexlang/core/ast/mod.ts";
 
 const importUrl = new URL(".", import.meta.url);
 

@@ -1,4 +1,4 @@
-import type { Alias, Context } from "@apexlang/core/model";
+import { Alias, Context } from "../../deps/@apexlang/core/model/mod.ts";
 import { convertDescription } from "../utils/conversions.ts";
 import { convertType } from "../utils/types.ts";
 

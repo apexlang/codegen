@@ -1,5 +1,5 @@
 /*
-Copyright 2022 The Apex Authors.
+Copyright 2025 The Apex Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,12 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import type { Context, Writer } from "@apexlang/core/model";
-import {
-  camelCase,
-  InterfaceUsesVisitor,
-  type UsesVisitor,
-} from "../utils/mod.ts";
+import { Context, Writer } from "../../deps/@apexlang/core/model/mod.ts";
+import { camelCase, InterfaceUsesVisitor, UsesVisitor } from "../utils/mod.ts";
 import { IMPORTS } from "./constant.ts";
 import { getImporter, getImports, GoVisitor } from "./go_visitor.ts";
 
