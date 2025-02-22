@@ -1,7 +1,4 @@
-import {
-  Context,
-  Type,
-} from "https://deno.land/x/apex_core@v0.1.5/model/mod.ts";
+import type { Context, Type } from "@apexlang/core/model";
 import { convertDescription } from "../utils/conversions.ts";
 import { convertType } from "../utils/types.ts";
 import { SourceGenerator } from "./base.ts";
@@ -24,32 +21,32 @@ export class TypeVisitor extends SourceGenerator<Type> {
     super(context.type, context);
   }
 
-  buffer(): string {
+  override buffer(): string {
     // This is the Type name from the input Apex schema.
-    const name = this.node.name;
+    const _name = this.node.name;
 
     // This is a comment generated from the description in Apex.
-    const comment = convertDescription(this.node.description);
+    const _comment = convertDescription(this.node.description);
 
     // Get the buffered output. Your visitor operations write
     // to this buffer when they call `.write()`.
-    const innerSource = this.writer.string();
+    const _innerSource = this.writer.string();
 
     // Combine the above to create and return new source.
     return ``;
   }
 
-  visitTypeField(context: Context): void {
+  override visitTypeField(context: Context): void {
     const { field } = context;
 
     // The name of the TypeField from the Apex schema.
-    const name = field.name;
+    const _name = field.name;
 
     // The type of the field, converted from Apex type with `convertType()`.
-    const convertedType = convertType(field.type, context.config);
+    const _convertedType = convertType(field.type, context.config);
 
     // A comment generated from the description.
-    const comment = convertDescription(field.description);
+    const _comment = convertDescription(field.description);
 
     // Append to the buffer in `this.writer`. Get the buffer's
     // state by calling `this.writer.string()`.

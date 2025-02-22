@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Context } from "../deps/core/model.ts";
+import type { Context } from "@apexlang/core/model";
 import {
   defaultValueForType,
   expandType,
@@ -38,12 +38,12 @@ function getLogger(context: Context): Logger | undefined {
 }
 
 export class ScaffoldVisitor extends GoVisitor {
-  writeHead(context: Context): void {
+  public override writeHead(context: Context): void {
     context.config.doNotEdit = false;
     super.writeHead(context);
   }
 
-  visitNamespaceBefore(context: Context): void {
+  public override visitNamespaceBefore(context: Context): void {
     super.visitNamespaceBefore(context);
     const logger = getLogger(context);
 
@@ -67,7 +67,7 @@ export class ScaffoldVisitor extends GoVisitor {
 }
 
 class ServiceVisitor extends GoVisitor {
-  visitInterfaceBefore(context: Context): void {
+  public override visitInterfaceBefore(context: Context): void {
     const roleNames = (context.config.names as string[]) || [];
     const roleTypes = (context.config.types as string[]) || [];
     const { interface: iface } = context;
@@ -121,7 +121,7 @@ class ServiceVisitor extends GoVisitor {
     }\n\n`);
   }
 
-  visitOperation(context: Context): void {
+  public override visitOperation(context: Context): void {
     if (!isValid(context)) {
       return;
     }

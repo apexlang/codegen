@@ -1,12 +1,12 @@
 // deno-lint-ignore-file no-explicit-any
 import {
-  AnyType,
-  Context,
+  type AnyType,
+  type Context,
   Kind,
-  ObjectMap,
-  Primitive,
-  Union,
-} from "../../deps/core/model.ts";
+  type ObjectMap,
+  type Primitive,
+  type Union,
+} from "@apexlang/core/model";
 import { codegenType, isNamed, isRecursiveType } from "../../utils/mod.ts";
 import {
   customAttributes,
@@ -48,7 +48,7 @@ export class UnionVisitor extends SourceGenerator<Union> {
     this.visibility = visibility(this.root.name, this.config);
   }
 
-  getSource(): string {
+  public override getSource(): string {
     const variants = this.root.members.map((member) => {
       const t = member.type;
       const isRecursive = isRecursiveType(t);

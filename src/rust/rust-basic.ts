@@ -1,4 +1,4 @@
-import { Context, Writer } from "../deps/core/model.ts";
+import type { Context, Writer } from "@apexlang/core/model";
 import { ContextWriter } from "./visitors/base.ts";
 import { StructVisitor } from "./visitors/struct_visitor.ts";
 import {
@@ -24,7 +24,7 @@ export class RustBasic extends ContextWriter {
     super(writer);
   }
 
-  visitContextBefore(context: Context): void {
+  public override visitContextBefore(context: Context): void {
     this.append(
       utils.generatedHeader(
         context.config.generatedHeader || [
@@ -43,28 +43,28 @@ export class RustBasic extends ContextWriter {
     }
   }
 
-  visitType(context: Context): void {
+  public override visitType(context: Context): void {
     this.append(new StructVisitor(context.type, context).toString());
   }
 
-  visitInterface(context: Context): void {
+  public override visitInterface(context: Context): void {
     this.append(new InterfaceVisitor(context.interface, context).toString());
   }
 
-  visitEnum(context: Context): void {
+  public override visitEnum(context: Context): void {
     this.append(new EnumVisitor(context.enum, context).toString());
   }
 
-  visitUnion(context: Context): void {
+  public override visitUnion(context: Context): void {
     this.append(new UnionVisitor(context.union, context).toString());
   }
 
-  visitFunction(context: Context): void {
+  public override visitFunction(context: Context): void {
     const vis = visibility(context.operation.name, context.config);
     this.append(genOperation(context.operation, vis, context.config));
   }
 
-  visitAlias(context: Context): void {
+  public override visitAlias(context: Context): void {
     const { alias } = context;
     const vis = visibility(alias.name, context.config);
 

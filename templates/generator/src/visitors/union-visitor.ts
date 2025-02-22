@@ -1,7 +1,4 @@
-import {
-  Context,
-  Union,
-} from "https://deno.land/x/apex_core@v0.1.5/model/mod.ts";
+import type { Context, Union } from "@apexlang/core/model";
 import { convertDescription } from "../utils/conversions.ts";
 import { convertType } from "../utils/types.ts";
 
@@ -22,18 +19,18 @@ export class UnionVisitor extends SourceGenerator<Union> {
     super(context.union, context);
   }
 
-  buffer(): string {
+  override buffer(): string {
     // Iterate over each type in the Union and convert it
     // with `convertType()`
-    const types = this.node.types.map((t) => {
+    const _types = this.node.members.map((t) => {
       return convertType(t, this.config);
     });
 
     // A comment generated from the description.
-    const comment = convertDescription(this.node.description);
+    const _comment = convertDescription(this.node.description);
 
     // The name of the Union as defined in the Apex schema.
-    const name = this.node.name;
+    const _name = this.node.name;
 
     // Combine the above to create and return new output.
     return ``;

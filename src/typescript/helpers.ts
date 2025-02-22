@@ -30,7 +30,7 @@ import {
   Primitive,
   Type,
   Valued,
-} from "../deps/core/model.ts";
+} from "@apexlang/core/model";
 import { capitalize, renamed } from "../utils/mod.ts";
 import { defaultForAlias } from "./alias_visitor.ts";
 import { translations } from "./constant.ts";
@@ -161,9 +161,9 @@ export function defaultValueForType(type: AnyType): string {
  * returns string in quotes
  * @param s string to have quotes
  */
-export const strQuote = (s: string) => {
+export function strQuote(s: string): string {
   return `'${s}'`;
-};
+}
 
 /**
  * returns string of the expanded type of a node

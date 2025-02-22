@@ -1,7 +1,4 @@
-import {
-  Alias,
-  Context,
-} from "https://deno.land/x/apex_core@v0.1.5/model/mod.ts";
+import type { Alias, Context } from "@apexlang/core/model";
 import { convertDescription } from "../utils/conversions.ts";
 import { convertType } from "../utils/types.ts";
 
@@ -23,14 +20,14 @@ export class AliasVisitor extends SourceGenerator<Alias> {
     super(context.alias, context);
   }
 
-  buffer(): string {
+  override buffer(): string {
     // The name of the Alias from the Apex schema.
-    const name = this.node.name;
+    const _name = this.node.name;
 
     // A comment generated from the description.
-    const comment = convertDescription(this.node.description);
+    const _comment = convertDescription(this.node.description);
 
-    const type = convertType(this.node.type, this.context.config);
+    const _type = convertType(this.node.type, this.context.config);
 
     // Combine the above to create and return new output here.
     return ``;

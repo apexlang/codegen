@@ -15,21 +15,21 @@ limitations under the License.
 */
 
 import {
-  AnyType,
+  type AnyType,
   BaseVisitor,
-  Context,
+  type Context,
   Kind,
-  List,
-  Map,
-  Optional,
-  Type,
-} from "../deps/core/model.ts";
-import { Import } from "./alias_visitor.ts";
+  type List,
+  type Map,
+  type Optional,
+  type Type,
+} from "@apexlang/core/model";
+import type { Import } from "./alias_visitor.ts";
 
 export class ImportsVisitor extends BaseVisitor {
   private imports: { [key: string]: Import } = {};
 
-  visitNamespaceAfter(_context: Context): void {
+  public override visitNamespaceAfter(_context: Context): void {
     const modules: { [module: string]: string[] } = {};
     for (const key in this.imports) {
       const i = this.imports[key];
@@ -88,15 +88,15 @@ export class ImportsVisitor extends BaseVisitor {
     }
   }
 
-  visitParameter(context: Context): void {
+  public override visitParameter(context: Context): void {
     this.checkType(context, context.parameter!.type);
   }
 
-  visitOperation(context: Context): void {
+  public override visitOperation(context: Context): void {
     this.checkType(context, context.operation!.type);
   }
 
-  visitTypeField(context: Context): void {
+  public override visitTypeField(context: Context): void {
     this.checkType(context, context.field!.type);
   }
 }

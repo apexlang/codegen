@@ -16,19 +16,19 @@ limitations under the License.
 */
 
 import {
-  Alias,
-  AnyType,
+  type Alias,
+  type AnyType,
   BaseVisitor,
-  Context,
+  type Context,
   Kind,
-  List,
-  Map as MapType,
-  Optional,
-  Primitive,
+  type List,
+  type Map as MapType,
+  type Optional,
+  type Primitive,
   PrimitiveName,
-  Type,
-} from "../deps/core/model.ts";
-import { Import } from "./alias_visitor.ts";
+  type Type,
+} from "@apexlang/core/model";
+import type { Import } from "./alias_visitor.ts";
 
 interface Imported {
   as?: string;
@@ -220,7 +220,7 @@ export class GoVisitor extends BaseVisitor {
   private _ctx: Context | undefined;
   aliases: Record<string, Import> = {};
 
-  writeHead(context: Context): void {
+  public override writeHead(context: Context): void {
     this.aliases = (context?.config?.aliases as Record<string, Import>) || {};
     const packageName = context.config.package || "module";
 
@@ -240,7 +240,7 @@ export class GoVisitor extends BaseVisitor {
     super.writeHead(context);
   }
 
-  public renderImports(context: Context): string {
+  public override renderImports(context: Context): string {
     return getImports(context).render();
   }
 }

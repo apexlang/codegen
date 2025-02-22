@@ -1,9 +1,5 @@
-import {
-  ObjectMap,
-  Operation,
-  Parameter,
-} from "https://deno.land/x/apex_core@v0.1.5/model/mod.ts";
-import * as utils from "https://deno.land/x/apex_codegen@v0.1.7/utils/mod.ts";
+import type { ObjectMap, Operation, Parameter } from "@apexlang/core/model";
+import * as utils from "@apexlang/codegen/utils";
 import { convertType } from "./types.ts";
 
 /**
@@ -38,16 +34,16 @@ export function convertOperation(
   config: ObjectMap,
 ): string {
   // The name of the Operation.
-  const name = op.name;
+  const _name = op.name;
 
   // A comment generated from the description.
-  const comment = convertDescription(op.description);
+  const _comment = convertDescription(op.description);
 
   // The return type of the operation, converted via `convertType()`
-  const type = convertType(op.type, config);
+  const _type = convertType(op.type, config);
 
   // Iterate over the Operation's Parameters and generate new output.
-  const params = op.parameters.map((arg) => convertParameter(arg, config));
+  const _params = op.parameters.map((arg) => convertParameter(arg, config));
 
   if (global) {
     // Generate output for global functions here.
@@ -68,10 +64,10 @@ export function convertOperation(
  */
 export function convertParameter(param: Parameter, config: ObjectMap): string {
   // The name of the Parameter
-  const name = param.name;
+  const _name = param.name;
 
   // The type of the Parameter, converted via `convertType()`
-  const type = convertType(param.type, config);
+  const _type = convertType(param.type, config);
 
   // Combine the above to create and return new output here.
   return ``;

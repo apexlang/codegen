@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Annotated, Context } from "../deps/core/model.ts";
+import { Annotated, Context } from "@apexlang/core/model";
 import { formatComment, typeName } from "../utils/mod.ts";
 import { getImports, GoVisitor } from "./go_visitor.ts";
 import { expandType, fieldName } from "./helpers.ts";
@@ -24,7 +24,7 @@ interface UnionKey {
 }
 
 export class UnionVisitor extends GoVisitor {
-  visitUnion(context: Context): void {
+  public override visitUnion(context: Context): void {
     const tick = "`";
     const { union } = context;
     const imports = getImports(context);

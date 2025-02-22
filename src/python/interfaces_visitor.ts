@@ -15,23 +15,23 @@ limitations under the License.
 */
 
 import {
-  Alias,
-  AnyType,
+  type Alias,
+  type AnyType,
   BaseVisitor,
   Context,
-  Enum,
+  type Enum,
   Kind,
-  Type,
-  Union,
-  Visitor,
-} from "../deps/core/model.ts";
+  type Type,
+  type Union,
+  type Visitor,
+} from "@apexlang/core/model";
 import { ClassVisitor } from "./class_visitor.ts";
 import { InterfaceVisitor } from "./interface_visitor.ts";
 import { isHandler, isProvider, visitNamed } from "../utils/mod.ts";
 import { HandlerVisitor } from "./handler_visitor.ts";
 
 export class InterfacesVisitor extends BaseVisitor {
-  visitNamespaceBefore(context: Context): void {
+  public override visitNamespaceBefore(context: Context): void {
     this.write(`from typing import Optional, Awaitable, Type, TypeVar
 from serde import serialize, deserialize
 from dataclasses import dataclass, field\n\n\n`);
@@ -42,12 +42,12 @@ from dataclasses import dataclass, field\n\n\n`);
 }
 
 class TypesVisitor extends BaseVisitor {
-  visitTypeBefore(context: Context): void {
+  public override visitTypeBefore(context: Context): void {
     const clazz = new ClassVisitor(this.writer);
     context.type!.accept(context, clazz);
   }
 
-  visitInterfaceBefore(context: Context): void {
+  public override visitInterfaceBefore(context: Context): void {
     if (isProvider(context)) {
       const iface = new InterfaceVisitor(this.writer);
       context.interface.accept(context, iface);

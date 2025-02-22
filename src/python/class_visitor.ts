@@ -14,12 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, Context, Kind } from "../deps/core/model.ts";
+import { BaseVisitor, type Context, Kind } from "@apexlang/core/model";
 import { defValue, expandType } from "./helpers.ts";
 import { formatComment, snakeCase } from "../utils/mod.ts";
 
 export class ClassVisitor extends BaseVisitor {
-  visitTypeBefore(context: Context): void {
+  public override visitTypeBefore(context: Context): void {
     super.triggerTypeBefore(context);
     const t = context.type!;
     this.write(`@deserialize
@@ -33,7 +33,7 @@ export class ClassVisitor extends BaseVisitor {
     this.write(`${t.name}:\n`);
   }
 
-  visitTypeField(context: Context): void {
+  public override visitTypeField(context: Context): void {
     const field = context.field!;
     this.write(formatComment("\t# ", field.description));
     let defaultSuffix = "";
@@ -59,7 +59,7 @@ export class ClassVisitor extends BaseVisitor {
     super.triggerTypeField(context);
   }
 
-  visitTypeAfter(_context: Context): void {
+  public override visitTypeAfter(_context: Context): void {
     this.write(`\n\n`);
   }
 }

@@ -1,14 +1,14 @@
 import {
-  AnyType,
+  type AnyType,
   Kind,
-  List,
-  Map,
-  Named,
-  ObjectMap,
-  Optional,
-  Primitive,
+  type List,
+  type Map,
+  type Named,
+  type ObjectMap,
+  type Optional,
+  type Primitive,
   PrimitiveName,
-} from "https://deno.land/x/apex_core@v0.1.5/model/mod.ts";
+} from "@apexlang/core/model";
 
 /**
  * Convert an Apex type to a type suitable for the destination format.
@@ -36,7 +36,7 @@ export function convertType(typ: AnyType, config: ObjectMap): string {
       const t = typ as List;
 
       // The list element's type
-      const itemType = convertType(t.type, config);
+      const _itemType = convertType(t.type, config);
 
       return ``;
     }
@@ -53,9 +53,9 @@ export function convertType(typ: AnyType, config: ObjectMap): string {
       const t = typ as Map;
 
       // The type of the keys in the Map.
-      const keyType = convertType(t.keyType, config);
+      const _keyType = convertType(t.keyType, config);
       // The type of the values in the Map.
-      const valueType = convertType(t.valueType, config);
+      const _valueType = convertType(t.valueType, config);
 
       return ``;
     }
@@ -72,7 +72,7 @@ export function convertType(typ: AnyType, config: ObjectMap): string {
       const t = typ as Optional;
 
       // The inner type of the Optional node.
-      const innerType = convertType(t.type, config);
+      const _innerType = convertType(t.type, config);
 
       return ``;
     }
@@ -130,7 +130,7 @@ export function convertType(typ: AnyType, config: ObjectMap): string {
  *
  * @throws Throws if there is a type unaccounted for.
  */
-function convertPrimitive(typ: Primitive, config: ObjectMap): string {
+function convertPrimitive(typ: Primitive, _config: ObjectMap): string {
   switch (typ.name) {
     case PrimitiveName.Bool:
       return "bool";

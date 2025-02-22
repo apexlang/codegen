@@ -5,7 +5,7 @@ import {
   Map,
   Named,
   Optional,
-} from "../deps/core/model.ts";
+} from "@apexlang/core/model";
 
 export const expandType = (type: AnyType): string => {
   switch (type.kind) {

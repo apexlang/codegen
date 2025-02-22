@@ -1,14 +1,14 @@
 import {
   AbstractVisitor,
-  Alias,
+  type Alias,
   BaseVisitor,
-  Context,
-  Enum,
-  Interface,
-  Type,
-  Union,
-  Writer,
-} from "../../deps/core/model.ts";
+  type Context,
+  type Enum,
+  type Interface,
+  type Type,
+  type Union,
+  type Writer,
+} from "@apexlang/core/model";
 
 export type VisitorTypes = Alias | Type | Union | Enum | Interface;
 
@@ -31,7 +31,7 @@ export class SourceGenerator<T extends VisitorTypes> extends AbstractVisitor {
     return this.source;
   }
 
-  toString(): string {
+  public override toString(): string {
     this.root.accept(this.context, this);
     return this.getSource();
   }
@@ -48,7 +48,7 @@ export class ContextWriter extends BaseVisitor {
     this.source += source;
   }
 
-  visitContextAfter(_context: Context): void {
+  public override visitContextAfter(_context: Context): void {
     this.write(this.source);
   }
 }

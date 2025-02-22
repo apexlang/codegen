@@ -1,10 +1,10 @@
 // deno-lint-ignore-file no-explicit-any
-import {
+import type {
   Context,
   Interface,
   ObjectMap,
   Operation,
-} from "../../deps/core/model.ts";
+} from "@apexlang/core/model";
 import {
   customAttributes,
   rustDoc,
@@ -27,7 +27,7 @@ export class InterfaceVisitor extends SourceGenerator<Interface> {
     this.visibility = visibility(this.root.name, this.config);
   }
 
-  getSource(): string {
+  public override getSource(): string {
     const prefix = trimLines([
       rustDoc(this.root.description),
       customAttributes(this.root.name, this.config),
@@ -37,7 +37,7 @@ export class InterfaceVisitor extends SourceGenerator<Interface> {
     ${this.visibility} trait ${rustifyCaps(this.root.name)} {${this.source}}\n`;
   }
 
-  visitOperation(context: Context): void {
+  public override visitOperation(context: Context): void {
     this.append(genOperation(context.operation, this.visibility, this.config));
   }
 }

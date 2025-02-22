@@ -15,25 +15,25 @@ limitations under the License.
 */
 
 import {
-  Alias,
-  Annotated,
-  Annotation,
-  AnyType,
-  Context,
-  Enum,
-  Interface,
+  type Alias,
+  type Annotated,
+  type Annotation,
+  type AnyType,
+  type Context,
+  type Enum,
+  type Interface,
   Kind,
-  List,
-  Map,
-  Named,
-  Operation,
-  Optional,
-  Primitive,
-  Stream,
+  type List,
+  type Map,
+  type Named,
+  type Operation,
+  type Optional,
+  type Primitive,
+  type Stream,
   Type,
-  TypeResolver,
-  Union,
-} from "../deps/core/model.ts";
+  type TypeResolver,
+  type Union,
+} from "@apexlang/core/model";
 import {
   FieldDefinition,
   ListType,
@@ -43,9 +43,9 @@ import {
   Optional as OptionalAST,
   Stream as StreamType,
   StringValue,
-  Type as ASTType,
+  type Type as ASTType,
   TypeDefinition,
-} from "../deps/core/ast.ts";
+} from "@apexlang/core/ast";
 
 export function isOneOfType(context: Context, types: string[]): boolean {
   if (context.interface) {
@@ -255,7 +255,7 @@ export function visitNamed(t: AnyType, callback: (name: string) => void): void {
   }
 }
 
-export const primitives = new Set([
+export const primitives: Set<string> = new Set([
   "bool",
   "i8",
   "i16",
@@ -350,24 +350,24 @@ export function formatComment(
 // https://github.com/blakeembrey/change-case
 // Pasted here to avoid an NPM dependency for the CLI.
 
-export function camelCaseTransform(input: string, index: number) {
+export function camelCaseTransform(input: string, index: number): string {
   if (index === 0) return input.toLowerCase();
   return pascalCaseTransform(input, index);
 }
 
-export function camelCaseTransformMerge(input: string, index: number) {
+export function camelCaseTransformMerge(input: string, index: number): string {
   if (index === 0) return input.toLowerCase();
   return pascalCaseTransformMerge(input);
 }
 
-export function camelCase(input: string, options: Options = {}) {
+export function camelCase(input: string, options: Options = {}): string {
   return pascalCase(input, {
     transform: camelCaseTransform,
     ...options,
   });
 }
 
-export function pascalCaseTransform(input: string, index: number) {
+export function pascalCaseTransform(input: string, index: number): string {
   const firstChar = input.charAt(0);
   const lowerChars = input.substr(1).toLowerCase();
   if (index > 0 && firstChar >= "0" && firstChar <= "9") {
@@ -376,11 +376,11 @@ export function pascalCaseTransform(input: string, index: number) {
   return `${firstChar.toUpperCase()}${lowerChars}`;
 }
 
-export function pascalCaseTransformMerge(input: string) {
+export function pascalCaseTransformMerge(input: string): string {
   return input.charAt(0).toUpperCase() + input.slice(1).toLowerCase();
 }
 
-export function pascalCase(input: string, options: Options = {}) {
+export function pascalCase(input: string, options: Options = {}): string {
   return noCase(input, {
     delimiter: "",
     transform: pascalCaseTransform,
@@ -388,14 +388,14 @@ export function pascalCase(input: string, options: Options = {}) {
   });
 }
 
-export function snakeCase(input: string, options: Options = {}) {
+export function snakeCase(input: string, options: Options = {}): string {
   return dotCase(input, {
     delimiter: "_",
     ...options,
   });
 }
 
-export function dotCase(input: string, options: Options = {}) {
+export function dotCase(input: string, options: Options = {}): string {
   return noCase(input, {
     delimiter: ".",
     ...options,
@@ -415,7 +415,7 @@ export interface Options {
   transform?: (part: string, index: number, parts: string[]) => string;
 }
 
-export function noCase(input: string, options: Options = {}) {
+export function noCase(input: string, options: Options = {}): string {
   const {
     splitRegexp = DEFAULT_SPLIT_REGEXP,
     stripRegexp = DEFAULT_STRIP_REGEXP,
@@ -442,7 +442,7 @@ export function noCase(input: string, options: Options = {}) {
 /**
  * Replace `re` in the input string with the replacement value.
  */
-function replace(input: string, re: RegExp | RegExp[], value: string) {
+function replace(input: string, re: RegExp | RegExp[], value: string): string {
   if (re instanceof RegExp) return input.replace(re, value);
   return re.reduce((input, re) => input.replace(re, value), input);
 }
@@ -491,7 +491,7 @@ const SUPPORTED_LOCALE: Record<string, Locale> = {
 /**
  * Localized lower case.
  */
-export function localeLowerCase(str: string, locale: string) {
+export function localeLowerCase(str: string, locale: string): string {
   const lang = SUPPORTED_LOCALE[locale.toLowerCase()];
   if (lang) return lowerCase(str.replace(lang.regexp, (m) => lang.map[m]));
   return lowerCase(str);
@@ -500,7 +500,7 @@ export function localeLowerCase(str: string, locale: string) {
 /**
  * Lower case as a function.
  */
-export function lowerCase(str: string) {
+export function lowerCase(str: string): string {
   return str.toLowerCase();
 }
 

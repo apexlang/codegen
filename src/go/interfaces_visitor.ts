@@ -15,7 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Context, Visitor, Writer } from "../deps/core/model.ts";
+import { Context, Visitor, Writer } from "@apexlang/core/model";
 import { EnumVisitor } from "./enum_visitor.ts";
 import { DefaultsVisitor, StructVisitor } from "./struct_visitor.ts";
 import { AliasVisitor } from "./alias_visitor.ts";
@@ -38,7 +38,7 @@ export class InterfacesVisitor extends GoVisitor {
   unionVisitor = (writer: Writer): Visitor => new UnionVisitor(writer);
   aliasVisitor = (writer: Writer): Visitor => new AliasVisitor(writer);
 
-  visitNamespaceBefore(context: Context): void {
+  public override visitNamespaceBefore(context: Context): void {
     const { namespace: ns } = context;
     this.writeTypeInfo = context.config.writeTypeInfo as boolean;
     if (this.writeTypeInfo == undefined) {
@@ -62,13 +62,13 @@ export class InterfacesVisitor extends GoVisitor {
     super.triggerNamespaceBefore(context);
   }
 
-  visitFunctionBefore(context: Context): void {
+  public override visitFunctionBefore(context: Context): void {
     const { operation } = context;
     const visitor = this.serviceVisitor(this.writer);
     operation.accept(context, visitor);
   }
 
-  visitInterfaceBefore(context: Context): void {
+  public override visitInterfaceBefore(context: Context): void {
     const { interface: iface } = context;
     if (isProvider(context)) {
       const visitor = this.dependencyVisitor(this.writer);
@@ -79,22 +79,22 @@ export class InterfacesVisitor extends GoVisitor {
     }
   }
 
-  visitAlias(context: Context): void {
+  public override visitAlias(context: Context): void {
     const visitor = this.aliasVisitor(this.writer);
     context.alias.accept(context, visitor);
   }
 
-  visitEnum(context: Context): void {
+  public override visitEnum(context: Context): void {
     const visitor = this.enumVisitor(this.writer);
     context.enum.accept(context, visitor);
   }
 
-  visitUnion(context: Context): void {
+  public override visitUnion(context: Context): void {
     const visitor = this.unionVisitor(this.writer);
     context.union.accept(context, visitor);
   }
 
-  visitType(context: Context): void {
+  public override visitType(context: Context): void {
     const sVisitor = this.structVisitor(this.writer);
     context.type.accept(context, sVisitor);
     const dVisitor = this.defaultsVisitor(this.writer);

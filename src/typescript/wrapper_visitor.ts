@@ -14,12 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, Context } from "../deps/core/model.ts";
+import { BaseVisitor, type Context } from "@apexlang/core/model";
 import { expandType } from "./helpers.ts";
 import { camelCase, capitalize, isVoid, noCode } from "../utils/mod.ts";
 
 export class WrapperVisitor extends BaseVisitor {
-  visitInterfaceBefore(context: Context): void {
+  public override visitInterfaceBefore(context: Context): void {
     super.triggerInterfaceBefore(context);
     const { interface: iface } = context;
     this.write(
@@ -27,7 +27,7 @@ export class WrapperVisitor extends BaseVisitor {
     );
   }
 
-  visitOperation(context: Context): void {
+  public override visitOperation(context: Context): void {
     const { interface: iface, operation } = context;
     if (noCode(operation)) {
       return;
@@ -73,14 +73,14 @@ export class WrapperVisitor extends BaseVisitor {
     super.triggerOperation(context);
   }
 
-  visitInterfaceAfter(context: Context): void {
+  public override visitInterfaceAfter(context: Context): void {
     this.write(`}\n\n`);
     super.triggerInterfaceAfter(context);
   }
 }
 
 export class WrapperStatefulVisitor extends BaseVisitor {
-  visitInterfaceBefore(context: Context): void {
+  public override visitInterfaceBefore(context: Context): void {
     super.triggerInterfaceBefore(context);
     const { namespace, interface: iface } = context;
     const ns = namespace.name + "." + iface.name;
@@ -94,7 +94,7 @@ export class WrapperStatefulVisitor extends BaseVisitor {
     );
   }
 
-  visitOperation(context: Context): void {
+  public override visitOperation(context: Context): void {
     const { interface: iface, operation } = context;
     if (noCode(operation)) {
       return;
@@ -147,7 +147,7 @@ export class WrapperStatefulVisitor extends BaseVisitor {
     super.triggerOperation(context);
   }
 
-  visitInterfaceAfter(context: Context): void {
+  public override visitInterfaceAfter(context: Context): void {
     this.write(`}\n\n`);
     super.triggerInterfaceAfter(context);
   }

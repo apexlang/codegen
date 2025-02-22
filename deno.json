@@ -1,0 +1,37 @@
+{
+  "name": "@apexlang/codegen",
+  "version": "0.1.10",
+  "description": "Code generators for Apex.",
+  "keywords": ["apex", "idl", "codegen"],
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://www.github.com/apexlang/codegen"
+  },
+  "bugs": {
+    "url": "https://www.github.com/apexlang/codegen/issues"
+  },
+  "imports": {
+    "@apexlang/apex": "jsr:@apexlang/apex@^0.2.0",
+    "@apexlang/core": "jsr:@apexlang/core@^0.2.0",
+    "@std/assert": "jsr:@std/assert@^1.0.11",
+    "@std/yaml": "jsr:@std/yaml@^1.0.5"
+  },
+  "exports": {
+    "./cs": "./src/cs/mod.ts",
+    "./go": "./src/go/mod.ts",
+    "./json-schema": "./src/json-schema/mod.ts",
+    "./markdown": "./src/markdown/mod.ts",
+    "./openapiv3": "./src/openapiv3/mod.ts",
+    "./proto": "./src/proto/mod.ts",
+    "./python": "./src/python/mod.ts",
+    "./rest": "./src/rest/mod.ts",
+    "./rust": "./src/rust/mod.ts",
+    "./typescript": "./src/typescript/mod.ts",
+    "./utils": "./src/utils/mod.ts"
+  },
+  "publish": {
+    "include": ["LICENSE", "README.md", "templates", "src/**/*.ts"],
+    "exclude": ["src/tests"]
+  }
+}

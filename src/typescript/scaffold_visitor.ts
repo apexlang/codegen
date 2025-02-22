@@ -15,16 +15,16 @@ limitations under the License.
 */
 
 import {
-  AnyType,
+  type AnyType,
   BaseVisitor,
-  Context,
+  type Context,
   Kind,
-  List,
-  Map,
-  Optional,
-  Type,
-  Writer,
-} from "../deps/core/model.ts";
+  type List,
+  type Map,
+  type Optional,
+  type Type,
+  type Writer,
+} from "@apexlang/core/model";
 import {
   camelCase,
   isHandler,
@@ -36,7 +36,7 @@ import {
 import { defaultValueForType, expandType, mapArg, mapArgs } from "./helpers.ts";
 
 export class ScaffoldVisitor extends BaseVisitor {
-  visitNamespaceBefore(context: Context): void {
+  public override visitNamespaceBefore(context: Context): void {
     const adapter = new AdapterTypesVisitor(this.writer);
     context.namespace.accept(context, adapter);
     const types = new TypesVisitor(this.writer);
@@ -44,14 +44,14 @@ export class ScaffoldVisitor extends BaseVisitor {
     this.write(`\n`);
   }
 
-  visitInterfaceBefore(context: Context): void {
+  public override visitInterfaceBefore(context: Context): void {
     if (isHandler(context)) {
       const impl = new ImplVisitor(this.writer);
       context.interface.accept(context, impl);
     }
   }
 
-  visitNamespaceAfter(_context: Context): void {
+  public override visitNamespaceAfter(_context: Context): void {
     this.write(`\nstart();\n`);
   }
 }
@@ -64,13 +64,13 @@ class ImplVisitor extends BaseVisitor {
     this.stateful = stateful;
   }
 
-  visitInterfaceBefore(context: Context): void {
+  public override visitInterfaceBefore(context: Context): void {
     super.triggerInterfaceBefore(context);
     const { interface: iface } = context;
     this.write(`class ${iface.name}Impl {`);
   }
 
-  visitOperation(context: Context): void {
+  public override visitOperation(context: Context): void {
     const { operation } = context;
     if (noCode(operation)) {
       return;
@@ -101,7 +101,7 @@ class ImplVisitor extends BaseVisitor {
     super.triggerOperation(context);
   }
 
-  visitInterfaceAfter(context: Context): void {
+  public override visitInterfaceAfter(context: Context): void {
     this.write(`}\n\n`);
     const name = context.interface.name;
     this.write(`register${pascalCase(name)}(new ${name}Impl());\n\n`);
@@ -110,10 +110,11 @@ class ImplVisitor extends BaseVisitor {
 }
 
 class AdapterTypesVisitor extends BaseVisitor {
-  visitNamespaceBefore(_content: Context): void {
+  public override visitNamespaceBefore(_content: Context): void {
     this.write(`import { start`);
   }
-  visitInterface(context: Context): void {
+
+  public override visitInterface(context: Context): void {
     const { interface: iface } = context;
     if (isHandler(context)) {
       this.write(`, register${pascalCase(iface.name)}`);
@@ -122,7 +123,8 @@ class AdapterTypesVisitor extends BaseVisitor {
       this.write(`, ${camelCase(iface.name)}`);
     }
   }
-  visitNamespaceAfter(_content: Context): void {
+
+  public override visitNamespaceAfter(_content: Context): void {
     this.write(` } from "./adapter";\n`);
   }
 }
@@ -169,19 +171,19 @@ class TypesVisitor extends BaseVisitor {
     }
   }
 
-  visitOperation(context: Context): void {
+  public override visitOperation(context: Context): void {
     const operation = context.operation!;
     this.addType(operation.type);
   }
 
-  visitParameter(context: Context): void {
+  public override visitParameter(context: Context): void {
     const parameter = context.parameter!;
     this.addType(parameter.type);
   }
 
-  visitNamespaceBefore(_context: Context): void {}
+  public override visitNamespaceBefore(_context: Context): void {}
 
-  visitNamespaceAfter(_context: Context): void {
+  public override visitNamespaceAfter(_context: Context): void {
     if (this.hasObjects) {
       this.write(` } from "./interfaces";\n\n`);
     }

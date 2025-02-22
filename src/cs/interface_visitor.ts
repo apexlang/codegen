@@ -14,12 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, Context } from "../deps/core/model.ts";
+import { BaseVisitor, type Context } from "@apexlang/core/model";
 import { formatComment, pascalCase } from "../utils/mod.ts";
 import { expandType } from "./helpers.ts";
 
 export class InterfaceVisitor extends BaseVisitor {
-  visitInterfaceBefore(context: Context) {
+  public override visitInterfaceBefore(context: Context) {
     this.write(formatComment("  // ", context.interface.description));
     this.write(
       `  public interface ${pascalCase(context.interface.name)}\n  {\n`,
@@ -27,7 +27,7 @@ export class InterfaceVisitor extends BaseVisitor {
     super.visitInterfaceBefore(context);
   }
 
-  visitInterface(context: Context) {
+  public override visitInterface(context: Context) {
     const operations = context.interface.operations;
     for (let i = 0; i < operations.length; ++i) {
       const operation = operations[i];
@@ -50,7 +50,7 @@ export class InterfaceVisitor extends BaseVisitor {
     super.visitInterface(context);
   }
 
-  visitInterfaceAfter(context: Context) {
+  public override visitInterfaceAfter(context: Context) {
     this.write("  }\n\n");
     super.visitInterfaceAfter(context);
   }

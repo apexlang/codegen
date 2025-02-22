@@ -14,12 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Argument, BaseVisitor, Context } from "../deps/core/model.ts";
+import { type Argument, BaseVisitor, type Context } from "@apexlang/core/model";
 import { camelCase, formatComment, pascalCase } from "../utils/mod.ts";
 import { expandType } from "./helpers.ts";
 
 export class TypeVisitor extends BaseVisitor {
-  visitTypeBefore(context: Context): void {
+  public override visitTypeBefore(context: Context): void {
     const { type } = context;
 
     this.write(formatComment("  // ", type.description));
@@ -28,7 +28,7 @@ export class TypeVisitor extends BaseVisitor {
     super.visitTypesBefore(context);
   }
 
-  visitTypeField(context: Context) {
+  public override visitTypeField(context: Context) {
     if (context.fieldIndex > 0) {
       this.write(`\n`);
     }
@@ -93,7 +93,7 @@ export class TypeVisitor extends BaseVisitor {
     }
   }
 
-  visitTypeAfter(context: Context) {
+  public override visitTypeAfter(context: Context) {
     this.write("  }\n\n");
 
     super.visitTypeAfter(context);

@@ -1,5 +1,10 @@
 // deno-lint-ignore-file no-explicit-any
-import { Context, Kind, ObjectMap, Type } from "../../deps/core/model.ts";
+import {
+  type Context,
+  Kind,
+  type ObjectMap,
+  type Type,
+} from "@apexlang/core/model";
 import { isPrimitive, isRecursiveType } from "../../utils/mod.ts";
 import {
   customAttributes,
@@ -25,7 +30,7 @@ export class StructVisitor extends SourceGenerator<Type> {
     this.visibility = visibility(this.root.name, this.config);
   }
 
-  getSource(): string {
+  public override getSource(): string {
     const prefix = trimLines([
       rustDoc(this.root.description),
       deriveDirective(this.root.name, this.config),
@@ -39,7 +44,7 @@ export class StructVisitor extends SourceGenerator<Type> {
     }`;
   }
 
-  visitTypeField(context: Context): void {
+  public override visitTypeField(context: Context): void {
     const { field } = context;
     const isRecursive = isRecursiveType(field.type);
     const isHeapAllocated = field.type.kind === Kind.Map ||

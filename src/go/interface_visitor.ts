@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Context } from "../deps/core/model.ts";
+import type { Context } from "@apexlang/core/model";
 import { expandType, mapParam, methodName, returnPointer } from "./helpers.ts";
 import { translateAlias } from "./alias_visitor.ts";
 import { formatComment, isVoid, noCode } from "../utils/mod.ts";
@@ -22,13 +22,13 @@ import { getImporter, GoVisitor } from "./go_visitor.ts";
 import { IMPORTS } from "./constant.ts";
 
 export class InterfaceVisitor extends GoVisitor {
-  visitInterfaceBefore(context: Context): void {
+  public override visitInterfaceBefore(context: Context): void {
     const { interface: iface } = context;
     this.write(formatComment("// ", iface.description));
     this.write(`type ${iface.name} interface {\n`);
   }
 
-  visitFunction(context: Context): void {
+  public override visitFunction(context: Context): void {
     const { operation } = context;
     if (noCode(operation)) {
       return;
@@ -49,7 +49,7 @@ export class InterfaceVisitor extends GoVisitor {
     this.write(`\n\n`);
   }
 
-  visitOperation(context: Context): void {
+  public override visitOperation(context: Context): void {
     const { operation } = context;
     if (noCode(operation)) {
       return;
@@ -93,7 +93,7 @@ export class InterfaceVisitor extends GoVisitor {
     }
   }
 
-  visitInterfaceAfter(_context: Context): void {
+  public override visitInterfaceAfter(_context: Context): void {
     this.write(`}\n\n`);
   }
 }

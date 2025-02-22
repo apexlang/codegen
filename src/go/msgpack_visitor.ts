@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Context, Kind, Writer } from "../deps/core/model.ts";
+import { type Context, Kind, type Writer } from "@apexlang/core/model";
 import { convertOperationToType, convertUnionToType } from "../utils/mod.ts";
 import { GoVisitor } from "./go_visitor.ts";
 import { MsgPackDecoderVisitor } from "./msgpack_decoder_visitor.ts";
@@ -50,7 +50,7 @@ export class MsgPackVisitor extends GoVisitor {
     this.setCallback("OperationAfter", "arguments", operArgs);
   }
 
-  visitType(context: Context): void {
+  public override visitType(context: Context): void {
     const { type } = context;
     const decoder = new MsgPackDecoderVisitor(this.writer);
     type.accept(context, decoder);
@@ -59,7 +59,7 @@ export class MsgPackVisitor extends GoVisitor {
     this.write(`\n`);
   }
 
-  visitUnion(context: Context): void {
+  public override visitUnion(context: Context): void {
     const { union } = context;
     const tr = context.getType.bind(context);
     const type = convertUnionToType(tr, union);

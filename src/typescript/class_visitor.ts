@@ -14,15 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { BaseVisitor, Context, Field } from "../deps/core/model.ts";
+import { BaseVisitor, type Context, type Field } from "@apexlang/core/model";
 import { defValue, expandType } from "./helpers.ts";
 import { formatComment } from "../utils/mod.ts";
 
 export class ClassVisitor extends BaseVisitor {
-  decorate(field: Field): string {
+  decorate(_field: Field): string {
     return "";
   }
-  visitTypeBefore(context: Context): void {
+
+  public override visitTypeBefore(context: Context): void {
     super.triggerTypeBefore(context);
     const t = context.type!;
     this.write(formatComment("// ", t.description));
@@ -32,7 +33,7 @@ export class ClassVisitor extends BaseVisitor {
     this.write(`class ${t.name} {\n`);
   }
 
-  visitTypeField(context: Context): void {
+  public override visitTypeField(context: Context): void {
     const field = context.field!;
     this.write(formatComment("  // ", field.description));
     const et = expandType(field.type!, true);
@@ -43,7 +44,7 @@ export class ClassVisitor extends BaseVisitor {
     super.triggerTypeField(context);
   }
 
-  visitTypeAfter(context: Context): void {
+  public override visitTypeAfter(context: Context): void {
     this.write(`\n`);
     const ctor = new ConstructorVisitor(this.writer);
     context.type!.accept(context.clone({ type: context.type! }), ctor);
@@ -54,7 +55,7 @@ export class ClassVisitor extends BaseVisitor {
 }
 
 class ConstructorVisitor extends BaseVisitor {
-  visitTypeBefore(context: Context): void {
+  public override visitTypeBefore(context: Context): void {
     super.triggerTypeBefore(context);
     const t = context.type!;
     this.write(`constructor({\n`);
@@ -72,13 +73,13 @@ class ConstructorVisitor extends BaseVisitor {
     this.write(`} = {}) {\n`);
   }
 
-  visitTypeField(context: Context): void {
+  public override visitTypeField(context: Context): void {
     const field = context.field!;
     this.write(`  this.${field.name} = ${field.name}\n`);
     super.triggerTypeField(context);
   }
 
-  visitTypeAfter(context: Context): void {
+  public override visitTypeAfter(context: Context): void {
     this.write(`}\n`);
     super.triggerTypeAfter(context);
   }

@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Context, Writer } from "../deps/core/model.ts";
+import type { Context, Writer } from "@apexlang/core/model";
 import { formatComment, pascalCase } from "../utils/mod.ts";
 import { IMPORTS } from "./constant.ts";
 import { getImporter, GoVisitor } from "./go_visitor.ts";
@@ -27,7 +27,7 @@ export class EnumVisitor extends GoVisitor {
     this.writeTypeInfo = writeTypeInfo;
   }
 
-  visitEnumBefore(context: Context): void {
+  public override visitEnumBefore(context: Context): void {
     super.triggerEnumsBefore(context);
     this.write(formatComment("// ", context.enum.description));
     this.write(`type ${context.enum.name} int32
@@ -35,7 +35,7 @@ export class EnumVisitor extends GoVisitor {
     const (\n`);
   }
 
-  visitEnumValue(context: Context): void {
+  public override visitEnumValue(context: Context): void {
     const { enumValue } = context;
     this.write(formatComment("// ", enumValue.description));
     this.write(
@@ -46,7 +46,7 @@ export class EnumVisitor extends GoVisitor {
     super.triggerTypeField(context);
   }
 
-  visitEnumAfter(context: Context): void {
+  public override visitEnumAfter(context: Context): void {
     const $ = getImporter(context, IMPORTS);
     this.write(`)\n\n`);
 
@@ -95,22 +95,41 @@ func (e *${context.enum.name}) UnmarshalJSON(b []byte) error {
 		return err
 	}
   return e.FromString(str)
-}
-\n\n`);
+}\n\n`);
     }
+    const yamlSupport = context.config.noEnumYAML
+      ? !context.config.noEnumYAML
+      : true;
+    if (yamlSupport) {
+      this.write(`// MarshalYAML marshals the enum as a YAML string
+  func (e ${context.enum.name}) MarshalYAML() (any, error) {
+    return e.String(), nil
+  }
+  
+  // UnmarshalYAML unmashals a quoted YAML string to the enum value
+  func (e *${context.enum.name}) UnmarshalYAML(unmarshal func(any) error) error {
+    var str string
+    if err := unmarshal(&str); err != nil {
+      return err
+    }
+
+    return e.FromString(str)
+  }\n\n`);
+    }
+
     super.triggerEnumsAfter(context);
   }
 }
 
 export class EnumVisitorToStringMap extends GoVisitor {
-  visitEnumBefore(context: Context): void {
+  public override visitEnumBefore(context: Context): void {
     super.triggerEnumsBefore(context);
     this.write(
       `var toString${context.enum.name} = map[${context.enum.name}]string{\n`,
     );
   }
 
-  visitEnumValue(context: Context): void {
+  public override visitEnumValue(context: Context): void {
     const { enumValue } = context;
     const display = enumValue.display ? enumValue.display : enumValue.name;
     this.write(
@@ -119,21 +138,21 @@ export class EnumVisitorToStringMap extends GoVisitor {
     super.triggerTypeField(context);
   }
 
-  visitEnumAfter(context: Context): void {
+  public override visitEnumAfter(context: Context): void {
     this.write(`}\n\n`);
     super.triggerEnumsAfter(context);
   }
 }
 
 export class EnumVisitorToIDMap extends GoVisitor {
-  visitEnumBefore(context: Context): void {
+  public override visitEnumBefore(context: Context): void {
     super.triggerEnumsBefore(context);
     this.write(
       `var toID${context.enum.name} = map[string]${context.enum.name}{\n`,
     );
   }
 
-  visitEnumValue(context: Context): void {
+  public override visitEnumValue(context: Context): void {
     const { enumValue } = context;
     const display = enumValue.display ? enumValue.display : enumValue.name;
     this.write(
@@ -142,7 +161,7 @@ export class EnumVisitorToIDMap extends GoVisitor {
     super.triggerTypeField(context);
   }
 
-  visitEnumAfter(context: Context): void {
+  public override visitEnumAfter(context: Context): void {
     this.write(`}\n\n`);
     super.triggerEnumsAfter(context);
   }

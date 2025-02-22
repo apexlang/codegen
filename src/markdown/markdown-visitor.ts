@@ -1,4 +1,4 @@
-import { BaseVisitor, Context } from "../deps/core/model.ts";
+import { BaseVisitor, type Context } from "@apexlang/core/model";
 import { expandType } from "./helpers.ts";
 
 export class MarkdownVisitor extends BaseVisitor {
@@ -24,7 +24,7 @@ export class MarkdownVisitor extends BaseVisitor {
     return desc ? `: ${desc}` : "";
   }
 
-  visitNamespace(context: Context): void {
+  public override visitNamespace(context: Context): void {
     if (context.config.title) {
       this.writeLn(`# ${context.config.title}\n`);
       this.writeLn(`Namespace: **\`${context.namespace.name}\`**`);
@@ -34,11 +34,11 @@ export class MarkdownVisitor extends BaseVisitor {
     this.writeDescription(context.namespace.description);
   }
 
-  public visitInterfacesBefore(_: Context): void {
+  public override visitInterfacesBefore(_: Context): void {
     this.writeHeader("Interfaces");
   }
 
-  visitInterface(context: Context): void {
+  public override visitInterface(context: Context): void {
     const node = context.interface;
     this.writeDefinitionName(node.name);
     this.writeDescription(node.description);
@@ -56,11 +56,11 @@ export class MarkdownVisitor extends BaseVisitor {
     }
   }
 
-  public visitTypesBefore(_: Context): void {
+  public override visitTypesBefore(_: Context): void {
     this.writeHeader("Types");
   }
 
-  visitType(context: Context): void {
+  public override visitType(context: Context): void {
     const typ = context.type;
     this.writeDefinitionName(typ.name);
     this.writeDescription(typ.description);
@@ -75,11 +75,11 @@ export class MarkdownVisitor extends BaseVisitor {
     }
   }
 
-  public visitEnumsBefore(_: Context): void {
+  public override visitEnumsBefore(_: Context): void {
     this.writeHeader("Enums");
   }
 
-  visitEnum(context: Context): void {
+  public override visitEnum(context: Context): void {
     const e = context.enum;
     this.writeDefinitionName(e.name);
 
@@ -89,22 +89,22 @@ export class MarkdownVisitor extends BaseVisitor {
     }
   }
 
-  public visitAliasesBefore(_: Context): void {
+  public override visitAliasesBefore(_: Context): void {
     this.writeHeader("Aliases");
   }
 
-  visitAlias(context: Context): void {
+  public override visitAlias(context: Context): void {
     const a = context.alias;
     this.writeDefinitionName(a.name);
     this.writeLn(`\`alias ${a.name} = ${expandType(a.type)}\``);
     this.writeDescription(a.description);
   }
 
-  public visitUnionsBefore(_: Context): void {
+  public override visitUnionsBefore(_: Context): void {
     this.writeHeader("Unions");
   }
 
-  visitUnion(context: Context): void {
+  public override visitUnion(context: Context): void {
     const u = context.union;
     this.writeDefinitionName(u.name);
     this.writeLn(

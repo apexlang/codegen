@@ -15,18 +15,18 @@ limitations under the License.
 */
 
 import {
-  Alias,
-  AnyType,
+  type Alias,
+  type AnyType,
   BaseVisitor,
-  Context,
+  type Context,
   Kind,
-  List,
-  Map,
-  Named,
-  Optional,
-  Type,
-  Union,
-} from "../deps/core/model.ts";
+  type List,
+  type Map,
+  type Named,
+  type Optional,
+  type Type,
+  type Union,
+} from "@apexlang/core/model";
 import { isNamed, isService } from "./utilities.ts";
 
 export class ExposedTypesVisitor extends BaseVisitor {
@@ -77,7 +77,7 @@ export class ExposedTypesVisitor extends BaseVisitor {
     }
   }
 
-  visitOperation(context: Context): void {
+  public override visitOperation(context: Context): void {
     if (!isService(context)) {
       return;
     }
@@ -85,7 +85,7 @@ export class ExposedTypesVisitor extends BaseVisitor {
     this.checkType(operation.type);
   }
 
-  visitParameter(context: Context): void {
+  public override visitParameter(context: Context): void {
     if (!isService(context)) {
       return;
     }

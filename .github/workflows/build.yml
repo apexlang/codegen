@@ -15,33 +15,30 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # The OIDC ID token is used for authentication with JSR.
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
         with:
-          node-version: 16
-          registry-url: https://registry.npmjs.org/
-      - uses: denoland/setup-deno@v1
-        with:
-          deno-version: v1.40
+          deno-version: v2.x
       - name: Run tests
         run: deno test test/**/*.test.ts
 
-      - uses: actions/setup-go@v3
+      - uses: actions/setup-go@v5
         with:
-          go-version: "1.21"
-
-      - name: Bundle module and dependencies
-        run: deno bundle src/mod.ts bundle.js
+          go-version: "1.24"
 
       - name: Install Apex CLI
-        run: deno install -A -f -n apex https://deno.land/x/apex_cli@v0.1.2/apex.ts
+        run: deno install -g -A --unstable-worker-options -f -n apex jsr:@apexlang/apex
 
       - name: Install Protoc
         run: |
           PB_REL="https://github.com/protocolbuffers/protobuf/releases"
           curl -LO $PB_REL/download/v3.15.8/protoc-3.15.8-linux-x86_64.zip
           sudo unzip protoc-3.15.8-linux-x86_64.zip -d /usr/local
+          sudo rm protoc-3.15.8-linux-x86_64.zip
 
       - name: Install protoc-gen-go
         run: |
@@ -59,3 +56,11 @@ jobs:
       - name: Validate generated OpenAPI
         run: find . -name 'openapi.yaml' -exec swagger-cli validate {} \;
         working-directory: ./testdata
+
+      - name: Is Release?
+        if: startswith(github.ref, 'refs/tags/v')
+        run: echo "DEPLOY_PACKAGE=true" >> $GITHUB_ENV
+
+      - name: Publish to npm
+        if: env.DEPLOY_PACKAGE == 'true'
+        run: npx jsr publish

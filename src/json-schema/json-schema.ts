@@ -14,25 +14,25 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Named } from "../deps/core/ast.ts";
+import type { Named } from "@apexlang/core/ast";
 import {
-  AnyType,
+  type AnyType,
   BaseVisitor,
-  Context,
+  type Context,
   Kind,
-  List,
-  Map,
-  Optional,
-  Primitive,
+  type List,
+  type Map,
+  type Optional,
+  type Primitive,
   PrimitiveName,
-  Type,
-  Writer,
-} from "../deps/core/model.ts";
-import {
+  type Type,
+  type Writer,
+} from "@apexlang/core/model";
+import type {
   ArraySchemaObject,
   ReferenceObject,
   SchemaObject,
-} from "https://deno.land/x/openapi@0.1.0/mod.ts";
+} from "../openapiv3/types.ts";
 import { convertArrayToObject } from "../utils/mod.ts";
 
 interface Definitions {
@@ -71,16 +71,16 @@ export class JsonSchemaVisitor extends BaseVisitor {
     super(writer);
   }
 
-  visitNamespace(context: Context): void {
+  public override visitNamespace(context: Context): void {
     context.config;
     this.schema.title = context.namespace.name;
   }
 
-  visitNamespaceAfter(_context: Context): void {
+  public override visitNamespaceAfter(_context: Context): void {
     this.write(JSON.stringify(this.schema.valueOf(), null, 2));
   }
 
-  visitType(context: Context): void {
+  public override visitType(context: Context): void {
     const visitor = new TypeVisitor(this.writer);
     context.type.accept(context, visitor);
 
@@ -90,7 +90,7 @@ export class JsonSchemaVisitor extends BaseVisitor {
     this.schema.$defs[context.type?.name!] = visitor.def;
   }
 
-  visitEnum(context: Context): void {
+  public override visitEnum(context: Context): void {
     const visitor = new EnumVisitor(this.writer);
     context.enum.accept(context, visitor);
     if (!this.schema.$defs) {
@@ -99,7 +99,7 @@ export class JsonSchemaVisitor extends BaseVisitor {
     this.schema.$defs[context.enum?.name!] = visitor.def;
   }
 
-  visitUnion(context: Context): void {
+  public override visitUnion(context: Context): void {
     const visitor = new UnionVisitor(this.writer);
     context.union.accept(context, visitor);
     if (!this.schema.$defs) {
@@ -108,7 +108,7 @@ export class JsonSchemaVisitor extends BaseVisitor {
     this.schema.$defs[context.union?.name!] = visitor.def;
   }
 
-  visitAlias(context: Context): void {
+  public override visitAlias(context: Context): void {
     const visitor = new AliasVisitor(this.writer);
     context.alias.accept(context, visitor);
     if (!this.schema.$defs) {
@@ -125,7 +125,7 @@ class TypeVisitor extends BaseVisitor {
     super(writer);
   }
 
-  visitTypeField(context: Context): void {
+  public override visitTypeField(context: Context): void {
     const def: Mutable<SchemaObject | ReferenceObject> = {};
     if (context.field.description) {
       def.description = context.field.description;
@@ -146,7 +146,7 @@ class EnumVisitor extends BaseVisitor {
     super(writer);
   }
 
-  visitEnum(context: Context): void {
+  public override visitEnum(context: Context): void {
     const schema: SchemaObject = {
       description: context.enum.description,
       type: JsonSchemaType.String,
@@ -163,7 +163,7 @@ class UnionVisitor extends BaseVisitor {
     super(writer);
   }
 
-  visitUnion(context: Context): void {
+  public override visitUnion(context: Context): void {
     const { union } = context;
     const arr: SchemaObject[] = [];
     convertArrayToObject(
@@ -201,7 +201,7 @@ class AliasVisitor extends BaseVisitor {
     super(writer);
   }
 
-  visitAlias(context: Context): void {
+  public override visitAlias(context: Context): void {
     const schema: SchemaObject = {
       description: context.alias.description,
     };
