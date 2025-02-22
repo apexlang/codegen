@@ -1,10 +1,10 @@
 // deno-lint-ignore-file no-explicit-any
-import type {
+import {
   Context,
   Interface,
   ObjectMap,
   Operation,
-} from "@apexlang/core/model";
+} from "../../../deps/@apexlang/core/model/mod.ts";
 import {
   customAttributes,
   rustDoc,

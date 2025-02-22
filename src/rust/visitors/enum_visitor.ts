@@ -1,5 +1,9 @@
-import type { Context, Enum, ObjectMap } from "@apexlang/core/model";
-import type { IndexTypeDirective } from "../directives.ts";
+import {
+  Context,
+  Enum,
+  ObjectMap,
+} from "../../../deps/@apexlang/core/model/mod.ts";
+import { IndexTypeDirective } from "../directives.ts";
 import {
   customAttributes,
   rustDoc,

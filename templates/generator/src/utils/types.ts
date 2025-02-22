@@ -1,14 +1,14 @@
 import {
-  type AnyType,
+  AnyType,
   Kind,
-  type List,
-  type Map,
-  type Named,
-  type ObjectMap,
-  type Optional,
-  type Primitive,
+  List,
+  Map,
+  Named,
+  ObjectMap,
+  Optional,
+  Primitive,
   PrimitiveName,
-} from "@apexlang/core/model";
+} from "../../deps/@apexlang/core/model/mod.ts";
 
 /**
  * Convert an Apex type to a type suitable for the destination format.

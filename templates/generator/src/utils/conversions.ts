@@ -1,5 +1,9 @@
-import type { ObjectMap, Operation, Parameter } from "@apexlang/core/model";
-import * as utils from "@apexlang/codegen/utils";
+import {
+  ObjectMap,
+  Operation,
+  Parameter,
+} from "../../deps/@apexlang/core/model/mod.ts";
+import * as utils from "../../deps/@apexlang/codegen/utils/mod.ts";
 import { convertType } from "./types.ts";
 
 /**

@@ -1,5 +1,5 @@
 /*
-Copyright 2022 The Apex Authors.
+Copyright 2025 The Apex Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { type Context, Kind, type Writer } from "@apexlang/core/model";
+import { Context, Kind, Writer } from "../../deps/@apexlang/core/model/mod.ts";
 import { convertOperationToType, convertUnionToType } from "../utils/mod.ts";
 import { GoVisitor } from "./go_visitor.ts";
 import { MsgPackDecoderVisitor } from "./msgpack_decoder_visitor.ts";

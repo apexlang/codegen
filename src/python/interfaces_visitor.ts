@@ -1,5 +1,5 @@
 /*
-Copyright 2022 The Apex Authors.
+Copyright 2025 The Apex Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,16 +15,16 @@ limitations under the License.
 */
 
 import {
-  type Alias,
-  type AnyType,
+  Alias,
+  AnyType,
   BaseVisitor,
   Context,
-  type Enum,
+  Enum,
   Kind,
-  type Type,
-  type Union,
-  type Visitor,
-} from "@apexlang/core/model";
+  Type,
+  Union,
+  Visitor,
+} from "../../deps/@apexlang/core/model/mod.ts";
 import { ClassVisitor } from "./class_visitor.ts";
 import { InterfaceVisitor } from "./interface_visitor.ts";
 import { isHandler, isProvider, visitNamed } from "../utils/mod.ts";

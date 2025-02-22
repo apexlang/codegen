@@ -22,10 +22,22 @@
     "./rest": "./src/rest/mod.ts",
     "./rust": "./src/rust/mod.ts",
     "./typescript": "./src/typescript/mod.ts",
-    "./utils": "./src/utils/mod.ts"
+    "./utils": "./src/utils/mod.ts",
+    "./templates": "./templates/mod.ts",
+    "./templates/basic": "./templates/basic/mod.ts",
+    "./templates/generator": "./templates/generator/mod.ts",
+    "./templates/go": "./templates/go/mod.ts",
+    "./templates/nodejs": "./templates/nodejs/mod.ts",
+    "./templates/python": "./templates/python/mod.ts"
   },
   "publish": {
-    "include": ["LICENSE", "README.md", "templates", "src/**/*.ts"],
+    "include": [
+      "LICENSE",
+      "README.md",
+      "templates",
+      "deps/**/*.ts",
+      "src/**/*.ts"
+    ],
     "exclude": ["src/tests"]
   }
 }

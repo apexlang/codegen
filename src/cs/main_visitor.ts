@@ -1,5 +1,5 @@
 /*
-Copyright 2022 The Apex Authors.
+Copyright 2025 The Apex Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@ limitations under the License.
 
 // This Visitor generates the Main method, which is the entry point for C# code.
 
-import { BaseVisitor, type Context } from "@apexlang/core/model";
+import { BaseVisitor, Context } from "../../deps/@apexlang/core/model/mod.ts";
 import { parseNamespaceName } from "./helpers.ts";
 
 export class MainVisitor extends BaseVisitor {

@@ -1,4 +1,4 @@
-import { BaseVisitor, type Context } from "@apexlang/core/model";
+import { BaseVisitor, Context } from "../../deps/@apexlang/core/model/mod.ts";
 import { expandType } from "./helpers.ts";
 
 export class MarkdownVisitor extends BaseVisitor {

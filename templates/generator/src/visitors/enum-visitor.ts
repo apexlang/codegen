@@ -1,4 +1,4 @@
-import type { Context, Enum } from "@apexlang/core/model";
+import { Context, Enum } from "../../deps/@apexlang/core/model/mod.ts";
 import { convertDescription } from "../utils/conversions.ts";
 
 import { SourceGenerator } from "./base.ts";

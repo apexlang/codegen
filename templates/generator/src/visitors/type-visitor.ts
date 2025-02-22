@@ -1,4 +1,4 @@
-import type { Context, Type } from "@apexlang/core/model";
+import { Context, Type } from "../../deps/@apexlang/core/model/mod.ts";
 import { convertDescription } from "../utils/conversions.ts";
 import { convertType } from "../utils/types.ts";
 import { SourceGenerator } from "./base.ts";

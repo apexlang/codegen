@@ -1,16 +1,16 @@
 // deno-lint-ignore-file no-explicit-any
 import {
-  type AnyType,
+  AnyType,
   Kind,
-  type List,
-  type Map,
-  type Named,
-  type ObjectMap,
-  type Optional,
-  type Primitive,
+  List,
+  Map,
+  Named,
+  ObjectMap,
+  Optional,
+  Primitive,
   PrimitiveName,
-  type Stream,
-} from "@apexlang/core/model";
+  Stream,
+} from "../../../deps/@apexlang/core/model/mod.ts";
 import { rustifyCaps } from "./mod.ts";
 
 export function apexToRustType(

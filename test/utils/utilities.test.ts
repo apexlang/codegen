@@ -1,4 +1,4 @@
-import { assert } from "@std/assert";
+import { assert } from "../../deps/@std/assert/mod.ts";
 import { isRecursiveType } from "../../src/utils/utilities.ts";
 import { getTypes, parse } from "../parse.ts";
 
