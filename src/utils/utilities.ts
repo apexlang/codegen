@@ -894,3 +894,59 @@ export function extractVersion(url: string): string | undefined {
 
   return undefined;
 }
+
+export function importPlugin(
+  importUrl: string,
+  name: string,
+): string {
+  return urlify(importUrl, `/plugins/${name}`, `../../src/${name}/plugin.ts`);
+}
+
+export function importModule(
+  importUrl: string,
+  name: string,
+): string {
+  return urlify(importUrl, `/${name}`, `../../src/${name}/mod.ts`);
+}
+
+export function urlify(
+  importUrl: string,
+  jsrSuffix: string,
+  relativePath: string,
+): string {
+  const jsrPackage = toJSR(importUrl);
+  return jsrPackage
+    ? (jsrPackage + jsrSuffix)
+    : new URL(relativePath, importUrl).toString();
+}
+
+export function toJSR(url: string): string | undefined {
+  if (url.startsWith("https://jsr.io/")) {
+    let pkg = url.substring(15);
+    while (pkg.startsWith("/")) {
+      pkg = pkg.substring(1);
+    }
+    const parts = pkg.split("/");
+    if (parts.length >= 3) {
+      return "jsr:" + parts[0] + "/" + parts[1] + "@" + parts[2];
+    }
+
+    return undefined;
+  } else if (url.startsWith("jsr:")) {
+    let pkg = url.substring(4);
+    while (pkg.startsWith("/")) {
+      pkg = pkg.substring(1);
+    }
+    // No version included
+    if (!/@\d+\.\d+\.\d+/.test(pkg)) {
+      return undefined;
+    }
+
+    const parts = pkg.split("/");
+    if (parts.length >= 3) {
+      return "jsr:" + parts[0] + "/" + parts[1];
+    }
+  }
+
+  return undefined;
+}

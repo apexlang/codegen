@@ -1,10 +1,6 @@
 // deno-lint-ignore-file require-await
 import { FSStructure, Template } from "../../deps/@apexlang/apex/config/mod.ts";
-
-const importUrl = new URL(".", import.meta.url);
-function urlify(relpath: string): string {
-  return new URL(relpath, importUrl).toString();
-}
+import { importModule, importPlugin } from "../../src/utils/utilities.ts";
 
 const template: Template = {
   info: {
@@ -31,7 +27,10 @@ const template: Template = {
   async process(_vars: any): Promise<FSStructure> {
     return {
       variables: {
-        plugin: urlify("../../tinygo/plugin.ts"),
+        plugin: importPlugin(import.meta.url, "/tinygo"),
+        module_openapi3: importModule(import.meta.url, "openapi3"),
+        module_proto: importModule(import.meta.url, "proto"),
+        module_go: importModule(import.meta.url, "go"),
       },
       files: [
         ".vscode/extensions.json",

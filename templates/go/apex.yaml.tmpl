@@ -7,10 +7,10 @@ config:
     interface: "logr.Logger"
 generates:
   openapi.yaml:
-    module: 'jsr:@apexlang/codegen{{ .version_qualifier }}/openapiv3'
+    module: '{{ .module_openapi3 }}'
     visitorClass: OpenAPIV3Visitor
   proto/service.proto:
-    module: 'jsr:@apexlang/codegen{{ .version_qualifier }}/proto'
+    module: '{{ .module_proto }}'
     visitorClass: ProtoVisitor
     config:
       options:
@@ -24,31 +24,31 @@ generates:
           --go-grpc_opt=paths=source_relative
           proto/service.proto
   pkg/{{.package}}/interfaces.go:
-    module: 'jsr:@apexlang/codegen{{ .version_qualifier }}/go'
+    module: '{{ .module_go }}'
     visitorClass: InterfacesVisitor
   pkg/{{.package}}/fiber.go:
-    module: 'jsr:@apexlang/codegen{{ .version_qualifier }}/go'
+    module: '{{ .module_go }}'
     visitorClass: FiberVisitor
   pkg/{{.package}}/grpc.go:
-    module: 'jsr:@apexlang/codegen{{ .version_qualifier }}/go'
+    module: '{{ .module_go }}'
     visitorClass: GRPCVisitor
     config:
       protoPackage: {{.module}}/proto
   pkg/{{.package}}/services.go:
     ifNotExists: true
-    module: 'jsr:@apexlang/codegen{{ .version_qualifier }}/go'
+    module: '{{ .module_go }}'
     visitorClass: ScaffoldVisitor
     config:
       types:
         - service
   pkg/{{.package}}/providers.go:
     ifNotExists: true
-    module: 'jsr:@apexlang/codegen{{ .version_qualifier }}/go'
+    module: '{{ .module_go }}'
     visitorClass: ScaffoldVisitor
     config:
       types:
         - provider
   cmd/main.go:
     ifNotExists: false  # Change to true to control dependency injection
-    module: 'jsr:@apexlang/codegen{{ .version_qualifier }}/go'
+    module: '{{ .module_go }}'
     visitorClass: MainVisitor

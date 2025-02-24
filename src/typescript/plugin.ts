@@ -1,14 +1,6 @@
 import { Configuration } from "../../deps/@apexlang/apex/config/mod.ts";
 import * as ast from "../../deps/@apexlang/core/ast/mod.ts";
-import { extractVersion } from "../utils/utilities.ts";
-
-const importUrl = new URL(".", import.meta.url);
-
-function _urlify(relpath: string): string {
-  const url = new URL(relpath, importUrl).toString();
-  console.error(url);
-  return url;
-}
+import { importModule } from "../utils/utilities.ts";
 
 export default function (
   _doc: ast.Document,
@@ -16,8 +8,7 @@ export default function (
 ): Configuration {
   config.generates ||= {};
 
-  const version = extractVersion(import.meta.url);
-  const versionQualifier = version ? ("@" + version) : "";
+  const tsModule = importModule(import.meta.url, "typescript");
 
   config.config ||= {};
   config.config.aliases ||= {};
@@ -29,13 +20,13 @@ export default function (
   };
   config.generates[`./src/api.ts`] = {
     ifNotExists: true,
-    module: `jsr:@apexlang/codegen${versionQualifier}/typescript`,
+    module: tsModule,
     visitorClass: "ApiVisitor",
     config: {},
   };
   config.generates[`./src/interfaces.ts`] = {
     ifNotExists: true,
-    module: `jsr:@apexlang/codegen${versionQualifier}/typescript`,
+    module: tsModule,
     visitorClass: "InterfacesVisitor",
     config: {},
   };

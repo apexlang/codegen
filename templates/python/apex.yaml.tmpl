@@ -1,9 +1,9 @@
 spec: apex.axdl
 generates:
   interfaces.py:
-    module: "jsr:@apexlang/codegen{{ .version_qualifier }}/python"
+    module: '{{ .module_python }}'
     visitorClass: InterfacesVisitor
   service.py:
     ifNotExists: true
-    module: "jsr:@apexlang/codegen{{ .version_qualifier }}/python"
+    module: '{{ .module_python }}'
     visitorClass: ScaffoldVisitor

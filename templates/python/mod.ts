@@ -1,5 +1,6 @@
 // deno-lint-ignore-file require-await
 import { FSStructure, Template } from "../../deps/@apexlang/apex/config/mod.ts";
+import { importModule } from "../../src/utils/utilities.ts";
 
 const template: Template = {
   info: {
@@ -17,6 +18,9 @@ const template: Template = {
   // deno-lint-ignore no-explicit-any
   async process(_vars: any): Promise<FSStructure> {
     return {
+      variables: {
+        module_python: importModule(import.meta.url, "python"),
+      },
       files: [
         ".vscode/extensions.json",
         ".vscode/settings.json",
