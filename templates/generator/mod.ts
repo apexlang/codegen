@@ -33,6 +33,7 @@ const template: Template = {
       files: [
         ".vscode/extensions.json",
         ".vscode/settings.json",
+        "_gitignore", // Is renamed to .gitignore
         "apex.yaml",
         "deps/README.md",
         "deps/@apexlang/apex/mod.ts",
@@ -46,7 +47,29 @@ const template: Template = {
         "deps/@std/yaml/mod.ts",
         "example/apex.axdl",
         "example/apex.yaml",
-        //
+        "src/visitors/alias-visitor.ts",
+        "src/visitors/base.ts",
+        "src/visitors/enum-visitor.ts",
+        "src/visitors/interface-visitor.ts",
+        "src/visitors/mod.ts",
+        "src/visitors/type-visitor.ts",
+        "src/visitors/union-visitor.ts",
+        "src/mod.ts",
+        "src/utils/conversions.ts",
+        "src/utils/mod.ts",
+        "src/utils/types.ts",
+        "src/default-visitor.ts",
+        "templates/example/apex.axdl",
+        "templates/example/apex.yaml.tmpl",
+        "templates/example/mod.ts",
+        "templates/example/.vscode/extensions.json",
+        "templates/example/.vscode/settings.json",
+        "templates/example/.vscode/tasks.json",
+        "test/default.test.ts",
+        "test/parse.ts",
+        "testdata/snapshot/apex.axdl",
+        "testdata/snapshot/apex.yaml",
+        "testdata/diffcheck.sh",
       ],
       templates: {
         "tmpl": [

@@ -28,7 +28,8 @@
     "./templates/generator": "./templates/generator/mod.ts",
     "./templates/go": "./templates/go/mod.ts",
     "./templates/nodejs": "./templates/nodejs/mod.ts",
-    "./templates/python": "./templates/python/mod.ts"
+    "./templates/python": "./templates/python/mod.ts",
+    "./plugins/typescript": "./src/typescript/plugin.ts"
   },
   "publish": {
     "include": [

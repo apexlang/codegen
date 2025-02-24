@@ -21,12 +21,16 @@ const template: Template = {
         ".vscode/extensions.json",
         ".vscode/settings.json",
         ".vscode/tasks.json",
-        ".gitignore",
+        "_gitignore", // Is renamed to .gitignore
         "apex.axdl",
-        "apex.yaml",
         "Dockerfile",
         "requirements.txt",
       ],
+      templates: {
+        "tmpl": [
+          "apex.yaml.tmpl",
+        ],
+      },
     };
   },
 };

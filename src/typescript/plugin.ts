@@ -1,5 +1,6 @@
 import { Configuration } from "../../deps/@apexlang/apex/config/mod.ts";
 import * as ast from "../../deps/@apexlang/core/ast/mod.ts";
+import { extractVersion } from "../utils/utilities.ts";
 
 const importUrl = new URL(".", import.meta.url);
 
@@ -15,6 +16,9 @@ export default function (
 ): Configuration {
   config.generates ||= {};
 
+  const version = extractVersion(import.meta.url);
+  const version_slug = version ? ("/" + version) : "";
+
   config.config ||= {};
   config.config.aliases ||= {};
   (config.config.aliases as Record<string, unknown>).UUID = {
@@ -25,13 +29,13 @@ export default function (
   };
   config.generates[`./src/api.ts`] = {
     ifNotExists: true,
-    module: "@apexlang/codegen/typescript",
+    module: `jsr:@apexlang/codegen${version_slug}/typescript`,
     visitorClass: "ApiVisitor",
     config: {},
   };
   config.generates[`./src/interfaces.ts`] = {
     ifNotExists: true,
-    module: "@apexlang/codegen/typescript",
+    module: `jsr:@apexlang/codegen${version_slug}/typescript`,
     visitorClass: "InterfacesVisitor",
     config: {},
   };
