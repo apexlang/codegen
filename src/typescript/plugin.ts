@@ -17,7 +17,7 @@ export default function (
   config.generates ||= {};
 
   const version = extractVersion(import.meta.url);
-  const version_slug = version ? ("/" + version) : "";
+  const versionQualifier = version ? ("@" + version) : "";
 
   config.config ||= {};
   config.config.aliases ||= {};
@@ -29,13 +29,13 @@ export default function (
   };
   config.generates[`./src/api.ts`] = {
     ifNotExists: true,
-    module: `jsr:@apexlang/codegen${version_slug}/typescript`,
+    module: `jsr:@apexlang/codegen${versionQualifier}/typescript`,
     visitorClass: "ApiVisitor",
     config: {},
   };
   config.generates[`./src/interfaces.ts`] = {
     ifNotExists: true,
-    module: `jsr:@apexlang/codegen${version_slug}/typescript`,
+    module: `jsr:@apexlang/codegen${versionQualifier}/typescript`,
     visitorClass: "InterfacesVisitor",
     config: {},
   };
