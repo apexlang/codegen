@@ -7,7 +7,7 @@ config:
     interface: "logr.Logger"
 generates:
   openapi.yaml:
-    module: '{{ .module_openapi3 }}'
+    module: '{{ .module_openapiv3 }}'
     visitorClass: OpenAPIV3Visitor
   proto/service.proto:
     module: '{{ .module_proto }}'

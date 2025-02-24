@@ -28,7 +28,7 @@ const template: Template = {
     return {
       variables: {
         plugin: importPlugin(import.meta.url, "/tinygo"),
-        module_openapi3: importModule(import.meta.url, "openapi3"),
+        module_openapiv3: importModule(import.meta.url, "openapiv3"),
         module_proto: importModule(import.meta.url, "proto"),
         module_go: importModule(import.meta.url, "go"),
       },
