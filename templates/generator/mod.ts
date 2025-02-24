@@ -59,6 +59,7 @@ const template: Template = {
         "src/utils/mod.ts",
         "src/utils/types.ts",
         "src/default-visitor.ts",
+        "templates/mod.ts",
         "templates/example/apex.axdl",
         "templates/example/apex.yaml.tmpl",
         "templates/example/mod.ts",

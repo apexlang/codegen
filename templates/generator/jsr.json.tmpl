@@ -4,7 +4,9 @@
   "description": "{{ .description }}",
   "keywords": ["idl", "codegen"],
   "exports": {
+    ".": "./templates/mod.ts",
     "./visitors": "./src/visitors/mod.ts"
+    "./templates": "./templates/mod.ts",
   },
   "publish": {
     "include": [

@@ -12,6 +12,7 @@
     "url": "https://www.github.com/apexlang/codegen/issues"
   },
   "exports": {
+    ".": "./templates/mod.ts",
     "./cs": "./src/cs/mod.ts",
     "./go": "./src/go/mod.ts",
     "./json-schema": "./src/json-schema/mod.ts",
