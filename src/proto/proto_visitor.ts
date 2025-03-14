@@ -298,8 +298,8 @@ const scalarTypeMap = new Map<string, string>([
   ["boolean", "bool"],
   ["date", "google.protobuf.Timestamp"],
   ["datetime", "google.protobuf.Timestamp"],
-  ["any", "google.protobuf.Any"],
-  ["value", "google.protobuf.Any"],
+  ["any", "google.protobuf.Value"],
+  ["value", "google.protobuf.Value"],
 ]);
 
 function typeSignature(type: AnyType): string {
@@ -365,7 +365,8 @@ class ImportVisitor extends BaseVisitor {
             this.addImport("google/protobuf/timestamp.proto");
             break;
           case PrimitiveName.Any:
-            this.addImport("google/protobuf/any.proto");
+          case PrimitiveName.Value:
+            this.addImport("google/protobuf/struct.proto");
             break;
         }
         break;
@@ -449,7 +450,8 @@ function primitiveMessageType(name: PrimitiveName): string {
     case PrimitiveName.Bytes:
       return `google.protobuf.BytesValue`;
     case PrimitiveName.Any:
-      return `google.protobuf.Any`;
+    case PrimitiveName.Value:
+      return `google.protobuf.Value`;
   }
 
   return "unknown";

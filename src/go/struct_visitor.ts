@@ -16,11 +16,12 @@ limitations under the License.
 
 import {
   Context,
+  Field,
   Kind,
   Named,
   Writer,
 } from "../../deps/@apexlang/core/model/mod.ts";
-import { expandType, fieldName } from "./helpers.ts";
+import { defaultValueForType, expandType, fieldName } from "./helpers.ts";
 import { translateAlias } from "./alias_visitor.ts";
 import { formatComment } from "../utils/mod.ts";
 import { getImports, GoVisitor } from "./go_visitor.ts";
@@ -29,6 +30,7 @@ import {
   StringValue,
   Value,
 } from "../../deps/@apexlang/core/ast/mod.ts";
+import { snakeCase } from "../utils/utilities.ts";
 
 interface Serialize {
   value: string;
@@ -45,13 +47,19 @@ export class StructVisitor extends GoVisitor {
   public override visitTypeBefore(context: Context): void {
     const { type } = context;
     super.triggerTypeBefore(context);
-    this.write(formatComment("// ", type.description));
-    this.write(`type ${type.name} struct {\n`);
-
     let writeTypeInfo = context.config.writeTypeInfo as boolean;
     if (writeTypeInfo == undefined) {
       writeTypeInfo = this.writeTypeInfo;
     }
+
+    if (writeTypeInfo) {
+      this.write(
+        `const TYPE_${snakeCase(type.name).toUpperCase()} = "${type.name}"\n\n`,
+      );
+    }
+
+    this.write(formatComment("// ", type.description));
+    this.write(`type ${type.name} struct {\n`);
 
     if (writeTypeInfo) {
       this.write(`  ns\n`);
@@ -100,6 +108,7 @@ export class StructVisitor extends GoVisitor {
 
   public override visitTypeAfter(context: Context): void {
     const { type } = context;
+    const importer = getImports(context);
     const receiver = type.name.substring(0, 1).toLowerCase();
     this.write(`}\n\n`);
 
@@ -108,8 +117,39 @@ export class StructVisitor extends GoVisitor {
       writeTypeInfo = this.writeTypeInfo;
     }
     if (writeTypeInfo) {
-      this.write(`func (${receiver} *${type.name}) Type() string {
-        return "${type.name}"
+      const idField = type.fields.find((f: Field) => f.name == "id");
+      if (idField) {
+        importer.type(idField.type);
+        const packageName = context.config.otherPackage;
+        const idType = expandType(
+          idField.type!,
+          packageName,
+          true,
+          translateAlias(context),
+        );
+        const idDefault = defaultValueForType(
+          context,
+          idField.type,
+          packageName,
+        );
+        this.write(`func (${receiver} *${type.name}) GetID() ${idType} {
+          if ${receiver} == nil {
+            return ${idDefault}
+          }
+        
+          return ${receiver}.ID
+        }
+        
+        func (${receiver} *${type.name}) SetID(id ${idType}) {
+          if ${receiver} == nil {
+            return
+          }
+        
+          ${receiver}.ID = id
+        }\n\n`);
+      }
+      this.write(`func (${receiver} *${type.name}) GetType() string {
+        return TYPE_${snakeCase(type.name).toUpperCase()}
       }\n\n`);
     }
     super.triggerTypeAfter(context);

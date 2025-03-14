@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 import { Context, Writer } from "../../deps/@apexlang/core/model/mod.ts";
-import { formatComment, pascalCase } from "../utils/mod.ts";
+import { formatComment, pascalCase, snakeCase } from "../utils/mod.ts";
 import { IMPORTS } from "./constant.ts";
 import { getImporter, GoVisitor } from "./go_visitor.ts";
 
@@ -56,8 +56,12 @@ export class EnumVisitor extends GoVisitor {
     context.enum.accept(context, toIDVisitor);
 
     if (this.writeTypeInfo) {
-      this.write(`func (e ${context.enum.name}) Type() string {
-        return "${context.enum.name}"
+      const constName = `ENUM_${snakeCase(context.enum.name).toUpperCase()}`;
+      this.write(
+        `const ${constName} = "${context.enum.name}"\n\n`,
+      );
+      this.write(`func (e ${context.enum.name}) GetType() string {
+        return ${constName}
       }\n\n`);
     }
 
