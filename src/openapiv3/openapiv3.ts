@@ -230,7 +230,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
     }
 
     const { operation, parameter } = context;
-    let paramIn: string;
+    let paramIn = "query";
 
     let required = true;
     let t = parameter.type;
@@ -365,6 +365,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
         } as ParameterObject);
         return;
       }
+
       case "query":
         switch (t.kind) {
           case Kind.List: {
@@ -401,7 +402,7 @@ export class OpenAPIV3Visitor extends BaseVisitor {
                   ...primitive,
                 },
               } as ParameterObject);
-              return;
+              break;
             }
 
             // query parameters encapsulated inside a type
@@ -423,16 +424,41 @@ export class OpenAPIV3Visitor extends BaseVisitor {
                   } as ParameterObject);
                 }
               });
-              return;
+              break;
             }
             throw Error(
               `query parameter "${parameter.name}" must be a built-type: found "${named.name}"`,
             );
           }
+
+          case Kind.Type: {
+            const type = t as Type;
+            type.fields.map((f) => {
+              let value = f.type;
+              if (value.kind == Kind.Optional) {
+                value = (value as Optional).type;
+              }
+              if (value.kind != Kind.Primitive) {
+                return;
+              }
+              const named = value as Named;
+              const primitive = primitiveTypeMap.get(named.name);
+              if (primitive) {
+                this.operation!.parameters!.push({
+                  name: f.name,
+                  in: "query",
+                  description: f.description,
+                  required: f.type.kind != Kind.Optional,
+                  schema: {
+                    ...primitive,
+                  },
+                } as ParameterObject);
+              }
+            });
+            break;
+          }
         }
     }
-
-    this.operation!.parameters.push(p);
   }
 
   public override visitOperationAfter(context: Context): void {

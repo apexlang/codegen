@@ -19,6 +19,7 @@ func (o *MyServiceFuncTypeArgs) Decode(decoder msgpack.Reader) error {
 		return err
 	}
 
+	var _o MyServiceFuncTypeArgs
 	for numFields > 0 {
 		numFields--
 		field, err := decoder.ReadString()
@@ -27,15 +28,16 @@ func (o *MyServiceFuncTypeArgs) Decode(decoder msgpack.Reader) error {
 		}
 		switch field {
 		case "value":
-			err = o.Value.Decode(decoder)
+			err = _o.Value.Decode(decoder)
 		case "optional":
-			o.Optional, err = msgpack.DecodeNillable[MyType](decoder)
+			_o.Optional, err = msgpack.DecodeNillable[MyType](decoder)
 		default:
 			err = decoder.Skip()
 		}
 		if err != nil {
 			return err
 		}
+		*o = _o
 	}
 
 	return nil
@@ -66,6 +68,7 @@ func (o *MyServiceFuncEnumArgs) Decode(decoder msgpack.Reader) error {
 		return err
 	}
 
+	var _o MyServiceFuncEnumArgs
 	for numFields > 0 {
 		numFields--
 		field, err := decoder.ReadString()
@@ -74,15 +77,16 @@ func (o *MyServiceFuncEnumArgs) Decode(decoder msgpack.Reader) error {
 		}
 		switch field {
 		case "value":
-			o.Value, err = convert.Numeric[MyEnum](decoder.ReadInt32())
+			_o.Value, err = convert.Numeric[MyEnum](decoder.ReadInt32())
 		case "optional":
-			o.Optional, err = convert.NillableNumeric[MyEnum](decoder.ReadNillableInt32())
+			_o.Optional, err = convert.NillableNumeric[MyEnum](decoder.ReadNillableInt32())
 		default:
 			err = decoder.Skip()
 		}
 		if err != nil {
 			return err
 		}
+		*o = _o
 	}
 
 	return nil
@@ -113,6 +117,7 @@ func (o *MyServiceFuncAliasArgs) Decode(decoder msgpack.Reader) error {
 		return err
 	}
 
+	var _o MyServiceFuncAliasArgs
 	for numFields > 0 {
 		numFields--
 		field, err := decoder.ReadString()
@@ -121,15 +126,16 @@ func (o *MyServiceFuncAliasArgs) Decode(decoder msgpack.Reader) error {
 		}
 		switch field {
 		case "value":
-			o.Value, err = convert.Parse(uuid.Parse)(decoder.ReadString())
+			_o.Value, err = convert.Parse(uuid.Parse)(decoder.ReadString())
 		case "optional":
-			o.Optional, err = convert.NillableParse(uuid.Parse)(decoder.ReadNillableString())
+			_o.Optional, err = convert.NillableParse(uuid.Parse)(decoder.ReadNillableString())
 		default:
 			err = decoder.Skip()
 		}
 		if err != nil {
 			return err
 		}
+		*o = _o
 	}
 
 	return nil
@@ -164,6 +170,7 @@ func (o *MyServiceFuncStringArgs) Decode(decoder msgpack.Reader) error {
 		return err
 	}
 
+	var _o MyServiceFuncStringArgs
 	for numFields > 0 {
 		numFields--
 		field, err := decoder.ReadString()
@@ -172,15 +179,16 @@ func (o *MyServiceFuncStringArgs) Decode(decoder msgpack.Reader) error {
 		}
 		switch field {
 		case "value":
-			o.Value, err = decoder.ReadString()
+			_o.Value, err = decoder.ReadString()
 		case "optional":
-			o.Optional, err = decoder.ReadNillableString()
+			_o.Optional, err = decoder.ReadNillableString()
 		default:
 			err = decoder.Skip()
 		}
 		if err != nil {
 			return err
 		}
+		*o = _o
 	}
 
 	return nil
@@ -211,6 +219,7 @@ func (o *MyServiceFuncI64Args) Decode(decoder msgpack.Reader) error {
 		return err
 	}
 
+	var _o MyServiceFuncI64Args
 	for numFields > 0 {
 		numFields--
 		field, err := decoder.ReadString()
@@ -219,15 +228,16 @@ func (o *MyServiceFuncI64Args) Decode(decoder msgpack.Reader) error {
 		}
 		switch field {
 		case "value":
-			o.Value, err = decoder.ReadInt64()
+			_o.Value, err = decoder.ReadInt64()
 		case "optional":
-			o.Optional, err = decoder.ReadNillableInt64()
+			_o.Optional, err = decoder.ReadNillableInt64()
 		default:
 			err = decoder.Skip()
 		}
 		if err != nil {
 			return err
 		}
+		*o = _o
 	}
 
 	return nil
@@ -258,6 +268,7 @@ func (o *MyServiceFuncI32Args) Decode(decoder msgpack.Reader) error {
 		return err
 	}
 
+	var _o MyServiceFuncI32Args
 	for numFields > 0 {
 		numFields--
 		field, err := decoder.ReadString()
@@ -266,15 +277,16 @@ func (o *MyServiceFuncI32Args) Decode(decoder msgpack.Reader) error {
 		}
 		switch field {
 		case "value":
-			o.Value, err = decoder.ReadInt32()
+			_o.Value, err = decoder.ReadInt32()
 		case "optional":
-			o.Optional, err = decoder.ReadNillableInt32()
+			_o.Optional, err = decoder.ReadNillableInt32()
 		default:
 			err = decoder.Skip()
 		}
 		if err != nil {
 			return err
 		}
+		*o = _o
 	}
 
 	return nil
@@ -305,6 +317,7 @@ func (o *MyServiceFuncI16Args) Decode(decoder msgpack.Reader) error {
 		return err
 	}
 
+	var _o MyServiceFuncI16Args
 	for numFields > 0 {
 		numFields--
 		field, err := decoder.ReadString()
@@ -313,15 +326,16 @@ func (o *MyServiceFuncI16Args) Decode(decoder msgpack.Reader) error {
 		}
 		switch field {
 		case "value":
-			o.Value, err = decoder.ReadInt16()
+			_o.Value, err = decoder.ReadInt16()
 		case "optional":
-			o.Optional, err = decoder.ReadNillableInt16()
+			_o.Optional, err = decoder.ReadNillableInt16()
 		default:
 			err = decoder.Skip()
 		}
 		if err != nil {
 			return err
 		}
+		*o = _o
 	}
 
 	return nil
@@ -352,6 +366,7 @@ func (o *MyServiceFuncI8Args) Decode(decoder msgpack.Reader) error {
 		return err
 	}
 
+	var _o MyServiceFuncI8Args
 	for numFields > 0 {
 		numFields--
 		field, err := decoder.ReadString()
@@ -360,15 +375,16 @@ func (o *MyServiceFuncI8Args) Decode(decoder msgpack.Reader) error {
 		}
 		switch field {
 		case "value":
-			o.Value, err = decoder.ReadInt8()
+			_o.Value, err = decoder.ReadInt8()
 		case "optional":
-			o.Optional, err = decoder.ReadNillableInt8()
+			_o.Optional, err = decoder.ReadNillableInt8()
 		default:
 			err = decoder.Skip()
 		}
 		if err != nil {
 			return err
 		}
+		*o = _o
 	}
 
 	return nil
@@ -399,6 +415,7 @@ func (o *MyServiceFuncU64Args) Decode(decoder msgpack.Reader) error {
 		return err
 	}
 
+	var _o MyServiceFuncU64Args
 	for numFields > 0 {
 		numFields--
 		field, err := decoder.ReadString()
@@ -407,15 +424,16 @@ func (o *MyServiceFuncU64Args) Decode(decoder msgpack.Reader) error {
 		}
 		switch field {
 		case "value":
-			o.Value, err = decoder.ReadUint64()
+			_o.Value, err = decoder.ReadUint64()
 		case "optional":
-			o.Optional, err = decoder.ReadNillableUint64()
+			_o.Optional, err = decoder.ReadNillableUint64()
 		default:
 			err = decoder.Skip()
 		}
 		if err != nil {
 			return err
 		}
+		*o = _o
 	}
 
 	return nil
@@ -446,6 +464,7 @@ func (o *MyServiceFuncU32Args) Decode(decoder msgpack.Reader) error {
 		return err
 	}
 
+	var _o MyServiceFuncU32Args
 	for numFields > 0 {
 		numFields--
 		field, err := decoder.ReadString()
@@ -454,15 +473,16 @@ func (o *MyServiceFuncU32Args) Decode(decoder msgpack.Reader) error {
 		}
 		switch field {
 		case "value":
-			o.Value, err = decoder.ReadUint32()
+			_o.Value, err = decoder.ReadUint32()
 		case "optional":
-			o.Optional, err = decoder.ReadNillableUint32()
+			_o.Optional, err = decoder.ReadNillableUint32()
 		default:
 			err = decoder.Skip()
 		}
 		if err != nil {
 			return err
 		}
+		*o = _o
 	}
 
 	return nil
@@ -493,6 +513,7 @@ func (o *MyServiceFuncU16Args) Decode(decoder msgpack.Reader) error {
 		return err
 	}
 
+	var _o MyServiceFuncU16Args
 	for numFields > 0 {
 		numFields--
 		field, err := decoder.ReadString()
@@ -501,15 +522,16 @@ func (o *MyServiceFuncU16Args) Decode(decoder msgpack.Reader) error {
 		}
 		switch field {
 		case "value":
-			o.Value, err = decoder.ReadUint16()
+			_o.Value, err = decoder.ReadUint16()
 		case "optional":
-			o.Optional, err = decoder.ReadNillableUint16()
+			_o.Optional, err = decoder.ReadNillableUint16()
 		default:
 			err = decoder.Skip()
 		}
 		if err != nil {
 			return err
 		}
+		*o = _o
 	}
 
 	return nil
@@ -540,6 +562,7 @@ func (o *MyServiceFuncU8Args) Decode(decoder msgpack.Reader) error {
 		return err
 	}
 
+	var _o MyServiceFuncU8Args
 	for numFields > 0 {
 		numFields--
 		field, err := decoder.ReadString()
@@ -548,15 +571,16 @@ func (o *MyServiceFuncU8Args) Decode(decoder msgpack.Reader) error {
 		}
 		switch field {
 		case "value":
-			o.Value, err = decoder.ReadUint8()
+			_o.Value, err = decoder.ReadUint8()
 		case "optional":
-			o.Optional, err = decoder.ReadNillableUint8()
+			_o.Optional, err = decoder.ReadNillableUint8()
 		default:
 			err = decoder.Skip()
 		}
 		if err != nil {
 			return err
 		}
+		*o = _o
 	}
 
 	return nil
@@ -587,6 +611,7 @@ func (o *MyServiceFuncF64Args) Decode(decoder msgpack.Reader) error {
 		return err
 	}
 
+	var _o MyServiceFuncF64Args
 	for numFields > 0 {
 		numFields--
 		field, err := decoder.ReadString()
@@ -595,15 +620,16 @@ func (o *MyServiceFuncF64Args) Decode(decoder msgpack.Reader) error {
 		}
 		switch field {
 		case "value":
-			o.Value, err = decoder.ReadFloat64()
+			_o.Value, err = decoder.ReadFloat64()
 		case "optional":
-			o.Optional, err = decoder.ReadNillableFloat64()
+			_o.Optional, err = decoder.ReadNillableFloat64()
 		default:
 			err = decoder.Skip()
 		}
 		if err != nil {
 			return err
 		}
+		*o = _o
 	}
 
 	return nil
@@ -634,6 +660,7 @@ func (o *MyServiceFuncF32Args) Decode(decoder msgpack.Reader) error {
 		return err
 	}
 
+	var _o MyServiceFuncF32Args
 	for numFields > 0 {
 		numFields--
 		field, err := decoder.ReadString()
@@ -642,15 +669,16 @@ func (o *MyServiceFuncF32Args) Decode(decoder msgpack.Reader) error {
 		}
 		switch field {
 		case "value":
-			o.Value, err = decoder.ReadFloat32()
+			_o.Value, err = decoder.ReadFloat32()
 		case "optional":
-			o.Optional, err = decoder.ReadNillableFloat32()
+			_o.Optional, err = decoder.ReadNillableFloat32()
 		default:
 			err = decoder.Skip()
 		}
 		if err != nil {
 			return err
 		}
+		*o = _o
 	}
 
 	return nil
@@ -681,6 +709,7 @@ func (o *MyServiceFuncBytesArgs) Decode(decoder msgpack.Reader) error {
 		return err
 	}
 
+	var _o MyServiceFuncBytesArgs
 	for numFields > 0 {
 		numFields--
 		field, err := decoder.ReadString()
@@ -689,15 +718,16 @@ func (o *MyServiceFuncBytesArgs) Decode(decoder msgpack.Reader) error {
 		}
 		switch field {
 		case "value":
-			o.Value, err = decoder.ReadByteArray()
+			_o.Value, err = decoder.ReadByteArray()
 		case "optional":
-			o.Optional, err = decoder.ReadNillableByteArray()
+			_o.Optional, err = decoder.ReadNillableByteArray()
 		default:
 			err = decoder.Skip()
 		}
 		if err != nil {
 			return err
 		}
+		*o = _o
 	}
 
 	return nil
@@ -723,6 +753,7 @@ func (o *MyType) Decode(decoder msgpack.Reader) error {
 		return err
 	}
 
+	var _o MyType
 	for numFields > 0 {
 		numFields--
 		field, err := decoder.ReadString()
@@ -731,67 +762,67 @@ func (o *MyType) Decode(decoder msgpack.Reader) error {
 		}
 		switch field {
 		case "sameValue":
-			o.SameValue, err = msgpack.DecodeNillable[MyType](decoder)
+			_o.SameValue, err = msgpack.DecodeNillable[MyType](decoder)
 		case "typeValue":
-			err = o.TypeValue.Decode(decoder)
+			err = _o.TypeValue.Decode(decoder)
 		case "stringValue":
-			o.StringValue, err = decoder.ReadString()
+			_o.StringValue, err = decoder.ReadString()
 		case "stringOption":
-			o.StringOption, err = decoder.ReadNillableString()
+			_o.StringOption, err = decoder.ReadNillableString()
 		case "i64Value":
-			o.I64Value, err = decoder.ReadInt64()
+			_o.I64Value, err = decoder.ReadInt64()
 		case "i64Option":
-			o.I64Option, err = decoder.ReadNillableInt64()
+			_o.I64Option, err = decoder.ReadNillableInt64()
 		case "i32Value":
-			o.I32Value, err = decoder.ReadInt32()
+			_o.I32Value, err = decoder.ReadInt32()
 		case "i32Option":
-			o.I32Option, err = decoder.ReadNillableInt32()
+			_o.I32Option, err = decoder.ReadNillableInt32()
 		case "i16Value":
-			o.I16Value, err = decoder.ReadInt16()
+			_o.I16Value, err = decoder.ReadInt16()
 		case "i16Option":
-			o.I16Option, err = decoder.ReadNillableInt16()
+			_o.I16Option, err = decoder.ReadNillableInt16()
 		case "i8Value":
-			o.I8Value, err = decoder.ReadInt8()
+			_o.I8Value, err = decoder.ReadInt8()
 		case "i8Option":
-			o.I8Option, err = decoder.ReadNillableInt8()
+			_o.I8Option, err = decoder.ReadNillableInt8()
 		case "u64Value":
-			o.U64Value, err = decoder.ReadUint64()
+			_o.U64Value, err = decoder.ReadUint64()
 		case "u64Option":
-			o.U64Option, err = decoder.ReadNillableUint64()
+			_o.U64Option, err = decoder.ReadNillableUint64()
 		case "u32Value":
-			o.U32Value, err = decoder.ReadUint32()
+			_o.U32Value, err = decoder.ReadUint32()
 		case "u32Option":
-			o.U32Option, err = decoder.ReadNillableUint32()
+			_o.U32Option, err = decoder.ReadNillableUint32()
 		case "u16Value":
-			o.U16Value, err = decoder.ReadUint16()
+			_o.U16Value, err = decoder.ReadUint16()
 		case "u16Option":
-			o.U16Option, err = decoder.ReadNillableUint16()
+			_o.U16Option, err = decoder.ReadNillableUint16()
 		case "u8Value":
-			o.U8Value, err = decoder.ReadUint8()
+			_o.U8Value, err = decoder.ReadUint8()
 		case "u8Option":
-			o.U8Option, err = decoder.ReadNillableUint8()
+			_o.U8Option, err = decoder.ReadNillableUint8()
 		case "f64Value":
-			o.F64Value, err = decoder.ReadFloat64()
+			_o.F64Value, err = decoder.ReadFloat64()
 		case "f64Option":
-			o.F64Option, err = decoder.ReadNillableFloat64()
+			_o.F64Option, err = decoder.ReadNillableFloat64()
 		case "f32Value":
-			o.F32Value, err = decoder.ReadFloat32()
+			_o.F32Value, err = decoder.ReadFloat32()
 		case "f32Option":
-			o.F32Option, err = decoder.ReadNillableFloat32()
+			_o.F32Option, err = decoder.ReadNillableFloat32()
 		case "datetimeValue":
-			o.DatetimeValue, err = decoder.ReadTime()
+			_o.DatetimeValue, err = decoder.ReadTime()
 		case "datetimeOption":
-			o.DatetimeOption, err = decoder.ReadNillableTime()
+			_o.DatetimeOption, err = decoder.ReadNillableTime()
 		case "bytesValue":
-			o.BytesValue, err = decoder.ReadByteArray()
+			_o.BytesValue, err = decoder.ReadByteArray()
 		case "bytesOption":
-			o.BytesOption, err = decoder.ReadNillableByteArray()
+			_o.BytesOption, err = decoder.ReadNillableByteArray()
 		case "mapValue":
 			mapSize, err := decoder.ReadMapSize()
 			if err != nil {
 				return err
 			}
-			o.MapValue = make(map[string]int64, mapSize)
+			_o.MapValue = make(map[string]int64, mapSize)
 			for mapSize > 0 {
 				mapSize--
 				key, err := decoder.ReadString()
@@ -802,14 +833,14 @@ func (o *MyType) Decode(decoder msgpack.Reader) error {
 				if err != nil {
 					return err
 				}
-				o.MapValue[key] = value
+				_o.MapValue[key] = value
 			}
 		case "mapOfTypes":
 			mapSize, err := decoder.ReadMapSize()
 			if err != nil {
 				return err
 			}
-			o.MapOfTypes = make(map[string]MyType, mapSize)
+			_o.MapOfTypes = make(map[string]MyType, mapSize)
 			for mapSize > 0 {
 				mapSize--
 				key, err := decoder.ReadString()
@@ -820,14 +851,14 @@ func (o *MyType) Decode(decoder msgpack.Reader) error {
 				if err != nil {
 					return err
 				}
-				o.MapOfTypes[key] = value
+				_o.MapOfTypes[key] = value
 			}
 		case "arrayValue":
 			listSize, err := decoder.ReadArraySize()
 			if err != nil {
 				return err
 			}
-			o.ArrayValue = make([]string, 0, listSize)
+			_o.ArrayValue = make([]string, 0, listSize)
 			for listSize > 0 {
 				listSize--
 				var nonNilItem string
@@ -835,14 +866,14 @@ func (o *MyType) Decode(decoder msgpack.Reader) error {
 				if err != nil {
 					return err
 				}
-				o.ArrayValue = append(o.ArrayValue, nonNilItem)
+				_o.ArrayValue = append(_o.ArrayValue, nonNilItem)
 			}
 		case "arrayOfTypes":
 			listSize, err := decoder.ReadArraySize()
 			if err != nil {
 				return err
 			}
-			o.ArrayOfTypes = make([]MyType, 0, listSize)
+			_o.ArrayOfTypes = make([]MyType, 0, listSize)
 			for listSize > 0 {
 				listSize--
 				var nonNilItem MyType
@@ -850,30 +881,31 @@ func (o *MyType) Decode(decoder msgpack.Reader) error {
 				if err != nil {
 					return err
 				}
-				o.ArrayOfTypes = append(o.ArrayOfTypes, nonNilItem)
+				_o.ArrayOfTypes = append(_o.ArrayOfTypes, nonNilItem)
 			}
 		case "unionValue":
-			o.UnionValue, err = msgpack.Decode[MyUnion](decoder)
+			_o.UnionValue, err = msgpack.Decode[MyUnion](decoder)
 		case "unionOption":
-			o.UnionOption, err = msgpack.DecodeNillable[MyUnion](decoder)
+			_o.UnionOption, err = msgpack.DecodeNillable[MyUnion](decoder)
 		case "enumValue":
-			o.EnumValue, err = convert.Numeric[MyEnum](decoder.ReadInt32())
+			_o.EnumValue, err = convert.Numeric[MyEnum](decoder.ReadInt32())
 		case "enumOption":
-			o.EnumOption, err = convert.NillableNumeric[MyEnum](decoder.ReadNillableInt32())
+			_o.EnumOption, err = convert.NillableNumeric[MyEnum](decoder.ReadNillableInt32())
 		case "aliasValue":
-			o.AliasValue, err = convert.Parse(uuid.Parse)(decoder.ReadString())
+			_o.AliasValue, err = convert.Parse(uuid.Parse)(decoder.ReadString())
 		case "aliasOption":
-			o.AliasOption, err = convert.NillableParse(uuid.Parse)(decoder.ReadNillableString())
+			_o.AliasOption, err = convert.NillableParse(uuid.Parse)(decoder.ReadNillableString())
 		case "boolValue":
-			o.BoolValue, err = decoder.ReadBool()
+			_o.BoolValue, err = decoder.ReadBool()
 		case "boolOption":
-			o.BoolOption, err = decoder.ReadNillableBool()
+			_o.BoolOption, err = decoder.ReadNillableBool()
 		default:
 			err = decoder.Skip()
 		}
 		if err != nil {
 			return err
 		}
+		*o = _o
 	}
 
 	return nil
@@ -1001,6 +1033,7 @@ func (o *MyOtherType) Decode(decoder msgpack.Reader) error {
 		return err
 	}
 
+	var _o MyOtherType
 	for numFields > 0 {
 		numFields--
 		field, err := decoder.ReadString()
@@ -1009,15 +1042,16 @@ func (o *MyOtherType) Decode(decoder msgpack.Reader) error {
 		}
 		switch field {
 		case "foo":
-			o.Foo, err = decoder.ReadString()
+			_o.Foo, err = decoder.ReadString()
 		case "bar":
-			o.Bar, err = decoder.ReadString()
+			_o.Bar, err = decoder.ReadString()
 		default:
 			err = decoder.Skip()
 		}
 		if err != nil {
 			return err
 		}
+		*o = _o
 	}
 
 	return nil
@@ -1043,6 +1077,7 @@ func (o *MyUnion) Decode(decoder msgpack.Reader) error {
 		return err
 	}
 
+	var _o MyUnion
 	for numFields > 0 {
 		numFields--
 		field, err := decoder.ReadString()
@@ -1051,17 +1086,18 @@ func (o *MyUnion) Decode(decoder msgpack.Reader) error {
 		}
 		switch field {
 		case "MyType":
-			o.MyType, err = msgpack.DecodeNillable[MyType](decoder)
+			_o.MyType, err = msgpack.DecodeNillable[MyType](decoder)
 		case "MyEnum":
-			o.MyEnum, err = convert.NillableNumeric[MyEnum](decoder.ReadNillableInt32())
+			_o.MyEnum, err = convert.NillableNumeric[MyEnum](decoder.ReadNillableInt32())
 		case "string":
-			o.String, err = decoder.ReadNillableString()
+			_o.String, err = decoder.ReadNillableString()
 		default:
 			err = decoder.Skip()
 		}
 		if err != nil {
 			return err
 		}
+		*o = _o
 	}
 
 	return nil

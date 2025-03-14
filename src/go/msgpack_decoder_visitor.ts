@@ -33,6 +33,7 @@ export class MsgPackDecoderVisitor extends GoVisitor {
       return err
     }
 
+    var _o ${type.name}
     for numFields > 0 {
       numFields--;
       ${context.fields.length > 0 ? "field" : "_"}, err := decoder.ReadString()
@@ -52,7 +53,7 @@ export class MsgPackDecoderVisitor extends GoVisitor {
       msgpackRead(
         context,
         false,
-        `o.${fieldName(field, field.name)}`,
+        `_o.${fieldName(field, field.name)}`,
         true,
         "",
         field.type,
@@ -73,6 +74,7 @@ export class MsgPackDecoderVisitor extends GoVisitor {
     this.write(`if err != nil {
       return err
     }
+    *o = _o
   }\n`);
     this.write(`
     return nil

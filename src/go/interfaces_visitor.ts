@@ -51,10 +51,13 @@ export class InterfacesVisitor extends GoVisitor {
 
     if (this.writeTypeInfo) {
       this.write(`\n\n
+
+        const NAMESPACE = "${ns.name}"
+
         type ns struct{}
 
-        func (n *ns) Namespace() string {
-          return "${ns.name}"
+        func (n *ns) GetNamespace() string {
+          return NAMESPACE
         }\n\n`);
 
       ns.annotation("version", (a) => {
