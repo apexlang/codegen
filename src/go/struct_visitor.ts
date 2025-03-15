@@ -21,7 +21,13 @@ import {
   Named,
   Writer,
 } from "../../deps/@apexlang/core/model/mod.ts";
-import { defaultValueForType, expandType, fieldName } from "./helpers.ts";
+import {
+  defaultValueForType,
+  expandType,
+  fieldName,
+  shouldWriteTypeInfo,
+  writeNamespaceEmbeddedStruct,
+} from "./helpers.ts";
 import { translateAlias } from "./alias_visitor.ts";
 import { formatComment } from "../utils/mod.ts";
 import { getImports, GoVisitor } from "./go_visitor.ts";
@@ -47,12 +53,10 @@ export class StructVisitor extends GoVisitor {
   public override visitTypeBefore(context: Context): void {
     const { type } = context;
     super.triggerTypeBefore(context);
-    let writeTypeInfo = context.config.writeTypeInfo as boolean;
-    if (writeTypeInfo == undefined) {
-      writeTypeInfo = this.writeTypeInfo;
-    }
 
+    const writeTypeInfo = shouldWriteTypeInfo(context, this.writeTypeInfo);
     if (writeTypeInfo) {
+      writeNamespaceEmbeddedStruct(context, this.writer);
       this.write(
         `const TYPE_${snakeCase(type.name).toUpperCase()} = "${type.name}"\n\n`,
       );

@@ -18,6 +18,10 @@ import { Context, Writer } from "../../deps/@apexlang/core/model/mod.ts";
 import { formatComment, pascalCase, snakeCase } from "../utils/mod.ts";
 import { IMPORTS } from "./constant.ts";
 import { getImporter, GoVisitor } from "./go_visitor.ts";
+import {
+  shouldWriteTypeInfo,
+  writeNamespaceEmbeddedStruct,
+} from "./helpers.ts";
 
 export class EnumVisitor extends GoVisitor {
   private writeTypeInfo: boolean;
@@ -29,6 +33,12 @@ export class EnumVisitor extends GoVisitor {
 
   public override visitEnumBefore(context: Context): void {
     super.triggerEnumsBefore(context);
+
+    const writeTypeInfo = shouldWriteTypeInfo(context, this.writeTypeInfo);
+    if (writeTypeInfo) {
+      writeNamespaceEmbeddedStruct(context, this.writer);
+    }
+
     this.write(formatComment("// ", context.enum.description));
     this.write(`type ${context.enum.name} int32
 

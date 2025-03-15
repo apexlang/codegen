@@ -122,7 +122,7 @@ package ${ns.name};\n\n`);
     this.write(
       `  ${typeSignature(field.type)} ${
         snakeCase(field.name)
-      } = ${fieldnum.value};\n`,
+      } = ${fieldnum.value} [json_name="${field.name}"];\n`,
     );
   }
 

@@ -39,35 +39,9 @@ export class InterfacesVisitor extends GoVisitor {
   defaultsVisitor = (writer: Writer): Visitor => new DefaultsVisitor(writer);
   enumVisitor = (writer: Writer): Visitor =>
     new EnumVisitor(writer, this.writeTypeInfo);
-  unionVisitor = (writer: Writer): Visitor => new UnionVisitor(writer);
+  unionVisitor = (writer: Writer): Visitor =>
+    new UnionVisitor(writer, this.writeTypeInfo);
   aliasVisitor = (writer: Writer): Visitor => new AliasVisitor(writer);
-
-  public override visitNamespaceBefore(context: Context): void {
-    const { namespace: ns } = context;
-    this.writeTypeInfo = context.config.writeTypeInfo as boolean;
-    if (this.writeTypeInfo == undefined) {
-      this.writeTypeInfo = false;
-    }
-
-    if (this.writeTypeInfo) {
-      this.write(`\n\n
-
-        const NAMESPACE = "${ns.name}"
-
-        type ns struct{}
-
-        func (n *ns) GetNamespace() string {
-          return NAMESPACE
-        }\n\n`);
-
-      ns.annotation("version", (a) => {
-        this.write(`func (n *ns) Version() string {
-            return "${a.arguments[0].value.getValue()}"
-          }\n\n`);
-      });
-    }
-    super.triggerNamespaceBefore(context);
-  }
 
   public override visitFunctionBefore(context: Context): void {
     const { operation } = context;
