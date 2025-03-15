@@ -32,6 +32,7 @@ import {
   PrimitiveName,
   Stream,
   Valued,
+  Writer,
 } from "../../deps/@apexlang/core/model/mod.ts";
 import { capitalize, renamed } from "../utils/mod.ts";
 import { Import } from "./alias_visitor.ts";
@@ -423,4 +424,39 @@ export function varAccessArg(
 
 export function receiver(iface: Interface): string {
   return iface.name[0].toLowerCase();
+}
+
+export function shouldWriteTypeInfo(
+  context: Context,
+  defaultValue: boolean,
+): boolean {
+  const writeTypeInfo = context.config.writeTypeInfo as boolean;
+  if (writeTypeInfo == undefined) {
+    return defaultValue;
+  }
+  return writeTypeInfo;
+}
+
+export function writeNamespaceEmbeddedStruct(context: Context, writer: Writer) {
+  if (context.config.nsWritten == true) {
+    return;
+  }
+
+  const { namespace: ns } = context;
+  writer.write(`\n\n
+const NAMESPACE = "${ns.name}"
+
+type ns struct{}
+
+func (n *ns) GetNamespace() string {
+  return NAMESPACE
+}\n\n`);
+
+  ns.annotation("version", (a) => {
+    writer.write(`func (n *ns) Version() string {
+      return "${a.arguments[0].value.getValue()}"
+    }\n\n`);
+  });
+
+  context.config.nsWritten = true;
 }

@@ -14,22 +14,53 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import { Annotated, Context } from "../../deps/@apexlang/core/model/mod.ts";
-import { formatComment, typeName } from "../utils/mod.ts";
+import {
+  Annotated,
+  Context,
+  Writer,
+} from "../../deps/@apexlang/core/model/mod.ts";
+import { formatComment, snakeCase, typeName } from "../utils/mod.ts";
 import { getImports, GoVisitor } from "./go_visitor.ts";
-import { expandType, fieldName } from "./helpers.ts";
+import {
+  expandType,
+  fieldName,
+  shouldWriteTypeInfo,
+  writeNamespaceEmbeddedStruct,
+} from "./helpers.ts";
 
 interface UnionKey {
   value: string;
 }
 
 export class UnionVisitor extends GoVisitor {
+  private writeTypeInfo: boolean;
+
+  constructor(writer: Writer, writeTypeInfo: boolean = false) {
+    super(writer);
+    this.writeTypeInfo = writeTypeInfo;
+  }
+
   public override visitUnion(context: Context): void {
     const tick = "`";
     const { union } = context;
     const imports = getImports(context);
+
+    const writeTypeInfo = shouldWriteTypeInfo(context, this.writeTypeInfo);
+    if (writeTypeInfo) {
+      writeNamespaceEmbeddedStruct(context, this.writer);
+
+      this.write(
+        `const UNION_${
+          snakeCase(union.name).toUpperCase()
+        } = "${union.name}"\n\n`,
+      );
+    }
+
     this.write(formatComment("// ", union.description));
     this.write(`type ${union.name} struct {\n`);
+    if (writeTypeInfo) {
+      this.write(`ns\n`);
+    }
     union.members.forEach((member) => {
       let tname = typeName(member.type);
       member.annotation("unionKey", (a) => {
@@ -50,5 +81,12 @@ export class UnionVisitor extends GoVisitor {
       this.write(`"${tick}\n`);
     });
     this.write(`}\n\n`);
+
+    if (writeTypeInfo) {
+      const receiver = union.name.substring(0, 1).toLowerCase();
+      this.write(`func (${receiver} *${union.name}) GetType() string {
+      return UNION_${snakeCase(union.name).toUpperCase()}
+    }\n\n`);
+    }
   }
 }
