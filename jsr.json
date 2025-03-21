@@ -36,6 +36,7 @@
     "include": [
       "LICENSE",
       "README.md",
+      "definitions",
       "templates",
       "deps/**/*.ts",
       "src/**/*.ts"
