@@ -29,6 +29,7 @@ export const translations: Map<string, string> = new Map<string, string>([
   ["f32", "float32"],
   ["f64", "float64"],
   ["datetime", "time.Time"],
+  ["raw", "[]byte"],
 ]);
 
 export const IMPORTS = {
