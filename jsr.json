@@ -1,6 +1,6 @@
 {
   "name": "@apexlang/codegen",
-  "version": "0.2.11",
+  "version": "0.2.12",
   "description": "Code generators for Apex.",
   "keywords": ["apex", "idl", "codegen"],
   "license": "Apache-2.0",
