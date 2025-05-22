@@ -49,6 +49,7 @@ export const msgpackDecodeFuncs: Map<string, string> = new Map<string, string>([
   ["f64", "ReadFloat64"],
   ["bytes", "ReadByteArray"],
   ["any", "ReadAny"],
+  ["raw", "ReadRaw"],
 ]);
 
 export const msgpackDecodeNillableFuncs: Map<string, string> = new Map<
@@ -89,6 +90,7 @@ export const msgpackEncodeFuncs: Map<string, string> = new Map<string, string>([
   ["f64", "WriteFloat64"],
   ["bytes", "WriteByteArray"],
   ["any", "WriteAny"],
+  ["raw", "WriteRaw"],
 ]);
 
 export const msgpackEncodeNillableFuncs: Map<string, string> = new Map<
