@@ -143,7 +143,11 @@ package ${ns.name};\n\n`);
     this.write(`enum ${pascalCase(e.name)} {\n`);
     e.values.forEach((ev) => {
       this.write(formatComment("  // ", ev.description));
-      this.write(`  ${snakeCase(ev.name).toUpperCase()} = ${ev.index};\n`);
+      this.write(
+        `  ${snakeCase(e.name).toUpperCase()}_${
+          snakeCase(ev.name).toUpperCase()
+        } = ${ev.index};\n`,
+      );
     });
     this.write(`}\n\n`);
     if (!this.valueTypes.has(e.name)) {

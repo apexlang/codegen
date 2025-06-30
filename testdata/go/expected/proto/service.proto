@@ -45,90 +45,90 @@ service MyService {
 // MyType is a class
 message MyType {
   // same type value
-  optional MyType same_value = 1;
+  optional MyType same_value = 1 [json_name="sameValue"];
   // type value
-  MyOtherType type_value = 2;
+  MyOtherType type_value = 2 [json_name="typeValue"];
   // string value
-  string string_value = 3;
+  string string_value = 3 [json_name="stringValue"];
   // string option
-  optional string string_option = 4;
+  optional string string_option = 4 [json_name="stringOption"];
   // i64 value
-  int64 i64_value = 5;
+  int64 i64_value = 5 [json_name="i64Value"];
   // i64 option
-  optional int64 i64_option = 6;
+  optional int64 i64_option = 6 [json_name="i64Option"];
   // i32 value
-  int32 i32_value = 7;
+  int32 i32_value = 7 [json_name="i32Value"];
   // i32 option
-  optional int32 i32_option = 8;
+  optional int32 i32_option = 8 [json_name="i32Option"];
   // i16 value
-  int32 i16_value = 9;
+  int32 i16_value = 9 [json_name="i16Value"];
   // i16 option
-  optional int32 i16_option = 10;
+  optional int32 i16_option = 10 [json_name="i16Option"];
   // i8 value
-  int32 i8_value = 11;
+  int32 i8_value = 11 [json_name="i8Value"];
   // i8 option
-  optional int32 i8_option = 12;
+  optional int32 i8_option = 12 [json_name="i8Option"];
   // u64 value
-  uint64 u64_value = 13;
+  uint64 u64_value = 13 [json_name="u64Value"];
   // u64 option
-  optional uint64 u64_option = 14;
+  optional uint64 u64_option = 14 [json_name="u64Option"];
   // u32 value
-  uint32 u32_value = 15;
+  uint32 u32_value = 15 [json_name="u32Value"];
   // u32 option
-  optional uint32 u32_option = 16;
+  optional uint32 u32_option = 16 [json_name="u32Option"];
   // u16 value
-  uint32 u16_value = 17;
+  uint32 u16_value = 17 [json_name="u16Value"];
   // u16 option
-  optional uint32 u16_option = 18;
+  optional uint32 u16_option = 18 [json_name="u16Option"];
   // u8 value
-  uint32 u8_value = 19;
+  uint32 u8_value = 19 [json_name="u8Value"];
   // u8 option
-  optional uint32 u8_option = 20;
+  optional uint32 u8_option = 20 [json_name="u8Option"];
   // f64 value
-  double f64_value = 21;
+  double f64_value = 21 [json_name="f64Value"];
   // f64 option
-  optional double f64_option = 22;
+  optional double f64_option = 22 [json_name="f64Option"];
   // f32 value
-  float f32_value = 23;
+  float f32_value = 23 [json_name="f32Value"];
   // f32 option
-  optional float f32_option = 24;
+  optional float f32_option = 24 [json_name="f32Option"];
   // datetime value
-  google.protobuf.Timestamp datetime_value = 25;
+  google.protobuf.Timestamp datetime_value = 25 [json_name="datetimeValue"];
   // datetime option
-  optional google.protobuf.Timestamp datetime_option = 26;
+  optional google.protobuf.Timestamp datetime_option = 26 [json_name="datetimeOption"];
   // bytes value
-  bytes bytes_value = 27;
+  bytes bytes_value = 27 [json_name="bytesValue"];
   // bytes option
-  optional bytes bytes_option = 28;
+  optional bytes bytes_option = 28 [json_name="bytesOption"];
   // map value
-  map<string, int64> map_value = 29;
+  map<string, int64> map_value = 29 [json_name="mapValue"];
   // map of types
-  map<string, MyType> map_of_types = 30;
+  map<string, MyType> map_of_types = 30 [json_name="mapOfTypes"];
   // array value
-  repeated string array_value = 31;
+  repeated string array_value = 31 [json_name="arrayValue"];
   // array of types
-  repeated MyType array_of_types = 32;
+  repeated MyType array_of_types = 32 [json_name="arrayOfTypes"];
   // union value
-  MyUnion union_value = 33;
+  MyUnion union_value = 33 [json_name="unionValue"];
   // union option
-  optional MyUnion union_option = 34;
+  optional MyUnion union_option = 34 [json_name="unionOption"];
   // enum value
-  MyEnum enum_value = 35;
+  MyEnum enum_value = 35 [json_name="enumValue"];
   // enum option
-  optional MyEnum enum_option = 36;
+  optional MyEnum enum_option = 36 [json_name="enumOption"];
   // enum value
-  string alias_value = 37;
+  string alias_value = 37 [json_name="aliasValue"];
   // enum option
-  optional string alias_option = 38;
+  optional string alias_option = 38 [json_name="aliasOption"];
   // bool value
-  bool bool_value = 39;
+  bool bool_value = 39 [json_name="boolValue"];
   // bool option
-  optional bool bool_option = 40;
+  optional bool bool_option = 40 [json_name="boolOption"];
 }
 
 message MyOtherType {
-  string foo = 1;
-  string bar = 2;
+  string foo = 1 [json_name="foo"];
+  string bar = 2 [json_name="bar"];
 }
 
 message MyUnion {
@@ -142,11 +142,11 @@ message MyUnion {
 // MyEnum is an emuneration
 enum MyEnum {
   // ONE value
-  ONE = 0;
+  MY_ENUM_ONE = 0;
   // TWO value
-  TWO = 1;
+  MY_ENUM_TWO = 1;
   // THREE value
-  THREE = 2;
+  MY_ENUM_THREE = 2;
 }
 
 message MyEnumValue {
@@ -154,77 +154,77 @@ message MyEnumValue {
 }
 
 message MyServiceFuncTypeArgs {
-  MyType value = 1;
-  optional MyType optional = 2;
+  MyType value = 1 [json_name="value"];
+  optional MyType optional = 2 [json_name="optional"];
 }
 
 message MyServiceFuncEnumArgs {
-  MyEnum value = 1;
-  optional MyEnum optional = 2;
+  MyEnum value = 1 [json_name="value"];
+  optional MyEnum optional = 2 [json_name="optional"];
 }
 
 message MyServiceFuncAliasArgs {
-  string value = 1;
-  optional string optional = 2;
+  string value = 1 [json_name="value"];
+  optional string optional = 2 [json_name="optional"];
 }
 
 message MyServiceFuncStringArgs {
-  string value = 1;
-  optional string optional = 2;
+  string value = 1 [json_name="value"];
+  optional string optional = 2 [json_name="optional"];
 }
 
 message MyServiceFuncI64Args {
-  int64 value = 1;
-  optional int64 optional = 2;
+  int64 value = 1 [json_name="value"];
+  optional int64 optional = 2 [json_name="optional"];
 }
 
 message MyServiceFuncI32Args {
-  int32 value = 1;
-  optional int32 optional = 2;
+  int32 value = 1 [json_name="value"];
+  optional int32 optional = 2 [json_name="optional"];
 }
 
 message MyServiceFuncI16Args {
-  int32 value = 1;
-  optional int32 optional = 2;
+  int32 value = 1 [json_name="value"];
+  optional int32 optional = 2 [json_name="optional"];
 }
 
 message MyServiceFuncI8Args {
-  int32 value = 1;
-  optional int32 optional = 2;
+  int32 value = 1 [json_name="value"];
+  optional int32 optional = 2 [json_name="optional"];
 }
 
 message MyServiceFuncU64Args {
-  uint64 value = 1;
-  optional uint64 optional = 2;
+  uint64 value = 1 [json_name="value"];
+  optional uint64 optional = 2 [json_name="optional"];
 }
 
 message MyServiceFuncU32Args {
-  uint32 value = 1;
-  optional uint32 optional = 2;
+  uint32 value = 1 [json_name="value"];
+  optional uint32 optional = 2 [json_name="optional"];
 }
 
 message MyServiceFuncU16Args {
-  uint32 value = 1;
-  optional uint32 optional = 2;
+  uint32 value = 1 [json_name="value"];
+  optional uint32 optional = 2 [json_name="optional"];
 }
 
 message MyServiceFuncU8Args {
-  uint32 value = 1;
-  optional uint32 optional = 2;
+  uint32 value = 1 [json_name="value"];
+  optional uint32 optional = 2 [json_name="optional"];
 }
 
 message MyServiceFuncF64Args {
-  double value = 1;
-  optional double optional = 2;
+  double value = 1 [json_name="value"];
+  optional double optional = 2 [json_name="optional"];
 }
 
 message MyServiceFuncF32Args {
-  float value = 1;
-  optional float optional = 2;
+  float value = 1 [json_name="value"];
+  optional float optional = 2 [json_name="optional"];
 }
 
 message MyServiceFuncBytesArgs {
-  bytes value = 1;
-  optional bytes optional = 2;
+  bytes value = 1 [json_name="value"];
+  optional bytes optional = 2 [json_name="optional"];
 }
 
