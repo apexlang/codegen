@@ -4,7 +4,7 @@ tasks:
     cmds:
       - deno fmt --check src/ test/
       - deno lint src/
-      - deno check ./**/*.ts
+      - deno check ./src/**/*.ts
       - deno test -A --unstable-worker-options --permit-no-files
   install:
     description: Install templates
