@@ -66,7 +66,7 @@ export class StructVisitor extends GoVisitor {
     this.write(`type ${type.name} struct {\n`);
 
     if (writeTypeInfo) {
-      this.write(`  ns\n`);
+      this.write('  ns `yaml:"-"`\n');
     }
   }
 
