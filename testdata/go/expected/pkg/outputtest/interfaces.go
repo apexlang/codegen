@@ -207,7 +207,7 @@ func (e MyEnum) MarshalJSON() ([]byte, error) {
 	return json.Marshal(e.String())
 }
 
-// UnmarshalJSON unmashals a quoted json string to the enum value
+// UnmarshalJSON unmarshals a quoted json string to the enum value
 func (e *MyEnum) UnmarshalJSON(b []byte) error {
 	var str string
 	err := json.Unmarshal(b, &str)
@@ -222,7 +222,7 @@ func (e MyEnum) MarshalYAML() (any, error) {
 	return e.String(), nil
 }
 
-// UnmarshalYAML unmashals a quoted YAML string to the enum value
+// UnmarshalYAML unmarshals a quoted YAML string to the enum value
 func (e *MyEnum) UnmarshalYAML(unmarshal func(any) error) error {
 	var str string
 	if err := unmarshal(&str); err != nil {
