@@ -27,20 +27,18 @@ export interface ResponseDirective {
   examples?: { [k: string]: string };
 }
 
+export interface ScopesDirective {
+  value: string[];
+}
+
 export function getPath(context: Context): string {
   const ns = context.namespace;
-  const inter = context.interface;
   const { interface: iface, operation } = context;
 
   let path = "";
   ns.annotation("path", (a) => {
     path += a.convert<PathDirective>().value;
   });
-  if (inter) {
-    inter.annotation("path", (a) => {
-      path += a.convert<PathDirective>().value;
-    });
-  }
   if (iface) {
     iface.annotation("path", (a) => {
       path += a.convert<PathDirective>().value;

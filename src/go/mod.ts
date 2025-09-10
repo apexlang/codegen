@@ -17,6 +17,7 @@ limitations under the License.
 export * from "./go_visitor.ts";
 export * from "./alias_visitor.ts";
 export * from "./constant.ts";
+export * from "./embed_visitor.ts";
 export * from "./enum_visitor.ts";
 export * from "./fiber_visitor.ts";
 export * from "./grpc_visitor.ts";
@@ -26,6 +27,7 @@ export * from "./interfaces_visitor.ts";
 export * from "./main_visitor.ts";
 export * from "./scaffold_visitor.ts";
 export * from "./struct_visitor.ts";
+export * from "./servemux_visitor.ts";
 export * from "./union_visitor.ts";
 export * from "./msgpack_visitor.ts";
 export * from "./msgpack_constants.ts";

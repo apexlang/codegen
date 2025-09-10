@@ -17,20 +17,24 @@ limitations under the License.
 
 import {
   Alias,
+  Annotation,
   AnyType,
   BaseVisitor,
   Context,
   Field,
+  Interface,
   Kind,
   List as ListType,
   Map as MapType,
   Named,
+  Operation,
   Optional,
   Primitive,
   Type,
   Writer,
 } from "../../deps/@apexlang/core/model/mod.ts";
 import {
+  ComponentsObject,
   Document,
   ExternalDocumentationObject,
   InfoObject,
@@ -51,7 +55,7 @@ import {
   ExposedTypesVisitor,
   isService,
 } from "../utils/mod.ts";
-import { getPath, ResponseDirective } from "../rest/mod.ts";
+import { getPath, ResponseDirective, ScopesDirective } from "../rest/mod.ts";
 
 type Method = "get" | "post" | "options" | "put" | "delete" | "patch";
 
@@ -104,6 +108,25 @@ const removeEmpty = (obj: any): any => {
   return newObj;
 };
 
+interface Config {
+  securitySchemes: SecurityScheme;
+}
+
+interface SecurityScheme {
+  oauth2: OAuth2Scheme;
+}
+
+interface OAuth2Scheme {
+  flows: OAuth2Flow[];
+  hasRefreshURL: boolean;
+}
+
+type OAuth2Flow =
+  | "implicit"
+  | "password"
+  | "clientCredentials"
+  | "authorizationCode";
+
 export class OpenAPIV3Visitor extends BaseVisitor {
   private root: Mutable<Document> = {
     openapi: "3.0.3",
@@ -137,7 +160,81 @@ export class OpenAPIV3Visitor extends BaseVisitor {
   public override visitNamespaceAfter(context: Context): void {
     const filename = context.config["$filename"];
     this.root.paths = this.paths;
-    this.root.components = { schemas: this.schemas };
+
+    const components: Mutable<ComponentsObject> = {
+      schemas: this.schemas,
+    };
+
+    const ns = context.namespace;
+    const config = context.config as Config;
+    if (config.securitySchemes && config.securitySchemes.oauth2) {
+      const allScopes: Set<string> = new Set();
+      Object.values(ns.interfaces).forEach((i: Interface) => {
+        i.annotation("scopes", (a: Annotation) => {
+          getScopes(a).forEach((v) => allScopes.add(v));
+        });
+        i.operations.forEach((o: Operation) => {
+          o.annotation("scopes", (a: Annotation) => {
+            getScopes(a).forEach((v) => allScopes.add(v));
+          });
+        });
+      });
+      const scopes: { [name: string]: string } = {};
+      Array.from(allScopes).sort().forEach((v) => {
+        scopes[v] = v;
+      });
+      const oauth2 = config.securitySchemes.oauth2;
+      const flows: { [name: string]: any } = {};
+      oauth2.flows.forEach((flow) => {
+        switch (flow) {
+          case "implicit":
+            flows.implicit = {
+              authorizationUrl: "{{OAUTH_AUTHORIZATION_URL}}",
+              scopes: scopes,
+            };
+            if (oauth2.hasRefreshURL) {
+              flows.implicit.refreshUrl = "{{OAUTH_REFRESH_URL}}";
+            }
+            break;
+          case "password":
+            flows.password = {
+              tokenUrl: "{{OAUTH_ACCESS_TOKEN_URL}}",
+              scopes: scopes,
+            };
+            if (oauth2.hasRefreshURL) {
+              flows.password.refreshUrl = "{{OAUTH_REFRESH_URL}}";
+            }
+            break;
+          case "clientCredentials":
+            flows.clientCredentials = {
+              tokenUrl: "{{OAUTH_ACCESS_TOKEN_URL}}",
+              scopes: scopes,
+            };
+            if (oauth2.hasRefreshURL) {
+              flows.clientCredentials.refreshUrl = "{{OAUTH_REFRESH_URL}}";
+            }
+            break;
+          case "authorizationCode":
+            flows.authorizationCode = {
+              authorizationUrl: "{{OAUTH_AUTHORIZATION_URL}}",
+              tokenUrl: "{{OAUTH_ACCESS_TOKEN_URL}}",
+              scopes: scopes,
+            };
+            if (oauth2.hasRefreshURL) {
+              flows.authorizationCode.refreshUrl = "{{OAUTH_REFRESH_URL}}";
+            }
+            break;
+        }
+      });
+      components.securitySchemes = {
+        oauth2: {
+          type: "oauth2",
+          flows: flows,
+        },
+      };
+    }
+
+    this.root.components = components;
     const contents = removeEmpty(this.root);
     if (filename.toLowerCase().endsWith(".json")) {
       this.write(JSON.stringify(contents, null, 2));
@@ -206,6 +303,15 @@ export class OpenAPIV3Visitor extends BaseVisitor {
       summary = a.convert<SummaryDirective>().value;
     });
 
+    let scopes: string[] = [];
+    iface.annotation("scopes", (a) => {
+      scopes = getScopes(a);
+    });
+    // Operation scopes override interface scopes
+    operation.annotation("scopes", (a) => {
+      scopes = getScopes(a);
+    });
+
     this.path = path;
     this.method = method;
     this.operation = {
@@ -218,6 +324,9 @@ export class OpenAPIV3Visitor extends BaseVisitor {
     operation.annotation("deprecated", (_a) => {
       this.operation!.deprecated = true;
     });
+    if (scopes.length > 0) {
+      this.operation!.security = [{ oauth2: scopes }];
+    }
     pathItem[method] = this.operation;
   }
 
@@ -709,3 +818,12 @@ const primitiveTypeMap = new Map<string, TypeFormat>([
   ["any", {}],
   ["value", {}],
 ]);
+
+function getScopes(a: Annotation): string[] {
+  let scopes = a.convert<ScopesDirective>().value;
+  // Convert single value to array
+  if (typeof scopes === "string") {
+    scopes = [scopes as string];
+  }
+  return scopes || [];
+}
