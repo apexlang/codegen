@@ -15,7 +15,7 @@ import {
 } from "../utils/mod.ts";
 import { getMethods, getPath, hasBody, ScopesDirective } from "../rest/mod.ts";
 import { StructVisitor } from "./struct_visitor.ts";
-import { expandType, fieldName, methodName } from "./helpers.ts";
+import { expandType, fieldName, methodName, strQuote } from "./helpers.ts";
 import { translateAlias } from "./alias_visitor.ts";
 import { getImporter, GoVisitor } from "./go_visitor.ts";
 import { IMPORTS } from "./constant.ts";
@@ -72,7 +72,9 @@ class ServeMuxServiceVisitor extends GoVisitor {
 
       if (scopes.length > 0) {
         this.write(
-          `if err := ${$.authorization}.CheckScopes(r.Context(), "write:clusters"); err != nil {
+          `if err := ${$.authorization}.CheckScopes(r.Context(), ${
+            scopes.map((v) => strQuote(v)).join(", ")
+          }); err != nil {
   ${$.thttp}.Error(w, nil, err, ${$.errorz}.PermissionDenied)
   return
 }\n`,
